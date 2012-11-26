@@ -19,14 +19,14 @@
 
 
     <div id="createGroupBanner">
-        <h3> THIS IS WHER YOU AODIOW</h3>
+        <h3> Create groups based on groups you are a part of on Facebook.</h3>
     </div>
 
     <div class="container" style="width:950px; margin-top: 20px;">
 
         <div id="fbNewGroup" >
             {% if new_groups %}
-                <h2>Create groups</h2>
+                <h2>Create groups from Facebook</h2>
                 {% for group in new_groups %}
                     <div style="padding-bottom: 4px;">
                         <input type="checkbox" id="id_{{ group.id }}" name="createFbId" value="{{ group.id }}" style="margin-top: -2px;">
@@ -37,8 +37,9 @@
         </div>
 
         <div id="fbOldGroup">
-            {% if existing_groups %}
             <h2>Groups You May Know</h2>
+            {% if existing_groups %}
+            
             {% for group in existing_groups %}
                 <div style="padding-bottom: 4px;">
 
@@ -46,10 +47,15 @@
                     <span id="{{ group.url_key }}" class="checkId">{{ group.name }}</span><br>
                 </div>
             {% endfor %}
+            
+            {% else %}
+            
+            Sorry, no relevant groups exist at the moment.
+            
             {% endif %}
         </div>
 
-        <input type="submit" class="btn btn-primary btn-large" style="margin-top: 20px; width: 450px;">
+        <input value="Submit" type="submit" class="btn btn-primary btn-large" style="margin-top: 20px; width: 450px;">
     </div>
 
 </form>
@@ -63,7 +69,7 @@
     $(document).ready(function(){
         $(".checkId").click(function(){
             var id = $(this).attr("id");
-            $("#id_"+id).attr("checked","checked")
+            $("#id_"+id).attr("checked",!$("#id_"+id).is(':checked'))
         })
 
     })
