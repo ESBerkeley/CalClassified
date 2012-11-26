@@ -495,6 +495,7 @@ def ajax_box(request):
             item.object.friend = 0
             item.object.friendname = ""
             item.object.boxsize = random.randint(0,1)
+            item.object.score = item.score
 
     if request.user.is_authenticated(): 
         user = request.user
@@ -502,6 +503,7 @@ def ajax_box(request):
         if friends:
             for search_result in found_entries:
                 item = search_result.object
+                item.score = search_result.score
                 try:
                     op = item.owner.get_profile()
                     ownerid = op.facebook_id 
@@ -517,8 +519,8 @@ def ajax_box(request):
     else:
         foreveralone()
 
-    for x in found_entries:
-        x.object.score = x.score
+    #for x in found_entries:
+    #    x.object.score = x.score
 
     data = serializers.serialize('json', [x.object for x in found_entries] , indent = 4, extras=('boxsize','friend','friendname','get_thumbnail_url','score'))
     return HttpResponse(data,'application/javascript')
@@ -623,7 +625,7 @@ def view_circle(request,url_key):
 
         # this is where the user gets authenticated
 
-def delete_circle(request, url_key):
+def delete_group(request, url_key):
     if request.method == "POST":
         user = request.user
         circle = Circle.objects.get(url_key=url_key)
@@ -632,6 +634,17 @@ def delete_circle(request, url_key):
             for item in items:
                 item.delete()
             circle.delete()
+            return HttpResponse("Success")
+
+def update_group(request, url_key):
+    if request.method=="POST":
+        user = request.user
+        circle = Circle.objects.get(url_key=url_key)
+        if request.is_ajax() and user == circle.creator:
+            if "newDescription" in request.POST:
+                newDescription = request.POST['newDescription']
+                circle.description = newDescription
+                circle.save()
             return HttpResponse("Success")
 
 def verify_user(request,auth_key):

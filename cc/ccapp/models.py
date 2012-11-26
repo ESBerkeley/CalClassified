@@ -72,7 +72,7 @@ class CircleForm(ModelForm):
     """
 
     name = forms.CharField(label="Name", widget=forms.TextInput(attrs={'placeholder':'e.g. Berkeley'}))
-    description = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. Berkeley is a city on the east shore of the San Francisco Bay in Northern California, United States. Its neighbors to the south are the cities of Oakland and Emeryville.'}))
+    description = forms.CharField(label="Description", required=False, widget=forms.Textarea(attrs={'placeholder':'e.g. Berkeley is a city on the east shore of the San Francisco Bay in Northern California, United States. Its neighbors to the south are the cities of Oakland and Emeryville.'}))
 
     is_public = forms.BooleanField(widget=forms.HiddenInput(),initial=True,required=False)
     

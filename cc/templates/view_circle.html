@@ -35,21 +35,30 @@
 
     <div id="circleHeader" class="span10 offset3">
         <h2>{{ circle.name }}</h2>
-        <p>{{ circle.description }}</p>
+        <p id="groupDescription" style="white-space: pre-wrap;">{{ circle.description }}</p>
 
         {% if circle.creator == request.user %}
             <hr>
-            <h3 style="margin-top:0; padding-top: 0;">Admin Options</h3>
+            <h3 style="margin-top:0; padding-top: 0; margin-bottom: 0;">Admin Options</h3>
             <a id="editDescriptionToggle" href="#" onclick="return false;"> Edit Description </a>
             <div id="descriptionP" style="padding-top:4px;">
 
-                <textarea id="descriptionInput">{{ circle.description }}</textarea><br>
-                <button class="btn btn-primary">Update</button>
+                <textarea id="descriptionInput" style="width:400px; height: 150px;">{{ circle.description }}</textarea><br>
+                <button id="updateDescription" class="btn btn-primary">Change Description</button>
             </div>
             <br>
             <a href="#" onclick="return false;" id="deleteGroup">Delete Group</a>
         {% endif %}
 
+    </div>
+
+    <div id="groupActivity">
+        <h3> Social</h3>
+        <button class="btn btn-primary btn-mini" id="action" value="{{action}}" >{{ action }} Group</button>
+        <span id="actionComplete"></span>
+        <br>
+        <br>
+        <fb:share-button href="#" type="button"> </fb:share-button>
     </div>
 
 {{ block.super }}
@@ -70,9 +79,31 @@ $(document).ready( function(){
     {% endif %}
 
 $("#descriptionP").hide();
-
+$("#actionComplete").hide();
 $("#editDescriptionToggle").click(function(){
     $("#descriptionP").slideToggle();
+})
+
+$("#updateDescription").click(function(){
+    var newDescription =  $("#descriptionInput").val();
+    data = {};
+    data['newDescription'] = newDescription;
+    data['csrfmiddlewaretoken'] = csrf_token;
+    $.ajax({
+        type: "POST",
+        url: "./update/",
+        //dataType: "text",
+        data: data,
+        success: function(msg){
+            if (msg=="Success") {
+                $("#descriptionP").slideToggle();
+                $("#groupDescription").fadeOut(function() {
+                    $(this).text(newDescription).fadeIn();
+                });
+            }
+        }
+    })
+
 })
 
 
@@ -88,10 +119,12 @@ $("#action").click( function() {
     data: dataString,
     success: function(){
       if (action == "Join") {
-        $("#action").html("Leave Circle");
+        $("#action").hide().delay(3000).fadeIn(400).delay(300).html("Leave Group");
+        $("#actionComplete").html("Group Joined!").fadeIn(300).delay(2000).fadeOut(300);
         $("#action").attr("value","Leave");
       } else {
-        $("#action").html("Join Circle");
+        $("#action").hide().delay(3000).fadeIn(400).html("Join Group");
+          $("#actionComplete").html("Group Left!").fadeIn(300).delay(2000).fadeOut(300);
         $("#action").attr("value","Join");
       }
     }
@@ -105,8 +138,6 @@ $("#deleteGroup").click( function() {
         data = {};
         data['csrfmiddlewaretoken'] = csrf_token;
         $.ajax({
-            // even tho it is a get request, works as a post request
-            // odd reason POST doesn't work with ajax call
             type: "POST",
             url: "./delete/",
             //dataType: "text",
