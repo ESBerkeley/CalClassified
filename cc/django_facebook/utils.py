@@ -110,6 +110,9 @@ def next_redirect(request, default='/', additional_params=None,
     if not isinstance(next_key, (list, tuple)):
         next_key = [next_key]
 
+    if request.user.get_profile().first_time:
+        redirect_url = '/fb_import/'
+
     # get the redirect url
     if not redirect_url:
         for key in next_key:

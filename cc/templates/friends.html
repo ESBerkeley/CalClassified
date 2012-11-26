@@ -23,7 +23,14 @@
 	</div>
 
 </div>
-
+<script>
+    FB.init({appId:171685159547122, cookie:true,status:true, xfbml:true});
+    function apprequest () {
+        FB.ui({ method: 'apprequests',
+            message: 'Buy and sell items on buynear.me!',
+            filters: [{name: 'Friends in Group', user_ids: {{ friends_list }} },'app_non_users']});
+    }
+</script>
 {% endblock %}
 
 

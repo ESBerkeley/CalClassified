@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Group Import{% endblock %}
+
+{% block head %}
+
+<!-- Styles -->
+<style type="text/css">
+    .checkId {
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form id="fb_groups_form" method="post" action="." >
+{% csrf_token %}
+
+
+    <div id="createGroupBanner">
+        <h3> THIS IS WHER YOU AODIOW</h3>
+    </div>
+
+    <div class="container" style="width:950px; margin-top: 20px;">
+
+        <div id="fbNewGroup" >
+            {% if new_groups %}
+                <h2>Create groups</h2>
+                {% for group in new_groups %}
+                    <div style="padding-bottom: 4px;">
+                        <input type="checkbox" id="id_{{ group.id }}" name="createFbId" value="{{ group.id }}" style="margin-top: -2px;">
+                        <span id="{{ group.id }}" class="checkId">{{ group.name }}</span><br>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div id="fbOldGroup">
+            {% if existing_groups %}
+            <h2>Groups You May Know</h2>
+            {% for group in existing_groups %}
+                <div style="padding-bottom: 4px;">
+
+                    <input type="checkbox" id="id_{{ group.url_key }}" name="joinGroupId" value="{{ group.id }}" style="margin-top: -2px;">
+                    <span id="{{ group.url_key }}" class="checkId">{{ group.name }}</span><br>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <input type="submit" class="btn btn-primary btn-large" style="margin-top: 20px; width: 450px;">
+    </div>
+
+</form>
+
+<div style="clear:both"></div>
+
+{% endblock %}
+
+{% block post_js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".checkId").click(function(){
+            var id = $(this).attr("id");
+            $("#id_"+id).attr("checked","checked")
+        })
+
+    })
+</script>
+{% endblock %}
+
+

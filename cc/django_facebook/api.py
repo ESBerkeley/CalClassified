@@ -573,8 +573,6 @@ class FacebookUserConverter(object):
                 name = group.get('name')
                 bookmark_order = group.get('bookmark_order')
                 description = group.get('description')
-                if bookmark_order > 99:
-                    bookmark_order = 100
                 default_dict[group['id']] = dict(
                     bookmark_order=bookmark_order,
                     name=name

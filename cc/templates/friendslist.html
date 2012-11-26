@@ -16,28 +16,25 @@
 </script>
 
 <div class="row">
-	<div class="span3">
-		<div class="span3">
-            <h2> Your groups </h2>
-            {% for group in my_groups %}
-			    <p>{{ group.name }}</p>
-			{% endfor %}
-		    <h2> Your friends </h2>
-		    {% for friend in my_friends_list %}
-			    <p>{{ friend.name }}</p>
-			{% endfor %}
-		</div>
-        
-	</div>
+
+    {% if request.user.get_profile.first_time %}
+    <div id="circleHeader" class="span10 offset3">
+        {% if existing_groups %}
+        <h2>Would you like to join some groups?</h2>
+        {% for group in existing_groups %}
+        <p>{{ group.name }}</p>
+        {% endfor %}
+        {% endif %}
+        {% if new_groups %}
+        <h2>Create some groups?</h2>
+        {% for group in new_groups %}
+        <p>{{ group.name }}</p>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
 </div>
-    <script>
-      FB.init({appId:171685159547122, cookie:true,status:true, xfbml:true});
-      function apprequest () {
-        FB.ui({ method: 'apprequests',
-        message: 'Buy and sell items on buynear.me!',
-        filters: [{name: 'Friends in Group', user_ids: {{ friends_list }} },'app_non_users']});
-      }
-    </script>
+
 
 {% endblock %}
 

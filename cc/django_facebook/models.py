@@ -144,6 +144,7 @@ class FacebookProfile(FacebookProfileModel):
     bookmarks = models.ManyToManyField(ItemForSale, related_name='bookmarked_user_set')
     message_email = models.BooleanField("buyer sends you a message", default=True)
     friend_email = models.BooleanField("friend lists an item", default=True)
+    first_time = models.BooleanField(default=True)
     
 class FacebookProfileForm(forms.Form):
     # this will be the username as well

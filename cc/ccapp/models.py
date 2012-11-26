@@ -41,11 +41,13 @@ class Circle(models.Model):
     url_key = models.CharField(max_length=20,unique=True)
     creator = models.ForeignKey(User,null=True)
     description = models.TextField(null=True,blank=True)
+    fb_id = models.PositiveIntegerField(null=True, unique= True)
     def __unicode__(self):
         return self.name
     def get_absolute_url(self):
         return "/groups/view/%s" % self.url_key
-    def make_key(self):
+    @staticmethod
+    def make_key():
         while True:
             try:
                 url_key = ""

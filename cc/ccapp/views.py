@@ -41,7 +41,11 @@ def note(request):
 
 def ajax_circle_search(request): 
     if request.is_ajax() or True:
-        results = Circle.objects.filter(is_public=True)
+        user_profile = request.user.get_profile()
+        my_circles = user_profile.my_circles.all()
+        my_circles_id = [o.id for o in my_circles]
+
+        results = Circle.objects.filter(is_public=True).exclude(id__in=my_circles_id)
         
         #if 'query' in request.GET:
         #    results = results.filter(name__contains = request.GET['query'])
@@ -63,12 +67,12 @@ def friendslist(request):
     #print(graph)
     facebook = FacebookUserConverter(graph)
     #print(facebook)
-    print(dir(facebook))
+    #print(dir(facebook))
     groups = facebook.get_groups()
     friends = facebook.get_friends()
     likes = facebook.get_likes()
     #store_likes = facebook.get_and_store_likes(request.user)
-    print(groups)
+    #print(groups)
     #print(store_likes)
     #print(queryset)
     context_object_name = 'my_friends_list'
@@ -78,6 +82,66 @@ def friendslist(request):
     #except:
     #    raise Http404
     return render_to_response('friendslist.html',{'my_friends_list': friends, 'my_groups': groups}, context_instance=RequestContext(request))
+
+@login_required
+def fb_import(request):
+    if request.method == 'GET':
+        existing_groups = []
+        new_groups = []
+        data = {}
+        if request.user.is_authenticated():
+            user_profile = request.user.get_profile()
+            my_circles = user_profile.my_circles.all()
+            my_circles_id = [o.id for o in my_circles]
+            try:
+                graph = get_facebook_graph(request)
+                facebook = FacebookUserConverter(graph)
+                groups = facebook.get_groups()
+                #friends = facebook.get_friends()
+                groups = sorted(groups, key=lambda group: group['bookmark_order'])
+                for group in groups:
+                    try:
+                        existing = Circle.objects.get(fb_id=group['id'])
+                        if existing not in my_circles:
+                            existing_groups.append(existing)
+                    except:
+                        new_groups.append(group)
+            except:
+                existing_groups = Circle.objects.exclude(id__in=my_circles_id).order_by('?')[:5]
+
+            if not existing_groups:
+                print(my_circles_id)
+                existing_groups = Circle.objects.exclude(id__in=my_circles_id).order_by('?')[:5]
+
+            data['existing_groups'] = existing_groups
+            data['new_groups'] = new_groups
+
+
+            user_profile.first_time = False
+            user_profile.save()
+            return render_to_response('fb_import.html', data, context_instance=RequestContext(request))
+    else:
+        user_profile = request.user.get_profile()
+        create_groups = request.POST.getlist("createFbId")
+        create_groups = map(int,create_groups)
+        join_groups = request.POST.getlist("joinGroupId")
+
+        graph = get_facebook_graph(request)
+        facebook = FacebookUserConverter(graph)
+        groups = facebook.get_groups()
+
+        for group in groups:
+            #print(group['id'])
+            if not Circle.objects.filter(fb_id=group['id']) and int(group['id']) in create_groups:
+                circle = Circle.objects.create(name=group['name'], creator=request.user, fb_id=group['id'], url_key=Circle.make_key(),is_public=True)
+                user_profile.my_circles.add(circle)
+
+
+        for group_id in join_groups:
+            group = Circle.objects.get(id=group_id)
+            user_profile.my_circles.add(group)
+
+        return redirect('/accounts/profile/groups/?msg=Groups have been successfully updated!')
 
 """@login_required
 def friends(request):
@@ -408,7 +472,6 @@ def search(request):
     return render_to_response('index.html',{ 'query_string': query_string, 'cc_ifs': found_entries }, context_instance=RequestContext(request))
 
 def boxview(request):
-
     query_string = ''
     #found_entries = ItemForSale.objects.all()
     found_entries = 1 #This is a dummy value which isnt used at all
@@ -745,6 +808,9 @@ def profile_circles(request):
     data['my_circles'] = my_circles
     data['my_private_circles'] = my_private_circles
     data['my_public_circles'] = my_public_circles
+
+    if 'msg' in request.GET:
+        data['msg'] = request.GET['msg']
     return render_to_response('profile/profile_circles.html',
                              data,
                              context_instance=RequestContext(request))

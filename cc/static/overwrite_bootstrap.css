@@ -866,7 +866,8 @@ label.error {
     margin-top: 18px;
     border: 1px solid #bababa;
     padding: 5px 15px 15px 15px;
-    width: 735px; /
+    width: 735px;
+    min-height: 122px;
 }
 
 #groupActivity {
@@ -878,3 +879,29 @@ label.error {
     width: 120px;
 }
 
+#fbNewGroup {
+    background-color: white;
+    border: 1px solid #bababa;
+    padding: 5px 25px 15px 25px;
+    width: 400px;
+    margin-right: 46px;
+
+    float:left;
+}
+
+#fbOldGroup {
+    float: left;
+    background-color: white;
+
+    border: 1px solid #bababa;
+    padding: 5px 25px 15px 25px;
+    width: 400px;
+}
+
+#createGroupBanner {
+    background-color: white;
+    border: 1px solid #bababa;
+    padding: 15px 25px 15px 25px;
+    width: 900px;
+    margin: auto;
+}

@@ -1,6 +1,6 @@
 {% extends 'profile/profile.html' %}
 
-{% block profile_title %} Groups {% endblock %}
+{% block profile_title %} Groups <span style="float:right; font-size:22px; color: red;">{{ msg }}</span> {% endblock %}
 
 {% block title %} Account - Groups {% endblock %}
 
@@ -22,7 +22,8 @@
         </tr>
       {% endfor %}
     </table>
-  <a class="btn btn btn-success" href="{% url createCircle %}">Create a group</a>
+  <a class="btn btn-success" href="{% url createCircle %}">Create a group</a> <br><br>
+  <a class="btn btn-success" href="{% url fb_import %}">Import Facebook Groups</a>
 </div>
 
     <div id="profile-circles-sidebar" class="span4">
