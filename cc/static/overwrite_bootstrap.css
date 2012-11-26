@@ -34,6 +34,7 @@ h4 {
 .navbar .nav > li > a {
   color: #6f6f6f;
     font-family: 'Duru Sans', sans-serif;
+    padding: 10px;
 }
 
 .navbar-search .search-query {
