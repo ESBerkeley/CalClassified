@@ -24,7 +24,7 @@
     <h2>{{ circle }}</h2>
     {% if request.user.is_authenticated %}
       <div class=" pull-right">
-        <fb:share-button href="#" type="button"> </fb:share-button>  
+        <fb:share-button href="#" type="button"> </fb:share-button>
         <button class="btn btn-primary" id="action" value="{{action}}" style="margin-left:10px;">{{ action }} Group</button>
       </div>
     {% else %}
@@ -32,19 +32,36 @@
     {% endif %}
   </legend>
 </div>-->
+
+    <div id="circleHeader" class="span10 offset3">
+        <h2>{{ circle.name }}</h2>
+        <p>{{ circle.description }}</p>
+
+        {% if circle.creator == request.user %}
+            <hr>
+            <h3 style="margin-top:0; padding-top: 0;">Admin Options</h3>
+            <a href="#" onclick="return false;" id="deleteGroup">Delete Group</a>
+        {% endif %}
+
+    </div>
+
 {{ block.super }}
 
-{% if all_items|length == 0 %}
-<div class="span9 offset4">
-  <h2>Nothing seems to be here. <a href="/post/">Sell</a> and</h2>
-  <div style="margin-top:-38px; margin-left:430px;"><fb:share-button href="#" type="button"></fb:share-button></div>
-</div>
-{% endif %}
+
 {% endblock %}
 
 {% block post_js %}
 <script type="text/javascript">
 $(document).ready( function(){
+
+    var csrf_token = "{{ csrf_token }}";
+
+    {% if all_items|length == 0 %}
+        var noneText = '<h2>Nothing seems to be here. <a href="/post/">Sell</a> and</h2> \
+                <div style="margin-top:-38px; margin-left:430px;"><fb:share-button href="#" type="button"></fb:share-button></div>'
+        $("#boxDiv").append(noneText)
+    {% endif %}
+
 
 $("#action").click( function() {
   var action = $(this).attr("value"); // either Join or Leave
@@ -58,14 +75,38 @@ $("#action").click( function() {
     data: dataString,
     success: function(){
       if (action == "Join") {
-        $("#action").html("Leave Group");
+        $("#action").html("Leave Circle");
         $("#action").attr("value","Leave");
       } else {
-        $("#action").html("Join Group");
+        $("#action").html("Join Circle");
         $("#action").attr("value","Join");
       }
     }
   })
+})
+
+$("#deleteGroup").click( function() {
+    var r = confirm("Are you sure you want to delete this group? This action is permanent")
+
+    if(r==true){
+        data = {};
+        data['csrfmiddlewaretoken'] = csrf_token;
+        $.ajax({
+            // even tho it is a get request, works as a post request
+            // odd reason POST doesn't work with ajax call
+            type: "POST",
+            url: "./delete/",
+            //dataType: "text",
+            data: data,
+            success: function(msg){
+                if (msg=="Success") {
+                    var title = "Group Deleted"
+                    var delete_msg = "Group has been successfully deleted."
+                    window.location.replace("/note/?msg="+delete_msg+"&title="+title);
+                }
+            }
+        })
+    }
 })
 
 

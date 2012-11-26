@@ -5,9 +5,6 @@
 {% block profile_content %}
 <div >
   <p>
-    {% if changed %}
-        <p style="color:red">Account settings saved.</p>
-    {% endif %}
     <h4> General</h4>
     <a href="{% url auth_password_change %}"> Change password </a>
     <br><br>
@@ -21,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-    <form action="#" method="post">{% csrf_token %}
+    <form action="." method="post">{% csrf_token %}
         {% for field in form %}
         <tr>
             <td>

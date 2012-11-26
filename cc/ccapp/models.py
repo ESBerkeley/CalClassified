@@ -39,6 +39,8 @@ class Circle(models.Model):
     is_public = models.BooleanField(default=False)
     is_city = models.BooleanField(default=False)
     url_key = models.CharField(max_length=20,unique=True)
+    creator = models.ForeignKey(User,null=True)
+    description = models.TextField(null=True,blank=True)
     def __unicode__(self):
         return self.name
     def get_absolute_url(self):
@@ -68,12 +70,15 @@ class CircleForm(ModelForm):
         choices=circle_types,
         help_text="Public groups can be viewed by anyone. Private groups can only be visited by providing links.")
     """
-    
+
+    name = forms.CharField(label="Name", widget=forms.TextInput(attrs={'placeholder':'e.g. Berkeley'}))
+    description = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. Berkeley is a city on the east shore of the San Francisco Bay in Northern California, United States. Its neighbors to the south are the cities of Oakland and Emeryville.'}))
+
     is_public = forms.BooleanField(widget=forms.HiddenInput(),initial=True,required=False)
     
     class Meta:
         model = Circle
-        exclude = ('url_key','is_city')
+        exclude = ('url_key','is_city','creator')
 
 class ItemForSale(Post):
     price = models.DecimalField(max_digits=8,decimal_places=2)
@@ -152,8 +157,8 @@ class ItemForSaleForm(ModelForm):
     circles = forms.MultipleChoiceField(required=True,
         label="Groups",)
     """
-    title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'placeholder':'eg. Calvin and Hobbes'}))
-    body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'eg. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
+    title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'placeholder':'e.g. Calvin and Hobbes'}))
+    body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
     class Meta:
         model = ItemForSale
         exclude = ('time_created','images','is_confirmed', 'key_data', 'owner','cached_thumb')

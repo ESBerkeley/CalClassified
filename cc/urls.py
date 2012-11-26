@@ -10,6 +10,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', MainView.as_view(), name='mainview'),
+    url(r'^note/$',"ccapp.views.note"),
     url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),
     url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS"),
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
@@ -33,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^friends/debug/$', 'ccapp.views.friendslist'),
     url(r'^groups/$', 'ccapp.views.all_circles', name="view_circles"),
     url(r'^groups/view/(?P<url_key>[\w\+%_& ]+)/$', 'ccapp.views.view_circle'),
+    url(r'^groups/view/(?P<url_key>[\w\+%_& ]+)/delete/$', 'ccapp.views.delete_circle'),
     #url(r'^circles/view/(?P<url_key>[\w\+%_& ]+)/post/$', 'ccapp.views.createIFSwithinCircle'),
     url(r'^groups/create/$', 'ccapp.views.create_circle',name='createCircle'),
     url(r'^groups/search/$', 'ccapp.views.ajax_circle_search'), #XXX

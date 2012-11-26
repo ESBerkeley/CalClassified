@@ -32,7 +32,7 @@ label.error {
   {% if message %}
   <p style="color:red"> {{ message }} </p>
   {% endif %}
-  <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
+  <form action="."  method="post" class="form-horizontal" id="groupForm">{% csrf_token %}
   <div id="fields form">
   
     {% for field in form %}
@@ -54,7 +54,7 @@ label.error {
     
   </div>
   
-  <span class="help-block">Circles can be shared by passing around the URL or using the Facebook share button.</span>
+  <span class="help-block">Groups can be shared by passing around the URL or using the Facebook share button.</span>
   
   <br />
   <input type="submit" class="btn btn-primary" value="Submit" />
@@ -64,4 +64,25 @@ label.error {
   </div>
 </div>
 
+{% endblock %}
+
+{% block post_js %}
+<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function(){
+
+        $("#groupForm").validate({
+            rules: {
+                name: {
+                required: true,
+                },
+                description: {
+                required: true,
+                },
+            }
+        });
+    })
+</script>
 {% endblock %}

@@ -33,7 +33,12 @@ RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 def canvas(request):
     return render_to_response('canvas.html', context_instance = RequestContext(request))
 
-    
+def note(request):
+    title = request.GET['title']
+    msg = request.GET['msg']
+    return render_to_response('message.html',{'title':title,'message':msg},context_instance=RequestContext(request))
+
+
 def ajax_circle_search(request): 
     if request.is_ajax() or True:
         results = Circle.objects.filter(is_public=True)
@@ -331,7 +336,6 @@ def ajax_contact_seller(request):
                     'message':message.body,
                     'thread':thread2,
                     'post':post,
-                    'recipient_name':recipient_name,
                     'username':sender.username,
                     'first_name':sender.first_name,
                     'full_name':sender.get_full_name(),
@@ -540,7 +544,7 @@ def create_circle(request):
             if circle.is_public:
                 try:
                     Circle.objects.get(name=circle.name)
-                    return render_to_response('create_circle.html',{'form':form,'message':"That public circle already exists"},context_instance=RequestContext(request))
+                    return render_to_response('create_circle.html',{'form':form,'message':"That public group already exists"},context_instance=RequestContext(request))
                 except:
                     pass
             
@@ -554,11 +558,13 @@ def create_circle(request):
                     c = Circle.objects.get(url_key=url_key)
                 except: #circle doesn't exist with key so we good
                    break
-            
+
+            user = request.user
+
+            circle.creator = user;
             circle.url_key = url_key
             circle.save()
-            
-            user = request.user
+
             user_profile = user.get_profile()
             user_profile.my_circles.add( circle )
             
@@ -616,7 +622,18 @@ def view_circle(request,url_key):
         return render_to_response('view_circle.html',{'circle':circle,'cc_cats':all_cats,'action':'None','cc_circs':all_circs,'all_items':all_items},context_instance=RequestContext(request))
 
         # this is where the user gets authenticated
-        
+
+def delete_circle(request, url_key):
+    if request.method == "POST":
+        user = request.user
+        circle = Circle.objects.get(url_key=url_key)
+        if request.is_ajax() and user == circle.creator:
+            items = ItemForSale.objects.annotate(count=Count('circles')).filter(circles = circle, count = 1)
+            for item in items:
+                item.delete()
+            circle.delete()
+            return HttpResponse("Success")
+
 def verify_user(request,auth_key):
     data = {}
     try:
@@ -657,17 +674,14 @@ def profile_posts(request):
 
 @login_required
 def profile_settings(request):
-    data = {}
-    data['changed'] = False
-    user_profile = request.user.get_profile()
     if request.method=="POST":
-        form = SettingsForm(request.POST, instance=user_profile)
+        form = SettingsForm(request.POST)
         if form.is_valid():
             form.save()
-            data['form'] = form
-            data['changed'] = True
         return render_to_response('profile/profile_settings.html',data,context_instance=RequestContext(request))
     else:
+        data = {}
+        user_profile = request.user.get_profile()
         form = SettingsForm(instance=user_profile)
         data['form'] = form
         data.update(csrf(request))

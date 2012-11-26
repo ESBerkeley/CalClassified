@@ -1,6 +1,6 @@
 {% block subject %}{{ post.title }} Response - {{ first_name }}{% endblock %}
 {% block html %}
-  <p>Hi {{ recipient_name }},</p>
+  <p>Hi {{ recipient_name}},</p>
     <br>
   <p>{{ first_name }}, {{ username }}, has contacted you about your item! </p>
   <h3>Message:</h3>
@@ -18,6 +18,6 @@
   <p>Thanks,</p>
   <p>Buy Near Me Team</p>
   {% load static %}
-  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
+  <img style="height:37px;" src="{% get_static_prefix %}124ta-orange.png"></a>
   <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 
 {% endblock %}

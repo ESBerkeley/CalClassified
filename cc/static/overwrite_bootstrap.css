@@ -277,6 +277,7 @@ div.friend_boxxx{
     padding:0;
     border:2px solid black;
     border-radius: 3px;
+    background-color: white;
 }
 
 div.friend_boxxx:hover{
@@ -858,5 +859,13 @@ label.error {
     -moz-opacity:1;
 }
 */
+
+#circleHeader {
+    background-color: white;
+    margin-top: 18px;
+    border: 1px solid #bababa;
+    padding: 5px 15px 15px 15px;
+    width: 885px;
+}
 
 
