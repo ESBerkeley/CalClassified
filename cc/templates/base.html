@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% load static %}
+    <meta charset="utf-8">
+    <title>{% block title %}Buy Near Me - Home{% endblock %}</title>
+    {% block metadata %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="Buy and sell items within your communities." />
+      <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,buy,sell,berkeley,UC Berkeley,friends,Berkeley Craigslist" />
+      <meta property="og:title" content="Buy Near Me"/>
+      <meta property="og:type" content="website"/>
+      <meta property="og:url" content="http://buynear.me/"/>
+      <meta property="og:image" content="{% get_static_prefix %}124ta-orange.png"/>
+      <meta property="og:site_name" content="Buy Near Me"/>
+
+      <meta property="og:description"
+            content="Buy and sell items within your communities."/>
+    {% endblock %}
+    <link href="{% get_static_prefix %}bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="{% get_static_prefix %}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
+    <link href="{% get_static_prefix %}overwrite_bootstrap.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,200,400,500,600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Duru+Sans' rel='stylesheet' type='text/css'>
+
+    {% block head %}
+    {% endblock %}
+
+    <style type="text/css">
+        {% block extra_css %}{% endblock %}
+    </style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="{% get_static_prefix %}1255.ico">
+    <!-- ANALYTICS -->
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34571639-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  <!-- END ANALYTICS -->
+
+  </head>
+
+  <body >
+  <div class="page-stretch">
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" id="logo" href="/"><img style="height:37px;" src="{% get_static_prefix %}124ta-orange.png"></a>
+          <ul class="nav">
+            <li><a href="{% url browse %}">Browse</a></li>
+            <li><a href="/post/">Sell</a></li>
+          </ul>
+
+          <form id="searchbarform" class="navbar-search form-inline" action="javascript:search();">
+            <input type="text" class="search-query" placeholder="Search" id="searchbar">
+            <i id="search-go-nav" class="icon-search search-icon-nav" class="submit" onclick="javascript:search();"></i>
+            <i id="search-cancel-nav" class="icon-remove-sign search-icon-nav" type="submit hidden" class="submit" onclick="javascript:searchbarCancel()"></i>
+          </form>
+
+          <ul class="nav pull-right">
+            <li>
+              {% if not request.user.is_authenticated %}
+              <div class="inner_content">
+                <form action="{% url facebook_connect %}?facebook_login=1" method="post">
+                  <input type="hidden" value="{{ request.path }}" name="next" />
+                  <div id="facebook_login_js">
+                    <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{% get_static_prefix %}images/login_crop.png" style="height:29px; width:170px; margin-bottom:-16px; padding-right:5px;"/>
+                  </div>
+                </form>
+              </div>
+              {% endif %}
+            </li>
+
+            {% if request.user.is_authenticated %}
+
+            {% block navbar %}
+            {% endblock %}
+
+            <li id=\"fat-menu\" class=\"dropdown\"><div id = "friend_notifications_dropdown"> </div> </li>
+
+
+            <li id="fat-menu">
+            <a class="tooltips" href="{% url account_messages %}" style="color: orange;" rel="tooltip" data-placement="bottom" title="New Messages">
+                <span class="badge badge-success">{{ request.user.get_profile.notifications }}</span>
+                <i class="icon-envelope "></i>
+            </a>
+            </li>
+          <!--  <li id="fat-menu"><a style="color: orange;"><span class="badge badge-warning">{{ request.user.get_profile.friend_notifications }}</span> Notifications</a></li> -->
+                <li><a href="{% url account_circles %}">My Groups</a></li>
+                <li><a href="/accounts/profile"></i> Account</a></li>
+                <li><a href="{% url auth_logout %}">
+                <!--<li><a href="{% url auth_logout %}?next={{ request.path|urlencode }}"> -->
+                  Logout</a></li>
+            {% else %}
+                <li ><a href="/accounts/login/">Login</a></li>
+                <li ><a style="padding-left: 0px;" href="/accounts/register/">Sign Up</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="body">
+
+    {% block sidebar %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block button %}{% endblock %}
+    </div>
+
+    {% block footer %}
+    <div class="footer">
+      <div class="container">
+        <p>
+          <div class="span9">
+            <a href="/about" class="footer-text">About</a>
+            <a href="/contact" class="footer-text">Contact</a>
+            <a class="footer-text" href="/terms">Terms</a>
+            <a href="/privacy" class="footer-text">Privacy</a>
+            <a class="footer-text" href="/feedback">Feedback</a>
+            <!--<span class="footer-copy">&copy; buynearme 2012</span>-->
+          </div>
+          <div class="fb-like span2" data-href="https://www.facebook.com/BuyNearMe" data-send="true" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana">
+          </div>
+        </p>
+      </div>
+    </div>
+    {% endblock %}
+
+    {% block pre_js %}{% endblock %}
+
+    <!-- Javascript
+    ================================================== -->
+    {% block js_stuff %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script src="{% get_static_prefix %}bootstrap/js/bootstrap.js"></script>
+    <script src="{% get_static_prefix %}jquery-cookie/jquery.cookie.js"></script>
+    <script src="{% get_static_prefix %}abomination.js"></script>
+    <script src="{% get_static_prefix %}myJS.js"></script>
+
+
+    {% endblock %}
+
+    {% block js_script %}
+    <script>
+    $(".collapse").collapse();
+    $("#search-cancel-nav").hide();  //hides search cancel button initially
+    $('.tooltips').tooltip('hide');  //activates tooltips. Use class "tooltips" plural. "tooltips" is taken and messes up
+    get_friend_notifications();
+
+    //jquery that adjusts sidebar horizontal scrolling
+    $(function() {
+        var $sidebar   = $(".sidebar-nav"),
+            $window    = $(window),
+            offset     = $sidebar.offset(),
+            leftPadding = 20;
+        $window.scroll(function() {
+            if ($window.scrollLeft() > 0) {
+                $sidebar.stop().animate({
+                    marginLeft: -$window.scrollLeft() + leftPadding
+                },0);
+            } else {
+                $sidebar.stop().animate({
+                    marginLeft: leftPadding
+                },0);
+            }
+        });
+    });
+    </script>
+    {% endblock %}
+
+    <!-- Facebook Crap -->
+    <script src="{% get_static_prefix %}js/statictest.js" type="text/javascript"></script>
+    {% include 'django_facebook/_facebook_js.html' %}
+
+    {% block post_js %}
+
+    {% endblock %}
+
+  </div>
+  </body>
+</html>

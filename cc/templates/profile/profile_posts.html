@@ -1,0 +1,205 @@
+{% extends 'profile/profile.html' %}
+
+{% block profile_title %} Posts {% endblock %}
+
+{% block title %} Account - Posts {% endblock %}
+
+
+
+{% block profile_content %}
+      <div class="tabbable "> <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs" style="margin-bottom: 0px;">
+          <li class="active"><a href="#tab1" data-toggle="tab">My Posts</a></li>
+          <li><a href="#tab2" data-toggle="tab">Bookmarked Posts</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab1">
+            {% if posts %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> Title </th>
+                  <th> Time Created </th>
+                    <th style="width:50px;"><center>Delete</center></th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for post in posts %}
+                <tr>
+                  <td><a href="{{ post.get_absolute_url }}"> {{ post.title }}</a></td>
+                  <td>{{ post.time_created }}</td>
+                  <td ><center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ post.id }}"></a></center></td>
+                </tr>
+
+                  <!--modal content -->
+                  <div class="modal fade hide" id="delete-modal-{{ post.id }}">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                          <h3>Delete Post</h3>
+                      </div>
+                      <div class="modal-body">
+                          <p>
+                              Are you sure you want to delete your post '{{ post.title }}'.
+                          </p>
+                      </div>
+                      <div class="modal-footer">
+                          <button class="btn btn-primary verify-delete" value="{{ post.id }}" type="button" data-loading-text="Deleting...">Delete</button>
+                          <button class="btn" data-dismiss="modal">Cancel</button>
+                      </div>
+                  </div>
+              {% endfor %}
+              </tbody>
+            </table>
+            
+            {% else %}
+                <div>
+                <h2>
+                    You have no posts.
+                </h2>
+                    <h4>
+                        <a href="{% url createIFS %}">Create a post now!</a>
+                    </h4>
+                </div>
+            
+            {% endif %}
+
+              <!-- success modal content -->
+              <div class="modal fade hide" id="success-modal">
+                  <div class="modal-header">
+                      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+                      <h3>Delete Post</h3>
+                  </div>
+                  <div class="modal-body">
+                      <p>Success, post deleted!</p>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn close-refresh" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+
+            
+          </div>
+
+          <div class="tab-pane" id="tab2">
+            {% if bookmarks %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> Title </th>
+                  <th> Time Created </th>
+                    <th style="width:50px;"><center>Unbookmark</center></th>
+                </tr>
+              </thead>
+              <tbody>
+              
+              {% for post in bookmarks %}
+                <tr>
+                  <td><a href="{{ post.get_absolute_url }}"> {{ post.title }}</a></td>
+                  <td>{{ post.time_created }}</td>
+                  <td ><center><a class="icon-remove" data-toggle="modal" href="#unbookmark-modal-{{ post.id }}"></a></center></td>
+                </tr>
+
+                  <!--modal content -->
+                  <div class="modal fade hide" id="unbookmark-modal-{{ post.id }}">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                          <h3>Unbookmark Post</h3>
+                      </div>
+                      <div class="modal-body">
+                          <p>
+                              Are you sure you want to unbookmark post '{{ post.title }}'.
+                          </p>
+                      </div>
+                      <div class="modal-footer">
+                          <button class="btn btn-primary verify-unbookmark" value="{{ post.id }}" type="button" data-loading-text="Unbookmark...">Unbookmark</button>
+                          <button class="btn" data-dismiss="modal">Cancel</button>
+                      </div>
+                  </div>
+
+              {% endfor %}
+              </tbody>
+            </table>
+            
+            {%else %}
+            <h2>
+                You have no bookmarked posts.
+            </h2>
+                <h4>
+                    You can bookmark a post while viewing them!
+                </h4>
+            {% endif %}
+
+              <!-- success unbookmark modal content -->
+              <div class="modal fade hide" id="unbookmark-success-modal">
+                  <div class="modal-header">
+                      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+                      <h3>Unbookmark Post</h3>
+                  </div>
+                  <div class="modal-body">
+                      <p>Post unbookmarked!</p>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn close-refresh" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+
+{% endblock %}
+
+{% block post_js %}
+    {% load static %}
+
+    <script type="text/javascript">
+        var csrf_token = "{{ csrf_token }}";
+
+        $(document).ready( function() {
+            $(".verify-delete").click(function(){
+                $(this).button('loading');
+                var post_id = $(this).val();
+                data= {};
+                data['csrfmiddlewaretoken'] = csrf_token;
+                data['post_id'] = post_id;
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax_delete_post/",
+                    data: data,
+                    success: function(data){
+                        $("#delete-modal-"+post_id).modal('hide');
+                        $("#success-modal").modal('show');
+                    }
+                })
+            })
+
+            $(".verify-unbookmark").click(function(){
+                $(this).button('loading');
+                var post_pk = $(this).val();
+                data = {};
+                data['post_pk'] = post_pk;
+                data['csrfmiddlewaretoken'] = csrf_token;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/bookmark/",
+                    data: data,
+                    success: function(){
+                        $("#unbookmark-modal-"+post_pk).modal('hide');
+                        $("#unbookmark-success-modal").modal('show');
+                    }
+                })
+            })
+
+            $(".close-refresh").click (function() {
+                location.reload();
+            })
+
+        })
+
+    </script>
+    <script src="{% get_static_prefix %}js/profile_messages.js"></script>
+{% endblock %}
+
+

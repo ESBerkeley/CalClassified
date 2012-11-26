@@ -1,0 +1,6 @@
+#!/bin/bash
+cd cc
+python manage.py createcachetable user_sessions
+python manage.py testdbgen
+
+

@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Near Me - {{post.title}}{% endblock %}
+
+{% block metadata %}
+{% load static %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="Buy and sell items within your community." />
+      <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,social,groups,buy,sell,berkeley,UC Berkeley,friends" />
+      <meta property="og:title" content="Buy Near Me"/>
+      <meta property="og:type" content="website"/>
+      <meta property="og:url" content="http://buynear.me"+{{ post.get_absolute_url }}/>
+      <meta property="og:image" content="{% get_static_prefix %}124ta-orange.png"/>
+      <meta property="og:site_name" content="Buy Near Me"/>
+
+      <meta property="og:description"
+            content="{{ post.body }}"/>
+{% endblock %}
+
+{% block head %}
+
+
+
+  <style type="text/css">
+    
+  </style>
+
+{% endblock %}
+
+
+
+{% block sidebar %}{% endblock %}
+
+    {% block content %} 
+    <div id="post-container" class="container">
+    
+    <div class="small-title small-title-post">
+      <center><h2> {{ post.title }}</h2></center>
+    </div>
+    
+    <div class="">
+    <div class="row post-top">
+
+
+
+      <div class="modal fade hide" id="contact-modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+          <h3>Contact</h3>
+        </div>
+        <div class="modal-body">
+          <textarea class="input-xlarge field span7" id="modal-message" rows="5"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button id="modal-send" class="btn btn-primary" type="button" data-loading-text="Sending...">Send</button>
+          <button class="btn" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+      <!-- this modal activates when message is sent -->
+      <div class="modal fade hide" id="success-modal">
+        <div class="modal-header">
+            <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Contact</h3>
+        </div>
+        <div class="modal-body">
+            <p> Message Sent!</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn close-refresh" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    
+    
+      <div class="span8" style="padding-right:25px;">
+        <div class="span8">
+          
+            <div id="postCarousel" class="carousel slide">
+              <!-- Carousel items -->
+              <div class="carousel-inner">
+                {% for image_url in image_set %}
+                  {% if image_url == post.get_first_image_url %}
+                    <div class="active item">
+                      <img src="{{ image_url }}" alt="Item Image"/>
+                      <!--<div class="carousel-caption">
+                        <p>{{ post.category.name }} : {{ post.time_created }}</p>
+                      </div>-->
+                    </div>
+                  {% else %}
+                    <div class="item">
+                      <img src="{{ image_url }}" alt="Item Image"/>
+                      <!--<div class="carousel-caption">
+                        <p>{{ post.category.name }} : {{ post.time_created }}</p>
+                      </div>-->
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <!-- Carousel nav -->
+              {% if image_set_length > 1 %}
+                <a class="carousel-control left" href="#postCarousel" data-slide="prev">&lsaquo;</a>
+                <a class="carousel-control right" href="#postCarousel" data-slide="next">&rsaquo;</a>
+              {% endif %}
+            </div>
+  
+        </div>
+        
+    </div><!-- end row -->
+      <div class="span3 post-sidebar">
+        <div class="">
+          <ul class="nav nav-list">
+            <li class="nav-header"><h2>Price:</h2></li>
+            <li> <p>$  {{ post.price }}<p></li>
+            <!-- <li class="nav-header">Posted by: </li>
+            {% if post.owner.get_full_name %}
+              <li class="side-item">{{ post.owner.get_full_name }} </li>
+            {% else %}
+              <li class="side-item">{{ post.owner }}</li>
+            {% endif %} -->
+            <li class="nav-header"><h2>Category</h2></li>
+            <li> {{ post.category.name }}</li>
+            <li class="nav-header"><h2>Posted In</h2></li>
+            {% for circle in post.circles.all %}
+              {% if circle.is_public or circle in request.user.get_profile.my_circles.all %}
+              <li><a href="{{ circle.get_absolute_url }}">{{ circle }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div><!--/.well -->
+
+        <div class="">
+          <!--<ul class="nav nav-list">
+            {% if request.user.is_authenticated %}
+            <li class="nav-header"><h2>Options</h2></li>
+            <li>
+                {% if request.user == post.owner %}
+                  <li>
+                      <a id="delete-post" style="cursor:pointer;">
+                          <i class="icon-trash side-icon"></i>
+                          Delete Post
+                      </a>
+                  </li>
+                {% endif %}
+                <li>
+
+                  <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
+                      <i class="icon-tag side-icon bookmark-activate"></i>
+                      Bookmark Post
+                  </a>
+
+                    <a href="" onclick="return false;" id="not-active-bookmark" class="bookmark-activate" >
+                        <i class="icon-remove side-icon bookmark-activate"></i>
+                        Unbookmark Post
+                    </a>
+                </li>
+                <br>
+                <li>
+
+                </li>
+            </li>
+             <br>
+            {% endif %}
+          </ul>-->
+          
+         
+              {% if request.user.is_authenticated %}
+              <button id="contact-now" class="btn contact-button btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal">Contact Now</button>
+              {% else %}
+              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/">Login to contact</a>
+              {% endif %}
+            
+        </div><!--/.well -->
+      </div><!--/span-->
+    
+    </div>
+    <div class="post-lower">
+        <h3 style="font-weight: 400;">Product Description:</h3>
+          <p style="white-space:pre-wrap">{{ post.body }} </p>
+          <!--<p> {{ post.time_created }}</p>-->
+
+            <hr>
+          {% if request.user.is_authenticated %}
+            <p style="margin-left: 20px;">
+                {% if request.user == post.owner %}
+
+                      <a id="delete-post" style="cursor:pointer;">
+                          <i class="icon-trash side-icon"></i>
+                          Delete Post
+                      </a>
+            </p>
+                {% endif %}
+
+            <p style="margin-left: 20px;">
+                  <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
+                      <i class="icon-tag side-icon bookmark-activate"></i>
+                      Bookmark Post
+                  </a>
+
+                    <a href="" onclick="return false;" id="not-active-bookmark" class="bookmark-activate" >
+                        <i class="icon-remove side-icon bookmark-activate"></i>
+                        Unbookmark Post
+                    </a>
+            </p>
+
+            {% endif %}
+          <fb:share-button href="#"
+            type="button">
+          </fb:share-button>
+        {% comment %}
+        <div class="span9 relevant-div">
+          <br />
+          <br />
+          <h3>Products you may be interested in: </h3>
+          <br />
+          
+          {% for post in related_posts %}
+          <div class="span2 relevant-items" style="text-align: center">
+            <a href="{{ post.get_absolute_url }}">
+              <img class="medium" src="{{ post.get_thumbnail_url }}">
+            </a>
+            <br>
+            <h4>{{ post.title }}</h4>
+            <p>${{ post.get_formatted_price }}</p>
+          </div><!--/span-->
+          {% endfor %}
+        </div>
+        {% endcomment %}
+    </div>
+    
+  </div><!--sidebar-container-->
+  
+</div>
+{% endblock %}
+
+{% block pre_js %}
+<script type="text/javascript">
+  var post_pk = "{{ post.pk }}";
+  var csrf_token = "{{ csrf_token }}";
+  var recipient_pk = "{{ post.owner.pk }}";
+  //var sender_pk = "{{ request.user.pk }}"
+</script>
+{% endblock %}
+
+{% block post_js %}
+  <script type="text/javascript">
+    $('.carousel').carousel();
+  </script>
+   
+   
+{% if not is_bookmarked %}
+<script type="text/javascript">
+    function focusMessage() {
+        alert("A");
+        document.getElementById('modal-message').focus();
+    }
+
+  $(document).ready( function() {
+
+      $.cookie('onpost',null); 
+      $.cookie('onpost','t', { expires: 1, path: '/' } );
+ 
+    //toggler("bookmark-icon")
+      $("#active-bookmark").show()
+      $("#not-active-bookmark").hide()
+
+      $(".close-refresh").click (function() {
+          location.reload();
+      })
+
+      
+      $("#delete-post").click(function(){
+        if (confirm("Are you sure you want to delete this post?")) {
+            window.location.href="/delete/{{ post.pk }}" 
+        }
+      })
+
+      $('#contact-modal').on('shown', function () {
+          $('#modal-message').focus();
+      })
+
+
+
+})
+</script>
+{% endif %}
+{% load static %}
+<script src="{% get_static_prefix %}js/postview.js"></script>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'profile/profile.html' %}
+
+{% block profile_title %} Groups {% endblock %}
+
+{% block title %} Account - Groups {% endblock %}
+
+{% block profile_content %}
+
+<div id="profile-circles-content" class="span4">
+
+    {% if my_circles|length > 0 %}
+        <h3>My Groups</h3>
+    {% else %}
+        <h3> You have no groups. </h3>
+    {% endif %}
+    <table class="table">
+      {% for circle in my_circles %}
+        <tr>
+            <td>
+                <a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a>
+            </td>
+        </tr>
+      {% endfor %}
+    </table>
+  <a class="btn btn btn-success" href="{% url createCircle %}">Create a group</a>
+</div>
+
+    <div id="profile-circles-sidebar" class="span4">
+        <h3>Search by name or location</h3>
+        <form id="" class="" action="javascript:circle_search();">
+            <input type="text" class="search-query" placeholder="Search" id="search_circle_input">
+            <i id="search-go-circles" class=" icon-search search-icon" class="submit" onclick="circle_search();"></i>
+            <i id="search-cancel-circles" class="icon-remove-sign search-icon" type="submit hidden" class="submit" onclick="circle_cancel();"></i>
+        </form>
+
+        <h3>Results</h3>
+        <caption>Click a group to be able to join!</caption>
+        <br><br>
+        <ul class="unstyled">
+            <div id = "circle_search_results"></div>
+        </ul>
+    </div><!--/span-->
+
+<!--<div id="profile-circles-content" class="span4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th> Group Name </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for circle in my_circles %}
+        <tr>
+          <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a class="btn btn btn-success" href="{% url createCircle %}">Create a group</a>
+</div>-->
+        
+      {% comment %}
+    <div >
+      <a class="btn btn btn-success" href="{% url createCircle %}">
+        Create a group
+      </a>
+      
+        <a class="btn btn btn-info" href="{% url view_circles %}">
+            Join a group
+        </a>
+        <br><br>
+      
+      <table class="table">
+          <thead>
+          <tr>
+              <th> Group Name </th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for circle in my_circles %}
+
+              <tr>
+                  <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
+              </tr>
+
+          {% endfor %}
+          </tbody>
+      </table>
+      <div class="tabbable"> <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs" style="margin-bottom: 0px;">
+          <li class="active"><a href="#tab1" data-toggle="tab">Public Groups</a></li>
+          <li><a href="#tab2" data-toggle="tab">Private Groups</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab1">
+
+              {% if my_public_circles %}
+                  <table class="table">
+                      <thead>
+                      <tr>
+                          <th> Group Name </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {% for circle in my_public_circles %}
+
+                          <tr>
+                              <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
+                          </tr>
+
+                      {% endfor %}
+                      </tbody>
+                  </table>
+
+              {% else %}
+                  <h2> You have no public groups </h2>
+
+              {% endif %}
+
+          </div>
+          <div class="tab-pane" id="tab2">
+
+              {% if my_private_circles %}
+                  <table class="table">
+                      <thead>
+                      <tr>
+                          <th> Group Name </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {% for circle in my_private_circles %}
+                              <tr>
+                                  <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
+                              </tr>
+                      {% endfor %}
+                      </tbody>
+                  </table>
+
+              {% else %}
+                  <h2> You have no groups </h2>
+
+              {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+{% endcomment %}
+{% endblock %}
+
+{% block post_js %}
+<script type="text/javascript">
+
+  $("#search-cancel-circles").hide();  //hides search cancel button initially
+
+    function circle_search_helper(q){
+      var xmlhttp;
+      if (window.XMLHttpRequest){
+        xmlhttp=new XMLHttpRequest();
+      }
+      else{
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.onreadystatechange=function(){
+        if(xmlhttp.readyState==4 && xmlhttp.status==200){
+        
+          var string1 = xmlhttp.responseText;
+          $("#circle_search_results").empty();
+
+          var obj = eval ("(" + string1 + ")");
+          var num = obj.length;
+          for(var k = 0; k < num; k++){
+            url = obj[k].extras.get_absolute_url;
+            $("#circle_search_results").append("<li><a href=\"" + url + "\"> " + obj[k].fields.name + "</a></li>");  
+          }
+        }
+      }
+      if(q) {      //hides and shows cancel button in search bar
+        $("#search-cancel-circles").show();
+        $("#search-go-circles").hide();
+      } else {
+        $("#search-cancel-circles").hide();
+        $("#search-go-circles").show()
+      }
+      var url="/groups/search/";
+      if(q){ url = url + "?query=" + q; }
+      
+      xmlhttp.open("GET",url,true);
+      xmlhttp.send();  
+    }
+    
+    function circle_search(){
+      circle_search_helper($("#search_circle_input")[0].value);
+    }
+    
+    $(document).ready(function(){
+        circle_search_helper("");
+    });
+
+    function circle_cancel() {
+      document.getElementById('search_circle_input').value = '';
+      circle_search();
+    }
+</script>
+{% endblock %}

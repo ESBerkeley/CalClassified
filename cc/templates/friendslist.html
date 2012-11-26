@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Cal Classified - Friends{% endblock %}
+
+{% block content %}
+<div id="fb-root"></div><!--pop-up for FB-->
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+<a href="#" onclick="apprequest()">Invite your Facebook friends!</a>
+<a href="#" class="btn btn-primary btn-block" onclick="apprequest()">Invite Friends to the Group!</a>
+<script>
+     FB.init({appId:171685159547122, cookie:true,status:true, xfbml:true});
+     function apprequest () {
+         FB.ui({ method: 'apprequests',
+            message: 'Buy and sell items on BuyNear.Me!'});
+     }
+</script>
+
+<div class="row">
+	<div class="span3">
+		<div class="span3">
+            <h2> Your groups </h2>
+            {% for group in my_groups %}
+			    <p>{{ group.name }}</p>
+			{% endfor %}
+		    <h2> Your friends </h2>
+		    {% for friend in my_friends_list %}
+			    <p>{{ friend.name }}</p>
+			{% endfor %}
+		</div>
+        
+	</div>
+</div>
+    <script>
+      FB.init({appId:171685159547122, cookie:true,status:true, xfbml:true});
+      function apprequest () {
+        FB.ui({ method: 'apprequests',
+        message: 'Buy and sell items on buynear.me!',
+        filters: [{name: 'Friends in Group', user_ids: {{ friends_list }} },'app_non_users']});
+      }
+    </script>
+
+{% endblock %}
+
+

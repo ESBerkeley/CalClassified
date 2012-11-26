@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Near Me - {{post.title}}{% endblock %}
+
+
+{% block head %}
+  <script type="text/javascript">
+    $('.carousel').carousel()
+  </script>
+{% endblock %}
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    {% block sidebar %}   		
+      <div class="span3 sidebar-div">
+        <div class="accordion sidebar-nav" id="accordion2">
+
+          <div class="accordion-group">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">
+                <h3>Stuff</h3>
+              </a>
+            </div>
+            <div id="collapse1" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="unstyled sidebar-collapse">
+
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+           <div class="accordion-group">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">
+                <h3>More Stuff</h3>
+              </a>
+            </div>
+            <div id="collapse2" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="unstyled sidebar-collapse">
+                  {% if request.user.is_authenticated %}
+                    <a href="/delete/all/">Delete All Posts</a>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!--/span-->
+    {% endblock %}
+
+    {% block content %}
+    {% for post in posts %}
+      <div class="span6">
+        <div class="span6">
+          <h2>{{ post.title }} </h2>
+          <p> {{ post.category.name }} </p>
+          {% if post.get_image_set_urls %}
+            <div id="myCarousel" class="carousel slide">
+              <!-- Carousel items -->
+              <div class="carousel-inner">
+                {% for image_url in post.get_image_set_urls %}
+                  <div class="active item">
+                    <img src="{{ image_url }}" alt="Item Image"/>
+                    <div class="carousel-caption">
+                      <h4>{{ post.title }}</h4>
+                      <p>{{ post.category.name }} : {{ post.time_created }}</p>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <!-- Carousel nav -->
+              <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+              <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+            </div>
+          {% endif %}
+          <div class="span9">
+          <p>{{ post.body }} </p>
+          <p> {{ post.time_created }}</p>
+          <fb:share-button href="#"
+            type="button">
+          </fb:share-button>
+          </div>
+        </div>
+
+        <div class="span9 relevant-div">
+          <br />
+          <br />
+          <h3>Products you may be interested in: </h3>
+          <br />
+          <div class="span2 relevant-items" style="text-align: center">
+            <a href="#asdf">
+              <img class="medium" src="http://www.aerospaceweb.org/question/history/inf/tomahawk.jpg">
+            </a>
+            <br>
+            <h4>Heading</h4>
+            <p>5 bucks man</p>
+          </div><!--/span-->
+
+          <div class="span2 relevant-items" style="text-align: center">
+            <a href="#asdf">
+              <img class="medium" src="http://www.aerospaceweb.org/question/history/inf/tomahawk.jpg">
+            </a>
+            <br>
+            <h4>Heading</h4>
+            <p>5 bucks man</p>
+          </div><!--/span-->
+
+          <div class="span2 relevant-items" style="text-align: center">
+            <a href="#asdf">
+              <img class="medium" src="http://www.aerospaceweb.org/question/history/inf/tomahawk.jpg">
+            </a>
+            <br>
+          </div><!--/span-->
+
+          <div class="span2 relevant-items" style="text-align: center">
+            <a href="#asdf">
+              <img class="medium" src="http://www.aerospaceweb.org/question/history/inf/tomahawk.jpg">
+            </a>
+          <br>
+          <h4>Heading</h4>
+          <p>5 bucks man</p>
+        </div><!--/span-->
+      </div>
+
+    <div class="span10">
+      <br />
+      <br />
+      <div class="control-group">
+        <label class="control-label" for="textarea">Contact seller:</label>
+        <div class="controls">
+          <textarea class="input-xlarge field span5" id="textarea" rows="5"></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

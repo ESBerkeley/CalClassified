@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block navbar %}
+    <li><a style="color: #6f6f6f;cursor: default;"> Hi, {{ request.user.first_name }}! </a></li>
+{% endblock %}
+
+{% block content %}
+<div class="container" id="profile-container">
+    <div class="small-title small-title-white">
+      <h2> Account <span class="divider">-</span> {% block profile_title %}{% endblock %}</h2>
+    </div>
+    <div id="profile-sidebar" class="span2">
+
+        <ul class="nav nav-tabs nav-stacked">
+          <li>
+            <a href="{% url account_profile %}">Posts</a>
+          </li>
+          <li>
+            <a href="{% url account_circles %}">Groups</a>
+          </li>
+          <li>
+            <a href="{% url account_messages %}">Messages</a>
+          </li>
+          <li>
+            <a href="{% url account_settings %}">Settings</a>
+          </li>
+
+        </ul>
+
+        <a href="#" class="btn btn-primary btn-block" onclick="apprequest()">Invite Friends</a>
+
+    </div><!--/span-->
+
+    <div id="fb-root"></div><!--pop-up for FB-->
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script>
+      FB.init({appId:171685159547122, cookie:true,status:true, xfbml:true});
+      function apprequest () {
+        FB.ui({ method: 'apprequests',
+        message: 'Buy and sell items on buynear.me!'});
+      }
+    </script>
+
+<div id="profile-content" class="span9">
+{% block profile_content %}{% endblock %}
+</div>
+</div>
+{% endblock %}
+
+{% block post_js %}
+
+{% endblock %}

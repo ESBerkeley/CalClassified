@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+{% comment %}
+<div id="all-circles-container" class="container">
+  <h2>Find Circles</h2>
+  <h4>Trade within your location, or among friends and colleagues.</h4>
+  <hr>
+  <div class="row">
+    <div class="span6">
+      <h3>Search #XXX</h3>
+      
+      <p>Search by name or Location</p>
+      <form id="" class="" action="javascript:circle_search();">
+        <input type="text" class="search-query" placeholder="Search" id="search_circle_input">
+        <i id="search-go-circles" class=" icon-search search-icon" class="submit" onclick="circle_search();"></i>
+        <i id="search-cancel-circles" class="icon-remove-sign search-icon" type="submit hidden" class="submit" onclick="circle_cancel();"></i>
+      </form>
+
+      <ul class="unstyled">
+        <li>
+          <i class="icon-plus" onclick=""></i>
+          <a onclick=""/>Private Circles</a>
+        </li>
+        <li>
+          <i class="icon-plus" onclick=""></i>
+          <a onclick=""/>Official (Cities, Companies, etc.)</a>
+        </li>
+      </ul>
+      <br />
+      <b><p>Don't have a circle yet?</p></b>
+      <a class="btn btn btn-success" href="{% url createCircle %}">
+        Create one now!
+      </a>
+    </div>
+
+    <div class="span4">
+      <h4>mmm here are circles</h4>
+      <ul class="unstyled">
+   <!--     {% for circle in all %}
+          <li><a href="{{ circle.get_absolute_url }}"> {{ circle }} </a></li>
+        {% endfor %}   -->
+        <div id = "circle_search_results"></div>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+{% endcomment %}
+
+<div class="container" id="all-circles-container">
+    <div class="small-title small-title-white">
+      <h2> Find Groups</h2>
+      <h4>Trade within your location, or among friends and colleagues.</h4>
+    </div>
+    <div id="all-circles-sidebar" class="span5">
+      <h3>Search by name or location</h3>
+      <form id="" class="" action="javascript:circle_search();">
+        <input type="text" class="search-query" placeholder="Search" id="search_circle_input">
+        <i id="search-go-circles" class=" icon-search search-icon" class="submit" onclick="circle_search();"></i>
+        <i id="search-cancel-circles" class="icon-remove-sign search-icon" type="submit hidden" class="submit" onclick="circle_cancel();"></i>
+      </form>
+      <br />
+      <h4>Don't have a group yet?</h4>
+      <a class="btn btn btn-success" href="{% url createCircle %}">
+        Create one now!
+      </a>
+    </div><!--/span-->
+
+    <div id="all-circles-content" class="span6">
+      <h3>Results</h3>
+      <ul class="unstyled">
+        <div id = "circle_search_results"></div>
+      </ul>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block post_js %}
+<script type="text/javascript">
+
+  $("#search-cancel-circles").hide();  //hides search cancel button initially
+
+    function circle_search_helper(q){
+      var xmlhttp;
+      if (window.XMLHttpRequest){
+        xmlhttp=new XMLHttpRequest();
+      }
+      else{
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.onreadystatechange=function(){
+        if(xmlhttp.readyState==4 && xmlhttp.status==200){
+        
+          var string1 = xmlhttp.responseText;
+          $("#circle_search_results").empty();
+
+          var obj = eval ("(" + string1 + ")");
+          var num = obj.length;
+          for(var k = 0; k < num; k++){
+            url = obj[k].extras.get_absolute_url;
+            $("#circle_search_results").append("<li><a href=\"" + url + "\"> " + obj[k].fields.name + "</a></li>");  
+          }
+        }
+      }
+      if(q) {      //hides and shows cancel button in search bar
+        $("#search-cancel-circles").show();
+        $("#search-go-circles").hide();
+      } else {
+        $("#search-cancel-circles").hide();
+        $("#search-go-circles").show()
+      }
+      var url="/circles/search/";
+      if(q){ url = url + "?query=" + q; }
+      
+      xmlhttp.open("GET",url,true);
+      xmlhttp.send();  
+    }
+    
+    function circle_search(){
+      circle_search_helper($("#search_circle_input")[0].value);
+    }
+    
+    $(document).ready(function(){
+        circle_search_helper("");
+    });
+
+    function circle_cancel() {
+      document.getElementById('search_circle_input').value = '';
+      circle_search();
+    }
+</script>
+{% endblock %}

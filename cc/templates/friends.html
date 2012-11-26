@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Near Me - Friends{% endblock %}
+
+{% block content %}
+<div id="fb-root"></div>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+<a href="#" onclick="apprequest()">Invite your Facebook friends!</a>
+<script>
+     FB.init({appId:171685159547122, cookie:true,status:true, xfbml:true});
+     function apprequest () {
+         FB.ui({ method: 'apprequests',
+            message: 'Buy and sell items on BuyNear.Me!'});
+     }
+</script>
+
+<div class="row">
+	<div class="span3">
+		<div class="span3">
+		    <h2> Your friends </h2>
+		    <p>Are awesome! Invite them to this site!</p>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
+
+

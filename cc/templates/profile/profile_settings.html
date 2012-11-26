@@ -1,0 +1,49 @@
+{% extends 'profile/profile.html' %}
+
+{% block profile_title %}Settings{% endblock %}
+
+{% block profile_content %}
+<div >
+  <p>
+    {% if changed %}
+        <p style="color:red">Account settings saved.</p>
+    {% endif %}
+    <h4> General</h4>
+    <a href="{% url auth_password_change %}"> Change password </a>
+    <br><br>
+    <h4> Email Notifications </h4>
+    <table class="table">
+
+    <thead>
+        <tr>
+            <th>Buy Near Me</th>
+            <th>Setting</th>
+        </tr>
+    </thead>
+    <tbody>
+    <form action="#" method="post">{% csrf_token %}
+        {% for field in form %}
+        <tr>
+            <td>
+                {{ field.label }}
+            </td>
+            <td>
+                {{ field }}
+            </td>
+        </tr>
+        {% endfor %}
+         </tbody>
+         </table>
+    <input type="submit" class="btn btn-primary" type="button" value="Save Changes"/>
+    </form>
+  </p>
+</div>
+{% endblock %}
+
+{% block post_js %}
+<script type="text/javascript">
+  $(document).ready( function() {
+    $("#settings-tab").addClass("active")
+  })
+</script>
+{% endblock %}

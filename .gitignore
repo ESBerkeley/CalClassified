@@ -1,0 +1,4 @@
+*.pyc
+*~
+static_files
+cc/media/images

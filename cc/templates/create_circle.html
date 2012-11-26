@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Group
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block head %}
+<style type='text/css'>
+label.error {
+ float: none;
+ color: red;
+ padding-left: .5em;
+ vertical-align: top;
+ }
+
+ </style>
+{% endblock %}
+
+{% block content %}
+<div id="signup-container" class="container" style="padding-top: 20px;">
+  <div id="signup-box" class="span12">
+
+  
+  <div class="small-title">
+    <h2> Create Group</h2>
+  </div>
+    
+  
+  <div class="small-body">
+  {% if message %}
+  <p style="color:red"> {{ message }} </p>
+  {% endif %}
+  <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
+  <div id="fields form">
+  
+    {% for field in form %}
+    
+        {% if field.html_name == "is_public" %} 
+            {{ field }} 
+        {% else %}
+          <div class="control-group">
+            {{ field.errors }}
+            <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+            <div class="controls ">
+            {{ field }}
+              <span class="help-block">{{ field.help_text }}</span>
+            </div>
+          </div>
+        {% endif %}
+      
+    {% endfor %}
+    
+  </div>
+  
+  <span class="help-block">Circles can be shared by passing around the URL or using the Facebook share button.</span>
+  
+  <br />
+  <input type="submit" class="btn btn-primary" value="Submit" />
+
+  </form>
+  </div>
+  </div>
+</div>
+
+{% endblock %}

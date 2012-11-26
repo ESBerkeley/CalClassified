@@ -1,0 +1,105 @@
+{% extends "registration/registration_base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block sidebar %} {% endblock %}
+
+
+
+{% block head %}
+<style type='text/css'>
+label.error {
+ float: none;
+ color: red;
+ padding-left: .5em;
+ vertical-align: top;
+ }
+ body {
+    background-image: url('/static/grey.png');
+ }
+ </style>
+{% endblock %}
+
+{% block content %}
+<div id="signup-container" class="container">
+  <div id="signup-box" class="span12">
+
+  
+  <div class="small-title">
+    <h2> Create an account</h2>
+    <p style="font-size:12px;">Already have an account or want to login with Facebook? <a href="/accounts/login">Login</a></p>
+  </div>
+    
+  
+  <div class="small-body">
+  {% if message %}
+  <p style="color:red">{{ message }}</p>
+  {% endif %}
+  <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
+  <div id="fields form">
+    {% for field in form %}
+      <div class="control-group">
+        {{ field.errors }}
+        <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+        <div class="controls ">
+        {{ field }}
+          <span class="help-block">{{ field.help_text }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <p style="margin-top: 0px; padding-bottom: 5px;" /><i>By proceeding, you have read and agreed to the <a href="/terms/">terms and conditions</a>.</i><br>
+  <!--label for="terms" class="error" style="display:none; padding-top: 5px;">This field is required.</label--> <br>
+  <input type="submit" class="btn btn-primary loading" data-loading-text="Sending..." value="Send Verification Email" />
+
+  </form>
+  </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block post_js %}
+<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+    $("#sellForm").validate({
+      rules: {
+        email: {
+          required: true,
+          email: true,
+        },
+        first_name: {
+          required: true,
+        },
+        last_name: {
+          required: true,
+        },
+        gender: {
+          required: true,
+        },
+        password: {
+          required: true,
+          minlength: 6,
+          maxlength: 22,
+        },
+        password_again: {
+          equalTo: "#id_password",
+          required: true,
+        }
+      },
+        submitHandler: function(form) {
+            // do other stuff for a valid form
+            $(".loading").button('loading')
+            form.submit();
+        }
+    });
+    
+
+  });
+</script>
+{% endblock %}
+
+

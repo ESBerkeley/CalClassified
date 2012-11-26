@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Cal Classified - Upload Image{% endblock %}
+
+{% block content %}
+{% if form.is_multipart %}
+    <form enctype="multipart/form-data" method="POST" action="/upload/">
+{% else %}
+    <form method="post" action="/foo/">
+{% endif %}
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.imgfile }}
+<input type="submit" value="Upload" />
+</form>
+
+{% endblock %}

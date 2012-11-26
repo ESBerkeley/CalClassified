@@ -1,0 +1,87 @@
+{% extends 'box.html' %}
+{% block metadata %}
+{% load static %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="Buy and sell items within your community." />
+      <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,social,groups,buy,sell,berkeley,UC Berkeley,friends" />
+      <meta property="og:title" content="Buy Near Me"/>
+      <meta property="og:type" content="website"/>
+      <meta property="og:url" content="http://buynear.me"+{{ circle.get_absolute_url }}/>
+      <meta property="og:image" content="{% get_static_prefix %} 124ta-orange.png"/>
+      <meta property="og:site_name" content="Buy Near Me"/>
+
+      <meta property="og:description"
+            content="{{ circle.name }}"/>
+{% endblock %}
+
+{% block sidebar %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<!--<div class="span9 offset3 sidebar-content" id="content">
+  <legend style="width: 980px;">
+    <h2>{{ circle }}</h2>
+    {% if request.user.is_authenticated %}
+      <div class=" pull-right">
+        <fb:share-button href="#" type="button"> </fb:share-button>  
+        <button class="btn btn-primary" id="action" value="{{action}}" style="margin-left:10px;">{{ action }} Group</button>
+      </div>
+    {% else %}
+      <p class="pull-right" style="font-size:16px;"> <a href="/accounts/login">Log in</a> now to join this group! </p>
+    {% endif %}
+  </legend>
+</div>-->
+{{ block.super }}
+
+{% if all_items|length == 0 %}
+<div class="span9 offset4">
+  <h2>Nothing seems to be here. <a href="/post/">Sell</a> and</h2>
+  <div style="margin-top:-38px; margin-left:430px;"><fb:share-button href="#" type="button"></fb:share-button></div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block post_js %}
+<script type="text/javascript">
+$(document).ready( function(){
+
+$("#action").click( function() {
+  var action = $(this).attr("value"); // either Join or Leave
+  dataString = "&action="+action
+  $.ajax({
+    // even tho it is a get request, works as a post request
+    // odd reason POST doesn't work with ajax call
+    type: "GET", 
+    url: "./",
+    dataType: "text",
+    data: dataString,
+    success: function(){
+      if (action == "Join") {
+        $("#action").html("Leave Group");
+        $("#action").attr("value","Leave");
+      } else {
+        $("#action").html("Join Group");
+        $("#action").attr("value","Join");
+      }
+    }
+  })
+})
+
+
+switchCirc('{{circle.name}}'); 
+toggler('{{circle.name}}-icon');
+
+{% if circle.is_public == 0 %}
+$('#circle_header').html('')
+$(".circle_side-item").html('')
+{% endif %}
+
+
+})
+</script>
+
+{{ block.super }}
+
+{% endblock %}<fb:share-button href="#" type="button"> </fb:share-button>  
+        <button class="btn btn-primary" id="action" value="{{action}}" style="margin-left:10px;">{{ action }} Group</button>

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Near Me - Make Post{% endblock %}
+
+{% block head %}
+<style type='text/css'>
+label.error {
+ float: none;
+ color: red;
+ padding-left: .5em;
+ vertical-align: top;
+ }
+
+ </style>
+{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+    
+<div id="signup-container" class="container">
+  <div id="signup-box" class="span12">
+
+  
+  <div class="small-title">
+    <h2> Sell Item</h2>
+  </div>
+    
+  
+  <div class="small-body">
+  {% if no_circles %}
+  <p style="color:red">
+      You aren't in any circles so you can't sell anything! Join or create some <a href="{% url view_circles %}">here</a>.<br><br>
+
+  </p>
+  {% endif %}
+  <form action="."  method="post" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+  <div id="fields form">
+    {% for field in form %}
+    
+    {% if specificCircleName and field.html_name == "circles" %}
+      <div class="control-group">
+        {{ field.errors }}
+        <label class="control-label">Group</label>
+        <div class="controls ">
+          {{ field }}
+          <input value="{{ specificCircleName }}" readonly>
+          <span class="help-block"> Group can't be changed when posting from within a private group</span>
+        </div>
+      </div>
+      <!-- do nothing, circle is already filled out -->
+      {% else %}
+
+        {% if field.html_name == "price" %}
+
+            <div class="control-group">
+                {{ field.errors }}
+                <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+                <div class="controls " style="padding-left: 0px;">
+                    $ {{ field }}
+                    <span class="help-block">{{ field.help_text }}</span>
+                </div>
+            </div>
+
+        {% else %}
+          <div class="control-group">
+            {{ field.errors }}
+            <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+            <div class="controls ">
+            {{ field }}
+              <span class="help-block">{{ field.help_text|safe }}</span>
+            </div>
+          </div>
+        {% endif %}
+      
+      {% endif %}
+    {% endfor %}
+    
+      <div class="control-group">
+        {{ field.errors }}
+        <label class="control-label" id="{{field.html_name}}">Upload Images</label>
+        <div class="controls ">
+        <input name="images" type="file">
+        <span id="upload-images"> </span>
+          <span class="help-block upload-more"><a style="cursor: pointer;">Click here to upload more</a></span>
+            <span class="help-block after-image">The first uploaded photo will be the thumbnail</span>
+        </div>
+      </div>
+      
+  </div>
+  <br />
+  
+  <input type="submit" class="btn btn-primary" value="Submit" /><br><br>
+  </form>
+  
+  </div>
+  
+  </div>
+</div>
+    
+{% endblock %}
+
+{% block post_js %}
+
+<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript">
+var uploadImageCounter = 1;
+
+$(document).ready(function(){
+    $("#sellForm").validate({
+      rules: {
+        title: {
+          required: true,
+        },
+        body: {
+          required: true,
+        },
+        price: {
+          required: true,
+          number: true,
+          min: 0,
+        },
+        category: {
+          required: true,
+        },
+        circles: {
+          required: true,
+        },
+      } 
+    });
+    
+    // require price only has 2 decimals
+    (function($) {
+        $.fn.currencyFormat = function() {
+            this.each( function( i ) {
+                $(this).change( function( e ){
+                    if( isNaN( parseFloat( this.value ) ) ) return;
+                    if (this.value.split(".").length >1) {
+                      this.value = parseFloat(this.value).toFixed(2);
+                    }
+                });
+            });
+            return this; //for chaining
+        }
+    })( jQuery );
+    
+    $( function() {
+        $('#id_price').currencyFormat();
+    });
+    // end price validation
+    
+    // add * to required fields
+    /**
+    var required = ['title','body','price','category','circles'];
+    for (index in required) {
+      try {
+        document.getElementById(required[index]).innerHTML += '*';
+        document.getElementById(required[index]).style.fontWeight = 'bold';
+      } catch (err) {}
+    }
+    **/
+
+  });
+  
+  {% if specificCircleName %}
+  $(document).ready( function() {
+    $('#id_circles').attr('style','visibility:hidden;position:absolute')
+  })
+  {% endif %}
+  
+  $(".upload-more").click(function(){
+        var new_upload_html = '<br><input name="images" type="file">'
+        $("#upload-images").append(new_upload_html)
+      uploadImageCounter += 1;
+      if (uploadImageCounter == 3){
+          $(this).remove();
+          var max_images = '<br>Maximum 3 images'
+          $(".after-image").append(max_images)
+      }
+    })
+  
+</script>
+{% endblock %}
+

@@ -1,0 +1,20 @@
+Prerequisites:
+
+-django 1.3 or greater
+
+NOTE: as of jun 5, there is no need to use easy_install to get django_evolution, django_registration, or django_facebook.
+However, you will have to download, compile and install the python imaging library to use django-facebook.
+(You may not yet encounter this error as you still have the old version of django_facebook installed on your machine,
+which is overriding the new one in this repo. So, it would be best to delete the old one, and grab PIL to satisfy the new one.)
+
+Stuff
+and stuff
+
+
+
+Image Upload Tutorials:
+http://groups.google.com/group/django-users/browse_thread/thread/712946dfabaa2ec1
+http://stackoverflow.com/questions/5871730/need-a-minimal-django-file-upload-example
+
+python manage.py createcachetable user_sessions
+python manage.py testdbgen

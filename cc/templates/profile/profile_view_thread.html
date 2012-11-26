@@ -1,0 +1,90 @@
+{% extends 'profile/profile.html' %}
+
+{% block profile_title %} {{ thread.post_title }} {% if thread.post_deleted %}(Post Deleted){%endif%} {% endblock %}
+
+{% block title %} Messages - {{ thread.post_title }} {% if thread.post_deleted %}(Post Deleted){%endif%} {% endblock %}
+
+{% block profile_content %}
+    <div>
+        <a class="btn contact-button" href="{% url account_messages %}"><i class="icon-chevron-left"></i> Back to messages </a>
+        <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+        <br><br>
+        
+        
+        <div class="modal fade hide" id="contact-modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+          <h3>Reply</h3>
+        </div>
+        <div class="modal-body">
+          <textarea autocomplete="off" class="input-xlarge field span7" id="modal-message" rows="5"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button id="modal-send" class="btn btn-primary" data-loading-text="Sending...">Send</button>
+          <button class="btn" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+      
+      <!-- this modal activates when message is sent -->
+      <div class="modal fade hide" id="success-modal">
+        <div class="modal-header">
+            <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Reply</h3>
+        </div>
+        <div class="modal-body">
+            <p> Message Sent! </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn close-refresh" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+
+    <table class="table table-hover table-bordered">
+
+      <tbody>
+    {% for message in messages %}
+        <tr>
+        <td>
+        {% if message.sender == request.user %}
+            <b> Me </b>
+        {% else %}
+            <b> {{ message.sender.first_name }} </b>
+        {% endif %}
+        <br> 
+        {{ message.time_created }}
+        <br>
+        <p> {{ message.body }} </p>
+        </td>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
+
+    </div>
+{% endblock %}
+
+{% block pre_js %}
+<script type="text/javascript">
+  var post_pk = "{{ thread.post_id }}";
+  var csrf_token = "{{ csrf_token }}";
+  var recipient_pk = "{{ thread.other_person.pk }}";
+</script>
+{% endblock %}
+
+{% block post_js %}
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $("#messages-tab").addClass("active")
+            
+            // refresh the page after sending msg
+            $(".close-refresh").click (function() {
+                location.reload();
+            })
+
+            $('#contact-modal').on('shown', function () {
+                $('#modal-message').focus();
+            })
+        })       
+    </script>
+{% endblock %}

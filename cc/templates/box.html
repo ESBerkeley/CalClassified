@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+
+{% block title %}buynear.me{% endblock %}
+
+{% block head %}
+{% load static %}
+
+  <!-- Styles -->
+  <style type="text/css">
+
+  </style>
+{% endblock %}
+{% block sidebar %}
+<div class="sidebar-container">
+  <div class="row">
+
+    <div class="accordion sidebar-nav span3" id="accordion1">
+
+      {% if circle %} <!--only shows up for specific groups page -->
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseZero">
+            <h2>{{circle}} <i class="icon-question-sign popovers" style="margin-left:5px; margin-top:4px;" data-content="Click to show description." rel="popover" href="#" data-original-title=""></i></h2>
+          </a>
+        </div>
+        <div id="collapseZero" class="accordion-body collapse {% if circle in request.user.get_profile.my_circles.all %}in{% endif %}">
+          <div class="accordion-inner">
+            <ul class="unstyled">Berkeley is a city on the east shore of the San Francisco Bay in Northern California, United States. Its neighbors to the south are the cities of Oakland and Emeryville.</ul>
+          </div>
+        </div>
+      </div>
+      {% endif %} <!-- end if circle -->
+
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+            <h2>Show Categories</h2>
+          </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+              {% for cat in cc_cats %}
+                {% if cat.name != "Other" %}
+                <li class="side-item">
+                  <i id="{{cat.name}}-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); runloadBox();"></i>
+                  <a id="{{cat.name}}_category" class="category" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); runloadBox();"> {{cat.name}} </a>
+                </li>
+                {% endif %}
+              {% endfor %}
+                <li class="side-item">
+                  <i id="Other-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"></i>
+                  <a id="Other_category" class="category" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"> Other </a>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {% if not circle %} <!--hides circles section if in specific circle page -->
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+            <h2>Show Groups  <i class="icon-question-sign popovers" style="margin-left:5px; margin-top:4px;" data-content="How do they work? Honestly, even we don't know." rel="popover" href="#" data-original-title="Groups"></i></h2>
+          </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+              {% if user.get_profile.facebook_id %}
+              <li class="side-item circle_side-item">
+                <i id="friend-icon" class="icon-ok-sign side-icon" type="hidden" onclick="toggle_friends_filter();"></i>
+                <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
+              </li>
+              <hr style="margin-top: 5px; margin-bottom: 5px;">
+              {% endif %} 
+              {% for entry in my_public_circles %}
+                <li class="side-item circle_side-item">
+                  <i id="{{entry.id}}-icon-circle" class="icon-ok-sign side-icon" type="hidden" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"></i>
+                  <a id="{{entry.id}}_circle" class="circle" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"/> {{entry.name}} </a>
+                </li>
+              {% endfor %}
+          
+              {% if my_private_circles  %} <!-- private won't exist if user not logged in, circle variable passed in when in viewing a circle -->
+              {% for entry in my_private_circles %}
+                <li class="side-item circle_side-item">
+                  <i id="{{entry.id}}-icon-circle" class="icon-ok-sign side-icon" type="hidden" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"></i>
+                  <a id="{{entry.id}}_circle" class="circle" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"/> {{entry.name}} </a>
+                </li>
+              {% endfor %}
+              {% endif %}
+              
+              {% if not my_public_circles and not my_private_circles %}
+              <li>
+                <p>
+                  Add groups to filter by location or community.
+                </p>
+                <a class="btn btn-small btn-success" href="{% url account_circles %}">Add Groups</a>
+              </li>
+              {% endif %} 
+              
+              
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+      {% endif %} <!-- end if not circle -->
+
+<!---
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree">
+            <h2>Show Locations</h2>
+          </a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+                <li class="side-item">
+                  <i id="" class="icon-ok-sign side-icon" type="hidden" onclick="runloadBox();"></i>
+                  <a id="{{cat.name}}_category" class="category" onclick="runloadBox();"> Not Set Up </a>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+-->
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+            <h2>Price</h2>
+          </a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+              <li class="side-item">
+                <form class="form-inline price-box" action="javascript:runloadBox();">
+                  <input id="min" type="text" class="input-mini" placeholder="Min"">
+                  <input id="max" type="text" class="input-mini" placeholder="Max" style="margin-right:8px;"> 
+                  <i id="price-cancel" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox();"></i>
+                  <i id="price-go" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel();"></i>
+                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/> <!--invisible button makes enter work -->
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      {% if circle %} <!--only shows up for specific groups page -->
+      <div class="accordion-group">
+        <div id="collapseButton" class="accordion-body">
+          <div style="height:33px;">
+            <div style="margin-top:10px; margin-left:30px;">
+              <fb:share-button href="#" type="button"> </fb:share-button>  
+              <button class="btn btn-primary btn-mini" id="action" value="{{action}}" style="margin-left:10px;">{{ action }} Group</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div><!--span-->
+{% endblock %}
+
+{% block content %}
+    <div id="boxDiv" class="span9 offset3">
+      {% if cc_circs|length == 0 %}
+          <h2><a href="{% url account_circles %}">Join</a> groups to see what people are selling!</h2>
+      {% else %}
+      
+      <div class="stopfloat"><br/>
+        <div id="myBox" style="position:relative; left:10px;">
+          <div id="myBox0" style="position:relative; top:0;">
+           
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+  <form style="display: none;" id="session">
+   <textarea id="sfield">3</textarea>
+  </form>
+
+  <form style="display: none;" id="session">
+   <textarea id="sfield_scroll">3</textarea>
+  </form>
+  
+
+{% endblock %}
+
+
+{% block post_js %}
+
+
+<script type="text/javascript">
+  $(".side-icon").hide();  //hides sidebar icons initially
+  $(".popovers").popover({trigger:'hover'});
+
+  $(window).scroll(function(){
+    if($(window).scrollTop() == $(document).height() - $(window).height()){
+      current_page++;
+      runloadBox(current_page);
+
+    }
+  });
+
+  $(document).ready(function(){
+  
+ 
+    document.getElementById("searchbarform").setAttribute("action","javascript: runloadBox();")
+    {% if q %}
+      document.getElementById('searchbar').value = "{{ q }}"
+    {% endif %}
+    
+     
+    if($.cookie('onpost') === 't'){
+       $.cookie('onpost',null);
+       $.cookie('onpost','f', { expires: 1, path: '/' } );
+       restore();
+    }
+
+   else{     
+        clear_restore();
+        runloadBox();
+    }
+    
+  });
+
+
+
+  var ogrid,old_obj,scraps,oflags;
+  scraps=[];
+  oflags="";
+  var current_page = 0;
+  var cat_object = {};
+  var circ_object = {};
+  var categories = [];
+  var circles = [];
+  var filtering_by_friends = 0;
+
+  {% for entry in cc_cats %}  //all categories and circles are initially false
+    categories.push("{{entry.name}}")
+  {% endfor %}
+  for (index in categories) {
+    cat = categories[index];
+    cat_object[cat] = false;
+  }
+
+  {% for entry in cc_circs %}  //circles
+    circles.push("{{entry.id}}")
+  {% endfor %}
+  for (index in circles) {
+    circ = circles[index];
+    circ_object[circ] = false;
+  }  
+
+  function scats(input){
+    var ii = 0;
+    var cat;
+    for(i in categories){
+        cat = categories[i];
+        if((1<<ii)&input){
+            if(!cat_object[cat]) toggler(categories[i] + "-icon");
+            cat_object[cat] = true;
+        }
+        else{
+            if(cat_object[cat]) toggler(categories[i] + "-icon");
+            cat_object[cat] = false;
+        }
+        ii = ii + 1; 
+    }
+  }
+  
+  function scircs(input){
+    var ii = 0;
+    var circ;
+    for(i in circles){
+        circ = circles[i];
+        if((1<<ii)&input){
+            if(!circ_object[circ]) toggler(circles[i] + "-icon");
+            circ_object[circ] = true;
+        }
+        else{
+            if(circ_object[circ]) toggler(circles[i] + "-icon");
+            circ_object[circ] = false;
+        }
+        ii = ii + 1; 
+    }
+  }
+  
+  function gcats(){
+    var k = 0; 
+    var j = -1;
+    for(i in categories){    
+      j=j+1;
+      var cat = categories[i];
+      if(cat_object[cat] == true){
+        k=k+(1<<j);
+      }
+    }
+    return k;
+  }
+
+  function gcircs(){
+    var k = 0; 
+    var j = -1;
+    for(i in circles){    
+      j=j+1;
+      var circ = circles[i];
+      if(circ_object[circ] == true){
+        k=k+(1<<j);
+      }
+    }
+    return k;
+  }
+  
+  function num2cat(num) {  //takes in number, spits out category string.
+    {% for cat in cc_cats %}
+      if(num == {{cat.pk}}) {
+        return "{{cat.name}}";
+      }
+    {% endfor %}
+    return "whoops";
+  }
+  
+  function cat2num(cat_name) { //takes in a category name, and returns category pk
+    {% for cat in cc_cats %}
+      if(cat_name == "{{cat.name}}") {
+        return {{cat.id}};
+      }
+    {% endfor %}
+    return "whoops";
+  }
+  
+    function cir2num(cir_name) { //takes in a category name, and returns category pk
+    {% for cir in cc_circs %}
+      if(cir_name == "{{cir.name}}") {
+        return {{cir.id}};
+      }
+    {% endfor %}
+    return "whoops";
+  }
+
+  function switchCat(category) {  //run on click, switches boolean
+    cat_object[category] = !cat_object[category];
+  }
+
+  function getCats() {
+    var hasTrue = false;
+    var cat_object2 = {};
+    for (index in categories) {  //checks if any categories are "checked", if not, returns as all true object
+      cat = categories[index];
+      if(cat_object[cat]) {
+        hasTrue = true;
+      }
+    }
+    if(hasTrue) {
+      return cat_object;
+    } else {
+      for (index in categories) {
+        cat = categories[index];
+        cat_object2[cat] = true;
+      }
+      return cat_object2;
+    }
+  }
+  
+  function switchCirc(circle) {  //run on click, switches boolean
+    circ_object[circle] = !circ_object[circle];
+  }
+
+  function getCircs(){
+    var hasTrue = false;
+    var circ_object2 = {};
+    for (index in circles) {  //checks if any categories are "checked", if not, returns as all true object
+      circ = circles[index];
+      if(circ_object[circ]) {
+        hasTrue = true;
+      }
+    }
+    if(hasTrue) {
+      return circ_object;
+    } else {
+      for (index in circles) {
+        circ = circles[index];
+        circ_object2[circ] = true;
+      }
+      return circ_object2;
+    }
+  }
+
+  function toggle_friends_filter(){
+    filtering_by_friends=!filtering_by_friends;
+    $('#friend-icon').toggle();
+    runloadBox(current_page);
+  }
+</script>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+{% block subject %}{{ post.title }} by {{ full_name }}{% endblock %}
+{% block html %}
+  <p>Hi {{ recipient_name }},</p>
+    <br>
+  <p>{{ full_name }} has listed a new item for sale! </p>
+  <h3>Item: {{ post.title }}</h3>
+  <p>
+  {{ post.body }}
+  </p>
+  <img style="max-width: 200px; max-height: 200px; height:auto; width:auto;" src="{{ post.get_thumbnail_url }}"></a>
+  <ul>
+    <li>
+        <a href="{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
+    </li>
+  </ul>
+  </p>
+  <p>Thanks,</p>
+  <p>Buy Near Me Team</p>
+  {% load static %}
+  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
+  <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 
+{% endblock %}

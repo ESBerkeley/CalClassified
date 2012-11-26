@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}buynear.me{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+<div id="index-banner">
+  <div id="index-internal">
+    <h1>Buying and selling never felt so good</h1>
+    <h2>Find and share items within your local community</h2>
+    <a id="learn-more-button" class="btn btn-success">Learn More</a>   
+    <!-- <div class="btn-group">
+      <a id="learn-more-button" class="btn btn-success">Learn More</a>
+      <a class="btn btn-success" href="/box">Browse Now</a>
+    </div> -->
+  </div>
+</div>
+
+<div id="index-bottom" type="hidden">
+  <div id="index-bottom-container">
+    <div class="row-fluid index-row">
+      <div class="span4 index-border">
+        <a><img class="test-image" src="static/images/index/money.jpg"></a>
+        <h2>Sell to people you trust</h2>
+        <p>Notify friends about items for sale.</p>
+      </div>
+      <div class="span4 index-border">
+        <a><img class="test-image" src="static/images/index/Community.jpg"></a>
+        <h2>Buy from people you know</h2>
+        <p>Use circles to see what your communities are selling.</p>
+      </div>
+      <div class="span4 index-border">
+        <a><img class="test-image" src="static/images/index/find.jpg"></a>
+        <h2>Find what you're looking for</h2>
+        <p>Easy to use interface makes browsing a breeze.</p>
+      </div>
+    </div>
+
+      <div class="row-fluid">
+          <div class="span4">
+              <div class="index-button">
+                  <a class="btn btn-large btn-warning" href="/box">Browse Now</a>
+              </div>
+          </div>
+          <div class="span4">
+              <div class="index-button">
+                  <a class="btn btn-large btn-warning" href="/accounts/register/">Sign Up</a>
+              </div>
+          </div>
+          <div class="span4">
+              <div class="index-button">
+                  <a class="btn btn-large btn-warning" href="/about">Learn More</a>
+              </div>
+          </div>
+      </div>
+
+  </div>
+
+    <div id="index-footer" class="footer">
+      <div class="container">
+        <p>
+          <div class="span9">
+            <a href="/about" class="footer-text">About</a><a href="/contact" class="footer-text">Contact</a><a class="footer-text" href="/terms">Terms</a> <a href="/privacy" class="footer-text">Privacy</a> <a class="footer-text" href="/feedback">Feedback</a><!--<span class="footer-copy">&copy; buynearme 2012</span>-->
+          </div>
+          <div class="fb-like span2" data-href="https://www.facebook.com/BuyNearMe" data-send="true" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana">
+          </div>
+        </p>
+      </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block post_js %}
+<script>
+$("document").ready(function() {
+  $("#index-bottom").hide();	//initially hidden
+
+  $('#learn-more-button').click(function() {	//show+scrolling animation on click
+    $('#index-bottom').show();
+
+    $('html, body').animate({
+      scrollTop: $("#index-bottom").offset().top
+    }, 1250);	//timing of scroll animation
+  });
+});
+</script>
+ {% endblock %}

@@ -1,0 +1,63 @@
+{% extends "registration/registration_base.html" %}
+{% block title %}Login{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+<div id="login-container" class="container">
+  <center>
+  <div id="login-box" >
+    <div class="small-title">
+      <h2> Login </h2>
+    </div>
+    <div class="small-body">
+    <form method="post" action="{% url auth_login %}">{% csrf_token %}
+      <table>
+        <tr>
+          <!--<td>{{ form.username.label_tag }}</td>-->
+          <td style="padding-right:40px;">E-mail </td>
+          <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+          <!--<td>{{ form.password.label_tag }}</td>-->
+          <td>Password </td>
+          <td>{{ form.password }}</td>
+        </tr>
+      </table>
+      <p id="login-error" style="display:none; color:red; font-size:12px; margin-top:5px; margin-bottom:0px;">Your E-mail or password was incorrect. Please try again.</p>
+      <p style="font-size:13px"><a href="{% url auth_password_reset %}">Forgot</a> your password?  <a href="{% url registration_register %}">Need an account</a>?</p>
+      
+      <input type="hidden" name="next" value="{{ next }}" />
+      <input type="submit" class="btn btn-primary btn-large" value="Login" />
+    </form>
+    
+    <div id="OR"> <h3> OR </h3> </div>
+    
+    <form action="{% url facebook_connect %}?facebook_login=1" method="post">
+      <input type="hidden" value="{{ request.path }}" name="next" />
+      <div id="facebook_login_js">
+        <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{% get_static_prefix %}images/login.png" style="height:35px; width:280px; margin-bottom:-16px; padding-right:5px;"/>
+      </div>
+    </form>
+  </div>
+    
+</div>
+</center>
+</div>
+
+
+{% endblock %}
+
+{% block post_js %}
+  <script type="text/javascript">
+    {% if form.errors %}
+        $("#login-error").show();
+    {% endif %}
+  </script>
+      
+{% endblock %}
