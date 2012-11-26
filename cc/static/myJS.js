@@ -262,11 +262,10 @@ function get_friend_notifications(){
            var imageWidth=(width*ww)-pfactor;
 
            if(!(obj.extras.get_thumbnail_url == null)){
-
                var thumbnail = obj.extras.get_thumbnail_url;
                thumbnail = thumbnail.replace(/'/g,"");
                //moar += "<img class=\"box-image\" style=\"width:"+imageWidth+"px; height:" +imageHeight+ "px;\" alt=\"\" src=\"" + thumbnail + "\" />";
-               moar += "<img class=\"box-image\" style=\"max-width:"+imageWidth+"px; max-height:" +imageHeight+ "px;\" alt=\"\" src=\"" + thumbnail + "\" />";
+               moar += "<img class=\"box-image\" style=\"max-width:"+imageWidth+"px; height:" +imageHeight+ "px;\" alt=\"\" src=\"" + thumbnail + "\" />";
                //moar += "<img class=\"box-image\" style=\"\" alt=\"\" src=\"" + thumbnail + "\" />";
            }/* explanation incoming */
 
