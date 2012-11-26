@@ -16,21 +16,6 @@
 
     <div class="accordion sidebar-nav span3" id="accordion1">
 
-      {% if circle %} <!--only shows up for specific groups page -->
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseZero">
-            <h2>{{circle}} <i class="icon-question-sign popovers" style="margin-left:5px; margin-top:4px;" data-content="Click to show description." rel="popover" href="#" data-original-title=""></i></h2>
-          </a>
-        </div>
-        <div id="collapseZero" class="accordion-body collapse {% if circle in request.user.get_profile.my_circles.all %}in{% endif %}">
-          <div class="accordion-inner">
-            <ul class="unstyled">Berkeley is a city on the east shore of the San Francisco Bay in Northern California, United States. Its neighbors to the south are the cities of Oakland and Emeryville.</ul>
-          </div>
-        </div>
-      </div>
-      {% endif %} <!-- end if circle -->
-
       <div class="accordion-group">
         <div class="accordion-heading">
           <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
@@ -67,13 +52,6 @@
         <div id="collapseTwo" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              {% if user.get_profile.facebook_id %}
-              <li class="side-item circle_side-item">
-                <i id="friend-icon" class="icon-ok-sign side-icon" type="hidden" onclick="toggle_friends_filter();"></i>
-                <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
-              </li>
-              <hr style="margin-top: 5px; margin-bottom: 5px;">
-              {% endif %} 
               {% for entry in my_public_circles %}
                 <li class="side-item circle_side-item">
                   <i id="{{entry.id}}-icon-circle" class="icon-ok-sign side-icon" type="hidden" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"></i>
@@ -89,7 +67,7 @@
                 </li>
               {% endfor %}
               {% endif %}
-              
+
               {% if not my_public_circles and not my_private_circles %}
               <li>
                 <p>
@@ -99,7 +77,19 @@
               </li>
               {% endif %} 
               
-              
+              {% if user.get_profile.facebook_id %}
+              <li class="side-item circle_side-item">
+                <i id="friend-icon" class="icon-ok-sign side-icon" type="hidden" onclick="toggle_friends_filter();"></i>
+                <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
+              </li>
+              <!--hr>
+              <li>
+                <p>
+                  FilTeR bY <blink> y0uR fb fRi3nDz </blink>, asshat!
+                </p>
+               <button type="button" id="friends_filter_button" class="btn" data-toggle="button" onclick="toggle_friends_filter();">ur firneds only, asshole</button>
+              </li-->
+              {% endif %} 
               
             </ul>
           </div>
@@ -138,7 +128,7 @@
               <li class="side-item">
                 <form class="form-inline price-box" action="javascript:runloadBox();">
                   <input id="min" type="text" class="input-mini" placeholder="Min"">
-                  <input id="max" type="text" class="input-mini" placeholder="Max" style="margin-right:8px;"> 
+                  <input id="max" type="text" class="input-mini" placeholder="Max" style="margin-right:8px;">
                   <i id="price-cancel" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox();"></i>
                   <i id="price-go" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel();"></i>
                   <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/> <!--invisible button makes enter work -->
@@ -160,6 +150,7 @@
         </div>
       </div>
       {% endif %}
+
     </div><!--span-->
 {% endblock %}
 
