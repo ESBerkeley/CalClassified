@@ -40,6 +40,13 @@
         {% if circle.creator == request.user %}
             <hr>
             <h3 style="margin-top:0; padding-top: 0;">Admin Options</h3>
+            <a id="editDescriptionToggle" href="#" onclick="return false;"> Edit Description </a>
+            <div id="descriptionP" style="padding-top:4px;">
+
+                <textarea id="descriptionInput">{{ circle.description }}</textarea><br>
+                <button class="btn btn-primary">Update</button>
+            </div>
+            <br>
             <a href="#" onclick="return false;" id="deleteGroup">Delete Group</a>
         {% endif %}
 
@@ -61,6 +68,12 @@ $(document).ready( function(){
                 <div style="margin-top:-38px; margin-left:430px;"><fb:share-button href="#" type="button"></fb:share-button></div>'
         $("#boxDiv").append(noneText)
     {% endif %}
+
+$("#descriptionP").hide();
+
+$("#editDescriptionToggle").click(function(){
+    $("#descriptionP").slideToggle();
+})
 
 
 $("#action").click( function() {
