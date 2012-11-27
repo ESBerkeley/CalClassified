@@ -101,7 +101,7 @@ class ItemForSale(Post):
             return [self.get_category_image_url()]
     
     def get_category_image_url(self):
-        return '/static/images/%s.jpg' % self.category
+        return '/static/images/%s.jpg' % str(self.category).lower()
     
     def get_first_image_url(self):
         try:

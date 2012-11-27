@@ -808,7 +808,9 @@ def profile_circles(request):
     data['my_circles'] = my_circles
     data['my_private_circles'] = my_private_circles
     data['my_public_circles'] = my_public_circles
-
+    data['is_facebook'] = False
+    if user_profile.facebook_id:
+        data['is_facebook'] = True
     if 'msg' in request.GET:
         data['msg'] = request.GET['msg']
     return render_to_response('profile/profile_circles.html',

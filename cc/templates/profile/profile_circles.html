@@ -23,7 +23,9 @@
       {% endfor %}
     </table>
   <a class="btn btn-success" href="{% url createCircle %}">Create a group</a> <br><br>
-  <a class="btn btn-success" href="{% url fb_import %}">Import Facebook Groups</a>
+  {% if is_facebook %}
+    <a class="btn btn-success" href="{% url fb_import %}">Import Facebook Groups</a>
+  {% endif %}
 </div>
 
     <div id="profile-circles-sidebar" class="span4">
