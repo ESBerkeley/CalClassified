@@ -221,6 +221,14 @@
   var circles = [];
   var filtering_by_friends = 0;
 
+
+  var numx = 4;
+  var heights = new Array();
+  for(var i = 0; i < numx; i++){
+    heights[i] = 0;
+  }
+
+
   {% for entry in cc_cats %}  //all categories and circles are initially false
     categories.push("{{entry.name}}")
   {% endfor %}
