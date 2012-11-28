@@ -3,8 +3,7 @@
 {% block title %}buynear.me{% endblock %}
 
 {% block head %}
-{% load static %}
-
+  {% load static %}
   <!-- Styles -->
   <style type="text/css">
     .navbar-inner {
@@ -12,6 +11,7 @@
     }
   </style>
 {% endblock %}
+
 {% block sidebar %}
 <div class="sidebar-container">
   <div class="row">
@@ -34,10 +34,18 @@
                 </li>
                 {% endif %}
               {% endfor %}
-                <li class="side-item">
-                  <i id="Other-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"></i>
-                  <a id="Other_category" class="category" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"> Other </a>
-                </li>
+              <li class="side-item">
+                <i id="Other-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"></i>
+                <a id="Other_category" class="category" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"> Other </a>
+              </li>
+
+              {% if user.get_profile.facebook_id %}
+              <hr style="margin-top:6px; margin-bottom:3px;">
+              <li class="side-item circle_side-item">
+                <i id="friend-icon" class="icon-ok-sign side-icon" type="hidden" onclick="toggle_friends_filter();"></i>
+                <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
+              </li>
+              {% endif %}
             </ul>
           </div>
         </div>
@@ -78,45 +86,12 @@
               </li>
               {% endif %} 
               
-              {% if user.get_profile.facebook_id %}
-              <li class="side-item circle_side-item">
-                <i id="friend-icon" class="icon-ok-sign side-icon" type="hidden" onclick="toggle_friends_filter();"></i>
-                <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
-              </li>
-              <!--hr>
-              <li>
-                <p>
-                  FilTeR bY <blink> y0uR fb fRi3nDz </blink>, asshat!
-                </p>
-               <button type="button" id="friends_filter_button" class="btn" data-toggle="button" onclick="toggle_friends_filter();">ur firneds only, asshole</button>
-              </li-->
-              {% endif %} 
-              
             </ul>
           </div>
         </div>
       </div>
       {% endif %} <!-- end if not circle -->
 
-<!---
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree">
-            <h2>Show Locations</h2>
-          </a>
-        </div>
-        <div id="collapseThree" class="accordion-body collapse">
-          <div class="accordion-inner">
-            <ul class="unstyled">
-                <li class="side-item">
-                  <i id="" class="icon-ok-sign side-icon" type="hidden" onclick="runloadBox();"></i>
-                  <a id="{{cat.name}}_category" class="category" onclick="runloadBox();"> Not Set Up </a>
-                </li>
-            </ul>
-          </div>
-        </div>
-      </div>
--->
       <div class="accordion-group">
         <div class="accordion-heading">
           <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
@@ -139,8 +114,6 @@
           </div>
         </div>
       </div>
-
-
     </div><!--span-->
 {% endblock %}
 
