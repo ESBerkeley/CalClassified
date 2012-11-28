@@ -40,8 +40,8 @@ class Circle(models.Model):
     is_city = models.BooleanField(default=False)
     url_key = models.CharField(max_length=20,unique=True)
     creator = models.ForeignKey(User,null=True)
-    description = models.TextField(null=True,blank=True)
-    fb_id = models.PositiveIntegerField(null=True, unique= True)
+    description = models.TextField(null=True, blank=True)
+    fb_id = models.BigIntegerField(null=True, unique=True)
     def __unicode__(self):
         return self.name
     def get_absolute_url(self):
@@ -80,7 +80,7 @@ class CircleForm(ModelForm):
     
     class Meta:
         model = Circle
-        exclude = ('url_key','is_city','creator')
+        exclude = ('url_key','is_city','creator', 'fb_id')
 
 class ItemForSale(Post):
     price = models.DecimalField(max_digits=8,decimal_places=2)

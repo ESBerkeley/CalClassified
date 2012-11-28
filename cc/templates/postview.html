@@ -164,9 +164,9 @@
           
          <br>
               {% if request.user.is_authenticated %}
-              <button id="contact-now" class="btn contact-button btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal">Contact Now</button>
+              <button id="contact-now" class="btn contact-button btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal">Buy/Contact Seller</button>
               {% else %}
-              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/">Login to contact</a>
+              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to contact seller</a>
               {% endif %}
             
         </div><!--/.well -->
