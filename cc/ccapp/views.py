@@ -31,7 +31,13 @@ RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 @csrf_exempt
 def canvas(request):
-    return render_to_response('canvas.html', context_instance = RequestContext(request))
+    data = {}
+    data['request_ids'] = []
+    if 'request_ids' in request.GET:
+        request_ids = str(request.GET['request_ids'])
+        request_ids = request_ids.split(',')
+        data['request_ids'] = request_ids
+    return render_to_response('canvas.html', data, context_instance = RequestContext(request))
 
 def note(request):
     title = request.GET['title']
