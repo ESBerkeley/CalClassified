@@ -41,7 +41,7 @@ class Circle(models.Model):
     url_key = models.CharField(max_length=20,unique=True)
     creator = models.ForeignKey(User,null=True)
     description = models.TextField(null=True, blank=True)
-    fb_id = models.BigIntegerField(null=True, unique=True)
+    fb_id = models.BigIntegerField(null=True, unique=True, blank=True)
     def __unicode__(self):
         return self.name
     def get_absolute_url(self):
