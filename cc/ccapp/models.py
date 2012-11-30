@@ -183,7 +183,7 @@ class Message(models.Model):
     post_title = models.CharField(max_length=50,default="",blank=True)
     time_created = models.DateTimeField(auto_now_add=True,null=True)
     def __unicode__(self):
-        return self.post.title
+        return self.post_title
 
 class MessageForm(ModelForm):
     class Meta:
