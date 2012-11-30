@@ -6,10 +6,10 @@
 {% load static %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="Buy and sell items within your community." />
-      <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,social,groups,buy,sell,berkeley,UC Berkeley,friends" />
+      <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,social,groups,buy,sell,berkeley,UC Berkeley,friends,buynearme.com" />
       <meta property="og:title" content="Buy Near Me"/>
       <meta property="og:type" content="website"/>
-      <meta property="og:url" content="http://buynear.me"+{{ post.get_absolute_url }}/>
+      <meta property="og:url" content="http://buynear.me{{ post.get_absolute_url }}" />
       <meta property="og:image" content="{% get_static_prefix %}124ta-orange.png"/>
       <meta property="og:site_name" content="Buy Near Me"/>
 
@@ -42,13 +42,14 @@
     <div class="row post-top">
 
 
-
+      <!-- contact modal -->
       <div class="modal fade hide" id="contact-modal">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
           <h3>Contact</h3>
         </div>
         <div class="modal-body">
+            <p>Message the seller to discuss this item or arrange a meet up!</p>
           <textarea class="input-xlarge field span7" id="modal-message" rows="5"></textarea>
         </div>
         <div class="modal-footer">
