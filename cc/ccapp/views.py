@@ -532,7 +532,7 @@ def ajax_box(request):
     checked_circles = map(int,checked_circles)
     checked_categories = map(int, checked_categories)
 
-    found_entries = SearchQuerySet().filter(circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price))
+    found_entries = SearchQuerySet().filter(circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
     
     """ #OLD NON-HAYSTACK SEARCH
     if ('q' in request.GET) and request.GET['q'].strip():

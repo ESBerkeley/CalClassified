@@ -9,6 +9,7 @@ function runserver {
     python manage.py evolve --hint
     python manage.py evolve --hint --execute
     python manage.py runserver
+    python manage.py rebuild_index
 }
 
 runserver cc
