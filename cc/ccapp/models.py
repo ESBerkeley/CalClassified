@@ -93,7 +93,7 @@ class ItemForSale(Post):
     
     def get_image_set_urls(self):
         urls = []
-        for image in self.image_set.all():
+        for image in self.image_set.all().order_by('-upload_date'):
             urls.append(image.image.url)
         if urls:
             return urls
