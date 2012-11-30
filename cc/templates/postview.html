@@ -49,7 +49,8 @@
           <h3>Contact</h3>
         </div>
         <div class="modal-body">
-            <p>Message the seller to discuss this item or arrange a meet up!</p>
+            <p>Message the seller to discuss this item or arrange a meet up! You will be emailed and notified on-site
+            when the seller has replied.</p>
           <textarea class="input-xlarge field span7" id="modal-message" rows="5"></textarea>
         </div>
         <div class="modal-footer">
@@ -188,6 +189,9 @@
           <!--<p> {{ post.time_created }}</p>-->
 
             <hr>
+            <fb:share-button href="#"
+                         type="button">
+            </fb:share-button>
           {% if request.user.is_authenticated %}
             <p style="margin-left: 20px;">
                 {% if request.user == post.owner %}
@@ -212,9 +216,6 @@
             </p>
 
             {% endif %}
-          <fb:share-button href="#"
-            type="button">
-          </fb:share-button>
         {% comment %}
         <div class="span9 relevant-div">
           <br />
