@@ -125,7 +125,7 @@
               <li class="side-item">{{ post.owner }}</li>
             {% endif %} -->
             <li class="nav-header"><h2>Date Added:</h2></li>
-            <li> {{ post.time_created }}</li>
+            <li> {{ post.time_created.date }}</li>
             <li class="nav-header"><h2>Category:</h2></li>
             <li> {{ post.category.name }}</li>
             <li class="nav-header"><h2>Posted In:</h2></li>
