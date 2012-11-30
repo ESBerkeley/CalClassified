@@ -518,6 +518,8 @@ def ajax_box(request):
             p=0
 
     p*=p>0
+
+    fbf=0
             
     checked_circles = request.GET.getlist('circle')
     checked_categories = request.GET.getlist('category')
@@ -528,6 +530,9 @@ def ajax_box(request):
         max_price = float(request.GET['max_price'])
     if ('min_price' in request.GET) and request.GET['min_price'].strip() and float(request.GET['min_price'])>= 0:
         min_price = float(request.GET['min_price'])
+
+    if ('fbf' in request.GET) and request.GET['fbf'].strip() and float(request.GET['fbf'])>= 0:
+        fbf=1
 
     checked_circles = map(int,checked_circles)
     checked_categories = map(int, checked_categories)
@@ -582,10 +587,16 @@ def ajax_box(request):
     else:
         foreveralone()
 
-    #for x in found_entries:
-    #    x.object.score = x.score
+    fatty_cheese_wheel = []
 
-    data = serializers.serialize('json', [x.object for x in found_entries] , indent = 4, extras=('boxsize','friend','friendname','get_thumbnail_url','score'))
+    for x in found_entries:
+        if fbf:
+            if x.object.friend:
+                fatty_cheese_wheel.append(x.object)
+        else:
+            fatty_cheese_wheel.append(x.object)
+
+    data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','friend','friendname','get_thumbnail_url','score'))
     return HttpResponse(data,'application/javascript')
    
 class ContactView(TemplateView):

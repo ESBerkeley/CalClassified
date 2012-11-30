@@ -65,13 +65,8 @@ function save_state(inputurl){
     
     //document.location = inputurl;
 }
-/*
-function toggle_friends_filter(){
-    filtering_by_friends = !filtering_by_friends;
-    
-    runloadBox(current_page);
-    
-}*/
+
+
 
 
 function get_friend_notifications(){  
