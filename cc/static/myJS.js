@@ -352,9 +352,8 @@ function get_friend_notifications(){
         
         var onum = 0; 
 
-
         if((current_page<1) && obj.length == 0){
-            $("#myBox").html("<h2>Sorry, there were no items that matched your search.g</h2>");
+            $("#myBox").html("<h2>Sorry, there were no items that matched your search.</h2>");
         }
 
 
