@@ -107,11 +107,11 @@ def fb_import(request):
                     except:
                         new_groups.append(group)
             except:
-                existing_groups = Circle.objects.exclude(id__in=my_circles_id).order_by('?')[:5]
+                existing_groups = Circle.objects.filter(is_public=True).exclude(id__in=my_circles_id).order_by('?')[:5]
 
             if not existing_groups:
                 print(my_circles_id)
-                existing_groups = Circle.objects.exclude(id__in=my_circles_id).order_by('?')[:5]
+                existing_groups = Circle.objects.filter(is_public=True).exclude(id__in=my_circles_id).order_by('?')[:5]
 
             data['existing_groups'] = existing_groups
             data['new_groups'] = new_groups

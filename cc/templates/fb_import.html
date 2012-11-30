@@ -25,14 +25,16 @@
     <div class="container" style="width:950px; margin-top: 20px;">
 
         <div id="fbNewGroup" >
+            <h2>Create groups from Facebook</h2>
             {% if new_groups %}
-                <h2>Create groups from Facebook</h2>
                 {% for group in new_groups %}
                     <div style="padding-bottom: 4px;">
                         <input type="checkbox" id="id_{{ group.id }}" name="createFbId" value="{{ group.id }}" style="margin-top: -2px;">
                         <span id="{{ group.id }}" class="checkId">{{ group.name }}</span><br>
                     </div>
                 {% endfor %}
+            {% else %}
+                <p> It seems you don't have any Facebook groups to import.</p>
             {% endif %}
         </div>
 

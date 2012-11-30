@@ -22,21 +22,22 @@
         </tr>
       {% endfor %}
     </table>
-  <a class="btn btn-success" href="{% url createCircle %}">Create a group</a> <br><br>
+  <h4>Circle Options</h4>
+  <a href="{% url createCircle %}">Create a group</a> <br>
   {% if is_facebook %}
-    <a class="btn btn-success" href="{% url fb_import %}">Import Facebook Groups</a>
+    <a href="{% url fb_import %}">Import Facebook Groups</a>
   {% endif %}
 </div>
 
     <div id="profile-circles-sidebar" class="span4">
-        <h3>Search by name or location</h3>
+        <h4>Search for circles</h4>
         <form id="" class="" action="javascript:circle_search();">
             <input type="text" class="search-query" placeholder="Search" id="search_circle_input">
             <i id="search-go-circles" class=" icon-search search-icon" class="submit" onclick="circle_search();"></i>
             <i id="search-cancel-circles" class="icon-remove-sign search-icon" type="submit hidden" class="submit" onclick="circle_cancel();"></i>
         </form>
 
-        <h3>Results</h3>
+        <h3 style="margin-bottom: 0;">Results</h3>
         <caption>Click a group to be able to join!</caption>
         <br><br>
         <ul class="unstyled">
