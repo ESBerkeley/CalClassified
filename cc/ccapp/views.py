@@ -133,9 +133,9 @@ def fb_import(request):
         for group in groups:
             #print(group['id'])
             if not Circle.objects.filter(fb_id=group['id']) and int(group['id']) in create_groups:
+                name = group['name'][:100] #this 100 comes from the circle name model max length
                 circle = Circle.objects.create(name=group['name'], creator=request.user, fb_id=group['id'], url_key=Circle.make_key(),is_public=True)
                 user_profile.my_circles.add(circle)
-
 
         for group_id in join_groups:
             group = Circle.objects.get(id=group_id)

@@ -109,6 +109,12 @@
       <div class="span3 post-sidebar">
         <div class="">
           <ul class="nav nav-list">
+            <li class="nav-header"><h2>Seller:</h2></li>
+            {% if post.owner.get_full_name %}
+              <li><p>{{ post.owner.get_full_name }}</p></li>
+            {% else %}
+              <li><p>{{ post.owner.username }}</p></li>
+            {% endif %}
             <li class="nav-header"><h2>Price:</h2></li>
             <li> <p>$  {{ post.price }}<p></li>
             <!-- <li class="nav-header">Posted by: </li>
@@ -117,9 +123,11 @@
             {% else %}
               <li class="side-item">{{ post.owner }}</li>
             {% endif %} -->
-            <li class="nav-header"><h2>Category</h2></li>
+            <li class="nav-header"><h2>Date Added:</h2></li>
+            <li> {{ post.time_created }}</li>
+            <li class="nav-header"><h2>Category:</h2></li>
             <li> {{ post.category.name }}</li>
-            <li class="nav-header"><h2>Posted In</h2></li>
+            <li class="nav-header"><h2>Posted In:</h2></li>
             {% for circle in post.circles.all %}
               {% if circle.is_public or circle in request.user.get_profile.my_circles.all %}
               <li><a href="{{ circle.get_absolute_url }}">{{ circle }}</a></li>
@@ -164,9 +172,9 @@
           
          <br>
               {% if request.user.is_authenticated %}
-              <button id="contact-now" class="btn contact-button btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal">Buy/Contact Seller</button>
+              <button id="contact-now" class="btn contact-button btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal">Buy/Contact</button>
               {% else %}
-              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to contact seller</a>
+              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy/Contact</a>
               {% endif %}
             
         </div><!--/.well -->

@@ -35,7 +35,7 @@ class Category(models.Model):
         return self.name
 
 class Circle(models.Model):
-    name = models.CharField(max_length=25)
+    name = models.CharField(max_length=100) #must change along with fb_import view
     is_public = models.BooleanField(default=False)
     is_city = models.BooleanField(default=False)
     url_key = models.CharField(max_length=20,unique=True)
@@ -58,7 +58,7 @@ class Circle(models.Model):
             except: #circle doesn't exist with key so we good
                 break
         return url_key
-        
+
 class CircleForm(ModelForm):
 
     """ #ONLY USED IF CIRCLES CAN BE PUBLIC
