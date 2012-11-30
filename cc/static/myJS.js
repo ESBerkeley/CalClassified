@@ -351,10 +351,12 @@ function get_friend_notifications(){
         var fity_small = (numy - (numy % sizes[1][1])) / sizes[1][1];
         
         var onum = 0; 
-        
-        //if((~page) && obj.length == 0){
-          //  $("#myBox").html("<h2>Sorry, there were no items that matched your search.</h2>");
-        //}
+
+
+        if((current_page<1) && obj.length == 0){
+            $("#myBox").html("<h2>Sorry, there were no items that matched your search.g</h2>");
+        }
+
 
         if(obj.length < fitx_small*fity_small){ //very few results. let's promote everything to max size (when doing a restrictive search)
         
