@@ -153,6 +153,7 @@
   $(".side-icon").hide();  //hides sidebar icons initially
   $(".popovers").popover({trigger:'hover'});
 
+
   $(window).scroll(function(){
     if($(window).scrollTop() == $(document).height() - $(window).height()){
       current_page++;
@@ -162,7 +163,8 @@
   });
 
   $(document).ready(function(){
-  
+     // $(".navbar").addClass("navbar-fixed-top");
+     // $("body").css("padding-top","+=70px")
  
     document.getElementById("searchbarform").setAttribute("action","javascript: runloadBox();")
     {% if q %}

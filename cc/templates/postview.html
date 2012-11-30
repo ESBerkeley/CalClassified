@@ -5,9 +5,9 @@
 {% block metadata %}
 {% load static %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="Buy and sell items within your community." />
+      <meta name="description" content="{{ post.body }}" />
       <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,social,groups,buy,sell,berkeley,UC Berkeley,friends,buynearme.com" />
-      <meta property="og:title" content="Buy Near Me"/>
+      <meta property="og:title" content="{{ post.title }}"/>
       <meta property="og:type" content="website"/>
       <meta property="og:url" content="http://buynear.me{{ post.get_absolute_url }}" />
       <meta property="og:image" content="http://buynear.me{% get_static_prefix %}124ta-orange.png"/>
