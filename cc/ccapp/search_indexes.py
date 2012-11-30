@@ -11,6 +11,7 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
     price = indexes.FloatField(model_attr='price') #purposely not decimal field as its bugged
     #POST
     owner = indexes.CharField(model_attr='owner')
+    time_created = indexes.DateTimeField(model_attr='time_created')
     
     category = indexes.MultiValueField()
     circles = indexes.MultiValueField()
