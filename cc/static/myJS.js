@@ -18,7 +18,6 @@ function restore(){
             $(window).scrollTop(xxxx["scroll"]); //works despite value being a string
         
             current_page = xxxx["current_page"];
-            heights = xxxx["heights"];
             scats(xxxx["categories"]);
             scircs(xxxx["circles"]);
             filtering_by_friends = xxxx["filtering_by_friends"];
@@ -53,7 +52,6 @@ function save_state(inputurl){
     sessionField.value = mybox.innerHTML;  //prepare the batcache
     sessionField_scroll.value = JSON.stringify({
         "scroll" : $(window).scrollTop(),
-        "heights" : heights,
         "current_page" : current_page,
         "circles" : gcircs(),
         "categories" : gcats(),
@@ -195,33 +193,52 @@ function get_friend_notifications(){
       if(xmlhttp.readyState==4 && xmlhttp.status==200){
         var string1 = xmlhttp.responseText;
 
+        //alert(string1);
         if(!(string1 == old_obj) || 100){	//broken code here!!!!!!!!!!!!!!
 
         old_obj = string1;
 
         var obj = eval ("(" + string1 + ")");
-        
+
+        var sizes = [[2,2],[1,1]];  //gogo tetris mode
         var w = 916;
         var h = 1400;
 
-
+        var numx = 6;
+        var numy = 12;
         var width = (w-(w%numx))/numx;
-
-
-
-
+        var height = (h-(h%numy))/numy;
+        ogrid = [];
         var sc = 0;
 
-        
-        
-        function render(x,y,ww,hh,obj){
-           ind3x = 0;
+        var lenk = scraps.length;
+        if(page){
+          if(lenk > 0){
+              for(var i = 0; i < lenk; i++){
+                  scraps[i].extras.boxsize=0;
+                  scraps[i].priority=1;
+                  obj.unshift(scraps[i]);
+              }
+              scraps=[];
+          }
+        }
+        else scraps=[];
 
+        var idid = "myBox" + page;
+        var boxxy = document.getElementById(idid); 
+
+        if(boxxy == null) {$("#myBox").append("<div id = \"myBox" + page + "\"style=\"position:relative; top: " + page * h + "px;\"></div>");}
+        document.getElementById(idid).innerHTML="";
+
+        function render(x,y,obj,grid){
+           ind3x = 0;
+           var ww = sizes[obj.extras.boxsize][0];
+           var hh = sizes[obj.extras.boxsize][1];
            var pfactor = 12;
            var stylin = "";
            if(obj.extras.friend){stylin+="class=\"friend_boxxx\"";}
            else{stylin += 'class="boxxx '+obj.pk+' "';}
-           stylin += "style=\"left: " + x + "px; top: " + y + "px; height: " + (hh-5) + "px; width: "+ (ww-5) + "px\"";
+           stylin += "style=\"left: " + x*width + "px; top: " + y*height + "px; height: " + ((height*hh)-pfactor) + "px; width: "+ ((width*ww)-pfactor) + "px\"";
 
            var moar = "<a OnClick=\"save_state('/" + obj.pk + "')\" class='empty-link' value='"+obj.pk+"' href='/"+obj.pk+"'><div "+stylin+">";
            moar += "<div class=\"box-div\">";
@@ -240,9 +257,9 @@ function get_friend_notifications(){
                thumbnail = thumbnail.replace(/'/g,"").replace("[","").replace("]",""); 
                moar += "<a href=\"" + filename + "\"><img alt=\"\" src=\"" + thumbnail + "\" /></a>";
            }*/
-           var imageHeight=hh-pfactor-36; //got rid of -36. !!PUT BACK THE 36
+           var imageHeight=(height*hh)-pfactor-36; //got rid of -36. !!PUT BACK THE 36
 
-           var imageWidth=ww-pfactor;
+           var imageWidth=(width*ww)-pfactor;
 
            if(!(obj.extras.get_thumbnail_url == null)){
                var thumbnail = obj.extras.get_thumbnail_url;
@@ -260,25 +277,130 @@ function get_friend_notifications(){
         }
 
 
-        for(var i = 0; i < obj.length; i++){
-          var curheight = 250 + 50*Math.random();
-
-          var mindex = 0;
-          for(var j = 0; j < numx; j++){
-            if(heights[mindex] > heights[j]){
-              mindex = j;
+        for(var i = 0; i < numx; i++){
+            var tmp = [];
+            for(var j = 0; j < numy; j++){
+                tmp.push(0);
             }
-          }
-
-          var y = heights[mindex];
-          heights[mindex] = heights[mindex] + curheight;
-          var x = width*mindex;
-    
-          $("#myBox").append(render(x,y,width,curheight,obj[i]));
-
+            ogrid.push(tmp);
         }
 
+        for(var i = 0; i < obj.length; i++){
+            obj[i].priority = 0;
+        }
 
+        var failing,fail_threshold,force_x,force_y, demoting;
+
+        function check(x,y,obj,grid){
+            var ffail = 0;
+            var osize = obj.extras.boxsize;
+            var ww = sizes[osize][0];
+            var hh = sizes[osize][1];
+            if(x+ww > numx || y+hh > numy) return 666;
+            for(var xxx = 0; xxx < ww; xxx++){
+                for(var yyy = 0; yyy < hh; yyy++){
+                    if(grid[x+xxx][y+yyy])return 666;
+                }
+            }
+            return ffail;
+        }
+
+        function set(x,y,obj,grid){
+            var ww = sizes[obj.extras.boxsize][0];
+            var hh = sizes[obj.extras.boxsize][1];
+            $("#myBox"+page).append(render(x,y,obj,grid));
+            for(var xx = 0; xx < ww; xx++){
+                for(var yy = 0; yy < hh; yy++){
+                    grid[x+xx][y+yy] = obj.pk;
+                }
+            }
+        }
+
+        function randfit(obj,grid){
+            while(failing < fail_threshold){
+                var xtar = Math.floor((rand0m()*(numx - sizes[obj.extras.boxsize][0])));
+                var ytar = Math.floor((rand0m()*(numy - sizes[obj.extras.boxsize][1])));
+                if(check(xtar,ytar,obj,grid) > 0){
+                    failing = failing + 1;
+                }
+                else{
+                    set(xtar,ytar,obj,grid);
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        function forcefit(obj,grid){
+            var x,y;
+            for(x = force_x; x < numx; x++){
+                for(y = (!x)*force_y; y < numy; y++){
+                    if(!(check(x,y,obj,grid))){  //true on success
+                        set(x,y,obj,grid);
+                        force_x = x;
+                        force_y = y;
+                        return 1;
+                    }
+                }
+            }
+            return 0;
+        }        
+
+        var fitx = (numx - (numx % sizes[0][0])) / sizes[0][0];
+        var fity = (numy - (numy % sizes[0][1])) / sizes[0][1];
+        
+        var fitx_small = (numx - (numx % sizes[1][0])) / sizes[1][0];
+        var fity_small = (numy - (numy % sizes[1][1])) / sizes[1][1];
+        
+        var onum = 0; 
+        if(obj.length < fitx_small*fity_small){ //very few results. let's promote everything to max size (when doing a restrictive search)
+        
+            for(var y = 0; y < fity; y++){
+                for(var x = 0; x < fitx; x++){ 
+                    if(onum >= obj.length){x = fitx; y =fity;} //bail if no more objects to place down..
+                    else{obj[onum].extras.boxsize = 0; set(x*sizes[0][0],y*sizes[0][1],obj[onum],ogrid);}
+                    onum++; 
+                }
+            }
+        }
+
+        else{                                        // there are more than a few results, so use multi-size standard boxfitting technique (most of the time)
+            for(var i = 0; i < sizes.length; i++){ 
+                failing = 0;
+                fail_threshold = 100;
+                force_x = 0;
+                force_y = 0;
+                demoting = 0;
+    
+                for(var j = 0; j < obj.length*2; j++){ 
+                    var jj = j % obj.length; 
+                    if(obj[jj].extras.boxsize == i && (obj[jj].priority == (j<obj.length))){  //is the object of the size we are considering?
+                        if(demoting){
+                            obj[jj].extras.boxsize += 1;
+                            obj[jj].extras.priority = 1;
+                        }
+                        else{
+                            if(failing < fail_threshold){
+                                randfit(obj[jj],ogrid);
+                            }
+                            else{
+                                if(!forcefit(obj[jj],ogrid)){
+                                    demoting = 1;
+                                    obj[jj].extras.boxsize += 1;
+                                    obj[jj].priority = 1;
+                                }
+                            } 
+                        } 
+                    }  //descend the bracket mountain
+                }
+            }  
+        }  
+
+        for(var j = 0; j < obj.length; j++){
+            if(obj[j].extras.boxsize == sizes.length){ 
+                scraps.push(obj[j]);
+            }
+        }
 
        
         //Calvin's random unimportant sidebar crap
