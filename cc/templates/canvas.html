@@ -2,9 +2,27 @@
 <head>
 </head>
 <body>
+
+
+
 <div id="fb-root"></div><!--pop-up for FB-->
+
+
 <script src="http://connect.facebook.net/en_US/all.js"></script>
  <script type='text/javascript'>
+
+    facebookAppId = '{{ FACEBOOK_APP_ID }}';
+    facebookDefaultScope = {{ FACEBOOK_DEFAULT_SCOPE_JS }};
+    staticUrl = '{{ STATIC_URL }}';
+
+    function facebookJSLoaded(){
+        FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
+    }
+
+    window.fbAsyncInit = facebookJSLoaded;
+    F = new facebookClass(facebookAppId);
+    F.load();
+
 
     function deleteRequest(requestId) {
         FB.api(requestId, 'delete', function(response) {
@@ -23,11 +41,14 @@
     }
 
     {% for request in request_ids %}
-    RemoveRequest({{ request }}, );
+    deleteRequest({{ request }});
     {% endfor %}
     window.location.assign('http://buynear.me');
 
  </script>
+
+
+
 
 </body>
 </html> 
