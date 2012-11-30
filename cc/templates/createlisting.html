@@ -89,7 +89,9 @@ label.error {
   </div>
   <br />
   
-  <input type="submit" class="btn btn-primary" value="Submit" /><br><br>
+  <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Submitting..." value="Submit">
+  <img id="ajax-loader" style="display: none;" src="/static/ajax-loader.gif" />
+  <br><br>
   </form>
   
   </div>
@@ -125,7 +127,12 @@ $(document).ready(function(){
         circles: {
           required: true,
         },
-      } 
+      },
+      submitHandler: function() { 
+        $("#ajax-loader").show(); 
+        $("#submit").button('loading');
+        $(form).ajaxSubmit();
+      },
     });
     
     // require price only has 2 decimals
