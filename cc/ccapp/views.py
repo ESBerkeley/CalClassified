@@ -210,7 +210,6 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 model.save()
 
                 files_list = request.FILES.getlist("images")
-
                 for file in files_list:
                     obj = MultiuploaderImage()
                     obj.image = file
