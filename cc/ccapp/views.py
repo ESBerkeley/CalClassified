@@ -506,7 +506,7 @@ def ajax_friend_notifications(request):
     for note in notifications:
         pfrom = note.post_from
         note.title = pfrom.title
-        note.username = pfrom.owner.username
+        note.username = pfrom.owner.get_full_name()
     data = serializers.serialize('json',notifications, indent = 4, extras = ('username','title',))
     notifications.delete()
     return HttpResponse(data,'application/javascript')
