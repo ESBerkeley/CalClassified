@@ -351,6 +351,11 @@ function get_friend_notifications(){
         var fity_small = (numy - (numy % sizes[1][1])) / sizes[1][1];
         
         var onum = 0; 
+
+        if((~page) && obj.length == 0){
+            $("#myBox").html("yo nothing to display, use less filters dawg");
+        }
+
         if(obj.length < fitx_small*fity_small){ //very few results. let's promote everything to max size (when doing a restrictive search)
         
             for(var y = 0; y < fity; y++){
