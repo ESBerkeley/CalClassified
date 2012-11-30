@@ -200,12 +200,15 @@ function get_friend_notifications(){
 
         var obj = eval ("(" + string1 + ")");
 
-        var sizes = [[2,2],[1,1]];  //gogo tetris mode
+   //     var sizes = [[2,2],[1,1]];  //gogo tetris mode
+        var sizes = [[1,1],[1,1]];
         var w = 916;
         var h = 1400;
 
-        var numx = 6;
-        var numy = 12;
+    //    var numx = 6;
+    //    var numy = 12;
+        var numx = 3;
+        var numy = 6;
         var width = (w-(w%numx))/numx;
         var height = (h-(h%numy))/numy;
         ogrid = [];
