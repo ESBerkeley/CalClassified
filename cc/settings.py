@@ -24,6 +24,19 @@ DATABASES = {
     }
 }
 
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'django_db',                      # Or path to database file if using sqlite3.
+        'USER': 'django_login',                      # Not used with sqlite3.
+        'PASSWORD': 'CalClassified3$BsQl',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+"""
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -133,10 +146,9 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'django.contrib.admin',
     'django_evolution',
-
     'haystack',
-
     'templated_email',
+    'django_resized',
     # 'django.contrib.admindocs',
 )
 
@@ -183,6 +195,7 @@ LOGGING = {
     }
 }
 
+DJANGORESIZED_DEFAULT_SIZE = [800, 600]
 
 FACEBOOK_APP_ID = '171685159547122'
 FACEBOOK_APP_SECRET = '1b87bf57984631d3830f64edd60ebfcf'

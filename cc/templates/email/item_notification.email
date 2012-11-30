@@ -7,10 +7,10 @@
   <p>
   {{ post.body }}
   </p>
-  <img style="max-width: 200px; max-height: 200px; height:auto; width:auto;" src="{{ post.get_thumbnail_url }}"></a>
+  <img style="max-width: 200px; max-height: 200px; height:auto; width:auto;" src="http://buynear.me/{{ post.get_thumbnail_url }}"></a>
   <ul>
     <li>
-        <a href="{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
+        <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
     </li>
   </ul>
   </p>
