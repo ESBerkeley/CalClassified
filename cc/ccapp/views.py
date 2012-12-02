@@ -408,6 +408,7 @@ def ajax_contact_seller(request):
                     'username':sender.username,
                     'first_name':sender.first_name,
                     'full_name':sender.get_full_name(),
+                    'recipient_name':recipient_name,
                 },
             )
         # send_mail(post.title+" Response - "+recipient_name, post.body, 'noreply@buynear.me', [recipient.email])
