@@ -64,8 +64,8 @@
         <span id="actionComplete"></span>
         <br>
         <br>
-        <fb:share-button href="#" type="button"> </fb:share-button>
-        <br><br>
+        <fb:share-button href="#" type="button" id="fbshare-social" style="display:none"> </fb:share-button>
+        <br>
     </div>
 
 {{ block.super }}
@@ -76,7 +76,6 @@
 {% block post_js %}
 <script type="text/javascript">
 $(document).ready( function(){
-
     var csrf_token = "{{ csrf_token }}";
 
     {% if all_items|length == 0 %}
