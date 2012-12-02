@@ -22,7 +22,7 @@
         </tr>
       {% endfor %}
     </table>
-  <h4>Circle Options</h4>
+  <h4>Group Options</h4>
   <a href="{% url createCircle %}">Create a group</a> <br>
   {% if is_facebook %}
     <a href="{% url fb_import %}">Import Facebook Groups</a>
@@ -44,111 +44,6 @@
           <div id="circle_search_results" style="height:175px; overflow:auto; position:relative;"></div>
         </ul>
     </div><!--/span-->
-
-<!--<div id="profile-circles-content" class="span4">
-  <table class="table">
-    <thead>
-      <tr>
-        <th> Group Name </th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for circle in my_circles %}
-        <tr>
-          <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <a class="btn btn btn-success" href="{% url createCircle %}">Create a group</a>
-</div>-->
-        
-      {% comment %}
-    <div >
-      <a class="btn btn btn-success" href="{% url createCircle %}">
-        Create a group
-      </a>
-      
-        <a class="btn btn btn-info" href="{% url view_circles %}">
-            Join a group
-        </a>
-        <br><br>
-      
-      <table class="table">
-          <thead>
-          <tr>
-              <th> Group Name </th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for circle in my_circles %}
-
-              <tr>
-                  <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
-              </tr>
-
-          {% endfor %}
-          </tbody>
-      </table>
-      <div class="tabbable"> <!-- Only required for left/right tabs -->
-        <ul class="nav nav-tabs" style="margin-bottom: 0px;">
-          <li class="active"><a href="#tab1" data-toggle="tab">Public Groups</a></li>
-          <li><a href="#tab2" data-toggle="tab">Private Groups</a></li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane active" id="tab1">
-
-              {% if my_public_circles %}
-                  <table class="table">
-                      <thead>
-                      <tr>
-                          <th> Group Name </th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {% for circle in my_public_circles %}
-
-                          <tr>
-                              <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
-                          </tr>
-
-                      {% endfor %}
-                      </tbody>
-                  </table>
-
-              {% else %}
-                  <h2> You have no public groups </h2>
-
-              {% endif %}
-
-          </div>
-          <div class="tab-pane" id="tab2">
-
-              {% if my_private_circles %}
-                  <table class="table">
-                      <thead>
-                      <tr>
-                          <th> Group Name </th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {% for circle in my_private_circles %}
-                              <tr>
-                                  <td><a href="{{ circle.get_absolute_url }}"> {{ circle.name }}</a></td>
-                              </tr>
-                      {% endfor %}
-                      </tbody>
-                  </table>
-
-              {% else %}
-                  <h2> You have no groups </h2>
-
-              {% endif %}
-          </div>
-        </div>
-      </div>
-    </div>
-{% endcomment %}
 {% endblock %}
 
 {% block post_js %}
