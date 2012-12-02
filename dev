@@ -8,7 +8,7 @@ function runserver {
     python manage.py syncdb
     python manage.py evolve --hint
     python manage.py evolve --hint --execute
-    python manage.py rebuild_index
+    
     python manage.py runserver
 }
 

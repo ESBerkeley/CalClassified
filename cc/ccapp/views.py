@@ -541,8 +541,7 @@ def ajax_box(request):
 
     checked_circles = map(int,checked_circles)
     checked_categories = map(int, checked_categories)
-
-    found_entries = SearchQuerySet().filter(circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
+    
     
     """ #OLD NON-HAYSTACK SEARCH
     if ('q' in request.GET) and request.GET['q'].strip():
@@ -553,23 +552,19 @@ def ajax_box(request):
 
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
-        found_entries = found_entries.filter(text=query_string)
+        found_entries = SearchQuerySet().filter(text=query_string,circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
+    else:
+        found_entries = SearchQuerySet().filter(circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
 
     found_entries = found_entries[(100*p):(100*(p+1))]
 
-
     #is user logged in? highlight his friends' posts
     #TODO: this could be very inefficient. consider performance optimization... perhaps store facebook user id of creator in post model...
-
-    def foreveralone():
-        for item in found_entries:
-            item.object.friend = 0
-            item.object.friendname = ""
-            item.object.boxsize = random.randint(0,1)
-            item.object.score = item.score
-
+    
+    fatty_cheese_wheel = []
+            
     if request.user.is_authenticated(): 
         user = request.user
         friends = FacebookUser.objects.filter(user_id = user.id)
@@ -587,22 +582,44 @@ def ajax_box(request):
                     item.friend = 0
                     item.friendname = ""
                 item.boxsize = random.randint(0,1)
+                
+                if fbf:
+                    if search_result.object.friend:
+                        fatty_cheese_wheel.append(search_result.object)
+                else:
+                    fatty_cheese_wheel.append(search_result.object)
+                
         else:
-            foreveralone()
+            foreveralone(found_entries,fbf, fatty_cheese_wheel)
     else:
-        foreveralone()
+        foreveralone(found_entries,fbf, fatty_cheese_wheel)
 
-    fatty_cheese_wheel = []
-
+    
+    """
     for x in found_entries:
         if fbf:
             if x.object.friend:
                 fatty_cheese_wheel.append(x.object)
         else:
             fatty_cheese_wheel.append(x.object)
+    """
+    
 
     data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','friend','friendname','get_thumbnail_url','score'))
     return HttpResponse(data,'application/javascript')
+
+def foreveralone(found_entries,fbf, fatty_cheese_wheel):
+    for item in found_entries:
+        item.object.friend = 0
+        item.object.friendname = ""
+        item.object.boxsize = random.randint(0,1)
+        item.object.score = item.score
+        
+        if fbf:
+            if item.object.friend:
+                fatty_cheese_wheel.append(item.object)
+        else:
+            fatty_cheese_wheel.append(item.object)
    
 class ContactView(TemplateView):
     template_name = 'contact.html'

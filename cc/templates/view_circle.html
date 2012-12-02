@@ -35,7 +35,13 @@
 
     <div id="circleHeader" class="span10 offset3">
         <h2>{{ circle.name }}</h2>
+        
+        {% if circle.description %}
         <p id="groupDescription" style="white-space: pre-wrap;">{{ circle.description }}</p>
+        {% else %}
+        <p id="groupDescription" style="white-space: pre-wrap;">No description available.</p>
+        {% endif %}
+        
 
         {% if circle.creator == request.user %}
             <hr>
