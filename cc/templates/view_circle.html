@@ -60,8 +60,12 @@
 
     <div id="groupActivity">
         <h3> Social</h3>
+        {% if user.is_authenticated %}
         <button class="btn btn-primary btn-mini" id="action" value="{{action}}" >{{ action }} Group</button>
         <span id="actionComplete"></span>
+        {% else %}
+        <a class="btn btn-primary btn-mini" href="/login/?next=/groups/view/{{ circle.url_key }}"> Login to join </a>
+        {% endif %}
         <br>
         <br>
         <fb:share-button href="#" type="button" id="fbshare-social"> </fb:share-button>
