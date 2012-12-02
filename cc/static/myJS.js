@@ -149,6 +149,7 @@ function get_friend_notifications(){
 
 
     if(oflags != flags) {
+        $(window).scrollTop(0);
         oflags = flags; 
         $("#myBox").empty(); //accidentally the posts
         scraps=[];
