@@ -188,13 +188,16 @@
           <p style="white-space:pre-wrap">{{ post.body }} </p>
           <!--<p> {{ post.time_created }}</p>-->
 
-            <hr>
+            <hr style="margin-bottom: 15px;">
             <fb:share-button href="#"
                          type="button">
             </fb:share-button>
+            <br>
           {% if request.user.is_authenticated %}
+              <br>
+              {% if request.user == post.owner %}
+
             <p style="margin-left: 20px;">
-                {% if request.user == post.owner %}
 
                       <a id="delete-post" style="cursor:pointer;">
                           <i class="icon-trash side-icon"></i>
@@ -202,7 +205,6 @@
                       </a>
             </p>
                 {% endif %}
-
             <p style="margin-left: 20px;">
                   <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
                       <i class="icon-tag side-icon bookmark-activate"></i>
