@@ -252,7 +252,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
             form.fields['circles'].queryset = user_profile.my_circles.all()
             form.fields['circles'].label = "Groups"
             form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
-                <br>Remember, only people in the groups you select can see your post."""
+                <p style="color:red;">Only people in the groups you select can see your post.</p>"""
             #Specify which groups you want to sell to.
 
 

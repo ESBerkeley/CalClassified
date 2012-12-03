@@ -170,12 +170,12 @@ function get_friend_notifications(){
       $("#search-cancel-nav").hide();
       $("#search-go-nav").show();
     }
-    if(max_price && min_price) {      //hides and shows price icons
-      $("#price-cancel").hide();
-      $("#price-go").show();
-    } else {
-      $("#price-cancel").show();
+    if(max_price || min_price) {      //hides and shows price icons
       $("#price-go").hide();
+      $("#price-cancel").show();
+    } else {
+      $("#price-go").show();
+      $("#price-cancel").hide();
     }
 
     var xmlhttp;
@@ -241,23 +241,8 @@ function get_friend_notifications(){
 
            var moar = "<a OnClick=\"save_state('/" + obj.pk + "')\" class='empty-link' value='"+obj.pk+"' href='/"+obj.pk+"'><div "+stylin+">";
            moar += "<div class=\"box-div\">";
-           /*moar += "OnClick=\"document.location='/" + obj.pk + "'\"><b>" + obj.fields.title;
-           moar +=  "</b></br>" + num2cat(obj.fields.category) + "</br>$";
-           moar += obj.fields.price + "</br>" + obj.fields.time_created + "</br>";
-           if(obj.extras.friend){
-               moar += "From your friend <b>" + obj.extras.friendname + "</b>";
-           }
-           if(!(obj.extras.get_image_set_urls == null)){
-               var urls = obj.extras.get_image_set_urls.split(",");
-               var filename = urls[0];
-               filename = filename.replace(/'/g,"").replace("[","").replace("]","");
-               var thumbnail = obj.extras.get_thumbnail_set_urls.split(",");
-               thumbnail = thumbnail[0];
-               thumbnail = thumbnail.replace(/'/g,"").replace("[","").replace("]",""); 
-               moar += "<a href=\"" + filename + "\"><img alt=\"\" src=\"" + thumbnail + "\" /></a>";
-           }*/
-           var imageHeight=(height*hh)-pfactor-36; //got rid of -36. !!PUT BACK THE 36
 
+           var imageHeight=(height*hh)-pfactor-36; //got rid of -36. !!PUT BACK THE 36
            var imageWidth=(width*ww)-pfactor;
 
            if(!(obj.extras.get_thumbnail_url == null)){
