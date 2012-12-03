@@ -4,14 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="Buy and sell items within your community." />
       <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,social,groups,buy,sell,berkeley,UC Berkeley,friends" />
-      <meta property="og:title" content="Buy Near Me"/>
+      <meta property="og:title" content="{{ circle.name }} - Buy Near Me"/>
       <meta property="og:type" content="website"/>
-      <meta property="og:url" content="http://buynear.me"+{{ circle.get_absolute_url }}/>
-      <meta property="og:image" content="{% get_static_prefix %} 124ta-orange.png"/>
+      <meta property="og:url" content="http://buynear.me/groups/view{{ circle.get_absolute_url }}"/>
+      <!-- <meta property="og:image" content="http://buynear.me{% get_static_prefix %} 124ta-orange.png"/> -->
       <meta property="og:site_name" content="Buy Near Me"/>
-
       <meta property="og:description"
-            content="{{ circle.name }}"/>
+            content="{{ circle.description }}"/>
 {% endblock %}
 
 {% block sidebar %}
