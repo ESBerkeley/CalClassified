@@ -1,17 +1,16 @@
 {% block subject %}{{ post.title }} Response - {{ first_name }}{% endblock %}
 {% block html %}
   <p>Hi {{ recipient_name}},</p>
-    <br>
   <p>{{ full_name }}, has contacted you about your item! </p>
   <h3>Message:</h3>
   <p>
   {{ message }}
   <ul>
     <li>
-        <a href="http://buynear.me/{{ thread.get_absolute_url }}">Click here</a> to view the message thread</p>
+        <a href="http://buynear.me/{{ thread.get_absolute_url }}">Click here</a> to view the message thread
     </li>
     <li>
-        <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view your item!</p>
+        <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view your item!
     </li>
   </ul>
   </p>
