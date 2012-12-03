@@ -6,7 +6,7 @@ from django.core.context_processors import csrf
 from django.core import serializers
 from django.db.models import Avg, Max, Min, Count
 from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import TemplateView
 #from django.utils import simplejson
@@ -323,8 +323,9 @@ def deleteallposts(request):
             return render_to_response('message.html', {'message':'No posts created by your account found.'},context_instance=RequestContext(request))
 
 def showpost(request,pid,super_cat):
- #   try:
-    post = super_cat.objects.get(pk=pid)
+    post = get_object_or_404(super_cat, pk=pid)
+
+
     related_posts = []
     # category_posts = super_cat.objects.filter(category=post.category).exclude(id=pid)
     # cat_length = len(category_posts)
