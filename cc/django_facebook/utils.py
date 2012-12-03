@@ -114,10 +114,11 @@ def next_redirect(request, default='/', additional_params=None,
     if not redirect_url:
         for key in next_key:
             redirect_url = request.REQUEST.get(key)
-            next = redirect_url.split('next=')
-            if len(next)>1:
-                redirect_url = next[1]
-                break
+            if next != None:
+                next = redirect_url.split('next=')
+                if len(next)>1:
+                    redirect_url = next[1]
+                    break
             if request.user.get_profile().first_time:
                 redirect_url = '/fb_import/'
                 break
