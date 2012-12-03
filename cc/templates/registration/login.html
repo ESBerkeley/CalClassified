@@ -39,7 +39,7 @@
     <div id="OR"> <h3> OR </h3> </div>
     
     <form action="{% url facebook_connect %}?facebook_login=1" method="post">
-      <input type="hidden" value="{{ request.path }}" name="next" />
+      <input type="hidden" value="{{ request.path }}?next={{ request.GET.next }}" name="next" />
       <div id="facebook_login_js">
         <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{% get_static_prefix %}images/login.png" style="height:35px; width:280px; margin-bottom:-16px; padding-right:5px;"/>
       </div>
