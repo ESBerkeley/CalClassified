@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function runserver {
+    cd $1
+    pwd
+    echo "yes" | python manage.py collectstatic
+    python manage.py validate
+    python manage.py syncdb
+    python manage.py evolve --hint
+    python manage.py evolve --hint --execute
+    echo "yes" | python manage.py rebuild_index
+    python manage.py runserver buynear.me:9001
+}
+
+runserver cc
+
+
