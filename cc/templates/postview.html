@@ -55,7 +55,7 @@
     <div id="post-container" class="container">
     
     <div class="small-title small-title-post">
-      <center><h2> {{ post.title }}</h2></center>
+      <center><h2 id="post-title">{{ post.title }}</h2></center>
     </div>
     
     <div class="">
@@ -205,7 +205,7 @@
     </div>
     <div class="post-lower">
         <h3 style="font-weight: 400;">Product Description:</h3>
-          <p style="white-space:pre-wrap">{{ post.body }} </p>
+          <p id="post-body" style="white-space:pre-wrap">{{ post.body }}</p>
           <!--<p> {{ post.time_created }}</p>-->
 
             <hr style="margin-bottom: 15px;">
@@ -307,8 +307,11 @@ $(document).ready( function() {
         );
     }
     function publishStream(){
-        streamPublish("{{ post.title }} - ${{ post.price }}",
-        '{{ post.body }}', 
+        var post_body = $("#post-body").html();
+        var fb_title = $("#post-title").html() + " - ${{ post.price }}"; //instatiate as a variable to be safe in case text contains quotes
+        
+        streamPublish(fb_title,
+        post_body, 
         "Buy and sell with your friends!", 
         'http://buynear.me{{ post.get_absolute_url }}', 
         "http://buynear.me{{ post.get_first_image_url }}");
