@@ -32,6 +32,26 @@
 {% block sidebar %}{% endblock %}
 
     {% block content %} 
+    
+    {% if new == 1 %}
+    <div id="new-post-alert" class="alert alert-block alert-info fade in container">
+    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    <b> Item successfully posted! </b>
+        <p> 
+            We recommend you share this on Facebook! 
+            <a href="#" onclick="return false;"><img class="fb-publish" src="/static/images/fb-icon.gif" /></a>
+        </p>
+    </div>
+    
+    <div id="new-post-success" class="alert alert-block alert-info fade in container" style="display:none;">
+    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    <b> Facebook Share </b>
+        <p> 
+            The item was successfully shared on your wall!
+        </p>
+    </div>
+    {% endif %}
+    
     <div id="post-container" class="container">
     
     <div class="small-title small-title-post">
@@ -254,27 +274,46 @@
 {% endblock %}
 
 {% block post_js %}
-  <script type="text/javascript">
-    $('.carousel').carousel();
-  </script>
-   
-   
-{% if not is_bookmarked %}
 <script type="text/javascript">
-    function focusMessage() {
-        alert("A");
-        document.getElementById('modal-message').focus();
+
+$(document).ready( function() {
+
+    $('.carousel').carousel();
+    
+    $(".fb-publish").click(function() {
+        publishStream();
+    })
+    
+    function streamPublish(name, description, caption, hrefLink, picLink){
+        FB.ui(
+        {
+            method: 'feed',
+            name: name,
+            link: hrefLink,
+            picture: picLink,
+            caption: caption,
+            description: description
+        },
+        
+        function(response) {
+          if (response && response.post_id) {
+            $("#new-post-alert").alert('close');
+            $("#new-post-success").fadeIn();
+          } else {
+            //alert('Post was not published.');
+          }
+        }
+        
+        );
     }
-
-  $(document).ready( function() {
-
-      $.cookie('onpost',null); 
-      $.cookie('onpost','t', { expires: 1, path: '/' } );
- 
-    //toggler("bookmark-icon")
-      $("#active-bookmark").show()
-      $("#not-active-bookmark").hide()
-
+    function publishStream(){
+        streamPublish("{{ post.title }} - ${{ post.price }}",
+        '{{ post.body }}', 
+        "Buy and sell with your friends!", 
+        'http://buynear.me{{ post.get_absolute_url }}', 
+        "http://buynear.me{{ post.get_first_image_url }}");
+    }
+    
       $(".close-refresh").click (function() {
           location.reload();
       })
@@ -290,11 +329,18 @@
           $('#modal-message').focus();
       })
 
+$.cookie('onpost',null); 
+  $.cookie('onpost','t', { expires: 1, path: '/' } );
 
+{% if not is_bookmarked %}
+    //toggler("bookmark-icon")
+      $("#active-bookmark").show()
+      $("#not-active-bookmark").hide()
+{% endif %}
 
 })
 </script>
-{% endif %}
+
 {% load static %}
 <script src="{% get_static_prefix %}js/postview.js"></script>
 {% endblock %}

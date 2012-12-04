@@ -238,7 +238,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
 
                 post_created_signal.send(sender = ItemForSale, instance = model)
 
-                return redirect(model)
+                return redirect(model.get_absolute_url()+"?new=1")
 
             else:
                 return render_to_response('createlisting.html',{'form':form},context_instance=RequestContext(request))
@@ -323,9 +323,8 @@ def deleteallposts(request):
             return render_to_response('message.html', {'message':'No posts created by your account found.'},context_instance=RequestContext(request))
 
 def showpost(request,pid,super_cat):
-    post = get_object_or_404(super_cat, pk=pid)
-
-
+    post = get_object_or_404(super_cat, pk=pid)    
+    
     related_posts = []
     # category_posts = super_cat.objects.filter(category=post.category).exclude(id=pid)
     # cat_length = len(category_posts)
@@ -350,6 +349,13 @@ def showpost(request,pid,super_cat):
         bookmarks = user_profile.bookmarks.filter(id = pid)
         if bookmarks:
             ecks['is_bookmarked'] = True
+        #if user_profile.facebook_id:
+            #ecks['is_facebook'] = True
+
+    if "new" in request.GET and int(request.GET['new']) == 1:
+        ecks['new'] = 1
+    
+            
     ecks.update(csrf(request))
     return render_to_response('postview.html',ecks,context_instance=RequestContext(request))
   #  except:
