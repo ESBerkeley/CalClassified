@@ -33,7 +33,7 @@
 
     {% block content %} 
     
-    {% if new == 1 %}
+    {% if new == 1 and request.user = post.owner%}
     <div id="new-post-alert" class="alert alert-block alert-info fade in container">
     <a class="close" data-dismiss="alert" href="#">&times;</a>
     <b> Item successfully posted! </b>
