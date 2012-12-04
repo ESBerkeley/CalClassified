@@ -584,7 +584,7 @@ def ajax_box(request):
                 except:
                     item.friend = 0
                     item.friendname = ""
-                item.boxsize = random.randint(0,1)
+                item.boxsize = 1
                 
                 if fbf:
                     if search_result.object.friend:
@@ -615,7 +615,7 @@ def foreveralone(found_entries,fbf, fatty_cheese_wheel):
     for item in found_entries:
         item.object.friend = 0
         item.object.friendname = ""
-        item.object.boxsize = random.randint(0,1)
+        item.object.boxsize = 1
         item.object.score = item.score
         
         if fbf:
