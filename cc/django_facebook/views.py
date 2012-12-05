@@ -26,7 +26,10 @@ from django.shortcuts import redirect
 
 
 logger = logging.getLogger(__name__)
-
+class NullHandler(logging.Handler): #exists in python 3.1
+    def emit(self, record):
+        pass
+null_handler = logger.addHandler(NullHandler())
 
 @facebook_required(scope='publish_actions')
 def open_graph_beta(request):
