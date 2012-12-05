@@ -8,7 +8,6 @@ function runserver {
     python manage.py syncdb
     python manage.py evolve --hint
     python manage.py evolve --hint --execute
-    echo "yes" | python manage.py rebuild_index
     python manage.py runserver buynear.me:9001
 }
 
