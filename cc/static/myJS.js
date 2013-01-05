@@ -29,6 +29,7 @@ function restore(){
             document.getElementById('max').value = xxxx["max_price"];
             flags = xxxx["flags"];
             oflags = xxxx["oflags"];
+            scraps = xxxx["scraps"];
         
         }
         
@@ -59,11 +60,11 @@ function save_state(inputurl){
         "query" : document.getElementById('searchbar').value,
         "min_price" : document.getElementById('min').value,
         "max_price" : document.getElementById('max').value,
+        "scraps" : scraps,
         "flags" : flags,
         "oflags" : oflags
     });
-    
-    //document.location = inputurl;
+   
 }
 
 
