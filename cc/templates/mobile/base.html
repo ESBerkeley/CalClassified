@@ -15,15 +15,30 @@
 <body>
 <div id="body-page" data-role="page" data-theme="d">
 
-    <div data-role="header" data-theme="b" data-position="fixed">
+    <div data-role="header" data-theme="b">
         <h1>{% block header_title %}Buy Near Me{% endblock %}</h1>
-        <a id="nav-account" href="index.html" data-icon="gear" class="ui-btn-right">Account</a>
     </div><!-- /header -->
 
 
 {% block body_content %}{% endblock %}
-</div><!-- /page -->
 
-{% block javascript %}{% endblock %}
+    <div data-role="footer" data-position="fixed" data-id="foo1" data-theme="a">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="{% url browse %}" id="footer-browse">Browse</a></li>
+                <li><a href="b.html">Sell</a></li>
+                <li><a href="c.html">My Listings</a></li>
+                <li><a href="d.html">Messages</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+    <script type="text/javascript" src="{% get_static_prefix %}mobile/mobile-js.js"></script>
+    {% block javascript %}{% endblock %}
+
+</div><!-- /page -->
 </body>
 </html>

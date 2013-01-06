@@ -5,12 +5,22 @@
         <center><img src="/static/124ta.png" alt="Buy Near Me" style="max-width: 300px;"></center>
         <center><p> Buy and Sell Your Things</p></center>
     </div>
-    <br>
-    <ul id="home-list" data-role="listview" data-inset="true">
-        <li><a href="#">Log In</a></li>
-        <li><a href="{% url browse %}">Browse</a></li>
-        <li><a href="#">Contact</a></li>
-        <li><a href="#">About</a></li>
 
-    </ul>
+
+    <div id="login-box">
+
+        <div>
+            <label for="basic">Email:</label>
+            <input type="text" name="email" id="basic" value=""  />
+            <label for="basic">Password: </label>
+            <input type="password" name="password" value=""  />
+            <br>
+            <input type="button" value="Log In" data-theme="d" >
+        </div>
+        <br>
+        <hr>
+        <br>
+        <input type="button" value="Log in with Facebook" data-theme="b" >
+    </div>
+
 {% endblock %}

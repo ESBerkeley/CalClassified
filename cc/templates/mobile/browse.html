@@ -3,6 +3,7 @@
 {% block title %}Browse{% endblock %}
 {% block header_title %}Browse{% endblock %}
 {% block body_content %}
+
     <form action="javascript: search();" id="search-form">
     <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" />
     </form>
@@ -18,53 +19,27 @@
 
 
             </ul>
-        </div><!--/content-primary -->
+        </div>
 {% endblock %}
 
 {% block javascript %}
     <script type="text/javascript">
-    $(document).ready(function(){
+
+    $('#body-page').live('pageshow', function () {
+        // THIS IS HOW TO DO DOCUMENT READY
         search();
-        $('.ui-input-clear').live('tap', function () {
-            $("#search-basic").val("");
-            search();
-        });
+    });
+
+    $(document).ready(function(){
+
+        //search();
+
+
     })
 
-    function search(){
-        $.mobile.loading( 'show', {
-            text: 'foo',
-            //textVisible: true,
-            theme: 'a',
-            html: ""
-        });
-        var send_data = {};
-        var searchText = $("#search-basic").val();
-        send_data['searchText'] = searchText;
-        $.ajax({
-                   type: "GET",
-                   url: "/ajax/browse/",
-                   data: send_data,
-                   success: function(data){
-                       var data = eval(data);
-                       var browseHtml = ""
-                       for (index in data) {
-                           var entry = data[index];
-                           browseHtml += "<li><a href='/"+entry['pk']+"'>"
-                           browseHtml += "<img src='" + entry['fields']['cached_thumb'] + "' />"
-                           browseHtml += "<h3>" + entry['fields']['title'] + "</h3>"
-                           browseHtml += "<p>$" + entry['fields']['price'] + "</p></a></li>"
-                       }
-                       $.mobile.loading( 'hide', {
-                           text: 'foo',
-                           //textVisible: true,
-                           theme: 'a',
-                           html: ""
-                       });
-                       $("#browse-list").html(browseHtml).listview("refresh");
-                   }
-               })
-
-    }
+    $('.ui-input-clear').live('tap', function () {
+        $("#search-basic").val("");
+        search();
+    });
     </script>
 {% endblock %}
