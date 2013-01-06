@@ -1,0 +1,16 @@
+{% extends "mobile/base.html" %}
+
+{% block body_content %}
+    <div id="home-logo" data-inset="true">
+        <center><img src="/static/124ta.png" alt="Buy Near Me" style="max-width: 300px;"></center>
+        <center><p> Buy and Sell Your Things</p></center>
+    </div>
+    <br>
+    <ul id="home-list" data-role="listview" data-inset="true">
+        <li><a href="#">Log In</a></li>
+        <li><a href="{% url browse %}">Browse</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">About</a></li>
+
+    </ul>
+{% endblock %}
