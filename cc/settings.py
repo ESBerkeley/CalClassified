@@ -149,6 +149,7 @@ INSTALLED_APPS = (
     'haystack',
     'templated_email',
     'django_resized',
+    'widget_tweaks'
     # 'django.contrib.admindocs',
 )
 
