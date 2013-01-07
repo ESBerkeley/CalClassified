@@ -6,7 +6,7 @@
     <title>{% block title %}Buy Near Me - Home{% endblock %}</title>
     {% block metadata %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="Buy and sell items within your communities." />
+      <meta name="description" content="Buy and sell items to friends and classmates!" />
       <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,buy,sell,berkeley,UC Berkeley,friends" />
       <meta property="og:title" content="Buy Near Me"/>
       <meta property="og:type" content="website"/>
@@ -15,7 +15,7 @@
       <meta property="og:site_name" content="Buy Near Me"/>
 
       <meta property="og:description"
-            content="Buy and sell items within your communities."/>
+            content="Buy and sell items to friends and classmates!"/>
     {% endblock %}
     <link href="{% get_static_prefix %}bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="{% get_static_prefix %}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
@@ -60,7 +60,7 @@
           <a class="brand" id="logo" href="/"><img style="height:37px;" src="{% get_static_prefix %}124ta-beta.png"></a>
           <ul class="nav">
             <li><a href="{% url browse %}">Browse</a></li>
-            <li><a href="/post/">Sell</a></li>
+            <li><a href="{% url createIFS %}">Sell</a></li>
             <li><a href="https://docs.google.com/a/buynear.me/spreadsheet/viewform?formkey=dGZ4SUVNcUtSNndidkdnUlVsWkpySGc6MQ#gid=0">Feedback</a></li>
           </ul>
 

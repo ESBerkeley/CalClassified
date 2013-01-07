@@ -471,7 +471,94 @@ class FacebookUserConverter(object):
         likes = likes_response and likes_response.get('data')
         logger.info('found %s likes', len(likes))
         return likes
-        
+
+    def get_free_for_sale(self, limit=100):
+        '''
+        Parses free and for sale page
+        '''
+        items_response = self.open_facebook.get('266259930135554/feed', limit=limit)
+        items = items_response and items_response.get('data')
+        return items
+
+    def get_textbook_exchange(self, limit=100):
+        '''
+        Parses textbook exchange page
+        '''
+        items_response = self.open_facebook.get('266259890135558/feed', limit=limit)
+        items = items_response and items_response.get('data')
+        return items
+
+    def get_facebook_data(self, url, limit=100):
+        '''
+        Parses facebook data
+        '''
+        fb_response = self.open_facebook.get(url, limit=limit)
+        data = fb_response and fb_response.get('data')
+        return data
+
+    def get_facebook_url(self, url):
+        '''
+        Parses facebook objects
+        '''
+        fb_response = self.open_facebook.get(url)
+        return fb_response
+
+    def store_free_for_sale(self, items):
+        '''
+        Given a user and likes store these in the db
+        Note this can be a heavy operation, best to do it
+        in the background using celery
+        '''
+        if facebook_settings.FACEBOOK_CELERY_STORE:
+            from django_facebook.tasks import store_free_for_sale
+            store_free_for_sale.delay(items)
+        else:
+            self._store_likes(items)
+
+    @classmethod
+    def _store_free_for_sale(self, user, items):
+        current_items = inserted_items = None
+
+        if items:
+            from django_facebook.models import FreeForSaleItem
+            base_queryset = FreeForSaleItem.objects.all()
+            global_defaults = dict(user_id=user.id)
+            id_field = 'facebook_id'
+            default_dict = {}
+            for item in items:
+                seller_name = item.get('from').get('name')
+                post_url = item.get('actions').get('link')
+                try:
+                    message = item.get('message')
+                except:
+                    continue
+
+                created_time_string = item.get('created_time')
+                created_time = None
+                if created_time_string:
+                    created_time = datetime.datetime.strptime(
+                        item['created_time'], "%Y-%m-%dT%H:%M:%S+0000")
+
+                default_dict[item['id']] = dict(
+                    created_time=created_time,
+                    seller_name=seller_name,
+                    post_url=post_url,
+                    message=message
+                )
+            current_items, inserted_items = mass_get_or_create(
+                FreeForSaleItem, base_queryset, id_field, default_dict,
+                global_defaults)
+            logger.debug('found %s items and inserted %s new items',
+                len(current_items), len(inserted_items))
+
+        #fire an event, so u can do things like personalizing the users' account
+        #based on the likes
+        signals.facebook_post_store_items.send(sender=get_profile_class(),
+            user=user, items=items, current_items=current_items,
+            inserted_items=inserted_items,
+        )
+        return items
+
     def store_likes(self, user, likes):
         '''
         Given a user and likes store these in the db
@@ -518,7 +605,6 @@ class FacebookUserConverter(object):
             user=user, likes=likes, current_likes=current_likes,
             inserted_likes=inserted_likes,
         )
-        
         return likes
 
     def get_and_store_groups(self, user):

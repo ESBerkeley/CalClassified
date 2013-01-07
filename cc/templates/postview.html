@@ -100,6 +100,11 @@
             <div id="postCarousel" class="carousel slide">
               <!-- Carousel items -->
               <div class="carousel-inner">
+                {% if post.is_facebook_post %}
+                    <div class="active item">
+                        <img src="{{ post.facebookpost.get_picture }}" alt="Item Image"/>
+                    </div>
+                {% else %}
                 {% for image_url in image_set %}
                   {% if image_url == post.get_first_image_url %}
                     <div class="active item">
@@ -117,6 +122,7 @@
                     </div>
                   {% endif %}
                 {% endfor %}
+                {% endif %}
               </div>
               <!-- Carousel nav -->
               {% if image_set_length > 1 %}
@@ -146,7 +152,11 @@
               <li class="side-item">{{ post.owner }}</li>
             {% endif %} -->
             <li class="nav-header"><h2>Date Added:</h2></li>
-            <li> {{ post.time_created.date }}</li>
+            {% if post.is_facebook_post %}
+              <li> {{ post.facebookpost.created_time.date }}</li>
+            {% else %}
+              <li> {{ post.time_created.date }}</li>
+            {% endif %}
             <li class="nav-header"><h2>Category:</h2></li>
             <li> {{ post.category.name }}</li>
             <li class="nav-header"><h2>Posted In:</h2></li>

@@ -15,7 +15,19 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
     
     category = indexes.MultiValueField()
     circles = indexes.MultiValueField()
-        
+    approved = indexes.BooleanField(model_attr='approved')
+    is_facebook_post = indexes.BooleanField(model_attr='is_facebook_post')
+
+    def prepare_approved(self, obj):
+        if obj.approved==False:
+            return ''
+        return True
+
+    def prepare_is_facebook_post(self, obj):
+        if obj.is_facebook_post==False:
+            return ''
+        return True
+
     def prepare_category(self, obj):
         return [obj.category.id]
     

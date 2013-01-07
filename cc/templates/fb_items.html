@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}FB Item Import{% endblock %}
+
+{% block head %}
+
+<!-- Styles -->
+<style type="text/css">
+    .checkId {
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form id="fb_groups_form" method="post" action="." >
+{% csrf_token %}
+
+
+    <div id="createGroupBanner">
+        <h3> Importing Items from Facebook! </h3>
+    </div>
+
+    <div class="container" style="width:950px; margin-top: 20px;">
+
+        <div id="fbNewGroup" >
+            <h2>Create items</h2>
+            {% if new_items %}
+                {% for item in new_items %}
+                    <div style="padding-bottom: 4px;">
+                        <p>{{ item.message }}</p>
+                        <ul>
+                            <li>{{ item.from.name }}</li>
+                            <li>{{ item.actions.0.link }}</li>
+                            <li><img src="{{ item.picture }}"></li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            {% elif items%}
+                {% for item in items %}
+                    <div style="padding-bottom: 4px;">
+                        <p>{{ item.body }}<p>
+                        <ul>
+                            <li>{{ item.seller_name }}</li>
+                            <li>{{ item.post_url }}</li>
+                            <li><img src="{{ item.picture_url }}"></li>
+                        </ul>
+                    </div>
+                {% endfor %}
+                <p> It seems there are no new posts</p>
+            {% endif %}
+        </div>
+
+        <div id="fbOldGroup">
+            <h2>Existing items</h2>
+            {% if existing_items %}
+            {% for item in existing_items %}
+                <div style="padding-bottom: 4px;">
+                    <p>{{ item.body }}<p>
+                    <ul>
+                        <li>{{ item.seller_name }}</li>
+                        <li>{{ item.post_url }}</li>
+                        <li><img src="{{ item.picture_url }}"></li>
+                    </ul>
+                </div>
+            {% endfor %}
+            {% else %}
+                <p>No existing items?</p>
+            {% endif %}
+        </div>
+
+        <input value="Submit" type="submit" class="btn btn-primary btn-large" style="margin-top: 20px; width: 450px;">
+    </div>
+
+</form>
+
+<div style="clear:both"></div>
+
+{% endblock %}
+
+
+

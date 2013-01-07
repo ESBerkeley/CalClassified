@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Group Import{% endblock %}
+
+{% block head %}
+
+<!-- Styles -->
+<style type="text/css">
+    .checkId {
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form id="fb_groups_form" method="post" action="." >
+{% csrf_token %}
+    {{ formset.management_form }}
+
+    <div id="createGroupBanner">
+        <h3> Approve Facebook Posts</h3>
+    </div>
+
+    <div class="container" style="width:950px; margin-top: 20px;">
+
+        <div id="fbAdmin">
+            <table class="table table-bordered">
+
+                <caption><h2> New items </h2></caption>
+                <thead>
+                <tr>
+                    <th> View </th>
+                    <th> Title </th>
+                    <th style="width:10px"> Price </th>
+                    <th> Category </th>
+                    <th> Approved </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% if formset %}
+                {% load widget_tweaks %}
+                {% for form in formset %}
+                    <tr>
+                        {{ form.id }}
+                        <td> <a href="/{{ form.instance.pk }}">{{ form.instance.title|truncatechars:30 }} </a> </td>
+                        <td> {{ form.title }} </td>
+                        <td> {{ form.price|attr:"style:width:70px" }} </td>
+                        <td> {{ form.category }} </td>
+                        <td> {{ form.approved }} </td>
+                        {{ form.itemforsale_ptr }}
+                    </tr>
+                {% endfor %}
+
+                {% elif approved_items %}
+                    {% for item in approved_items %}
+                    <tr>
+                        <td><a href="{{ item.get_absolute_url }}">link</a></td>
+                        <td> {{ item.title|truncatechars:30 }} </td>
+                        <td> {{ item.price }} </td>
+                        <td> {{ item.category }} </td>
+                        <td> {{ item.approved }} </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+
+                </tbody>
+            </table>
+            <!--h2>Approve new items</h2>
+            {% if new_items %}
+                {% for item in new_items %}
+                    <div style="padding-bottom: 4px;">
+                        <input type="checkbox" id="id_{{ item.id }}" name="fbPostId" value="{{ item.id }}" style="margin-top: -2px;">
+                        <span id="{{ item.id }}" class="checkId">{{ item.title }}</span><br>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p> No new items need to be approved</p>
+            {% endif %}-->
+        </div>
+
+        <!--div id="fbOldGroup">
+            <h2>Approved items</h2-->
+        {% if formset %}
+        <input value="Submit" type="submit" class="btn btn-primary btn-large" style="margin-top: 20px; width: 450px;">
+        {% endif %}
+    </div>
+
+</form>
+
+<div style="clear:both"></div>
+
+{% endblock %}
+
+{% block post_js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".checkId").click(function(){
+            var id = $(this).attr("id");
+            $("#id_"+id).attr("checked",!$("#id_"+id).is(':checked'))
+        })
+
+    })
+</script>
+{% endblock %}
+
+

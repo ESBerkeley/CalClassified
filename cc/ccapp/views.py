@@ -16,17 +16,22 @@ from django_facebook.api import get_facebook_graph, FacebookUserConverter
 from open_facebook.exceptions import OpenFacebookException
       
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.csrf import csrf_view_exempt
+#from django.views.decorators.csrf import csrf_view_exempt
 
 from haystack.query import SearchQuerySet
-from haystack.models import SearchResult
-
+from haystack.management.commands import update_index
+#from haystack.models import SearchResult
 
 from multiuploader.models import MultiuploaderImage
 
 from django.core.mail import send_mail
 from templated_email import send_templated_mail
+
+from urlparse import urlparse, parse_qs
+
 import random
+import datetime
+import re
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 @csrf_exempt
@@ -66,28 +71,139 @@ def ajax_circle_search(request):
     else:
         return HttpResponse("oi")
 
-
+@login_required
 def friendslist(request):
     #try:
     graph = get_facebook_graph(request)
-    #print(graph)
     facebook = FacebookUserConverter(graph)
-    #print(facebook)
-    #print(dir(facebook))
-    groups = facebook.get_groups()
-    friends = facebook.get_friends()
-    likes = facebook.get_likes()
+    #groups = facebook.get_groups()
+    items = facebook.get_free_for_sale()
+    import json
+    #print json.dumps(items, sort_keys=True, indent=4, separators=(',', ': '))
+    for item in items:
+        thumbnail_url = item.get('picture')
+        if thumbnail_url:
+            link = item.get('link')
+            fb_id = parse_qs(urlparse(link).query)['fbid'][0]
+            print(fb_id)
+            picture = facebook.get_facebook_url(fb_id)
+            print(picture)
+            picture_url = picture.get('source')
+            print(picture_url)
+    #print items
+    #friends = facebook.get_friends()
+    #likes = facebook.get_likes()
     #store_likes = facebook.get_and_store_likes(request.user)
     #print(groups)
     #print(store_likes)
     #print(queryset)
-    context_object_name = 'my_friends_list'
-    template_name = "friendslist.html" 
+    #context_object_name = 'my_friends_list'
+    #template_name = "friendslist.html"
     #except OpenFacebookException as e:
     #    print(e)
     #except:
     #    raise Http404
-    return render_to_response('friendslist.html',{'my_friends_list': friends, 'my_groups': groups}, context_instance=RequestContext(request))
+    update_index.Command().handle(using='default', remove=True)
+    return render_to_response('friendslist.html',{'items':items},
+        context_instance=RequestContext(request))
+
+@login_required
+def fb_items(request):
+    ''
+    existing_items = []
+    new_items = []
+    data = {}
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            existing_items = FacebookPost.objects.all()
+            graph = get_facebook_graph(request)
+            facebook = FacebookUserConverter(graph)
+            items = facebook.get_free_for_sale()
+            owner, created = User.objects.get_or_create(
+                first_name='Facebook',
+                last_name='Bot',
+                email='noreply@buynear.me',
+                username='noreply@buynear.me')
+            category, created = Category.objects.get_or_create(name='Uncategorized')
+            for item in items:
+                item_id = item.get('id').split('_')[1]
+                if not existing_items.filter(facebook_id=item_id).exists():
+                    user_id = item.get('from').get('id')
+                    seller_name = item.get('from').get('name')
+                    post_url = item.get('actions')[0].get('link')
+                    thumbnail_url = item.get('picture')
+                    picture_url = None
+                    if thumbnail_url:
+                        try:
+                            link = item.get('link')
+                            fb_id = parse_qs(urlparse(link).query)['fbid'][0]
+                            picture = facebook.get_facebook_url(fb_id)
+                            picture_url = picture.get('source')
+                        except:
+                            pass
+                    body = item.get('message')
+                    if not body:
+                        continue
+                    price = 0
+                    price_string = body.split('$')
+                    if len(price_string)>1:
+                        price = (float)(re.findall(r"[-+]?\d*\.\d+|\d+", price_string[1])[0])
+                    title = body[:48] + (body[50:] and '..')
+
+                    created_time_string = item.get('created_time')
+                    created_time = None
+                    if created_time_string:
+                        created_time = datetime.datetime.strptime(
+                            item['created_time'], "%Y-%m-%dT%H:%M:%S+0000")
+                    new_item = FacebookPost(facebook_id=item_id,
+                                    user_id=user_id,
+                                    seller_name=seller_name,
+                                    post_url=post_url,
+                                    thumbnail_url=thumbnail_url,
+                                    picture_url=picture_url,
+                                    body=body,
+                                    price=price,
+                                    title=title,
+                                    owner=owner,
+                                    category=category,
+                                    approved=False,
+                                    created_time=created_time)
+                    new_item.save()
+                    new_items.append(new_item)
+            circle = Circle.objects.get(name='Berkeley')
+            circle.itemforsale_set.add(*new_items)
+
+            data['existing_items'] = existing_items
+            data['new_items'] = new_items
+            data['items'] = items
+            return redirect('/fb_admin')
+    else:
+        if request.user.is_authenticated():
+            try:
+                graph = get_facebook_graph(request)
+                facebook = FacebookUserConverter(graph)
+                new_items = facebook.get_free_for_sale()
+            except:
+                pass
+        existing_items = FacebookPost.objects.all()
+        data['existing_items'] = existing_items
+        data['new_items'] = new_items
+        return render_to_response('fb_items.html', data, context_instance=RequestContext(request))
+
+@login_required
+def fb_admin(request):
+    data = {}
+    if request.method == 'GET':
+        formset = FacebookFormSet(queryset=FacebookPost.objects.filter(approved=False))
+        data['formset'] = formset
+        return render_to_response('fb_admin.html', data, context_instance=RequestContext(request))
+    else:
+        formset = FacebookFormSet(request.POST, queryset=FacebookPost.objects.filter(approved=False))
+        if formset.is_valid():
+            items = formset.save()
+        data['approved_items'] = items
+        update_index.Command().handle(using='default', remove=True)
+        return render_to_response('fb_admin.html', data, context_instance=RequestContext(request))
 
 @login_required
 def fb_import(request):
@@ -167,8 +283,6 @@ def friends(request):
     
 class FriendsView(TemplateView):
     template_name = 'friends.html'
-
-import random
 
 class MainView(TemplateView):
     template_name = 'index.html'
@@ -277,7 +391,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
         
 @login_required
 def createlistingviewIFS(request):
-    return createlistingview(request,ItemForSaleForm,ItemForSale)
+    return createlistingview(request, ItemForSaleForm, ItemForSale)
     
 #def createIFSwithinCircle(request, url_key):
 #    return createlistingview(request,ItemForSaleForm,ItemForSale,url_key=url_key)
@@ -338,7 +452,7 @@ def showpost(request,pid,super_cat):
             # rand_post = random.choice(category_posts)
             # if rand_post not in related_posts:
                 # related_posts.append(rand_post)
-    form = MessageForm()
+    #form = MessageForm()
     #ecks = {'MsgForm':form, 'post':post, 'related_posts':related_posts}
     ecks = {'post':post, 'related_posts':related_posts, 'is_bookmarked':False}
     image_set = post.get_image_set_urls()
@@ -407,7 +521,7 @@ def ajax_contact_seller(request):
         if rec_profile.message_email:
             send_templated_mail(
                 template_name='message',
-                from_email='noreply@buynear.me',
+                from_email='Buy Near Me <noreply@buynear.me>',
                 recipient_list=[recipient.email],
                 context={
                     'message':message.body,
@@ -489,8 +603,8 @@ def boxview(request):
     query_string = ''
     #found_entries = ItemForSale.objects.all()
     found_entries = 1 #This is a dummy value which isnt used at all
-    all_cats = Category.objects.all().order_by('name')
-    other_category, created = Category.objects.get_or_create(name="Other")
+    all_cats = Category.objects.order_by('name')
+    other_category, created = Category.objects.get_or_create(name='Other')
     return_dict = {'cc_ifs':found_entries,'cc_cats':all_cats,'other_category':other_category}
     if request.user.is_authenticated():
         profile = request.user.get_profile()
@@ -561,11 +675,22 @@ def ajax_box(request):
 
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
-        found_entries = SearchQuerySet().filter(text=query_string,circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
+        found_entries = SearchQuerySet().filter(
+            text=query_string,
+            circles__in=checked_circles,
+            category__in=checked_categories,
+            price__range=(min_price,max_price),
+            approved=True
+        ).order_by('-time_created')
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
     else:
-        found_entries = SearchQuerySet().filter(circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
+        found_entries = SearchQuerySet().filter(
+            circles__in=checked_circles,
+            category__in=checked_categories,
+            price__range=(min_price,max_price),
+            approved=True
+        ).order_by('-time_created')
 
     found_entries = found_entries[(100*p):(100*(p+1))]
 

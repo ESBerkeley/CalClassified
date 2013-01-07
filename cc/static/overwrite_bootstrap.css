@@ -902,6 +902,15 @@ label.error {
     width: 400px;
 }
 
+#fbAdmin {
+    float: left;
+    background-color: white;
+
+    border: 1px solid #bababa;
+    padding: 5px 25px 15px 25px;
+    width: 900px;
+}
+
 #createGroupBanner {
     background-color: white;
     border: 1px solid #bababa;

@@ -1,6 +1,8 @@
 #!/bin/bash
 cd cc
 python manage.py createcachetable user_sessions
+python manage.py rebuild_index
+read -p "Press [Enter] key to start dbgen"
 python manage.py testdbgen
 
 

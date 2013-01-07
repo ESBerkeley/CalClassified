@@ -1,9 +1,10 @@
 from django.db import models
 from django import forms
 from django.contrib import admin
-from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
+from django.forms import ModelForm
+from django.forms.models import modelformset_factory
 
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
@@ -20,7 +21,8 @@ class Post(models.Model):
     body = models.TextField()
     time_created = models.DateTimeField(auto_now_add=True)
     key_data = models.CharField(max_length=30, unique=True, blank=True, null=True)
-    owner = models.ForeignKey(User, null = True, default = None)
+    owner = models.ForeignKey(User, null=True, default=None)
+    approved = models.BooleanField(default=True)
     
     class Meta:  #abstract base class. no actual db table
         abstract = True
@@ -83,11 +85,11 @@ class CircleForm(ModelForm):
         exclude = ('url_key','is_city','creator', 'fb_id')
 
 class ItemForSale(Post):
-    price = models.DecimalField(max_digits=8,decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     category = models.ForeignKey(Category)
     circles = models.ManyToManyField(Circle)
     cached_thumb = models.CharField(max_length=200, default = '')
-    
+
     def get_formatted_price(self):
         return "%01.2f" % self.price
     
@@ -111,16 +113,18 @@ class ItemForSale(Post):
     
     def get_thumbnail_url(self):
         try:
-          if self.cached_thumb == '':
-              from sorl.thumbnail import get_thumbnail
-              image = self.image_set.all()[0]
-              im = get_thumbnail(image, "250x250", quality=50)
-              thumb_url = im.url
-              self.cached_thumb = thumb_url
-              self.save()
-              return thumb_url
-          else:
-              return self.cached_thumb
+            if self.is_facebook_post and self.facebookpost.thumbnail_url:
+                return self.facebookpost.thumbnail_url
+            if self.cached_thumb == '':
+                from sorl.thumbnail import get_thumbnail
+                image = self.image_set.all()[0]
+                im = get_thumbnail(image, "250x250", quality=50)
+                thumb_url = im.url
+                self.cached_thumb = thumb_url
+                self.save()
+                return thumb_url
+            else:
+                return self.cached_thumb
         except:
             self.cached_thumb = self.get_category_image_url()
             self.save()
@@ -151,6 +155,14 @@ class ItemForSale(Post):
     def get_absolute_url(self):
         return '/%i' % self.id
 
+    @property
+    def is_facebook_post(self):
+        try:
+            self.facebookpost
+            return True
+        except:
+            return False
+
 class ItemForSaleAdmin(admin.ModelAdmin):
     readonly_fields = ['time_created']
 
@@ -163,9 +175,30 @@ class ItemForSaleForm(ModelForm):
     body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
     class Meta:
         model = ItemForSale
-        exclude = ('time_created','images','is_confirmed', 'key_data', 'owner','cached_thumb')
+        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'approved')
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
+class FacebookPost(ItemForSale):
+    user_id = models.IntegerField()
+    facebook_id = models.BigIntegerField()
+    post_url = models.URLField(blank=True, null=True)
+    thumbnail_url = models.URLField(blank=True, null=True)
+    picture_url = models.URLField(blank=True, null=True)
+    seller_name = models.TextField(blank=True, null=True)
+    created_time = models.DateTimeField(blank=True, null=True)
+
+    def get_picture(self):
+        if self.picture_url:
+            return self.picture_url
+        elif self.thumbnail_url:
+            return self.thumbnail_url
+        else:
+            return self.get_category_image_url()
+
+    class Meta:
+        unique_together = ['user_id', 'facebook_id']
+
+FacebookFormSet = modelformset_factory(FacebookPost, max_num=0, fields=('title','price','category', 'approved'))
 
 class Notification(models.Model): 
     going_to  = models.ForeignKey('django_facebook.FacebookProfile')
@@ -173,7 +206,6 @@ class Notification(models.Model):
     post_from = models.ForeignKey(ItemForSale)
     def __unicode__(self):
         return self.post_from.title
-
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sender_msg_set')

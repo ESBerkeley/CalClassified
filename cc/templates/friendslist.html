@@ -16,23 +16,11 @@
 </script>
 
 <div class="row">
-
-    {% if request.user.get_profile.first_time %}
     <div id="circleHeader" class="span10 offset3">
-        {% if existing_groups %}
-        <h2>Would you like to join some groups?</h2>
-        {% for group in existing_groups %}
-        <p>{{ group.name }}</p>
+        {% for item in items %}
+            <p>{{ item.message }}</p>
         {% endfor %}
-        {% endif %}
-        {% if new_groups %}
-        <h2>Create some groups?</h2>
-        {% for group in new_groups %}
-        <p>{{ group.name }}</p>
-        {% endfor %}
-        {% endif %}
     </div>
-    {% endif %}
 </div>
 
 

@@ -9,27 +9,45 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
+    #MAIN PAGES
     url(r'^$', MainView.as_view(), name='mainview'),
-    url(r'^note/$',"ccapp.views.note"),
-    url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),
-    url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS"),
+    url(r'^browse/$','ccapp.views.boxview',name="browse"),
+    url(r'^sell/$','ccapp.views.createlistingviewIFS',name="createIFS"),
+    url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS"), #delete in future, in case for hard links
+    url(r'^about/$', AboutView.as_view()),
+    url(r'^contact/$', ContactView.as_view()),
+    url(r'^privacy/', TemplateView.as_view(template_name = 'privacy_policy.html')),
+    url(r'^feedback/', TemplateView.as_view(template_name = 'feedback.html')),
+    url(r'^terms/', TemplateView.as_view(template_name= 'terms.html')),
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
+
+    #ACCOUNT:
+    url(r'^facebook/', include('django_facebook.urls')),
+    url(r'^accounts/', include('django_facebook.auth_urls')),
+    url(r'^fb_import/$', 'ccapp.views.fb_import', name='fb_import'),
+
+    #ADMIN/DEBUG
+    url(r'^friends/debug/$', 'ccapp.views.friendslist', name='test_friends'),
+    url(r'^fb_items/$', 'ccapp.views.fb_items', name='add_fb_items'),
+    url(r'^fb_admin/$', 'ccapp.views.fb_admin', name='approve_fb_items'),
+
+    #??? not sure if functional still
+    url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),
+
+    #BACK-END -------
+    url(r'^note/$',"ccapp.views.note"),
+
     url(r'^delete/(?P<pid>\d+)$','ccapp.views.deletepostIFS'),
     url(r'^delete/all/','ccapp.views.deletepostIFS'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^search/$','ccapp.views.search'),
-    url(r'^browse/$','ccapp.views.boxview',name="browse"),
+
     url(r'^ajax_box/$','ccapp.views.ajax_box'),
     url(r'^get_friend_notifications/$','ccapp.views.ajax_friend_notifications'),
-    url(r'^about/$', AboutView.as_view()),
-    url(r'^contact/$', ContactView.as_view()),
     url(r'^message/(?P<pid>\d+)$', 'ccapp.views.contactsellerIFS'),
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.SITE_ROOT + settings.STATIC_DOC_ROOT}),
     #dont put $ in front of these links or hell breaks lose
-    url(r'^facebook/', include('django_facebook.urls')),
-    url(r'^accounts/', include('django_facebook.auth_urls')),
-    url(r'^friends/$', FriendsView.as_view()),
-    url(r'^fb_import/$', 'ccapp.views.fb_import', name='fb_import'),
+
     url(r'^groups/$', 'ccapp.views.all_circles', name="view_circles"),
     url(r'^groups/view/(?P<url_key>[\w\+%_& ]+)/$', 'ccapp.views.view_circle'),
     url(r'^groups/view/(?P<url_key>[\w\+%_& ]+)/delete/$', 'ccapp.views.delete_group'),
@@ -47,9 +65,6 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout',
                           {'next_page': '/successfully_logged_out/'}),
 
-    
     url(r'', include('multiuploader.urls')),
-    url(r'^privacy/', TemplateView.as_view(template_name = 'privacy_policy.html')),
-    url(r'^feedback/', TemplateView.as_view(template_name = 'feedback.html')),
-    url(r'^terms/', TemplateView.as_view(template_name= 'terms.html')),
+
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
