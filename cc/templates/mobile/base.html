@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>{% load static %}
+    <title>{% block title %}Buy Near Me Mobile{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+    <!--link rel="stylesheet" href="{% get_static_prefix %}mobile/jquery.mobile-1.2.0.css" /-->
+    <link href="{% get_static_prefix %}mobile/mobile_style.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+    <!-- script src="{% get_static_prefix %}/mobile/jquery.mobile-1.2.0.js"></script -->
+    <link rel="shortcut icon" href="{% get_static_prefix %}1255.ico">
+</head>
+<body>
+<div id="body-page" data-role="page" data-theme="d">
+
+    <div data-role="header" data-theme="b">
+        <h1>{% block header_title %}Buy Near Me{% endblock %}</h1>
+    </div><!-- /header -->
+
+
+{% block body_content %}{% endblock %}
+
+    <div data-role="footer" data-position="fixed" data-id="foo1" data-theme="a">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="{% url browse %}" id="footer-browse">Browse</a></li>
+                <li><a href="b.html">Sell</a></li>
+                <li><a href="c.html">My Listings</a></li>
+                <li><a href="d.html">Messages</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+    <script type="text/javascript" src="{% get_static_prefix %}mobile/mobile-js.js"></script>
+    {% block javascript %}{% endblock %}
+
+</div><!-- /page -->
+</body>
+</html>

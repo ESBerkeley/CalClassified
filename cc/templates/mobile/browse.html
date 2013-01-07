@@ -1,0 +1,45 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}Browse{% endblock %}
+{% block header_title %}Browse{% endblock %}
+{% block body_content %}
+
+    <form action="javascript: search();" id="search-form">
+    <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" />
+    </form>
+
+        <div >
+            <ul data-role="listview" id="browse-list">
+
+                <!-- <li><a href="index.html">
+                    <img src="/static/images/Apparel.jpg" />
+                    <h3>Broken Bells</h3>
+                    <p> $53 </p>
+                </a></li> -->
+
+
+            </ul>
+        </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+
+    $('#body-page').live('pageshow', function () {
+        // THIS IS HOW TO DO DOCUMENT READY
+        search();
+    });
+
+    $(document).ready(function(){
+
+        //search();
+
+
+    })
+
+    $('.ui-input-clear').live('tap', function () {
+        $("#search-basic").val("");
+        search();
+    });
+    </script>
+{% endblock %}
