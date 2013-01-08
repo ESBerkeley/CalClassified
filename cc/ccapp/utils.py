@@ -40,17 +40,20 @@ def send_bnm_message(request):
     rec_profile.save()
     recipient_name = recipient.get_full_name()
     if rec_profile.message_email:
-        send_templated_mail(
-            template_name='message',
-            from_email='Buy Near Me <noreply@buynear.me>',
-            recipient_list=[recipient.email],
-            context={
-                'message':message.body,
-                'thread':thread2,
-                'post':post,
-                'username':sender.username,
-                'first_name':sender.first_name,
-                'full_name':sender.get_full_name(),
-                'recipient_name':recipient_name,
-                },
-        )
+        try:
+            send_templated_mail(
+                template_name='message',
+                from_email='Buy Near Me <noreply@buynear.me>',
+                recipient_list=[recipient.email],
+                context={
+                    'message':message.body,
+                    'thread':thread2,
+                    'post':post,
+                    'username':sender.username,
+                    'first_name':sender.first_name,
+                    'full_name':sender.get_full_name(),
+                    'recipient_name':recipient_name,
+                    },
+            )
+        except:
+            pass
