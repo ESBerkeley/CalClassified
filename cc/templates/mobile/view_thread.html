@@ -1,0 +1,45 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}Messages{% endblock %}
+{% block header_title %}Messages{% endblock %}
+{% block body_content %}
+
+    <h3 class="source-font" style="text-align: center;">
+        <a href="{{ item.get_absolute_url }}">{{ thread.post_title }}</a>
+        - {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</h3>
+
+
+    <form action="{{ item.get_absolute_url }}" method="post" id="message-form">{% csrf_token %}
+        <input type="hidden" name="post_pk" value="{{ item.pk }}" />
+        <input type="hidden" name="recipient_pk" value="{{ item.owner.pk }}" />
+        <textarea id="message-text" name="message"></textarea>
+        <input type="submit" value="Send Message" data-theme="b"/>
+    </form>
+<br>
+<ul data-role="listview">
+    {% for message in messages %}
+
+            <li class="messages">
+                {% if message.sender == request.user %}
+                    <p class="sender"> Me </p>
+                {% else %}
+                    <p class="sender"> {{ message.sender.first_name }} {{ message.sender.last_name }}</p>
+                {% endif %}
+                <p class="msg_time_created">{{ message.time_created }}</p>
+                <p style="white-space:pre-wrap; line-height: 19px;">{{ message.body }}</p>
+            </li>
+
+
+    {% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        var recipient_pk = {{ item.owner.pk }}
+        var post_pk = {{ item.pk }}
+        var csrfmiddlewaretoken = "{{ csrf_token }}";
+        var view_thread = true;
+    </script>
+{% endblock %}

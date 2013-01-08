@@ -1,5 +1,6 @@
 from ccapp.models import *
 from ccapp.signals import post_created_signal
+from ccapp.utils import *
 
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
@@ -78,3 +79,62 @@ def ajax_browse(request):
 
     data = serializers.serialize('json', list_entries)
     return HttpResponse(data,'application/javascript')
+
+def view_item(request,pid):
+    if request.method == "GET":
+        item = ItemForSale.objects.get(id = pid)
+        image_set = item.get_image_set_urls()
+        data = {}
+        data['item'] = item
+        data['image_set'] = image_set
+        return render_to_response("mobile/view_item.html",data,context_instance = RequestContext(request))
+    else:
+        if request.is_ajax() and request.user.is_authenticated() and "message" in request.POST:
+            send_bnm_message(request) # in utils.py
+
+            return HttpResponse()
+
+def ajax_message_send(request):
+    if request.is_ajax() and request.user.is_authenticated() and request.method=="POST" and "message" in request.POST:
+        send_bnm_message(request) # in utils.py
+
+        return HttpResponse()
+
+def message_sent(request):
+    data = {}
+    return render_to_response("mobile/message_sent.html",data,context_instance = RequestContext(request))
+
+
+#ACCOUNT STUFF
+@login_required
+def view_messages(request):
+    data = {}
+    user = request.user
+    my_threads = Thread.objects.filter(owner=user).order_by('is_read','-newest_message_time')
+    for thread in my_threads:
+        try:
+            ItemForSale.objects.get(id=thread.post_id)
+        except:
+            thread.post_deleted = True
+            thread.save()
+    data['my_threads']= my_threads
+
+    user_profile = user.get_profile()
+    user_profile.notifications = 0
+    user_profile.save()
+    return render_to_response('mobile/view_messages.html',data,context_instance=RequestContext(request))
+
+@login_required
+def view_thread(request,thread_id):
+    thread = Thread.objects.get(id = thread_id)
+
+    try:
+        item = ItemForSale.objects.get(id=thread.post_id)
+    except:
+        thread.post_deleted = True
+
+    messages = thread.messages.all().order_by('-time_created')
+    data = {"thread":thread, "messages": messages, "item": item}
+    thread.is_read = True
+    thread.save()
+    return render_to_response('mobile/view_thread.html',data,context_instance=RequestContext(request))

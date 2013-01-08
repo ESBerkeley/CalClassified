@@ -1,0 +1,18 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}Browse{% endblock %}
+{% block header_title %}Browse{% endblock %}
+{% block data-role-page %}
+    <div data-role="dialog">
+
+        <div data-role="header" data-theme="b">
+            <h1>Message Sent</h1>
+
+        </div>
+
+        <div data-role="content" data-theme="c">
+            <p>Success, your message has been sent!</p>
+            <a data-role="button" data-rel="back" data-theme="c">Okay</a>
+        </div>
+    </div>
+{% endblock %}

@@ -63,7 +63,7 @@ urlpatterns = patterns('',
     url(r'^ajax_delete_thread/$','ccapp.views.ajax_delete_thread'),
     url(r'^ajax_delete_post/$','ccapp.views.ajax_delete_post'),
     url(r'^logout/$', 'django.contrib.auth.views.logout',
-                          {'next_page': '/successfully_logged_out/'}),
+                          {'next_page': '/'}),
 
     url(r'', include('multiuploader.urls')),
 

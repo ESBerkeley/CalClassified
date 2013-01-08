@@ -1,0 +1,46 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}Messages{% endblock %}
+{% block header_title %}Messages{% endblock %}
+{% block body_content %}
+    <div>
+
+        {% if my_threads %}
+
+            <ul data-role="listview">
+                {% for thread in my_threads %}
+
+                {% if thread.is_read %}
+                    <li  data-theme="c">
+                        {% else %}
+                    <li class="not-read" data-theme="d">
+                {% endif %}
+                    <a href="./{{ thread.id }}/">
+                        <h3>
+                            {{ thread.post_title }}
+                            {% if not thread.is_read %}
+                                (Unread)
+                            {% endif %}
+                            {% if thread.post_deleted %}
+                                (Post Deleted)
+                            {% endif %}
+                        </h3>
+                        <p>From: {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</p>
+                    </a>
+                    </li>
+
+                {% endfor %}
+            </ul>
+
+        {% else %}
+            <h2 style="text-align: center;"> You have no message history.</h2>
+        {% endif %}
+
+
+
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

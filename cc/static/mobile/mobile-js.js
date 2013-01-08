@@ -34,3 +34,63 @@ function search(){
 
 }
 
+
+$("#message-form").submit(function(event){
+    event.preventDefault();
+    $('[type="submit"]').button('disable');
+
+    $.mobile.loading( 'show', {
+        text: 'Sending Message...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+    });
+
+    data = {}
+    data['recipient_pk'] = recipient_pk
+    data['post_pk'] = post_pk
+    data['message'] = $("#message-text").val();
+    data['csrfmiddlewaretoken'] = csrfmiddlewaretoken;
+
+    $.ajax({
+        type: "POST",
+        url: "/ajax/send_message/",
+        data: data,
+        success: function(data){
+
+        },
+        error: function(){
+            alert("Oops! Something went wrong. Please contact support.")
+
+        },
+        complete: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+                if (view_thread == false){
+                    alert("Message Sent!");
+                }
+                refreshPage();
+
+        }
+
+    })
+
+    return false;
+
+})
+
+function refreshPage() {
+    $.mobile.changePage(
+        window.location.href,
+        {
+            allowSamePageTransition : true,
+            transition              : 'none',
+            showLoadMsg             : false,
+            reloadPage              : true
+        }
+    );
+}

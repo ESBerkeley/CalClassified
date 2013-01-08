@@ -25,9 +25,15 @@
 {% block javascript %}
     <script type="text/javascript">
 
+    var preloaded = false;
     $('#body-page').live('pageshow', function () {
         // THIS IS HOW TO DO DOCUMENT READY
-        search();
+        var pathname = window.location.pathname;
+        pathname = pathname.split("/")
+        if(pathname.length > 1 && pathname[1]=="browse" && !preloaded){
+            search();
+            preloaded = true
+        }
     });
 
     $(document).ready(function(){

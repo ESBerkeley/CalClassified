@@ -137,34 +137,8 @@
       <div class="span3 post-sidebar">
         <div class="">
           <ul class="nav nav-list">
-            <li class="nav-header"><h2>Seller:</h2></li>
-            {% if post.owner.get_full_name %}
-              <li><p>{{ post.owner.get_full_name }}</p></li>
-            {% else %}
-              <li><p>{{ post.owner.username }}</p></li>
-            {% endif %}
-            <li class="nav-header"><h2>Price:</h2></li>
-            <li> <p>$  {{ post.price }}<p></li>
-            <!-- <li class="nav-header">Posted by: </li>
-            {% if post.owner.get_full_name %}
-              <li class="side-item">{{ post.owner.get_full_name }} </li>
-            {% else %}
-              <li class="side-item">{{ post.owner }}</li>
-            {% endif %} -->
-            <li class="nav-header"><h2>Date Added:</h2></li>
-            {% if post.is_facebook_post %}
-              <li> {{ post.facebookpost.created_time.date }}</li>
-            {% else %}
-              <li> {{ post.time_created.date }}</li>
-            {% endif %}
-            <li class="nav-header"><h2>Category:</h2></li>
-            <li> {{ post.category.name }}</li>
-            <li class="nav-header"><h2>Posted In:</h2></li>
-            {% for circle in post.circles.all %}
-              {% if circle.is_public or circle in request.user.get_profile.my_circles.all %}
-              <li><a href="{{ circle.get_absolute_url }}">{{ circle }}</a></li>
-              {% endif %}
-            {% endfor %}
+              <h4>Price:</h4>
+              <p>$ {{ item.price }}<p>
           </ul>
         </div><!--/.well -->
 

@@ -1,0 +1,108 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}{{ item.title }}{% endblock %}
+{% block header_title %}View Item{% endblock %}
+
+{% block end_head %}
+    <link href="/static/mobile/photoswipe/photoswipe.css" type="text/css" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html"/>{% endblock %}
+
+{% block body_content %}
+
+<h2 style="padding: 0 3% 0 3%; margin-bottom: 0; text-align: center; font-weight: 400;">{{ item.title }}</h2>
+
+<div id="Gallery">
+    {% if post.is_facebook_post %}
+            <li><a href="{{ item.facebookpost.get_picture }}"><img src="{{ item.facebookpost.get_picture }}" alt="{{ item.title  }} Image" /></a></li>
+    {% else %}
+        {% for image_url in image_set %}
+            {% if forloop.first %}
+                <a href="{{ image_url }}" rel="external"><img src="{{ image_url }}" alt="{{ item.title  }} Image" width="100%"/></a>
+            {% else %}
+                <a href="{{ image_url }}" rel="external"><img src="{{ image_url }}" alt="{{ item.title  }} Image" width="100%" style="display:none;"/></a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+    <center><caption>Touch photo to view more and enlarge.</caption></center>
+
+    <div id="item-info">
+        <h3 style="margin-bottom: 0;">Description:</h3>
+        <p style="margin-top: 5px; margin-bottom: 0; white-space:pre-wrap">{{ item.body }}</p>
+    </div>
+
+    <div id="item-details">
+    <h3>Item Details</h3>
+
+    <h4>Price: <span class="item-details-span" style="color: #2e8b57;">$ {{ item.price }}</span></h4>
+
+    <h4 class="push-up">
+        Seller:
+        <span class="item-details-span">
+        {% if item.owner.get_full_name %}
+            {{ item.owner.get_full_name }}
+        {% else %}
+            {{ item.owner.username }}
+        {% endif %}
+        </span>
+    </h4>
+
+    <h4 class="push-up">
+        Date Added:
+        <span class="item-details-span">
+            {% if item.is_facebook_post %}
+                {{ item.facebookpost.created_time.date }}
+            {% else %}
+                {{ item.time_created.date }}
+            {% endif %}
+        </span>
+    </h4>
+
+    <h4 class="push-up">Category: <span class="item-details-span">{{ item.category.name }}</span></h4>
+
+    </div>
+    <br>
+    <form onsubmit="javascript: return false;" id="message-form">{% csrf_token %}
+    <input type="hidden" name="post_pk" value="{{ item.pk }}" />
+    <input type="hidden" name="recipient_pk" value="{{ item.owner.pk }}" />
+    <textarea id="message-text" name="message"></textarea>
+    <input type="submit" value="Send Message" data-theme="b"/>
+    </form>
+
+    <a href="{% url message_sent %}" data-rel="dialog" data-transition="pop" id="open-sent" style="display:none;">Open dialog</a>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="/static/mobile/photoswipe/lib/klass.min.js"></script>
+    <script type="text/javascript" src="/static/mobile/photoswipe/code.photoswipe.jquery-3.0.5.min.js"></script>
+
+
+    <script type="text/javascript">
+
+
+
+        //$(document).bind('pageinit', function(){
+
+
+            var recipient_pk = {{ item.owner.pk }}
+            var post_pk = {{ item.pk }}
+            var csrfmiddlewaretoken = "{{ csrf_token }}";
+            var view_thread = false;
+
+        var myPhotoSwipe = $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
+            enableKeyboard: false,
+            jQueryMobile: true,
+            preventSlideshow: true
+        //}); end document bind
+
+
+
+
+
+        });
+
+    </script>
+{% endblock %}

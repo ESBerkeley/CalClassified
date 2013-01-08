@@ -26,3 +26,60 @@
     -moz-border-radius: 15px;
     border-radius: 8px;
 }
+
+#Gallery{
+    padding-top: 5%;
+    padding-bottom: 5px;
+}
+
+#item-info{
+    padding: 3%;
+    padding-top: 0;
+    padding-bottom: 3%;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+#item-details {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #f8f8f8;
+    padding: 3%;
+    padding-top: 1%;
+    margin: 3%;
+    border-radius: 8px;
+    border: 1px solid #dfdfdf;
+}
+
+#item-details h4 {
+    margin-bottom: 5px;
+}
+
+#item-details p {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+#item-details h4.push-up {
+    margin-top: 0;
+}
+
+.source-font {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.item-details-span {
+    padding-left: 10px;
+    font-weight: normal;
+}
+
+li.messages p {
+    font-size: 11pt;
+}
+
+li.messages .sender{
+    padding-top: 5px;
+    padding-bottom: 2px;
+    font-weight: bold;
+}
+
+li.messages .msg_time_created {
+    padding-bottom: 4px;
+}

@@ -8,7 +8,13 @@
 
 
     <div id="login-box">
+        {% if request.user.is_authenticated %}
 
+            <div>
+                Hi, {{ request.user.first_name }}! Hopefully you can logout soon!<br>
+                <a href="/logout">logout</a>
+            </div>
+        {% else %}
         <div>
             <label for="basic">Email:</label>
             <input type="text" name="email" id="basic" value=""  />
@@ -20,7 +26,25 @@
         <br>
         <hr>
         <br>
-        <input type="button" value="Log in with Facebook" data-theme="b" >
+
+            <form action="{% url facebook_connect %}?facebook_login=1" method="post">
+                <input type="hidden" value="{{ request.path }}" name="next" />
+                <div id="facebook_login_js">
+                    <input onclick="F.connect(this.parentNode.parentNode); return false;" type="button" value="Log in with Facebook" data-theme="b" />
+                </div>
+            </form>
+
+            <div class="inner_content">
+                <form action="{% url facebook_connect %}?facebook_login=1" method="post">
+                    <input type="hidden" value="{{ request.path }}" name="next" />
+                    <div id="facebook_login_jss">
+                        <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{{ STATIC_URL }}images/login_crop.png" style="height:29px; width:170px; margin-bottom:-16px; padding-right:5px;"/>
+                    </div>
+                </form>
+            </div>
+
+
+        {% endif %}
     </div>
 
 {% endblock %}
