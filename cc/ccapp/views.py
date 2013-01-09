@@ -899,7 +899,7 @@ def profile_messages(request):
     return render_to_response('profile/profile_messages.html',data,context_instance=RequestContext(request))
 
     
-@login_required
+@login_required(redirect_field_name='/view_thread')
 def profile_view_thread(request,thread_id):
     thread = Thread.objects.get(id = thread_id)
     
