@@ -10,7 +10,9 @@ admin.autodiscover()
 urlpatterns = patterns('ccapp.mobile_views',
     url(r'^$', "home", name='home'),
     url(r'^browse/$',"browse", name="browse"),
-    url(r'^login',"login", name="login"),
+    url(r'^sell/$',"sell", name="sell"),
+    url(r'^my_items/$',"my_items", name="my_items"),
+    #url(r'^login',"login", name="login"),
     url(r'^(?P<pid>\d+)$','view_item'),
     url(r'^dialog/message_sent/$','message_sent', name="message_sent"),
 
@@ -27,7 +29,6 @@ urlpatterns = patterns('ccapp.mobile_views',
     #ACCOUNT URLS
     url(r'^view_messages/$',"view_messages", name="view_messages"),
     url(r'^view_messages/(?P<thread_id>\d+)/$',"view_thread"),
-
 
                         ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

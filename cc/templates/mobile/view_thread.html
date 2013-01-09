@@ -9,7 +9,7 @@
         - {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</h3>
 
 
-    <form action="{{ item.get_absolute_url }}" method="post" id="message-form">{% csrf_token %}
+    <form id="message-form">{% csrf_token %}
         <input type="hidden" name="post_pk" value="{{ item.pk }}" />
         <input type="hidden" name="recipient_pk" value="{{ item.owner.pk }}" />
         <textarea id="message-text" name="message"></textarea>

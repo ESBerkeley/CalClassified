@@ -24,6 +24,12 @@
 <div id="body-page" data-role="page" data-theme="d" data-add-back-btn="true">
 
     <div data-role="header" data-theme="b">
+        {% if request.user.is_authenticated %}
+        <a href="/logout" class="ui-btn-right">Log Out</a>
+        {% else %}
+            <a href="{% url home %}" class="ui-btn-right">Log In</a>
+        {% endif %}
+
         <h1>{% block header_title %}Buy Near Me{% endblock %}</h1>
     </div><!-- /header -->
 
@@ -34,8 +40,8 @@
         <div data-role="navbar">
             <ul>
                 <li><a href="{% url browse %}" id="footer-browse">Browse</a></li>
-                <li><a href="b.html">Sell</a></li>
-                <li><a href="c.html">My Items</a></li>
+                <li><a href="{% url sell %}">Sell</a></li>
+                <li><a href="{% url my_items %}">My Items</a></li>
                 <li><a href="{% url view_messages %}">Messages</a></li>
             </ul>
         </div>

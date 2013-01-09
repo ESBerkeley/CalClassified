@@ -6,6 +6,9 @@
         <center><p> Buy and Sell Your Things</p></center>
     </div>
 
+    {% if next %}
+    <p style="color:red; font-size:13px; margin-top:0px; margin-bottom:5px; text-align: center;">Please log in to continue.</p>
+    {% endif %}
 
     <div id="login-box">
         {% if request.user.is_authenticated %}
@@ -15,43 +18,42 @@
                 <a href="/logout">logout</a>
             </div>
         {% else %}
+
         <form method="post" action="{% url auth_login %}">{% csrf_token %}
             <label for="basic">Email:</label>
             <input type="text" name="username" id="basic" value=""  />
             <label for="basic">Password: </label>
             <input type="password" name="password" value=""  />
             <br>
-            <input type="submit" value="Log In" data-theme="d" >
-            {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-            {% else %}
-                <input type="hidden" name="next" value="/" />
-                {% endif %}
 
             {% if form.errors %}
-            <p id="login-error" style="color:red; font-size:12px; margin-top:5px; margin-bottom:0px; text-align: center;">Your E-mail or password was incorrect. Please try again.</p>
+                <p id="login-error" style="color:red; font-size:13px; margin-top:0px; margin-bottom:0px; text-align: center;">Your E-mail or password was incorrect. Please try again.</p>
             {% endif %}
+
+            <input type="submit" value="Log In" data-theme="d" >
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}" />
+            {% else %}
+                <input type="hidden" name="next" value="/" />
+            {% endif %}
+
+
         </form>
-        <br>
-        <hr>
-        <br>
 
-            <form action="{% url facebook_connect %}?facebook_login=1" method="post">
-                <input type="hidden" value="{{ request.path }}" name="next" />
-                <div id="facebook_login_js">
-                    <input onclick="F.connect(this.parentNode.parentNode); return false;" type="button" value="Log in with Facebook" data-theme="b" />
-                </div>
-            </form>
+            <br>
+            <hr>
+            <br>
 
-            <div class="inner_content">
+            <button id="fake-login" data-theme="b">Log in with Facebook</button>
+
+            <div class="inner_content" style="display: none;">
                 <form action="{% url facebook_connect %}?facebook_login=1" method="post">
-                    <input type="hidden" value="{{ request.path }}" name="next" />
+                    <input type="hidden" value="{{ next }}" name="next" />
                     <div id="facebook_login_jss">
-                        <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{{ STATIC_URL }}images/login_crop.png" style="height:29px; width:170px; margin-bottom:-16px; padding-right:5px;"/>
+                        <input id="actual-fb-login" onclick="F.connect(this.parentNode.parentNode); return false;" type="image"/>
                     </div>
                 </form>
             </div>
-
 
         {% endif %}
     </div>
@@ -69,11 +71,11 @@
         {% endif %}
 
     });
-</script>
 
-    <div>
-        some kind of landing page
-    </div>
+    $("#fake-login").click(function(){
+        $("#actual-fb-login").trigger("click");
+    })
+</script>
 
 {% endblock %}
 

@@ -6,8 +6,13 @@ function search(){
         html: ""
     });
     var send_data = {};
-    var searchText = $("#search-basic").val();
-    send_data['searchText'] = searchText;
+    send_data['searchText'] = $("#search-basic").val();
+    send_data['min_price'] = $("#min-price").val();
+    send_data['max_price'] = $("#max-price").val();
+    send_data['checked_categories'] = $('input[name=categories]:checked').map(function() {
+        return $(this).val();
+    }).get(); // array of checked category ids
+
     $.ajax({
                type: "GET",
                url: "/ajax/browse/",

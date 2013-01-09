@@ -7,6 +7,28 @@
     <form action="javascript: search();" id="search-form">
     <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" />
     </form>
+    <div id="filter-options">
+        <div  data-role="fieldcontain">
+            <fieldset data-role="controlgroup">
+                <p style="margin-top: 0;">Filter by as many categories you'd like!</p>
+
+                {% for category in categories %}
+
+                <input type="checkbox" name="categories" id="id_category_{{ category.id }}" value="{{ category.id }}"/>
+                <label for="id_category_{{ category.id }}">{{ category.name }}</label>
+                {% endfor %}
+
+            </fieldset>
+        </div>
+
+        <label for="min-price">Min Price</label>
+        <input type="range" id="min-price" value="0" min="0" max="{{ max_price }}" data-highlight="true" />
+        <br>
+        <label for="max-price">Max Price</label>
+        <input type="range" id="max-price" value="{{ max_price }}" min="0" max="{{ max_price }}" data-highlight="true" />
+
+    </div>
+    <button id="filter-button" data-icon="gear">Filter Options</button>
 
         <div >
             <ul data-role="listview" id="browse-list">
@@ -36,16 +58,21 @@
         }
     });
 
-    $(document).ready(function(){
-
-        //search();
-
-
-    })
-
     $('.ui-input-clear').live('tap', function () {
         $("#search-basic").val("");
         search();
     });
+
+    var first_filter = true;
+    $("#filter-button").click(function(){
+        if (first_filter) {
+            first_filter = false;
+            $("#filter-options").slideDown();
+            $("#filter-button").html("Search").button("refresh");
+        } else {
+            search();
+        }
+    })
+
     </script>
 {% endblock %}

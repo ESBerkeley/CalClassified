@@ -1,0 +1,120 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}Sell{% endblock %}
+{% block header_title %}Sell{% endblock %}
+
+{% block body_content %}
+<div id="sell-container">
+<form id="sell-form" action="{% url sell %}" method="post" enctype="multipart/form-data" data-ajax="false">
+    {% csrf_token %}
+    {% if error %}
+    <p style="color: red;">Sorry, something went wrong. Please try again or contact an admin.</p>
+        {{ form.errors }}
+    {% endif %}
+
+    <label>What are you selling?</label><br>
+    <input type="text" name="title" placeholder="Math 1A Textbook" />
+    <br><span class="insert-space"></span>
+
+    <label>Take a picture!</label><br>
+    <input name="images" type="file">
+    <span id="upload-images"> </span>
+    <br>
+
+    <span class="upload-more"><a>+ Upload more images if you wish!</a></span>
+    <br><br>
+
+    <label>Describe your item.</label><label class="error"></label>
+    <textarea name="body"></textarea>
+    <br><span class="insert-space"></span>
+
+    <label>How much do you want for it?</label>
+    <input type="text" name="price" placeholder="50.00" />
+    <br><span class="insert-space"></span>
+
+    <label>What kind of item is it?</label>
+    <select name="category" id="id_category">
+        <option value="" selected="selected">---------</option>
+        {% for entry in categories %}
+            <option value="{{ entry.id }}">{{ entry.name }}</option>
+        {% endfor %}
+    </select>
+    <br><span class="insert-space"></span>
+
+    <input type="hidden" name="circles" value="1" />
+
+    <input type="submit" value="Submit" />
+
+
+</form>
+</div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+
+    <script type="text/javascript">
+        var uploadImageCounter =1;
+        var first_time_error = true
+        $("#sell-form").validate({
+            rules: {
+                title: {
+                    required: true,
+                },
+                body: {
+                    required: true,
+                },
+                price: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                },
+                category: {
+                    required: true,
+                }
+            },
+            errorPlacement: function(error, element) {
+
+                // this is because error are too close to the input
+                if (first_time_error) {
+                    first_time_error = false;
+                    $(".insert-space").each(function(){
+                        $(this).html("<br>")
+                    })
+                }
+
+
+                if (element.attr("name") === "category") {
+                    error.insertAfter($(element).parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function() {
+                $("#sell-form").submit(function(event){
+                    $('[type="submit"]').button('disable');
+                })
+                $.mobile.loading( 'show', {
+                    text: 'Sending Message...',
+                    textVisible: false,
+                    theme: 'a',
+                    html: ""
+                });
+                $(form).ajaxSubmit();
+            },
+
+        });
+
+        $(".upload-more").click(function(){
+            var new_upload_html = '<br><input name="images" type="file">'
+            $("#upload-images").append(new_upload_html)
+            uploadImageCounter += 1;
+            if (uploadImageCounter == 3){
+                $(this).remove();
+                var max_images = '<br>Maximum 3 images'
+                $(".after-image").append(max_images)
+            }
+        })
+    </script>
+{% endblock %}
+

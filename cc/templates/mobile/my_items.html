@@ -1,0 +1,37 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}My Items{% endblock %}
+{% block header_title %}My Items{% endblock %}
+{% block body_content %}
+    <div>
+
+        {% if items %}
+
+            <ul data-role="listview" id="browse-list">
+                {% for item in items %}
+
+                <li>
+                <a href="{{ item.get_absolute_url }}">
+                    <img src="{{ item.cached_thumb }}" />
+                    <h3>
+                        {{ item.title }}
+                    </h3>
+                    <p>${{ item.price }}</p>
+                </a>
+                </li>
+
+                {% endfor %}
+            </ul>
+
+        {% else %}
+            <h2 style="text-align: center;"> You have no items.</h2>
+        {% endif %}
+
+
+
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

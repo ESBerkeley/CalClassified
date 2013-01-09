@@ -127,8 +127,16 @@ def next_redirect(request, default='/', additional_params=None,
                 break
             elif redirect_url:
                 break
+
         if not redirect_url:
-            redirect_url = default
+
+            #IF MOBILE GO ELSEWHERE
+            print(request.build_absolute_uri().split("."))
+            split_url = request.build_absolute_uri().split(".")
+            if "m" in split_url or "http://m" in split_url:
+                redirect_url = "/" #this is mobile redirect
+            else:
+                redirect_url = default
 
     if additional_params:
         query_params = QueryDict('', True)

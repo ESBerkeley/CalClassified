@@ -62,15 +62,20 @@
     <h4 class="push-up">Category: <span class="item-details-span">{{ item.category.name }}</span></h4>
 
     </div>
+
+    {% if request.user.is_authenticated %}
     <br>
-    <form onsubmit="javascript: return false;" id="message-form">{% csrf_token %}
+
+    <label style="padding: 3%;">Send a message to the owner:</label>
+    <form onsubmit="javascript: return false;" id="message-form" data-ajax="false">{% csrf_token %}
     <input type="hidden" name="post_pk" value="{{ item.pk }}" />
     <input type="hidden" name="recipient_pk" value="{{ item.owner.pk }}" />
     <textarea id="message-text" name="message"></textarea>
     <input type="submit" value="Send Message" data-theme="b"/>
     </form>
-
-    <a href="{% url message_sent %}" data-rel="dialog" data-transition="pop" id="open-sent" style="display:none;">Open dialog</a>
+    {% else %}
+        <a href="/?next={{ item.get_absolute_url }}" data-role="button">Login to Buy/Contact</a>
+    {% endif %}
 
 
 {% endblock %}
