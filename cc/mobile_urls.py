@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 admin.autodiscover()
 
@@ -11,6 +12,8 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^browse/$',"browse", name="browse"),
     url(r'^(?P<pid>\d+)$','view_item'),
     url(r'^dialog/message_sent/$','message_sent', name="message_sent"),
+
+    url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/home.html'},name='auth_login'),
 
     #FACEBOOK
     url(r'^facebook/', include('django_facebook.urls')),
