@@ -469,7 +469,7 @@ def showpost(request,pid,super_cat):
 
     if "new" in request.GET and int(request.GET['new']) == 1:
         ecks['new'] = 1
-    
+    ecks['this_is_a_post'] = True
             
     ecks.update(csrf(request))
     return render_to_response('postview.html',ecks,context_instance=RequestContext(request))
