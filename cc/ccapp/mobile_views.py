@@ -35,6 +35,9 @@ def home(request):
 def browse(request):
     return render_to_response('mobile/browse.html',context_instance = RequestContext(request))
 
+def login(request):
+    return render_to_response('mobile/login.html',context_instance = RequestContext(request))
+
 
 
 

@@ -9,6 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('ccapp.mobile_views',
     url(r'^$', "home", name='home'),
     url(r'^browse/$',"browse", name="browse"),
+    url(r'^login',"login", name="login"),
     url(r'^(?P<pid>\d+)$','view_item'),
     url(r'^dialog/message_sent/$','message_sent', name="message_sent"),
 
