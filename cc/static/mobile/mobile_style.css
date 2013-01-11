@@ -1,3 +1,58 @@
+/*WARNING all h2-4 fonts changed*/
+h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+}
+
+h3 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+}
+
+h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+}
+
+.font-300 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+}
+
+.font-400 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+}
+
+.font-600 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+}
+
+#body-page {
+    background-image: url('/static/fabric_plaid.png');
+}
+
+.title {
+    border-bottom: 1px solid #bababa;
+    margin-bottom:10px;
+}
+
+.title h2 {
+    margin-top:-5px;
+    margin-bottom:5px;
+}
+
+.box {
+    padding: 10px;
+    margin:10px;
+    margin-top: 0;
+    border: 1px solid #e5e5e5;
+    background-color: #f2f2f2;
+    -moz-border-radius: 15px;
+    border-radius: 8px;
+}
+
 #home-logo {
     padding: 10px;
     margin: 10px;
@@ -7,9 +62,6 @@
 
 #home-list {
     margin: 0 10px 0 10px;
-}
-
-#body-page {
 }
 
 #browse-list a{

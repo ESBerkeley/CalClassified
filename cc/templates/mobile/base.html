@@ -32,11 +32,12 @@
     {% block end_head %}{% endblock %}
 
 </head>
+
 <body>
 {% block data-role-page %}
 <div id="body-page" data-role="page" data-theme="d" data-add-back-btn="true">
 
-    <div data-role="header" data-theme="b">
+    <!--<div data-role="header" data-theme="b">
         {% if request.user.is_authenticated %}
         <a href="/logout" class="ui-btn-right">Log Out</a>
         {% else %}
@@ -45,6 +46,10 @@
 
         <h1>{% block header_title %}Buy Near Me{% endblock %}</h1>
     </div><!-- /header -->
+
+    {% if request.user.is_authenticated %}
+    <a href="/logout" data-role="button" data-inline="true" data-mini="true">Log Out</a>
+    {% endif %}
 
 
 {% block body_content %}{% endblock %}
@@ -67,8 +72,6 @@
     {% block javascript %}{% endblock %}
 
     {% include 'django_facebook/_facebook_js.html' %}
-
-
 
 </div><!-- /page -->
 {% endblock %}

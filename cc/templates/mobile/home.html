@@ -1,62 +1,17 @@
 {% extends "mobile/base.html" %}
 
 {% block body_content %}
-    <div id="home-logo" data-inset="true">
-        <center><img src="/static/124ta.png" alt="Buy Near Me" style="max-width: 300px;"></center>
-        <center><p> Buy and Sell Your Things</p></center>
-    </div>
 
-    {% if next %}
-    <p style="color:red; font-size:13px; margin-top:0px; margin-bottom:5px; text-align: center;">Please log in to continue.</p>
-    {% endif %}
+<div id="home-logo" data-inset="true">
+        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 40px;"></center>
+        <center><h2 style="font-size:15px; margin-top:5px;"> Buy and Sell Your Things</h2></center>
+</div>
 
-    <div id="login-box">
-        {% if request.user.is_authenticated %}
-
-            <div>
-                Hi, {{ request.user.first_name }}! Hopefully you can logout soon!<br>
-                <a href="/logout">logout</a>
-            </div>
-        {% else %}
-
-        <form method="post" action="{% url auth_login %}">{% csrf_token %}
-            <label for="basic">Email:</label>
-            <input type="text" name="username" id="basic" value=""  />
-            <label for="basic">Password: </label>
-            <input type="password" name="password" value=""  />
-            <br>
-
-            {% if form.errors %}
-                <p id="login-error" style="color:red; font-size:13px; margin-top:0px; margin-bottom:0px; text-align: center;">Your E-mail or password was incorrect. Please try again.</p>
-            {% endif %}
-
-            <input type="submit" value="Log In" data-theme="d" >
-            {% if next %}
-                <input type="hidden" name="next" value="{{ next }}" />
-            {% else %}
-                <input type="hidden" name="next" value="/" />
-            {% endif %}
-
-
-        </form>
-
-            <br>
-            <hr>
-            <br>
-
-            <button id="fake-login" data-theme="b">Log in with Facebook</button>
-
-            <div class="inner_content" style="display: none;">
-                <form action="{% url facebook_connect %}?facebook_login=1" method="post">
-                    <input type="hidden" value="{{ next }}" name="next" />
-                    <div id="facebook_login_jss">
-                        <input id="actual-fb-login" onclick="F.connect(this.parentNode.parentNode); return false;" type="image"/>
-                    </div>
-                </form>
-            </div>
-
-        {% endif %}
-    </div>
+<div class="box">
+    <a href="#" data-role="button" data-theme="b" class="font-400">Sign Up</a> 
+    <a href="#" data-role="button" data-theme="a" class="font-400">Features</a>
+    <a href="{% url login %}" data-role="button" data-theme="a" class="font-400">Log In</a>
+</div>
 
 {% endblock %}
 

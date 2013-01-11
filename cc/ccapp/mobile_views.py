@@ -31,23 +31,23 @@ from templated_email import send_templated_mail
 import random
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
-def home(request):
+def login(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('view_messages'))
     else:
         data = {}
         if "next" in request.GET:
             data['next'] = request.GET['next']
-        return render_to_response('mobile/home.html', data, context_instance = RequestContext(request))
+        return render_to_response('mobile/login.html', data, context_instance = RequestContext(request))
+
+def home(request):
+    return render_to_response('mobile/home.html',context_instance = RequestContext(request))
 
 def browse(request):
     data = {}
     data['categories'] = Category.objects.all()
     data['max_price'] = int(ceil(ItemForSale.objects.aggregate(Max('price'))['price__max']))
     return render_to_response('mobile/browse.html',data,context_instance = RequestContext(request))
-
-def login(request):
-    return render_to_response('mobile/login.html',context_instance = RequestContext(request))
 
 @login_required
 def sell(request):

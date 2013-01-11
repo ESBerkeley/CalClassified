@@ -12,7 +12,7 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^browse/$',"browse", name="browse"),
     url(r'^sell/$',"sell", name="sell"),
     url(r'^my_items/$',"my_items", name="my_items"),
-    #url(r'^login',"login", name="login"),
+    url(r'^login',"login", name="login"),
     url(r'^(?P<pid>\d+)$','view_item'),
     url(r'^dialog/message_sent/$','message_sent', name="message_sent"),
 
