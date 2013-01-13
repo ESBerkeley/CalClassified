@@ -20,7 +20,7 @@
         {% else %}
 
         <div class="title">
-            <h2>Login</h2>
+            <center><h2>Login</h2><center>
         </div>
 
         <form method="post" action="{% url auth_login %}">{% csrf_token %}
@@ -45,7 +45,7 @@
         </form>
 
             <br>
-            <hr>
+            <div class="border"></div>
             <br>
 
             <button id="fake-login" data-theme="b">Log in with Facebook</button>

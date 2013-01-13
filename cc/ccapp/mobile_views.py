@@ -43,6 +43,9 @@ def login(request):
 def home(request):
     return render_to_response('mobile/home.html',context_instance = RequestContext(request))
 
+def features(request):
+    return render_to_response('mobile/features.html',context_instance = RequestContext(request))
+
 def browse(request):
     data = {}
     data['categories'] = Category.objects.all()
