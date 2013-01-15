@@ -6,7 +6,7 @@
 
 <div id="filter-container">
     <div id="filter-options">
-        <form action="javascript: search();" id="search-form">
+        <form action="javascript: search(pageNum);" id="search-form">
         <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" />
         </form>
         <div  data-role="fieldcontain">
@@ -44,19 +44,23 @@
             <ul data-role="listview" id="browse-list">
                 <!-- list of items -->
             </ul>
+
+            <div id="load-more-div" style="display: none;"><button id="load-more">Tap here to load more items</button></div>
         </div>
 {% endblock %}
 
 {% block javascript %}
     <script type="text/javascript">
 
+    var pageNum = 1;
     var preloaded = false;
     $('#body-page').live('pageshow', function () {
         // THIS IS HOW TO DO DOCUMENT READY
         var pathname = window.location.pathname;
         pathname = pathname.split("/")
         if(pathname.length > 1 && pathname[1]=="browse" && !preloaded){
-            search();
+            pageNum = 1;
+            search(pageNum);
             preloaded = true
         }
     });
@@ -66,7 +70,8 @@
 
     $('.ui-input-clear').live('tap', function () {
         $("#search-basic").val("");
-        search();
+        pageNum = 1;
+        search(pageNum);
     });
 
     $("#filter-button").click(function(){
@@ -77,7 +82,8 @@
     });
 
     $("#search-button").click(function(){
-        search();
+        pageNum = 1;
+        search(pageNum);
     });
 
     $("#cancel-button").click(function(){
@@ -85,5 +91,12 @@
         $(".ui-grid-a").hide();   
         $("#filter-options").slideUp(); 
     });
+
+    $("#load-more").click(function(){
+        pageNum += 1;
+        search(pageNum);
+    })
+
+
     </script>
 {% endblock %}

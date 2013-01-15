@@ -1,4 +1,4 @@
-function search(){
+function search(pageNum){
     $.mobile.loading( 'show', {
         text: 'foo',
         //textVisible: true,
@@ -9,6 +9,7 @@ function search(){
     send_data['searchText'] = $("#search-basic").val();
     send_data['min_price'] = $("#min-price").val();
     send_data['max_price'] = $("#max-price").val();
+    send_data['pageNum'] = pageNum;
     send_data['checked_categories'] = $('input[name=categories]:checked').map(function() {
         return $(this).val();
     }).get(); // array of checked category ids
@@ -27,13 +28,26 @@ function search(){
                        browseHtml += "<h3>" + entry['fields']['title'] + "</h3>"
                        browseHtml += "<p>$" + entry['fields']['price'] + "</p></a></li>"
                    }
+
+
+                   if(data.length == 25) {
+                       $("#load-more-div").show();
+                   } else {
+                       $("#load-more-div").hide();
+                   }
+
                    $.mobile.loading( 'hide', {
                        text: 'foo',
                        //textVisible: true,
                        theme: 'a',
                        html: ""
                    });
-                   $("#browse-list").html(browseHtml).listview("refresh");
+
+                   if (pageNum == 1) {
+                       $("#browse-list").html(browseHtml).listview("refresh");
+                   } else {
+                       $("#browse-list").append(browseHtml).listview("refresh");
+                   }
                }
            })
 

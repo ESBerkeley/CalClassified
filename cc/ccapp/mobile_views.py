@@ -121,11 +121,19 @@ def ajax_browse(request):
 
     #checked_circles = map(int,checked_circles))
 
+    try:
+        page_num = int(request.GET['pageNum'])
+    except:
+        page_num = 1
+
+    first_index = (page_num-1)*25
+    last_index = page_num * 25
+
     if ('searchText' in request.GET) and request.GET['searchText'].strip():
         query_string = request.GET['searchText']
-        found_entries = SearchQuerySet().filter_or(text=query_string,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
+        found_entries = SearchQuerySet().filter_or(text=query_string,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
     else:
-        found_entries = SearchQuerySet().filter(category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
+        found_entries = SearchQuerySet().filter_or(category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
 
     list_entries = []
     for entry in found_entries:
