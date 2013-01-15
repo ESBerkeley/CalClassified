@@ -6,6 +6,11 @@
         <center><p> Buy and Sell Your Things</p></center>
     </div>-->
 
+<div id="home-logo" data-inset="true">
+        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 40px;"></center>
+        <center><h2 style="font-size:15px; margin-top:5px;"> Buy and Sell Your Things</h2></center>
+</div>
+
     {% if next %}
     <p style="color:red; font-size:13px; margin-top:0px; margin-bottom:5px; text-align: center;">Please log in to continue.</p>
     {% endif %}
@@ -24,9 +29,9 @@
         </div>
 
         <form method="post" action="{% url auth_login %}">{% csrf_token %}
-            <label for="basic">Email:</label>
-            <input type="text" name="username" id="basic" value=""  />
-            <label for="basic">Password: </label>
+            <label for="basic" class="font-400">Email:</label>
+            <input type="text" name="username" id="basic" value="" style=""/>
+            <label for="basic" class="font-300">Password: </label>
             <input type="password" name="password" value=""  />
             <br>
 
@@ -44,9 +49,9 @@
 
         </form>
 
-            <br>
+
             <div class="border"></div>
-            <br>
+
 
             <button id="fake-login" data-theme="b">Log in with Facebook</button>
 

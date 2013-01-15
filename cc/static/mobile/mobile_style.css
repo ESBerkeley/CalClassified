@@ -45,6 +45,12 @@ h4 {
     margin-bottom:5px;
 }
 
+#nav-logo {
+    height:23px;
+    margin-left:5px;
+    margin-top:6px;
+}
+
 /*use instead of hr*/
 .border {
     background-color: #FFFFFF;
