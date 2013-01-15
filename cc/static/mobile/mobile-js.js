@@ -23,7 +23,7 @@ function search(pageNum){
                    var browseHtml = ""
                    for (index in data) {
                        var entry = data[index];
-                       browseHtml += "<li><a href='/"+entry['pk']+"'>"
+                       browseHtml += "<li><a href='/"+entry['pk']+"' rel='external'>"
                        browseHtml += "<img src='" + entry['fields']['cached_thumb'] + "' />"
                        browseHtml += "<h3>" + entry['fields']['title'] + "</h3>"
                        browseHtml += "<p>$" + entry['fields']['price'] + "</p></a></li>"

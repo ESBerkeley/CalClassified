@@ -29,7 +29,7 @@ h4 {
     font-weight: 600;
 }
 
-#body-page {
+.div-page {
     background-image: url('/static/retina_dust.png');
 }
 

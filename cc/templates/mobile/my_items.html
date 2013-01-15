@@ -11,7 +11,7 @@
                 {% for item in items %}
 
                 <li>
-                <a href="{{ item.get_absolute_url }}">
+                <a href="{{ item.get_absolute_url }}" rel="external">
                     <img src="{{ item.cached_thumb }}" />
                     <h3>
                         {{ item.title }}

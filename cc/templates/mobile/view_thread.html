@@ -5,7 +5,7 @@
 {% block body_content %}
 
     <h3 class="source-font" style="text-align: center;">
-        <a href="{{ item.get_absolute_url }}">{{ thread.post_title }}</a>
+        <a href="{{ item.get_absolute_url }}" rel="external">{{ thread.post_title }}</a>
         - {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</h3>
 
 

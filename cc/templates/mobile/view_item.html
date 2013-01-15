@@ -97,11 +97,12 @@
             var csrfmiddlewaretoken = "{{ csrf_token }}";
             var view_thread = false;
 
-        var myPhotoSwipe = $("#Gallery a").photoSwipe({ enableMouseWheel: false ,
-            enableKeyboard: false,
-            jQueryMobile: true,
-            preventSlideshow: true
-        });
+            var photoSwipeInstance = $("#Gallery a").photoSwipe({
+                enableMouseWheel: false ,
+                enableKeyboard: false,
+                jQueryMobile: true,
+                preventSlideshow: true
+            });
 
 
 
