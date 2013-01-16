@@ -1,0 +1,36 @@
+{% extends "mobile/base.html" %}
+
+{% block body_content %}
+
+<div id="home-logo" data-inset="true">
+        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 40px;"></center>
+        <center><h2 style="font-size:15px; margin-top:5px;"> Buy and Sell Your Things</h2></center>
+</div>
+
+<div class="box">
+    <a href="#" data-role="button" data-theme="b" class="font-400">Sign Up</a> 
+    <a href="{% url features %}" data-role="button" data-theme="a" class="font-400">Features</a>
+    <a href="{% url login %}" data-role="button" data-theme="a" class="font-400">Log In</a>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script type="text/javascript">
+
+    $(document).bind('pageinit', function(){
+        // THIS IS HOW TO DO DOCUMENT READY
+        {% if form.errors %}
+            $("#login-error").show();
+        {% endif %}
+
+    });
+
+    $("#fake-login").click(function(){
+        $("#actual-fb-login").trigger("click");
+    })
+</script>
+
+{% endblock %}
+
