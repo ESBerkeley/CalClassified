@@ -58,12 +58,16 @@
             <li style="width:30%;"><img src="/static/124ta-beta.png" alt="Buy Near Me" id="nav-logo"></li>
 			<li style="width:30%;"><a href="{% url browse %}" class="font-400">Browse</a></li>
 			<li style="width:30%;"><a href="{% url sell %}" class="font-400">Sell</a></li>
-			<li style="width:10%;"><a href="#" class="font-400">hi</a></li>
+			<li style="width:10%;"><a id="flip" href="#" class="font-400">hi</a></li>
 		</ul>
 	</div><!-- /navbar -->
 </div>
 
-
+<div id="panel">
+    <div class="panel-item">whats up</div>
+    <div class="border" style="border-top-color:#474747"></div>
+    <div class="panel-item">Sign in and stuff</div>
+</div>
 
 
 
@@ -81,6 +85,13 @@
     </div>-->
 
     <script type="text/javascript" src="{% get_static_prefix %}mobile/mobile-js.js"></script>
+
+    <script>
+        $("#flip").click(function(){
+            $("#panel").slideToggle("slow");
+        });
+    </script>
+
     {% block javascript %}{% endblock %}
 
     {% include 'django_facebook/_facebook_js.html' %}

@@ -7,10 +7,10 @@
 <div id="filter-container">
     <div id="filter-options">
         <form action="javascript: search(pageNum);" id="search-form">
-        <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" />
+          <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" data-mini="true"/>
         </form>
-        <div  data-role="fieldcontain">
-            <fieldset data-role="controlgroup">
+        <div data-role="fieldcontain">
+            <fieldset data-role="controlgroup" data-mini="true">
                 <p style="margin-top: 0;">Filter by as many categories you'd like!</p>
 
                 {% for category in categories %}
@@ -23,10 +23,10 @@
         </div>
 
         <label for="min-price">Min Price</label>
-        <input type="range" id="min-price" value="0" min="0" max="{{ max_price }}" data-highlight="true" />
+        <input type="range" id="min-price" value="0" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
         <br>
         <label for="max-price">Max Price</label>
-        <input type="range" id="max-price" value="{{ max_price }}" min="0" max="{{ max_price }}" data-highlight="true" />
+        <input type="range" id="max-price" value="{{ max_price }}" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
     </div>
 
     <div id="filter-button-container">  <!--necessary for jquery hide() to work)-->
@@ -35,7 +35,7 @@
 
     <fieldset class="ui-grid-a">
 	    <div class="ui-block-a"><button id="search-button" data-icon="search" data-mini="true">Search</button></div>
-	    <div class="ui-block-b"><button id="cancel-button" data-icon="delete" data-mini="true">Cancel</button></div>	   
+	    <div class="ui-block-b"><button id="cancel-button" data-icon="arrow-u" data-mini="true">Close</button></div>	   
     </fieldset>
 
 </div>
