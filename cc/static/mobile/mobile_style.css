@@ -80,7 +80,7 @@ h4 {
 }
 
 #panel {
-    display:none;
+
     background-image: url("/static/low_contrast_linen.png");
 }
 
@@ -88,10 +88,14 @@ h4 {
     padding-left:8px;
     padding-top:8px;
     padding-bottom:8px;
+    font-size:14px;
+}
+
+#panel a {
+    text-decoration:none;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 300;
     color:white;
-    font-size:14px;
 }
 
 #filter-container {
