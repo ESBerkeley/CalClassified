@@ -223,10 +223,11 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 # HANDLES SENDING EMAILS FROM DJANGO
 # supposedly you have to at least log into the HOST_USER at least once normally
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'noreply@buynear.me'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'buynearme'
 EMAIL_HOST_PASSWORD = 'CalClassified'
 EMAIL_PORT = 587
+
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #from django.core.mail import send_mail      

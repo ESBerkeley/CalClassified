@@ -90,6 +90,11 @@ class ItemForSale(Post):
     circles = models.ManyToManyField(Circle)
     cached_thumb = models.CharField(max_length=200, default = '')
 
+    pending_buyer = models.ForeignKey(User, null=True, default=None, related_name='buyer')
+    pending_flag = models.BooleanField(default = False)
+    sold = models.BooleanField(default = False)
+    
+
     def get_formatted_price(self):
         return "%01.2f" % self.price
     
@@ -163,6 +168,14 @@ class ItemForSale(Post):
         except:
             return False
 
+    def delete(self): #If we're going to delete a post, let's delete its comments as well.
+        comments = Comment.objects.filter(item = self)
+        if len(comments):
+            for comment in comments:
+                comment.delete()
+        super(ItemForSale, self).delete()
+
+
 class ItemForSaleAdmin(admin.ModelAdmin):
     readonly_fields = ['time_created']
 
@@ -175,7 +188,8 @@ class ItemForSaleForm(ModelForm):
     body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
     class Meta:
         model = ItemForSale
-        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'approved')
+        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'approved')
+
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
 class FacebookPost(ItemForSale):
@@ -202,10 +216,31 @@ FacebookFormSet = modelformset_factory(FacebookPost, max_num=0, fields=('title',
 
 class Notification(models.Model): 
     going_to  = models.ForeignKey('django_facebook.FacebookProfile')
-  #  user_from = models.ForeignKey('django_facebook.FacebookProfile')
+    type = models.IntegerField(default = 0)
     post_from = models.ForeignKey(ItemForSale)
+    second_party = models.ForeignKey('django_facebook.FacebookProfile', blank=True, null=True, related_name='second_party')
+
     def __unicode__(self):
         return self.post_from.title
+
+
+class Comment(models.Model):
+    sender = models.ForeignKey(User)
+    item = models.ForeignKey(ItemForSale, null = False, blank = False)
+    body = models.CharField(max_length=200,default = "",blank = False)
+    seller_response = models.CharField(max_length=200, default = "", blank = True)
+    time_created = models.DateTimeField(auto_now_add = True, null = True)
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ('sender','item','time_created', 'seller_response')
+
+class SellerResponseForm(ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ('sender','item','time_created','body')
+
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sender_msg_set')
@@ -224,7 +259,7 @@ class MessageForm(ModelForm):
         
 class Thread(models.Model):
     # owner and other_person are meant so msging backen d can be more fluent.
-    # owner should either be the sender or recipient and other_person should be the one owner isn't
+    # owner should either be the sender or recipient and other_person should be the one owner isn't  <-- real helpful
     owner = models.ForeignKey(User, related_name='owner_msg_set',null=True)
     other_person =  models.ForeignKey(User, related_name='other_msg_set',null=True)
     #post = models.ForeignKey(ItemForSale, null=True, blank=True)

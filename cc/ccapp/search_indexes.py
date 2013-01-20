@@ -12,6 +12,9 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
     #POST
     owner = indexes.CharField(model_attr='owner')
     time_created = indexes.DateTimeField(model_attr='time_created')
+
+    pending_buyer = indexes.CharField(model_attr='pending_buyer', null=True)
+    pending_flag = indexes.BooleanField(model_attr='pending_flag')
     
     category = indexes.MultiValueField()
     circles = indexes.MultiValueField()

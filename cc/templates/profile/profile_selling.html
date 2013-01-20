@@ -1,0 +1,113 @@
+{% extends 'profile/profile.html' %}
+
+{% block profile_title %}Selling {% endblock %}
+
+{% block title %}Account - Selling {% endblock %}
+
+{% block profile_content %}
+    <div>
+
+    {% if my_threads or ifs_waiting_list %}
+    <table class="table">
+    <caption><h4> Things for Sale </h4></caption>
+    <thead>
+        <tr>
+            <th>Item Title</th>
+            <th>Buyer</th>
+            <th>Recent Message</th>
+            <th style="width:50px;"><center>Delete</center></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for thread in my_threads %}
+        {% if thread.is_read %}
+        <tr>
+        {% else %}
+        <tr class="not-read">
+        {% endif %}
+
+          <td>
+        <a href="../messages/{{ thread.id }}"> {{ thread.post_title }} </a>
+        {% if not thread.is_read %}
+            (Unread)
+        {% endif %}
+        {% if thread.post_deleted %}
+            (Post Deleted)
+        {% endif %}
+          <td>
+            sold to <strong>{{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</strong>
+          </td>
+          <td>
+            {{ thread.newest_message_time }}
+          </td>
+          <td ><center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ thread.pk }}"></a></center></td>
+
+
+          <!--modal content -->
+        <div class="modal fade hide" id="delete-modal-{{ thread.pk }}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                <h3>Delete Message</h3>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete all messages about "{{ thread.post_title }}" from {{ thread.other_person.first_name }}.
+                    <br><br>
+                    This action is permanent.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary verify-delete" value="{{ thread.id }}" type="button" data-loading-text="Deleting...">Delete</button>
+                <button class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+        </tr>
+    {% endfor %}
+    {% for item in ifs_waiting_list %} 
+    <tr>
+      <td>
+        <a href = "/{{ item.pk }}"> {{ item.title }} </a>
+      </td>
+      <td> 
+        (Awaiting Purchase)
+      </td>
+    </tr>
+    {% endfor %}
+
+
+    </tbody>
+    </table>
+
+    {% else %}
+        <h2> You are not currently selling anything.</h2>
+    {% endif %}
+    </div>
+
+    <!-- success modal content -->
+    <div class="modal fade hide" id="success-modal">
+        <div class="modal-header">
+            <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Delete Message</h3>
+        </div>
+        <div class="modal-body">
+            <p>Success, message deleted!</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn close-refresh" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block post_js %}
+    {% load static %}
+
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $("#messages-tab").addClass("active");
+
+        })
+        var csrf_token = "{{ csrf_token }}";
+    </script>
+    <script src="{% get_static_prefix %}js/profile_messages.js"></script>
+{% endblock %}
