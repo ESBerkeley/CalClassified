@@ -62,22 +62,28 @@
     <div class="row post-top">
 
 
-      <!-- contact modal -->
-      <div class="modal fade hide" id="contact-modal">
+
+      <!-- buy now modal -->
+      <div class="modal fade hide" id="buynow-modal">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
-          <h3>Contact</h3>
+          <h3>Almost there!</h3>
         </div>
         <div class="modal-body">
-            <p>Message the seller to discuss this item or arrange a meet up! You will be emailed and notified on-site
-            when the seller has replied.</p>
+            <p>Since you'll have to talk to the seller to figure out a place to meet, you might as well introduce yourself now. When you're done typing in your message, and if you're sure you want this, click Buy Now to lock down this item and notify the seller.</p>
           <textarea class="input-xlarge field span7" id="modal-message" rows="5"></textarea>
         </div>
         <div class="modal-footer">
-          <button id="modal-send" class="btn btn-primary" type="button" data-loading-text="Sending...">Send</button>
-          <button class="btn" data-dismiss="modal">Close</button>
+          <button id="modal-send" class="btn btn-danger btn-large" type="button" data-loading-text="Sending..."><i class="icon-white icon-star-empty"></i> Buy Now</button>
+<!--
+<a href="#" class="btn btn-danger btn-large"><i class="icon-white icon-star-empty"></i> Buy Now</a> -->
+
+
+          <button class="btn btn-large btn-inverse" data-dismiss="modal"><i class="icon-white icon-remove"></i> Cancel Purchase</button>
         </div>
       </div>
+
+
 
       <!-- this modal activates when message is sent -->
       <div class="modal fade hide" id="success-modal">
@@ -89,10 +95,10 @@
             <p> Message Sent!</p>
         </div>
         <div class="modal-footer">
-            <button class="btn close-refresh" data-dismiss="modal">Close</button>
+            <button class="btn btn-large btn-inverse close-refresh" data-dismiss="modal">Close</button>
         </div>
       </div>
-    
+          
     
       <div class="span8" style="padding-right:25px;">
         <div class="span8">
@@ -193,12 +199,19 @@
           </ul>-->
           
          <br>
+           {% if post.pending_flag %}
+              [Sale Pending - this listing will be removed shortly.]
+           {% else %}
+
               {% if request.user.is_authenticated %}
-              <button id="contact-now" class="btn contact-button btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal">Buy/Contact</button>
+              {% if post.owner != request.user %}
+              
+              <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn-danger btn-large" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-star-empty"></i> Buy Now</button> 
+              {% endif %}
               {% else %}
               <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy/Contact</a>
               {% endif %}
-            
+           {% endif %}
         </div><!--/.well -->
       </div><!--/span-->
     
@@ -257,7 +270,57 @@
           {% endfor %}
         </div>
         {% endcomment %}
+        <br>
+        <h3 style="font-weight: 400;">Comments:</h3>
+        <table class = "table">
+        {% for comment in comments %}
+          <tr>
+
+            <td><img height=48 width=48 src="{% if post.owneer.get_profile.image.url %} {{ post.owner.get_profile.image.url }} {% endif %}"></td>
+ 
+            <td>{% if comment.sender == post.owner %}<font color="red">[seller]{% endif %} {{comment.sender.username}}{% if comment.sender == post.owner %}</font>{% endif %} </td>
+
+            <td>"{{comment.body}}"</td> 
+
+            <td>
+            {% if comment.seller_response != "" %}
+              <font color="red">"{{ comment.seller_response }}" - OP</font>
+            {% else %}
+              {% if post.owner == request.user and comment.sender != request.user %}
+
+
+                <form action = "{{ request.path }}?sr={{ comment.id }}" method = "post"> {% csrf_token %}
+                 {{ response_form.as_p }}
+                <button class="btn contact-button btn-primary" style="margin-left:-1px;"><input type = "submit" value="Respond"/></button>
+                </form>
+
+
+              {% endif %}
+            {% endif %}
+            </td>
+
+          </tr>
+        {% endfor %}
+        </table>
+
+        <br>
+        <div>
+        {% if request.user.is_authenticated %}
+          <div class = "span4">
+            <form action = "{{ request.path }}" method = "post"> {% csrf_token %}
+              {{ comment_form.as_p }}
+                <button class="btn contact-button btn-primary" style="margin-left:-1px;"><input type = "submit" value="submit"/></button><font color="red"> <-seung halp i cant bootstarp</font>
+            </form>
+          </div>
+        {% else %}
+           <p> Please login to comment </p>
+        {% endif %}
+        </div>
+
+
     </div>
+
+
     
   </div><!--sidebar-container-->
   

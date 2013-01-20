@@ -1,11 +1,11 @@
 from ccapp.models import *
-from ccapp.signals import post_created_signal
+from ccapp.signals import *
 
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core import serializers
 from django.db.models import Avg, Max, Min, Count
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import TemplateView
@@ -309,6 +309,11 @@ def ajax_delete_post(request):
             post.delete()
             return HttpResponse("Success")
 
+@login_required
+def delete_notifications(request):
+    notifications = Notification.objects.filter(going_to = request.user.get_profile())
+    notifications.delete()
+    return HttpResponse("winning")
     
 def deleteallposts(request):
     if request.user.is_authenticated():
@@ -322,47 +327,113 @@ def deleteallposts(request):
         else:
             return render_to_response('message.html', {'message':'No posts created by your account found.'},context_instance=RequestContext(request))
 
+
+
 def showpost(request,pid,super_cat):
     post = get_object_or_404(super_cat, pk=pid)    
-    
-    related_posts = []
-    # category_posts = super_cat.objects.filter(category=post.category).exclude(id=pid)
-    # cat_length = len(category_posts)
-    # if cat_length>=4:
-        # while len(related_posts)<4:
-            # rand_post = random.choice(category_posts)
-            # if rand_post not in related_posts:
-                # related_posts.append(rand_post)
-    # else:
-        # while len(related_posts)<cat_length:
-            # rand_post = random.choice(category_posts)
-            # if rand_post not in related_posts:
-                # related_posts.append(rand_post)
-    form = MessageForm()
-    #ecks = {'MsgForm':form, 'post':post, 'related_posts':related_posts}
-    ecks = {'post':post, 'related_posts':related_posts, 'is_bookmarked':False}
-    image_set = post.get_image_set_urls()
-    ecks['image_set'] = image_set
-    ecks['image_set_length'] = len(image_set)
-    if request.user.is_authenticated():
-        user_profile = request.user.get_profile()
-        bookmarks = user_profile.bookmarks.filter(id = pid)
-        if bookmarks:
-            ecks['is_bookmarked'] = True
-        #if user_profile.facebook_id:
-            #ecks['is_facebook'] = True
 
-    if "new" in request.GET and int(request.GET['new']) == 1:
-        ecks['new'] = 1
+    if request.method == 'POST' and request.user.is_authenticated():
+        user = request.user
+    
+        if request.GET.get('sr'):   #sr is the id of the comment that the seller is responding to
+            rForm = SellerResponseForm(request.POST)
+            if rForm.is_valid and request.user == post.owner:
+                rcomment = rForm.save(commit = False)
+                orig_comment = Comment.objects.get(id = request.GET.get('sr'))
+                orig_comment.seller_response = rcomment.seller_response
+                orig_comment.save()
+                seller_response_signal.send(sender = Comment, instance = orig_comment)  
+
+        else:  #sr is left unset if this post request is being genenrated by the creation of a comment, not a resposne
+            cForm = CommentForm(request.POST)
+            if cForm.is_valid:
+                comment = cForm.save(commit = False)
+                comment.sender = user
+                comment.item = post
+                comment.seller_response = ""
+                comment.save()
+                new_comment_signal.send(sender = Comment, instance = comment) 
+                #the signal handeler for this, and the above takes care of adding an appropriate nofitication  
+            
+        return HttpResponseRedirect(request.path)
+
+    
+    else:
+
+        related_posts = []
+
+        # category_posts = super_cat.objects.filter(category=post.category).exclude(id=pid)
+        # cat_length = len(category_posts)
+        # if cat_length>=4:
+            # while len(related_posts)<4:
+                # rand_post = random.choice(category_posts)
+                    # if rand_post not in related_posts:
+                    # related_posts.append(rand_post)
+        # else:
+            # while len(related_posts)<cat_length:
+                # rand_post = random.choice(category_posts)
+                # if rand_post not in related_posts:
+                    # related_posts.append(rand_post)\
+
+        cForm = CommentForm()
+
+        ecks = {'post':post, 'related_posts':related_posts, 'is_bookmarked':False, 'comment_form': cForm}
+        image_set = post.get_image_set_urls()
+        ecks['image_set'] = image_set
+        ecks['image_set_length'] = len(image_set)
+    
+        relevant_comments = Comment.objects.filter(item = post).order_by('time_created')
+        ecks['comments'] = relevant_comments
+
+        if request.user.is_authenticated():
+            user_profile = request.user.get_profile()
+            bookmarks = user_profile.bookmarks.filter(id = pid)
+            if bookmarks:
+                ecks['is_bookmarked'] = True
+            #if user_profile.facebook_id:
+                #ecks['is_facebook'] = True
+            if request.user == post.owner:
+                ecks['response_form'] = SellerResponseForm()
+
+        if "new" in request.GET and int(request.GET['new']) == 1:
+            ecks['new'] = 1
     
             
-    ecks.update(csrf(request))
-    return render_to_response('postview.html',ecks,context_instance=RequestContext(request))
-  #  except:
-        #return render_to_response('message.html',{'message':'Oh No! Post does not exist!'},context_instance=RequestContext(request))
+        ecks.update(csrf(request))
+        return render_to_response('postview.html',ecks,context_instance=RequestContext(request))
+ 
 
 def showpostIFS(request,pid):
     return showpost(request,pid,ItemForSale)
+
+@login_required
+def modify_post(request):
+    if request.method == "GET" and request.user.is_authenticated():
+        post_pk = request.GET['post_pk']
+        action = request.GET['action']
+        post = ItemForSale.objects.get(id = int(post_pk))
+        if post.owner == request.user:
+            if action == "done":
+                #the sale is complete (yay). delete post and redirect to profile page
+                post.sold = True
+                post.save()
+                sale_complete_signal.send(sender = ItemForSale, instance = post)
+                return HttpResponseRedirect("/")
+
+            elif action == "repost":
+                #the sald didnt work out, repost the item, and redirect seller
+                repost_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer.get_profile())
+                post.pending_flag = False
+                post.pending_buyer = None
+                post.save()
+                return HttpResponseRedirect("/")
+            else:
+                return HttpResponse("Invalid Request")
+
+        else:
+            return HttpResponse("I can not let you do that, dave")
+    else:
+        return HttpResponse("please try again")
 
 @login_required
 def ajax_contact_seller(request):
@@ -373,6 +444,17 @@ def ajax_contact_seller(request):
         post = ItemForSale.objects.get(id=int(post_pk))
         sender = request.user
         recipient = User.objects.get(id=int(recipient_pk))
+
+        if post.pending_flag:
+            if request.user not in [post.owner, post.pending_buyer]:
+                
+                return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username) #crap someone else got it before you, sorrym8
+
+        else:
+            post.pending_buyer = request.user
+            post.pending_flag = True
+            post.save()
+        
         
         message = Message()
         message.body = body
@@ -380,18 +462,23 @@ def ajax_contact_seller(request):
         message.sender = sender
         message.recipient = recipient
         message.save()
-        
+
+        first_message = False        
+
         #Create 2 Threads for both ends
         try: #see if thread exists, if not create it
             thread1 = Thread.objects.get(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
         except:
             thread1 = Thread.objects.create(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
-            
+            first_message = True
         try: #see if thread exists, if not create it
             thread2 = Thread.objects.get(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
         except:
             thread2 = Thread.objects.create(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
-        
+
+        if first_message:
+            buy_button_signal.send(sender = ItemForSale, instance = post)
+
         thread1.messages.add(message)
         thread2.messages.add(message)
         thread1.newest_message_time = message.time_created
@@ -517,7 +604,7 @@ def ajax_friend_notifications(request):
         note.title = pfrom.title
         note.username = pfrom.owner.get_full_name()
     data = serializers.serialize('json',notifications, indent = 4, extras = ('username','title',))
-    notifications.delete()
+#    notifications.delete()
     return HttpResponse(data,'application/javascript')
         
 
@@ -567,6 +654,8 @@ def ajax_box(request):
     else:
         found_entries = SearchQuerySet().filter(circles__in=checked_circles,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')
 
+
+
     found_entries = found_entries[(100*p):(100*(p+1))]
 
     #is user logged in? highlight his friends' posts
@@ -603,6 +692,15 @@ def ajax_box(request):
     else:
         foreveralone(found_entries,fbf, fatty_cheese_wheel)
 
+
+    #kludge until someone can get haystack to work
+    #filter out all the pending items for sales
+    fatty_cheese2 = []
+    for x in fatty_cheese_wheel:
+        if not x.sold:
+            fatty_cheese2.append(x)
+    fatty_cheese_wheel = fatty_cheese2
+
     
     """
     for x in found_entries:
@@ -614,7 +712,7 @@ def ajax_box(request):
     """
     
 
-    data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','friend','friendname','get_thumbnail_url','score'))
+    data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','pending_flag','friend','friendname','get_thumbnail_url','score'))
     return HttpResponse(data,'application/javascript')
 
 def foreveralone(found_entries,fbf, fatty_cheese_wheel):
@@ -805,39 +903,123 @@ def profile_settings(request):
         data.update(csrf(request))
         return render_to_response('profile/profile_settings.html',data,context_instance=RequestContext(request))
 
+
 @login_required
 def profile_messages(request):
     data = {}
     user = request.user
-    my_threads = Thread.objects.filter(owner=user).order_by('is_read','-newest_message_time')
+
+    selling_ids = [poast.pk for poast in ItemForSale.objects.filter(owner=user).filter(pending_flag = False)]
+
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in = selling_ids).order_by('is_read','-newest_message_time')
+
     for thread in my_threads:
         try:
             ItemForSale.objects.get(id=thread.post_id)
         except:
             thread.post_deleted = True
             thread.save()
-    data['my_threads']= my_threads
+
+    data['my_threads'] = my_threads
     
     user_profile = user.get_profile()
     user_profile.notifications = 0
     user_profile.save()
     return render_to_response('profile/profile_messages.html',data,context_instance=RequestContext(request))
 
+
+
+@login_required
+def profile_selling(request):
+    data = {}
+    user = request.user
+
+    selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user)]
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=selling_ids).order_by('is_read','-newest_message_time')    
+
+    ifs_waiting_list = ItemForSale.objects.filter(owner = request.user).filter(pending_flag = False)
+
+    for thread in my_threads:
+        try:
+            ItemForSale.objects.get(id=thread.post_id)
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    data['my_threads'] = my_threads
+    data['ifs_waiting_list'] = ifs_waiting_list
+    
+    user_profile = user.get_profile()
+    user_profile.notifications = 0
+    user_profile.save()
+    return render_to_response('profile/profile_selling.html',data,context_instance=RequestContext(request))
+
+
+
+
+@login_required
+def profile_buying(request):
+    data = {}
+    user = request.user
+
+    pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=False)]
+    completed_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=True)]
+
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time')    
+
+    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time')
+
+    for thread in my_threads:
+        try:
+            ItemForSale.objects.get(id=thread.post_id)
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    for thread in completed_threads:
+        try:
+            ItemForSale.objects.get(id=thread.post_id)
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    data['my_threads'] = my_threads
+    data['completed_threads'] = completed_threads
+    
+    user_profile = user.get_profile()
+    user_profile.notifications = 0
+    user_profile.save()
+    return render_to_response('profile/profile_buying.html',data,context_instance=RequestContext(request))
+
+
+
+
     
 @login_required
 def profile_view_thread(request,thread_id):
     thread = Thread.objects.get(id = thread_id)
-    
+    is_owner = False
+
+    poast = 7
+
     try:
-        ItemForSale.objects.get(id=thread.post_id)
+        poast = ItemForSale.objects.get(id=thread.post_id)
+        if poast.owner == request.user:
+            is_owner = True
     except:
-        thread.post_deleted = True
-    
+        thread.post_deleted = True  
+
     messages = thread.messages.all().order_by('-time_created')
-    data = {"thread":thread, "messages": messages}
+    data = {"thread":thread, "messages": messages, "is_owner":is_owner}
+
+    if not thread.post_deleted:
+        data['post'] = poast
+
     thread.is_read = True
     thread.save()
     return render_to_response('profile/profile_view_thread.html',data,context_instance=RequestContext(request))
+
+
 
 @login_required
 def profile_circles(request):
