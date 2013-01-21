@@ -1,0 +1,10 @@
+{% block subject %}Feedback - {{ full_name }}{% endblock %}
+{% block html %}
+  <p>
+  Name: {{ full_name }}<br>
+  Email: {{ email }}<br>
+  Username: {{ username }}
+  <br><br>
+  Message: {{ message }}
+  </p>
+{% endblock %}
