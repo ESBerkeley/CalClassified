@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^facebook/', include('django_facebook.urls')),
     url(r'^accounts/', include('django_facebook.auth_urls')),
     url(r'^fb_import/$', 'ccapp.views.fb_import', name='fb_import'),
+    url(r'^account_setup/$', 'ccapp.views.account_setup', name='account_setup'),
 
     #ADMIN/DEBUG
     url(r'^friends/debug/$', 'ccapp.views.friendslist', name='test_friends'),
@@ -44,8 +45,15 @@ urlpatterns = patterns('',
 
     url(r'^ajax_box/$','ccapp.views.ajax_box'),
     url(r'^get_friend_notifications/$','ccapp.views.ajax_friend_notifications'),
+
+    url(r'^clear_notifications/$','ccapp.views.delete_notifications'),
+    url(r'^about/$', AboutView.as_view()),
+    url(r'^contact/$', ContactView.as_view()),
+
     url(r'^message/(?P<pid>\d+)$', 'ccapp.views.contactsellerIFS'),
+    url(r'^modify_post/','ccapp.views.modify_post'),
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.SITE_ROOT + settings.STATIC_DOC_ROOT}),
+#    url(r'^buynow/$','ccapp.views.buynow'),
     #dont put $ in front of these links or hell breaks lose
 
     url(r'^groups/$', 'ccapp.views.all_circles', name="view_circles"),

@@ -2,20 +2,16 @@
 {% block html %}
   <p>Hi {{ recipient_name}},</p>
   <p>{{ full_name }}, has contacted you about your item! </p>
-  <h3>Message:</h3>
+  <p>Message:</p>
   <p>
   {{ message }}
-  <ul>
-    <li>
-        <a href="http://buynear.me/{{ thread.get_absolute_url }}">Click here</a> to view the message thread
-    </li>
-    <li>
-        <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view your item!
-    </li>
-  </ul>
+  <br>
+    <a href="http://buynear.me/{{ thread.get_absolute_url }}">Click here</a> to view the message thread
+    <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view your item!
+  <br>
   </p>
   <p>Thanks,</p>
-  <p>Buy Near Me Team</p>
+  <p>BuyNearMe Team</p>
   {% load static %}
   <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
   <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 

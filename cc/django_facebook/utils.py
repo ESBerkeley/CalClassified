@@ -120,7 +120,7 @@ def next_redirect(request, default='/', additional_params=None,
                     redirect_url = next[1]
                     break
             if request.user.get_profile().first_time:
-                redirect_url = '/fb_import/'
+                redirect_url = '/account_setup/'
                 break
             if redirect_url == '/accounts/logout/' or redirect_url == '/accounts/login/':
                 redirect_url = default

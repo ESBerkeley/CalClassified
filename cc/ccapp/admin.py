@@ -12,4 +12,4 @@ admin.site.register(ItemForSale, ItemForSaleAdmin)
 admin.site.register(Notification)
 admin.site.register(Message)
 admin.site.register(Thread)
-
+admin.site.register(Comment)

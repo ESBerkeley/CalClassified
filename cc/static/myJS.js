@@ -38,7 +38,6 @@ function restore(){
 
 
 function clear_restore(){
-
     var sessionField = document.getElementById("sfield");
     var sessionField_scroll = document.getElementById("sfield_scroll");
     sessionField.value = "3";
@@ -67,7 +66,19 @@ function save_state(inputurl){
    
 }
 
-
+function clear_notif(){
+  var xhr_notif;
+  if(window.XMLHttpRequest){xhr_notif = new XMLHttpRequest();}
+  else{xhr_notif = new ActiveXObject("Microsoft.XMLHTTP");}
+    xhr_notif.onreadystatechange=function(){
+      if(xhr_notif.readyState == 4 && xhr_notif.status == 200){
+        get_friend_notifications();
+      }
+    };
+  var notif_url = "/clear_notifications";
+  xhr_notif.open("GET",notif_url,true);
+  xhr_notif.send();
+}
 
 
 function get_friend_notifications(){  
@@ -86,25 +97,52 @@ function get_friend_notifications(){
          var count = obj.length;
          var x = "";
 
+         x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" + "<span class=\"badge"
+
          if(count){
+           x+= "badge-warning"
+         }
+        
+         x+= "\">" + count + "</span>" + "Notifications<b class=\"caret\"></b></a>";
+         x += "<ul class=\"dropdown-menu no-collapse\">";
 
-
-     //      x =  " <li id=\"fat-menu\" class=\"dropdown\">";
-           x += "   <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" + "<span class=\"badge badge-warning\">" + count + "</span>" + "Notifications<b class=\"caret\"></b></a>";
-           x += "   <ul class=\"dropdown-menu no-collapse\">";
-
-           for(var k = 0; k < count; k++){
-             x += "     <li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
+         for(var k = 0; k < count; k++){
+           if(obj[k].fields.type == 0){
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
            }
-
-           x += "   </ul>";
-          // x += " </li>";
+           else if(obj[k].fields.type == 1){
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].fields.second_party.username + " commented on " + obj[k].extras.title + "</a></li>";
+           }
+           else if(obj[k].fields.type == 2){
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " replied to your comment on " + obj[k].extras.title + "</a></li>";
+           }
+           else if(obj[k].fields.type == 3){
+             x += "<li><a href=\"{% url xxx %}\">" + obj[k].extras.username + " has purchased your item: " + obj[k].extras.title + "</a></li>";
+           }
+           else if(obj[k].fields.type == 4){
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has marked the sale of " + obj[k].extras.title + "as complete." + "</a></li>";
+           }
+           else{
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
+           }
          }
 
-         element_in_question.innerHTML = x;
 
-       }       
-     }
+
+         if(count){
+           x+="<li> <font color=\"blue\"><div onclick = \"clear_notif()\"> Clear notifications <div> </font></li>";
+         }else{
+           x+="<li> No Notifications </li>";
+         }
+
+         x += "</ul>";
+
+       }
+
+       element_in_question.innerHTML = x;
+
+     }       
+     
    };
 
 
@@ -254,7 +292,9 @@ function get_friend_notifications(){
                //moar += "<img class=\"box-image\" style=\"\" alt=\"\" src=\"" + thumbnail + "\" />";
            }/* explanation incoming */
 
-           moar += " <div class=\"box-text-div\"><p class=\"box-text\">"+obj.fields.title;
+           moar += " <div class=\"box-text-div\"><p class=\"box-text\">";
+           if(obj.extras.pending_flag){moar += "[Sale Pending] ";}
+           moar += obj.fields.title;
            if(obj.extras.friend == 1){moar += "<br>" + obj.extras.friendname;}
            moar += " - $" + obj.fields.price + " </p></div>";
            moar += "</div> </div></a>";
@@ -488,6 +528,7 @@ function get_friend_notifications(){
   xmlhttp.send();
 }
 
+
 $("#modal-send").on("click", function(){
     $(this).button('loading');
     var message = $("#modal-message").val();
@@ -502,8 +543,12 @@ $("#modal-send").on("click", function(){
         url: "/ajax_contact_seller/",
         data: data,
         success: function(data){
-            $("#contact-modal").modal('hide');
+            $("#buynow-modal").modal('hide');
             $("#success-modal").modal('show');
         }
     })
-})
+});
+
+
+
+

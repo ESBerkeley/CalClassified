@@ -1,0 +1,20 @@
+{% block subject %}{{ post.title }} Response - {{ first_name }}{% endblock %}
+{% block html %}
+  <p>Greetings {{ first_name }},</p>
+  <p>
+  You (or someone pretending to be you) have asked to register an account at <a href="http://buynear.me">BuyNearMe.</a>
+      <br>
+      If this wasn't you, please ignore this email and your address will be removed from our records.
+      <br>
+      To activate this account, please click <a href="http://buynear.me/verify_user/{{ auth_key }}">
+      here</a> or click the following link:
+      <br>
+      <a href="http://buynear.me/verify_user/{{ auth_key }}">http://buynear.me/verify_user/{{ auth_key }}</a>
+      <br>
+  </p>
+  <p>Thanks,</p>
+  <p>BuyNearMe Team</p>
+  {% load static %}
+  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
+  <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 
+{% endblock %}

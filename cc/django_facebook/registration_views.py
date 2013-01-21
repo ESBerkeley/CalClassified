@@ -1,17 +1,17 @@
-from django.template.context import RequestContext
-from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response
-from django_facebook.utils import get_registration_backend
-from django.shortcuts import redirect
-from django_facebook.models import *
 from django.contrib.auth import authenticate, login
-from django.core.mail import send_mail
+from django.http import HttpResponse, Http404
+from django.shortcuts import render_to_response, redirect
+from django.template.context import RequestContext
+
+from django_facebook.models import *
+from django_facebook.utils import get_registration_backend
+
 from ccapp.models import *
-from django.contrib.sites.models import Site
+from templated_email import send_templated_mail
+
 import random
 
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-
 
 
 def register(request):
@@ -84,11 +84,17 @@ def register(request):
         
         verif = VerificationEmailID(user=new_user,auth_key=auth_key)
         verif.save()
-        
-        title = "Account registration for Buy Near Me"
-        body = create_body(auth_key,new_user)
-        
-        send_mail(title, body, 'noreply@buynear.me', [email])
+
+        send_templated_mail(
+            template_name='change_email',
+            from_email='Buy Near Me <noreply@buynear.me>',
+            recipient_list=[email],
+            context={
+                'auth_key':auth_key,
+                'first_name':new_user.first_name,
+                'full_name':new_user.get_full_name(),
+                },
+        )
         
         data['title'] = "Sign Up Verification"
         data['message'] = """Verification email has been sent.<br>Follow the instructions on the email to activate your account."""
@@ -106,18 +112,19 @@ def register(request):
     return response
     
 
-# Creates the body for the email
-def create_body(auth_key,user):
-    site_name = Site.objects.all()[0].name
-    site_domain = Site.objects.all()[0].domain
+## Creates the body for the email
+#def create_body(auth_key,user):
+#    site_name = Site.objects.all()[0].name
+#    site_domain = Site.objects.all()[0].domain
+#
+#    BODY = """Greetings %s,\n\nYou (or someone pretending to be you) have asked to register an account at
+#    %s.  If this wasn't you, please ignore this email
+#    and your address will be removed from our records.
+#
+#    To activate this account, please click the following link:
+#
+#    http://%s/verify_user/%s\n\nSincerely,
+#    %s Management""" % (user.first_name,site_name,site_domain,auth_key,site_name)
+#
+#    return BODY
 
-    BODY = """Greetings %s,\n\nYou (or someone pretending to be you) have asked to register an account at
-    %s.  If this wasn't you, please ignore this email
-    and your address will be removed from our records.
-
-    To activate this account, please click the following link:
-
-    http://%s/verify_user/%s\n\nSincerely,
-    %s Management""" % (user.first_name,site_name,site_domain,auth_key,site_name)
-    
-    return BODY
