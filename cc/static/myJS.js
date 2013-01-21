@@ -528,7 +528,6 @@ function get_friend_notifications(){
   xmlhttp.send();
 }
 
-
 $("#modal-send").on("click", function(){
     $(this).button('loading');
     var message = $("#modal-message").val();
@@ -546,9 +545,23 @@ $("#modal-send").on("click", function(){
             $("#buynow-modal").modal('hide');
             $("#success-modal").modal('show');
         }
-    })
+    });
 });
 
-
+/*$(".modal-seller-respond").on("click", function(){
+    $(this).button('loading');
+    var message = $(".modal-seller-mesage").val();
+    data = {};
+    data['csrfmiddlewaretoken'] = csrf_token;
+    data['seller_response'] = message;
+    $.ajax({
+        type: "POST",
+        url: "/" + post_pk + "?sr=" + comment_id,
+        data: data,
+        success: function(data){
+            $("#buynow-modal").modal('hide');
+        }
+    });
+});*/
 
 

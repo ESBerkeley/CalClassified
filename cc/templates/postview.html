@@ -75,10 +75,6 @@
         </div>
         <div class="modal-footer">
           <button id="modal-send" class="btn btn-danger btn-large" type="button" data-loading-text="Sending..."><i class="icon-white icon-star-empty"></i> Buy Now</button>
-<!--
-<a href="#" class="btn btn-danger btn-large"><i class="icon-white icon-star-empty"></i> Buy Now</a> -->
-
-
           <button class="btn btn-large btn-inverse" data-dismiss="modal"><i class="icon-white icon-remove"></i> Cancel Purchase</button>
         </div>
       </div>
@@ -151,12 +147,6 @@
                   {% endif %}
                   <li class="nav-header"><h2>Price:</h2></li>
                   <li> <p>$  {{ post.price }}<p></li>
-                  <!-- <li class="nav-header">Posted by: </li>
-            {% if post.owner.get_full_name %}
-              <li class="side-item">{{ post.owner.get_full_name }} </li>
-            {% else %}
-              <li class="side-item">{{ post.owner }}</li>
-            {% endif %} -->
                   <li class="nav-header"><h2>Date Added:</h2></li>
                   <li> {{ post.time_created.date }}</li>
                   <li class="nav-header"><h2>Category:</h2></li>
@@ -212,7 +202,7 @@
               {% if request.user.is_authenticated %}
               {% if post.owner != request.user %}
               
-              <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn-danger btn-large" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-star-empty"></i> Buy Now</button> 
+              <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button  btn btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-star-empty"></i> Buy Now</button> 
               {% endif %}
               {% else %}
               <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy/Contact</a>
@@ -226,24 +216,17 @@
         <h3 style="font-weight: 400;">Product Description:</h3>
           <p id="post-body" style="white-space:pre-wrap">{{ post.body }}</p>
           <!--<p> {{ post.time_created }}</p>-->
-
             <hr style="margin-bottom: 15px;">
-            <fb:share-button href="#"
-                         type="button">
-            </fb:share-button>
+            <fb:share-button href="#" type="button"></fb:share-button>
             <br>
-          {% if request.user.is_authenticated %}
-              <br>
-              {% if request.user == post.owner %}
+            {% if request.user.is_authenticated %}
+            <br>
+            {% if request.user == post.owner %}
 
             <p style="margin-left: 20px;">
-
-                      <a id="delete-post" style="cursor:pointer;">
-                          <i class="icon-trash side-icon"></i>
-                          Delete Post
-                      </a>
+              <a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Post</a>
             </p>
-                {% endif %}
+            {% endif %}
             <p style="margin-left: 20px;">
                   <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
                       <i class="icon-tag side-icon bookmark-activate"></i>
@@ -257,51 +240,51 @@
             </p>
 
             {% endif %}
-        {% comment %}
-        <div class="span9 relevant-div">
-          <br />
-          <br />
-          <h3>Products you may be interested in: </h3>
-          <br />
-          
-          {% for post in related_posts %}
-          <div class="span2 relevant-items" style="text-align: center">
-            <a href="{{ post.get_absolute_url }}">
-              <img class="medium" src="{{ post.get_thumbnail_url }}">
-            </a>
-            <br>
-            <h4>{{ post.title }}</h4>
-            <p>${{ post.get_formatted_price }}</p>
-          </div><!--/span-->
-          {% endfor %}
-        </div>
-        {% endcomment %}
+
         <br>
         {% if not post.is_facebook_post %}
         <h3 style="font-weight: 400;">Comments:</h3>
         <table class = "table">
         {% for comment in comments %}
           <tr>
-
             <td><img height=48 width=48 src="{% if post.owneer.get_profile.image.url %} {{ post.owner.get_profile.image.url }} {% endif %}"></td>
- 
             <td>{% if comment.sender == post.owner %}<font color="red">[seller]{% endif %} {{comment.sender.username}}{% if comment.sender == post.owner %}</font>{% endif %} </td>
-
             <td>"{{comment.body}}"</td> 
-
             <td>
             {% if comment.seller_response != "" %}
               <font color="red">"{{ comment.seller_response }}" - OP</font>
             {% else %}
               {% if post.owner == request.user and comment.sender != request.user %}
-
-
-                <form action = "{{ request.path }}?sr={{ comment.id }}" method = "post"> {% csrf_token %}
-                 {{ response_form.as_p }}
-                <button class="btn contact-button btn-primary" style="margin-left:-1px;"><input type = "submit" value="Respond"/></button>
-                </form>
-
-
+                <!--<form action = "{{ request.path }}?sr={{ comment.id }}" method = "post"> {% csrf_token %}
+                  <p>
+                    <label for="id_seller_response">Seller response:</label> 
+                    <textarea id="id_seller_response" type="text" name="seller_response" maxlength="200" style=""></textarea>
+                  </p>
+                  <button class="btn btn-primary" style="margin-left:-1px;">Respond</button>
+                </form>-->
+                
+                <!-- Button to trigger modal -->
+                <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Respond</a>
+     
+                <!-- Modal -->
+                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">Seller Response</h3>
+                  </div>
+                  
+                  <div class="modal-body">
+                  <form action = "{{ request.path }}?sr={{ comment.id }}" method = "post"> {% csrf_token %}
+                      <p>
+                        <textarea id="id_seller_response" type="text" name="seller_response" maxlength="200" class="input-xlarge field span7" rows="5"></textarea>
+                      </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <button class="btn btn-primary">Respond</button>
+                  </form>
+                  </div>
+                </div>
               {% endif %}
             {% endif %}
             </td>
@@ -314,9 +297,12 @@
         <div>
         {% if request.user.is_authenticated %}
           <div class = "span4">
-            <form action = "{{ request.path }}" method = "post"> {% csrf_token %}
-              {{ comment_form.as_p }}
-                <button class="btn contact-button btn-primary" style="margin-left:-1px;"><input type = "submit" value="submit"/></button><font color="red"> <-seung halp i cant bootstarp</font>
+            <form action="{{ request.path }}" method="post"> {% csrf_token %}
+          <p>
+            <label for="id_body">Questions? Ask here:</label> 
+            <textarea id="id_body" type="text" name="body" maxlength="200" class="span5" rows="5";/></textarea>
+          </p>
+              <button class="btn contact-button btn-primary" style="margin-left:-1px;">Submit</button><font color="red">
             </form>
           </div>
         {% else %}
@@ -324,11 +310,7 @@
         {% endif %}
         {% endif %}
         </div>
-
     </div>
-
-
-    
   </div><!--sidebar-container-->
   
 </div>
