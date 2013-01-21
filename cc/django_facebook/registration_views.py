@@ -85,7 +85,7 @@ def register(request):
         verif = VerificationEmailID(user=new_user,auth_key=auth_key)
         verif.save()
         
-        title = "Account registration for Buy Near Me"
+        title = "Buy Near Me - Account Registration"
         body = create_body(auth_key,new_user)
         
         send_mail(title, body, 'noreply@buynear.me', [email])

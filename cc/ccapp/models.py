@@ -15,6 +15,7 @@ from sorl.thumbnail import get_thumbnail
 class VerificationEmailID(models.Model):
     user = models.ForeignKey(User)
     auth_key = models.CharField(max_length=20)
+    email = models.EmailField(blank=True, null=True)
 
 class Post(models.Model):
     title = models.CharField(max_length=50)

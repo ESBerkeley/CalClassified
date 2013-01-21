@@ -1,7 +1,7 @@
 from ccapp.models import *
 from ccapp.signals import *
 from ccapp.utils import *
-
+from ccapp.forms import EmailForm
 
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
@@ -10,19 +10,15 @@ from django.db.models import Avg, Max, Min, Count
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-#from django.utils import simplejson
 
 from django_facebook.models import *
 from django_facebook.api import get_facebook_graph, FacebookUserConverter
 from open_facebook.exceptions import OpenFacebookException
-      
-from django.views.decorators.csrf import csrf_exempt
-#from django.views.decorators.csrf import csrf_view_exempt
 
 from haystack.query import SearchQuerySet
 from haystack.management.commands import update_index
-#from haystack.models import SearchResult
 
 from multiuploader.models import MultiuploaderImage
 
@@ -120,7 +116,9 @@ def fb_items(request):
             existing_items = FacebookPost.objects.all()
             graph = get_facebook_graph(request)
             facebook = FacebookUserConverter(graph)
-            items = facebook.get_free_for_sale()
+            ffs_items = facebook.get_free_for_sale()
+            txtbook_items = facebook.get_textbook_exchange()
+            items = ffs_items + txtbook_items
             owner, created = User.objects.get_or_create(
                 first_name='Facebook',
                 last_name='Bot',
@@ -197,12 +195,18 @@ def fb_admin(request):
     data = {}
     if request.method == 'GET':
         formset = FacebookFormSet(queryset=FacebookPost.objects.filter(approved=False))
+        last_week = datetime.datetime.now()-datetime.timedelta(weeks=-1)
+        old_items = FacebookPost.objects.filter(created_time__gte=last_week)
         data['formset'] = formset
+        data['old_items'] = old_items
         return render_to_response('fb_admin.html', data, context_instance=RequestContext(request))
     else:
         formset = FacebookFormSet(request.POST, queryset=FacebookPost.objects.filter(approved=False))
         if formset.is_valid():
             items = formset.save()
+        last_week = datetime.datetime.now()-datetime.timedelta(weeks=-1)
+        old_items = FacebookPost.objects.filter(created_time__gte=last_week)
+        old_items.delete()
         data['approved_items'] = items
         update_index.Command().handle(using='default', remove=True)
         return render_to_response('fb_admin.html', data, context_instance=RequestContext(request))
@@ -986,19 +990,46 @@ def update_group(request, url_key):
 
 def verify_user(request,auth_key):
     data = {}
+#try:
+    verif = VerificationEmailID.objects.get(auth_key=auth_key)
+    user = verif.user
+    if user.is_active:
+        user.email = verif.email
+        user.save()
+    else:
+        user.is_active = True
+        user.save()
+    verif.delete()
+    data['title'] = "Account Activated"
+    data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='/accounts/login'>login</a> using your username and password."""
+    return render_to_response('message.html',data,context_instance=RequestContext(request))
+#except: #something goes wrong, primarily this url doesnt exist
+#    data['title'] = "Oops! An error has occurred."
+#    data['message'] = """Oops &ndash; it seems that your activation key is invalid.  Please check the url again."""
+#    return render_to_response('message.html',data,context_instance=RequestContext(request))
+
+def change_email(request,auth_key):
+    data = {}
     try:
         verif = VerificationEmailID.objects.get(auth_key=auth_key)
         user = verif.user
-        user.is_active = True
-        user.save()
-        verif.delete()
-        data['title'] = "Account Activated"
-        data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='/accounts/login'>login</a> using your username and password.""" 
-        return render_to_response('message.html',data,context_instance=RequestContext(request))
+        if verif.email:
+            user.email = verif.email
+            if not user.facebookprofile.facebook_id:
+                user.username = verif.email
+            user.save()
+            verif.delete()
+            data['title'] = "Email Changed"
+            data['message'] = "Thanks %s, your email has been changed!<br>" % str(user.first_name) + \
+                "You will now receive notifications at %s.<br>" % str(user.email) + \
+                "Click <a href='/accounts/profile/settings/'>here</a> to change your account settings or <a href='/browse/'>browse now</a>!"
+            return render_to_response('message.html', data,context_instance=RequestContext(request))
+        else:
+            raise Exception
     except: #something goes wrong, primarily this url doesnt exist
         data['title'] = "Oops! An error has occurred."
         data['message'] = """Oops &ndash; it seems that your activation key is invalid.  Please check the url again."""
-        return render_to_response('message.html',data,context_instance=RequestContext(request))
+        return render_to_response('message.html', data,context_instance=RequestContext(request))
 
 @login_required
 def ajax_delete_thread(request):
@@ -1175,3 +1206,42 @@ def profile_circles(request):
                              data,
                              context_instance=RequestContext(request))
 
+@login_required
+def account_setup(request):
+    data = {}
+    user = request.user
+    if request.method == 'POST':
+        email = EmailForm(request.POST)
+        print(email)
+
+        auth_key = ""
+        # create a 20 length random key
+        for i in range(0,20):
+            auth_key += random.choice(RANDOM_CHARS)
+
+        verif = VerificationEmailID(user=user, auth_key=auth_key, email=email)
+        verif.save()
+
+
+        send_templated_mail(
+            template_name='change_email',
+            from_email='Buy Near Me <noreply@buynear.me>',
+            recipient_list=[email],
+            context={
+                'auth_key':auth_key,
+                'first_name':user.first_name,
+                'full_name':user.get_full_name(),
+            },
+        )
+
+        data['title'] = "Email Verification"
+        data['message'] = """Verification email has been sent to your new email address.
+            <br>Follow the instructions on the email to complete this change."""
+
+        return render_to_response('message.html', data, context_instance=RequestContext(request))
+
+        #return render_to_response('index.html',context_instance=RequestContext(request) )
+    else:
+        form = EmailForm()
+        data['form'] = form
+        return render_to_response('registration/account_setup.html', data, context_instance=RequestContext(request))

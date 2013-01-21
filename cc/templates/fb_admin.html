@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Group Import{% endblock %}
+{% block title %}Approve FB Posts{% endblock %}
 
 {% block head %}
 
@@ -44,7 +44,7 @@
                 {% for form in formset %}
                     <tr>
                         {{ form.id }}
-                        <td> <a href="/{{ form.instance.pk }}">{{ form.instance.title|truncatechars:30 }} </a> </td>
+                        <td> <a href="/{{ form.instance.pk }}">link </a> </td>
                         <td> {{ form.title }} </td>
                         <td> {{ form.price|attr:"style:width:70px" }} </td>
                         <td> {{ form.category }} </td>
@@ -91,18 +91,42 @@
 
 <div style="clear:both"></div>
 
+    {% if old_items %}
+    <div class="container" style="width:950px; margin-top: 20px;">
+
+        <div id="fbAdmin 2">
+            <table class="table table-bordered">
+
+                <caption><h2> Old FB items to be deleted </h2></caption>
+                <thead>
+                <tr>
+                    <th> View </th>
+                    <th> Title </th>
+                    <th style="width:10px"> Price </th>
+                    <th> Category </th>
+                    <th> Approved </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% load widget_tweaks %}
+                {% for item in old_items %}
+                    <tr>
+                        <td><a href="{{ item.get_absolute_url }}">link</a></td>
+                        <td> {{ item.title|truncatechars:30 }} </td>
+                        <td> {{ item.price }} </td>
+                        <td> {{ item.category }} </td>
+                        <td> {{ item.approved }} </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
 {% endblock %}
 
-{% block post_js %}
-<script type="text/javascript">
-    $(document).ready(function(){
-        $(".checkId").click(function(){
-            var id = $(this).attr("id");
-            $("#id_"+id).attr("checked",!$("#id_"+id).is(':checked'))
-        })
-
-    })
-</script>
-{% endblock %}
 
 

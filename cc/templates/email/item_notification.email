@@ -15,7 +15,7 @@
   </ul>
   </p>
   <p>Thanks,</p>
-  <p>Buy Near Me Team</p>
+  <p>BuyNearMe Team</p>
   {% load static %}
   <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
   <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 

@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^facebook/', include('django_facebook.urls')),
     url(r'^accounts/', include('django_facebook.auth_urls')),
     url(r'^fb_import/$', 'ccapp.views.fb_import', name='fb_import'),
+    url(r'^account_setup/$', 'ccapp.views.account_setup', name='account_setup'),
 
     #ADMIN/DEBUG
     url(r'^friends/debug/$', 'ccapp.views.friendslist', name='test_friends'),
