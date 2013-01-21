@@ -97,7 +97,7 @@ function get_friend_notifications(){
           var count = obj.length;
           var x = "";
 
-          x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\"icon-envelope\" style=\"margin-top:5px;\"></i></a>";
+          x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\"icon-envelope\" style=\"margin-top:3px;\"></i></a>";
 
           if(count){
             x += "<ul class=\"dropdown-menu no-collapse\">";
@@ -530,21 +530,4 @@ $("#modal-send").on("click", function(){
         }
     });
 });
-
-/*$(".modal-seller-respond").on("click", function(){
-    $(this).button('loading');
-    var message = $(".modal-seller-mesage").val();
-    data = {};
-    data['csrfmiddlewaretoken'] = csrf_token;
-    data['seller_response'] = message;
-    $.ajax({
-        type: "POST",
-        url: "/" + post_pk + "?sr=" + comment_id,
-        data: data,
-        success: function(data){
-            $("#buynow-modal").modal('hide');
-        }
-    });
-});*/
-
 
