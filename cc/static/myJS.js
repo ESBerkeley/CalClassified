@@ -88,68 +88,51 @@ function get_friend_notifications(){
     
     xhr.onreadystatechange = function(){
 
-    var element_in_question = document.getElementById("friend_notifications_dropdown");
+      var element_in_question = document.getElementById("friend_notifications_dropdown");
 
-     if ( element_in_question){
-       if (xhr.readyState==4 && xhr.status == 200){
-         var obj = eval ("(" + xhr.responseText + ")");
+      if ( element_in_question){
+        if (xhr.readyState==4 && xhr.status == 200){
+          var obj = eval ("(" + xhr.responseText + ")");
 
-         var count = obj.length;
-         var x = "";
+          var count = obj.length;
+          var x = "";
 
-         x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" + "<span class=\"badge"
+          x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\"icon-envelope\" style=\"margin-top:5px;\"></i></a>";
 
-         if(count){
-           x+= "badge-warning"
-         }
-        
-         x+= "\">" + count + "</span>" + "Notifications<b class=\"caret\"></b></a>";
-         x += "<ul class=\"dropdown-menu no-collapse\">";
+          if(count){
+            x += "<ul class=\"dropdown-menu no-collapse\">";
 
-         for(var k = 0; k < count; k++){
-           if(obj[k].fields.type == 0){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 1){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].fields.second_party.username + " commented on " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 2){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " replied to your comment on " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 3){
-             x += "<li><a href=\"{% url xxx %}\">" + obj[k].extras.username + " has purchased your item: " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 4){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has marked the sale of " + obj[k].extras.title + "as complete." + "</a></li>";
-           }
-           else{
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
-           }
-         }
-
-
-
-         if(count){
-           x+="<li> <font color=\"blue\"><div onclick = \"clear_notif()\"> Clear notifications <div> </font></li>";
-         }else{
-           x+="<li> No Notifications </li>";
-         }
-
-         x += "</ul>";
-
-       }
-
-       element_in_question.innerHTML = x;
-
-     }       
-     
-   };
-
-
-  var url="/get_friend_notifications/";
-  xhr.open("GET",url,true);
-  xhr.send();
-  }
+            for(var k = 0; k < count; k++){
+              if(obj[k].fields.type == 0){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
+              }
+              else if(obj[k].fields.type == 1){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].fields.second_party.username + " commented on " + obj[k].extras.title + "</a></li>";
+              }
+              else if(obj[k].fields.type == 2){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " replied to your comment on " + obj[k].extras.title + "</a></li>";
+              }
+              else if(obj[k].fields.type == 3){
+                x += "<li><a href=\"{% url xxx %}\">" + obj[k].extras.username + " has purchased your item: " + obj[k].extras.title + "</a></li>";
+              }
+              else if(obj[k].fields.type == 4){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has marked the sale of " + obj[k].extras.title + "as complete." + "</a></li>";
+              }
+              else{
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
+              }
+            }
+            x+="<li> <a onclick = \"clear_notif()\">Clear notifications</a></li>";
+            x += "</ul>";
+          }
+          element_in_question.innerHTML = x;
+        }
+      }       
+    }
+    var url="/get_friend_notifications/";
+    xhr.open("GET",url,true);
+    xhr.send();
+}
 
   function search(){
     var q = document.getElementById('searchbar').value;

@@ -202,10 +202,10 @@
               {% if request.user.is_authenticated %}
               {% if post.owner != request.user %}
               
-              <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button  btn btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-star-empty"></i> Buy Now</button> 
+              <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-shopping-cart"></i> Buy Now</button> 
               {% endif %}
               {% else %}
-              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy/Contact</a>
+              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
               {% endif %}
            {% endif %}
         </div><!--/.well -->
@@ -215,7 +215,6 @@
     <div class="post-lower">
         <h3 style="font-weight: 400;">Product Description:</h3>
           <p id="post-body" style="white-space:pre-wrap">{{ post.body }}</p>
-          <!--<p> {{ post.time_created }}</p>-->
             <hr style="margin-bottom: 15px;">
             <fb:share-button href="#" type="button"></fb:share-button>
             <br>
@@ -238,7 +237,6 @@
                         Unbookmark Post
                     </a>
             </p>
-
             {% endif %}
 
         <br>
@@ -255,22 +253,14 @@
               <font color="red">"{{ comment.seller_response }}" - OP</font>
             {% else %}
               {% if post.owner == request.user and comment.sender != request.user %}
-                <!--<form action = "{{ request.path }}?sr={{ comment.id }}" method = "post"> {% csrf_token %}
-                  <p>
-                    <label for="id_seller_response">Seller response:</label> 
-                    <textarea id="id_seller_response" type="text" name="seller_response" maxlength="200" style=""></textarea>
-                  </p>
-                  <button class="btn btn-primary" style="margin-left:-1px;">Respond</button>
-                </form>-->
-                
                 <!-- Button to trigger modal -->
-                <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Respond</a>
+                <a href="modal-response" role="button" class="btn btn-primary" data-toggle="modal">Respond</a>
      
                 <!-- Modal -->
-                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div id="modal-response" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-response-label" aria-hidden="true">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="myModalLabel">Seller Response</h3>
+                    <h3 id="modal-response-label">Seller Response</h3>
                   </div>
                   
                   <div class="modal-body">
@@ -302,7 +292,7 @@
             <label for="id_body">Questions? Ask here:</label> 
             <textarea id="id_body" type="text" name="body" maxlength="200" class="span5" rows="5";/></textarea>
           </p>
-              <button class="btn contact-button btn-primary" style="margin-left:-1px;">Submit</button><font color="red">
+              <button class="btn btn-primary" style="margin-left:-1px;">Submit</button><font color="red">
             </form>
           </div>
         {% else %}
