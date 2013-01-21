@@ -58,15 +58,21 @@
             <li style="width:30%;"><img src="/static/124ta-beta.png" alt="Buy Near Me" id="nav-logo"></li>
 			<li style="width:30%;"><a href="{% url browse %}" class="font-400">Browse</a></li>
 			<li style="width:30%;"><a href="{% url sell %}" class="font-400">Sell</a></li>
-			<li style="width:10%;"><a id="flip" href="#" class="font-400">hi</a></li>
+			<li style="width:10%;"><a id="flip"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
 		</ul>
 	</div><!-- /navbar -->
 </div>
 
 <div id="panel">
-    <div class="panel-item">whats up</div>
+    {% if request.user.is_authenticated %}
+    <div class="panel-item"><a href="{% url my_items %}">My Items</a></div>
     <div class="border" style="border-top-color:#474747"></div>
-    <div class="panel-item">Sign in and stuff</div>
+    <div class="panel-item"><a href="{% url view_messages %}">Messages</a></div>
+    <div class="border" style="border-top-color:#474747"></div>
+    <div class="panel-item"><a href="/logout">Logout</a></div>
+    {% else %}
+    <div class="panel-item"><a href="{% url home %}">Login</a></div>
+    {% endif %}
 </div>
 
 
@@ -86,9 +92,12 @@
 
     <script type="text/javascript" src="{% get_static_prefix %}mobile/mobile-js.js"></script>
 
-    <script>
-        $("#flip").click(function(){
-            $("#panel").slideToggle("slow");
+    <script type="text/javascript">
+        $('#body-page').live('pageshow', function () {
+            $("#panel").hide();
+            $("#flip").click(function(){
+                $("#panel").slideToggle("slow");
+            });
         });
     </script>
 
