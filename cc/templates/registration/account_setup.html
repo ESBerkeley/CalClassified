@@ -29,10 +29,11 @@ label.error {
   </div>
     
   
-  <div class="small-body">
+  <div class="small-body" style="padding:20px 40px 20px 40px">
   {% if message %}
   <p style="color:red">{{ message }}</p>
   {% endif %}
+  <p>Current Email: {{ request.user.email }}</p>
   <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
   <div id="fields form">
     {% for field in form %}

@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 
-    <div id="signup-container" class="container">
+    <div id="signup-container" class="container" xmlns="http://www.w3.org/1999/html">
         <div id="signup-box" class="span12">
 
 
@@ -15,15 +15,52 @@
                 <h2>Feedback</h2>
             </div>
 
-
             <div class="small-body" style="padding-bottom: 20px;">
                 <p>
-                    We're always trying to make you're experience a better one so please send any feedback to <a href="mailto:feedback@buynear.me">feedback@buynear.me</a>
+                    We're always trying to make your experience a better one. <br>
+                    Please send any feedback to
+                    <a href="mailto:feedback@buynear.me">feedback@buynear.me</a> or contact us using the form below!
                     <br><br>
                     Any feedback is good feedback, thanks!
                 </p>
+                {% load widget_tweaks %}
+                <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
+                    {% for field in form %}
+                        <div class="control-group">
+                            {{ field.errors }}
+                            <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+                            <div class="controls ">
+                                {{ field|attr:"style:width:500px"}}
+                                <span class="help-block">{{ field.help_text|safe }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <br>
+                    <br>
+                    <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Submitting..." value="Submit">
+                </form>
             </div>
         </div>
     </div>
 
+{% endblock %}
+
+{% block post_js %}
+<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#sellForm").validate({
+            rules: {
+                message: {
+                    required: true
+                }
+            },
+            submitHandler: function() {
+                $("#ajax-loader").show();
+                $("#submit").button('loading');
+                $(form).ajaxSubmit();
+            }
+        });
+    })
+</script>
 {% endblock %}

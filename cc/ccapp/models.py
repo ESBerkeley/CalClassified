@@ -189,7 +189,7 @@ class ItemForSaleForm(ModelForm):
     body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
     class Meta:
         model = ItemForSale
-        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'approved')
+        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'approved','circles')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 

@@ -8,6 +8,13 @@ body{
 
 }
 {% endblock %}
+
+{% block navbar %}
+{% if request.user.is_authenticated %}
+  <li><a style="color: #6f6f6f;cursor: default;"> Hi, {{ request.user.first_name }}! </a></li>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <div id="top-banner">
   <div id="banner-text">

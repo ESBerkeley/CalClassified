@@ -1,7 +1,7 @@
 from ccapp.models import *
 from ccapp.signals import *
 from ccapp.utils import *
-from ccapp.forms import EmailForm
+from ccapp.forms import EmailForm, FeedbackForm
 
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
@@ -12,6 +12,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 
 from django_facebook.models import *
 from django_facebook.api import get_facebook_graph, FacebookUserConverter
@@ -293,6 +294,41 @@ class FriendsView(TemplateView):
 class MainView(TemplateView):
     template_name = 'index.html'
 
+class FeedbackView(FormView):
+    template_name = 'feedback.html'
+    form_class = FeedbackForm
+    success_url = '/thanks/'
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        user = self.request.user
+        try:
+            full_name = user.get_full_name()
+        except:
+            full_name = 'No Name'
+        send_templated_mail(
+            template_name='feedback',
+            from_email='noreply@buynear.me',
+            recipient_list=['contact@buynear.me'],
+            context={
+                'message':form.cleaned_data['message'],
+                'username':user.username,
+                'email':form.cleaned_data['email'],
+                'full_name':full_name
+                },
+        )
+        return super(FeedbackView, self).form_valid(form)
+
+class ThanksView(TemplateView):
+    template_name = 'message.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ThanksView, self).get_context_data(**kwargs)
+        context['title'] = 'Thanks for the feedback!'
+        context['message'] = 'We hope you had a great experience, and we hope to make it even better!'
+        return context
+
 def confirmview(request,pid,secret,super_cat):
     try:
         post = super_cat.objects.get(pk=pid)
@@ -346,9 +382,10 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
 
                 #circles weren't being saved cause commit=False, and a pk was need to add
                 #manytomany relations
-                circleIDs = request.POST.getlist('circles')
-                circleQuery = Circle.objects.filter(id__in=circleIDs)
-                model.circles = circleQuery
+                #circleIDs = request.POST.getlist('circles')
+                #circleQuery = Circle.objects.filter(id__in=circleIDs)
+                #model.circles = circleQuery
+                model.circles = user_profile.my_circles.all()
                 model.save()
 
                 #MULTIUPLOADER
@@ -369,10 +406,10 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
 
             #form variable gets rewritten in 'if' statement if its within circle
             form = super_cat_form()#instance=model)
-            form.fields['circles'].queryset = user_profile.my_circles.all()
-            form.fields['circles'].label = "Groups"
-            form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
-                <p style="color:red;">Only people in the groups you select can see your post.</p>"""
+            #form.fields['circles'].queryset = user_profile.my_circles.all()
+            #form.fields['circles'].label = "Groups"
+            #form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
+            #    <p style="color:red;">Only people in the groups you select can see your post.</p>"""
             #Specify which groups you want to sell to.
 
 
@@ -990,23 +1027,19 @@ def update_group(request, url_key):
 
 def verify_user(request,auth_key):
     data = {}
-#try:
-    verif = VerificationEmailID.objects.get(auth_key=auth_key)
-    user = verif.user
-    if user.is_active:
-        user.email = verif.email
-        user.save()
-    else:
+    try:
+        verif = VerificationEmailID.objects.get(auth_key=auth_key)
+        user = verif.user
         user.is_active = True
         user.save()
-    verif.delete()
-    data['title'] = "Account Activated"
-    data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='/accounts/login'>login</a> using your username and password."""
-    return render_to_response('message.html',data,context_instance=RequestContext(request))
-#except: #something goes wrong, primarily this url doesnt exist
-#    data['title'] = "Oops! An error has occurred."
-#    data['message'] = """Oops &ndash; it seems that your activation key is invalid.  Please check the url again."""
-#    return render_to_response('message.html',data,context_instance=RequestContext(request))
+        verif.delete()
+        data['title'] = "Account Activated"
+        data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='/accounts/login'>login</a> using your username and password."""
+        return render_to_response('message.html',data,context_instance=RequestContext(request))
+    except: #something goes wrong, primarily this url doesnt exist
+        data['title'] = "Oops! An error has occurred."
+        data['message'] = """Oops &ndash; it seems that your activation key is invalid.  Please check the url again."""
+        return render_to_response('message.html',data,context_instance=RequestContext(request))
 
 def change_email(request,auth_key):
     data = {}
@@ -1210,38 +1243,44 @@ def profile_circles(request):
 def account_setup(request):
     data = {}
     user = request.user
+    user_profile = user.get_profile()
     if request.method == 'POST':
-        email = EmailForm(request.POST)
-        print(email)
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            auth_key = ""
+            # create a 20 length random key
+            for i in range(0,20):
+                auth_key += random.choice(RANDOM_CHARS)
 
-        auth_key = ""
-        # create a 20 length random key
-        for i in range(0,20):
-            auth_key += random.choice(RANDOM_CHARS)
+            verif = VerificationEmailID(user=user, auth_key=auth_key, email=email)
+            verif.save()
+            print(auth_key)
+            send_templated_mail(
+                template_name='change_email',
+                from_email='Buy Near Me <noreply@buynear.me>',
+                recipient_list=[email],
+                context={
+                    'auth_key':auth_key,
+                    'first_name':user.first_name
+                },
+            )
 
-        verif = VerificationEmailID(user=user, auth_key=auth_key, email=email)
-        verif.save()
-
-
-        send_templated_mail(
-            template_name='change_email',
-            from_email='Buy Near Me <noreply@buynear.me>',
-            recipient_list=[email],
-            context={
-                'auth_key':auth_key,
-                'first_name':user.first_name,
-                'full_name':user.get_full_name(),
-            },
-        )
-
-        data['title'] = "Email Verification"
-        data['message'] = """Verification email has been sent to your new email address.
-            <br>Follow the instructions on the email to complete this change."""
-
+            data['title'] = "Email Verification"
+            data['message'] = """Verification email has been sent to your new email address: %s
+                <br>Follow the instructions on the email to complete this change.""" % (email)
+        else:
+            data['title'] = "Email Verification Failed"
+            data['message'] = """Verification email has not been sent. Please try again <a href="/account_setup/">here</a>
+                <br>or contact us for assistance at
+                <a href="mailto:contact@buynear.me?Subject=Email%20Verification%20Failed">
+                contact@buynear.me</a>."""
         return render_to_response('message.html', data, context_instance=RequestContext(request))
 
         #return render_to_response('index.html',context_instance=RequestContext(request) )
     else:
         form = EmailForm()
         data['form'] = form
+        user_profile.first_time = False
+        user_profile.save()
         return render_to_response('registration/account_setup.html', data, context_instance=RequestContext(request))
