@@ -3,11 +3,11 @@
   <head>
       {% load static %}
     <meta charset="utf-8">
-    <title>{% block title %}Buy Near Me - Home{% endblock %}</title>
+    <title>{% block title %}BuyNearMe - Home{% endblock %}</title>
     {% block metadata %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="description" content="Buy and sell items to friends and classmates!" />
-      <meta name="keywords" content="Buy Near Me,buynear.me,buynearme,buy,sell,berkeley,UC Berkeley,friends" />
+      <meta name="keywords" content="BuyNearMe,buynear.me,Buy Near Me,buy,sell,berkeley,UC Berkeley,friends" />
       <meta property="og:title" content="Buy Near Me"/>
       <meta property="og:type" content="website"/>
       <meta property="og:url" content="http://buynear.me/"/>
@@ -110,8 +110,8 @@
                 <i class="icon-envelope "></i>
             </a>
             </li>
-          <!--  <li id="fat-menu"><a style="color: orange;"><span class="badge badge-warning">{{ request.user.get_profile.friend_notifications }}</span> Notifications</a></li> -->
-                <li><a href="{% url account_circles %}">My Groups</a></li>
+          <!--  <li id="fat-menu"><a style="color: orange;"><span class="badge badge-warning">
+          {{ request.user.get_profile.friend_notifications }}</span> Notifications</a></li> -->
                 <li><a href="/accounts/profile"></i> Account</a></li>
                 <li><a href="{% url auth_logout %}">
                 <!--<li><a href="{% url auth_logout %}?next={{ request.path|urlencode }}"> -->
