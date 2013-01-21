@@ -97,7 +97,7 @@ function get_friend_notifications(){
           var count = obj.length;
           var x = "";
 
-          x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\"icon-envelope\" style=\"margin-top:3px;\"></i></a>";
+          x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
 
           if(count){
             x += "<ul class=\"dropdown-menu no-collapse\">";
