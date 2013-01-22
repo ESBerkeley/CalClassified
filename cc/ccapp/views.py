@@ -631,23 +631,23 @@ def ajax_contact_seller(request):
 
         #Create 2 Threads for both ends
         try: #see if thread exists, if not create it
-            thread1 = Thread.objects.get(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
+            thread1 = Thread.objects.get(owner=sender, other_person=recipient, post_title=post.title, post_id=post_pk)
         except:
-            thread1 = Thread.objects.create(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
+            thread1 = Thread.objects.create(owner=sender, other_person=recipient, post_title=post.title, post_id=post_pk)
             first_message = True
         try: #see if thread exists, if not create it
-            thread2 = Thread.objects.get(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
+            thread2 = Thread.objects.get(owner=recipient,other_person=sender, post_title=post.title, post_id=post_pk)
         except:
-            thread2 = Thread.objects.create(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
+            thread2 = Thread.objects.create(owner=recipient,other_person=sender, post_title=post.title, post_id=post_pk)
 
         if first_message:
             buy_button_signal.send(sender=ItemForSale, instance=post, message=message)
 
         else:
             if request.user == post.owner: #sending a message to a buyer
-                message_to_buyer_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer)
+                message_to_buyer_signal.send(sender=ItemForSale, instance=post, message=message)
             else:   #sending a message to a seller
-                message_to_seller_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer)
+                message_to_seller_signal.send(sender= ItemForSale, instance=post, message=message)
 
         thread1.messages.add(message)
         thread2.messages.add(message)
