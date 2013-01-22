@@ -486,7 +486,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
         }
 
 
-        if(obj.length < fitx_small*fity_small || 1){ //very few results. let's promote everything to max size (when doing a restrictive search)
+        if(obj.length < fitx_small*fity_small && 0){ //very few results. let's promote everything to max size (when doing a restrictive search)
         
             for(var y = 0; y < fity; y++){
                 for(var x = 0; x < fitx; x++){ 
