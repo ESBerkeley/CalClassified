@@ -1131,7 +1131,7 @@ def profile_selling(request):
 
 
     ifs_waiting_list = ItemForSale.objects.filter(owner=request.user, pending_flag=False, deleted=False).order_by('-time_created')
-    ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True, deleted=False)
+    ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True, deleted=False).order_by('-time_created')
 
     unsold_ids = [x.id for x in ifs_waiting_list]
 

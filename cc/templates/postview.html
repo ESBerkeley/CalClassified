@@ -74,10 +74,10 @@
           <h3>Almost there!</h3>
         </div>
         <div class="modal-body">
-            <p>The item will be reserved with you. Send a message to the seller to hash out the details of your purchase, such as when and where you want to meet up!</p>
-          <textarea class="input-xlarge field span7" id="modal-message" rows="5"></textarea>
-            <br><br>
-            <p><b>Note:</b> Once you buy the product, this item will no longer be searchable for other users. So please buy accordingly!</p>
+            <p>Send a message to the seller to hash out the details of your purchase, such as when and where you want to meet up!</p>
+          <textarea class="input-xlarge field span7" id="modal-message" rows="5" placeholder="Can you meet at Dwinelle this Friday at 12pm? Thanks!"></textarea>
+            <br>
+            <p><b>Note:</b> Once you buy the product, this item will no longer be listed. So please buy accordingly!</p>
         </div>
         <div class="modal-footer">
           <button id="modal-send" class="btn btn-primary" type="button" data-loading-text="Sending...">Buy</button>
@@ -183,9 +183,11 @@
                   data-original-title="View the Facebook post connected to this listing on the Facebook group Free & For Sale or Textbook Exchange."></i>
            {% else %}
               {% if request.user.is_authenticated %}
-              {% if post.owner != request.user %}
+                  {% if post.sold %}
+                  {% elif post.pending_flag %}
+                  {% elif post.owner != request.user %}
                 <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-shopping-cart"></i> Buy Now</button>
-              {% endif %}
+                  {% endif %}
               {% else %}
                 <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
               {% endif %}
@@ -371,7 +373,7 @@ $(document).ready( function() {
     }
     
       $(".close-refresh").click (function() {
-          location.reload();
+          window.location = "/"
       });
 
       

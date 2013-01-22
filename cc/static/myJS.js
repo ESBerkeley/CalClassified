@@ -102,35 +102,35 @@ function get_friend_notifications(){
 //<<<<<<< .merge_file_Yjqavb
           if(count){
             x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
-            x += "<ul class=\"dropdown-menu no-collapse\">";
+            x += "<ul class=\"dropdown-menu no-collapse \" style='margin-left: -300px;'>";
 
             for(var k = 0; k < count; k++){
            if(obj[k].fields.type == 0){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 1){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title + "</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 2){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title + "</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 3){
-             x += "<li><a href=\"/accounts/profile/selling/\"><strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title + "</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/accounts/profile/selling/\"><strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 4){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete." + "</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete." + "</a></li>";
            }
            else if(obj[k].fields.type == 5){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
            }
            else if(obj[k].fields.type == 6){  //buyer "bob" has messaged you about your post "dogfood"
-             x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Buyer <strong>" + obj[k].extras.second_username + "</strong> has sent you a message about your post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Buyer <strong>" + obj[k].extras.second_username + "</strong> has sent you a message about your post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
            }
            else{   //seller "bob" has messaged you about their post "dogfood"
-             x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has sent you a message about their post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+             x += "<li class='notif-li'><a class='notif-li' href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has sent you a message about their post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
            }
             }
-            x+="<li> <a onclick = \"clear_notif()\">Clear notifications</a></li>";
+            x+="<li class='notif-li'> <a class='notif-li' onclick = \"clear_notif()\">Clear notifications</a></li>";
             x += "</ul>";
           }
           else {
