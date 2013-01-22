@@ -500,7 +500,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
         else{                                        // there are more than a few results, so use multi-size standard boxfitting technique (most of the time)
             for(var i = 0; i < sizes.length; i++){ 
                 failing = 0;
-                fail_threshold = 100;
+                fail_threshold = -100;
                 force_x = 0;
                 force_y = 0;
                 demoting = 0;
