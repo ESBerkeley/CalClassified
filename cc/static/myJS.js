@@ -460,8 +460,8 @@ function notification_sentence(obj, k) {    //list of notifications, position in
 
         function forcefit(obj,grid){
             var x,y;
-            for(x = force_x; x < numx; x++){
-                for(y = (!x)*force_y; y < numy; y++){
+            for(y = 0; y < numy; y++){
+                for(x = 0; x < numx; x++){
                     if(!(check(x,y,obj,grid))){  //true on success
                         set(x,y,obj,grid);
                         force_x = x;
