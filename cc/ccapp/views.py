@@ -127,7 +127,10 @@ def fb_items(request):
                 username='noreply@buynear.me')
             category, created = Category.objects.get_or_create(name='Uncategorized')
             for item in items:
-                item_id = item.get('id').split('_')[1]
+                try:
+                    item_id = item.get('id').split('_')[1]
+                except:
+                    continue
                 if not existing_items.filter(facebook_id=item_id).exists():
                     user_id = item.get('from').get('id')
                     seller_name = item.get('from').get('name')
@@ -148,7 +151,10 @@ def fb_items(request):
                     price = 0
                     price_string = body.split('$')
                     if len(price_string)>1:
-                        price = (float)(re.findall(r"[-+]?\d*\.\d+|\d+", price_string[1])[0])
+                        try:
+                            price = (float)(re.findall(r"[-+]?\d*\.\d+|\d+", price_string[1])[0])
+                        except IndexError:
+                            pass
                     title = body[:48] + (body[50:] and '..')
 
                     created_time_string = item.get('created_time')
