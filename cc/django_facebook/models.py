@@ -203,4 +203,4 @@ if settings.AUTH_PROFILE_MODULE == 'django_facebook.FacebookProfile':
 class SettingsForm(forms.ModelForm):
     class Meta:
         model = FacebookProfile
-        fields = ('message_email', 'comments_email', 'replies_email', 'friend_email', 'sold_email', 'failed_email' )
+        fields = ('message_email', 'comments_email', 'replies_email', 'friend_email', 'sold_email', 'failed_to_sell_email' )
