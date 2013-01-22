@@ -117,7 +117,7 @@ function get_friend_notifications(){
             x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">" + obj[0].extras.num_unread + "</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
             x += "<ul class=\"dropdown-menu no-collapse pull-right\">";
 
-            for(var k = 0; k < count-1; k++){
+            for(var k = 0; k < count; k++){
 
               if(obj[k].fields.type == 0){
                 x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> posted " + obj[k].extras.title + "</a></li>";
