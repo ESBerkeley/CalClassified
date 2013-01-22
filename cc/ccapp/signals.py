@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import Signal
 
-from ccapp.models import ItemForSale, Notification, Comment
+from ccapp.models import ItemForSale, Notification, Comment, Thread
 from django_facebook.models import FacebookUser, FacebookProfile
 
 
@@ -44,7 +44,8 @@ seller_response_signal = Signal()
 buy_button_signal = Signal() 
 sale_complete_signal = Signal()
 repost_signal = Signal()
-
+message_to_seller_signal = Signal()
+message_to_buyer_signal = Signal()
 
 #@receiver(post_save, dispatch_uid="AAAAARGH")
 def post_save_hndlr(sender, **kwargs):
@@ -158,6 +159,30 @@ def item_repost_hndlr(sender, **kwargs):
         buyer.save()
     return
     
+def message_to_seller_hndlr(sender, **kwargs):
+    if sender == ItemForSale:
+        item = kwargs['instance']
+        seller = item.owner.get_profile()
+        buyer = kwargs['target']
+        new_note = Notification(post_from = item, going_to = seller, type = 6)
+        new_note.second_party = buyer.get_profile()
+        new_note.thread_id = Thread.objects.get(owner = seller.user, post_id = item.id).id
+        new_note.save()
+        seller.friend_notifications += 1
+        seller.save()
+    return
+
+def message_to_buyer_hndlr(sender, **kwargs):
+    if sender == ItemForSale:
+        item = kwargs['instance']
+        seller = item.owner.get_profile()
+        buyer = kwargs['target']
+        new_note = Notification(post_from = item, going_to = buyer, type = 7)
+        new_note.thread_id = Thread.objects.get(owner = buyer.user, post_id = item.id).id
+        new_note.save()
+        buyer.friend_notifications += 1
+        buyer.save()
+    return
 
 
 new_comment_signal.connect(comment_save_hndlr, sender = Comment, dispatch_uid = "yolo")
@@ -165,4 +190,6 @@ seller_response_signal.connect(seller_response_hndlr, sender = Comment, dispatch
 buy_button_signal.connect(buy_button_hndlr, sender = ItemForSale, dispatch_uid = "11")
 sale_complete_signal.connect(sale_complete_hndlr, sender = ItemForSale, dispatch_uid = "123")
 repost_signal.connect(item_repost_hndlr, sender = ItemForSale, dispatch_uid = "333")
+message_to_seller_signal.connect(message_to_seller_hndlr, sender = ItemForSale, dispatch_uid = "234")
+message_to_buyer_signal.connect(message_to_buyer_hndlr, sender = ItemForSale, dispatch_uid = "woodchip")
 
