@@ -162,21 +162,24 @@ def fb_items(request):
                     if created_time_string:
                         created_time = datetime.datetime.strptime(
                             item['created_time'], "%Y-%m-%dT%H:%M:%S+0000")
-                    new_item = FacebookPost(facebook_id=item_id,
-                                    user_id=user_id,
-                                    seller_name=seller_name,
-                                    post_url=post_url,
-                                    thumbnail_url=thumbnail_url,
-                                    picture_url=picture_url,
-                                    body=body,
-                                    price=price,
-                                    title=title,
-                                    owner=owner,
-                                    category=category,
-                                    approved=False,
-                                    created_time=created_time)
-                    new_item.save()
-                    new_items.append(new_item)
+                    try:
+                        new_item = FacebookPost(facebook_id=item_id,
+                                        user_id=user_id,
+                                        seller_name=seller_name,
+                                        post_url=post_url,
+                                        thumbnail_url=thumbnail_url,
+                                        picture_url=picture_url,
+                                        body=body,
+                                        price=price,
+                                        title=title,
+                                        owner=owner,
+                                        category=category,
+                                        approved=False,
+                                        created_time=created_time)
+                        new_item.save()
+                        new_items.append(new_item)
+                    except:
+                        continue
             circle = Circle.objects.get(name='Berkeley')
             circle.itemforsale_set.add(*new_items)
 
