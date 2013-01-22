@@ -465,6 +465,7 @@ def ajax_delete_post(request):
         if post.owner == request.user:
             post.deleted = True
             post.save()
+            Notification.objects.filter(post_from=post).delete()
             return HttpResponse("Success")
 
 @login_required
