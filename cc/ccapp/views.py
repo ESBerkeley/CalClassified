@@ -310,7 +310,7 @@ class FeedbackView(FormView):
         send_templated_mail(
             template_name='feedback',
             from_email='noreply@buynear.me',
-            recipient_list=['contact@buynear.me'],
+            recipient_list=['feedback@buynear.me'],
             context={
                 'message':form.cleaned_data['message'],
                 'username':user.username,
@@ -469,8 +469,15 @@ def ajax_delete_post(request):
 
 @login_required
 def delete_notifications(request):
-    notifications = Notification.objects.filter(going_to = request.user.get_profile())
-    notifications.delete()
+
+    if not 'justnum' in request.GET:   
+        notifications = Notification.objects.filter(going_to = request.user.get_profile())
+        notifications.delete()
+
+    user_profile = request.user.get_profile()
+    user_profile.friend_notifications = 0
+    user_profile.save()
+
     return HttpResponse("winning")
     
 def deleteallposts(request):
@@ -511,7 +518,8 @@ def showpost(request,pid,super_cat):
                 comment.item = post
                 comment.seller_response = ""
                 comment.save()
-                new_comment_signal.send(sender = Comment, instance = comment) 
+                if user != post.owner:
+                    new_comment_signal.send(sender = Comment, instance = comment) 
                 #the signal handeler for this, and the above takes care of adding an appropriate nofitication  
             
         return HttpResponseRedirect(request.path)
@@ -579,7 +587,7 @@ def modify_post(request):
                 post.sold = True
                 post.save()
                 sale_complete_signal.send(sender = ItemForSale, instance = post)
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect("/accounts/profile/selling")
 
             elif action == "repost":
                 #the sald didnt work out, repost the item, and redirect seller
@@ -587,7 +595,7 @@ def modify_post(request):
                 post.pending_flag = False
                 post.pending_buyer = None
                 post.save()
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect("/"+str(post_pk))
             else:
                 return HttpResponse("Invalid Request")
 
@@ -631,23 +639,23 @@ def ajax_contact_seller(request):
 
         #Create 2 Threads for both ends
         try: #see if thread exists, if not create it
-            thread1 = Thread.objects.get(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
+            thread1 = Thread.objects.get(owner=sender, other_person=recipient, post_title=post.title, post_id=post_pk)
         except:
-            thread1 = Thread.objects.create(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
+            thread1 = Thread.objects.create(owner=sender, other_person=recipient, post_title=post.title, post_id=post_pk)
             first_message = True
         try: #see if thread exists, if not create it
-            thread2 = Thread.objects.get(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
+            thread2 = Thread.objects.get(owner=recipient,other_person=sender, post_title=post.title, post_id=post_pk)
         except:
-            thread2 = Thread.objects.create(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
+            thread2 = Thread.objects.create(owner=recipient,other_person=sender, post_title=post.title, post_id=post_pk)
 
         if first_message:
-            buy_button_signal.send(sender = ItemForSale, instance = post)
+            buy_button_signal.send(sender=ItemForSale, instance=post, message=message)
 
         else:
             if request.user == post.owner: #sending a message to a buyer
-                message_to_buyer_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer)
+                message_to_buyer_signal.send(sender=ItemForSale, instance=post, message=message)
             else:   #sending a message to a seller
-                message_to_seller_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer)
+                message_to_seller_signal.send(sender=ItemForSale, instance=post, message=message)
 
         thread1.messages.add(message)
         thread2.messages.add(message)
@@ -660,22 +668,6 @@ def ajax_contact_seller(request):
         rec_profile = recipient.get_profile()	
         rec_profile.notifications += 1
         rec_profile.save()
-        recipient_name = recipient.get_full_name()
-        if rec_profile.message_email:
-            send_templated_mail(
-                template_name='message',
-                from_email='noreply@buynear.me',
-                recipient_list=[recipient.email],
-                context={
-                    'message':message.body,
-                    'thread':thread2,
-                    'post':post,
-                    'username':sender.username,
-                    'first_name':sender.first_name,
-                    'full_name':sender.get_full_name(),
-                    'recipient_name':recipient_name,
-                },
-            )
 
         # send_mail(post.title+" Response - "+recipient_name, post.body, 'noreply@buynear.me', [recipient.email])
         return HttpResponse("success")
@@ -770,17 +762,25 @@ def boxview(request):
 @login_required
 def ajax_friend_notifications(request):
     dude = request.user.get_profile()
-    notifications = Notification.objects.filter(going_to = dude)
+    
+    notifications = Notification.objects.filter(going_to = dude).order_by('-time_created')  
 
+    if 'cap' in request.GET:
+        notifications = notifications[:7]
+        
     for note in notifications:
         pfrom = note.post_from
         note.title = pfrom.title
         note.username = pfrom.owner.get_full_name()
         note.second_username = ""
+        note.num_unread = dude.friend_notifications
         if note.second_party:
             note.second_username = note.second_party.user.get_full_name()
 
-    data = serializers.serialize('json',notifications, indent = 4, extras = ('second_username','username','title',))
+#    dude.friend_notifications = 0
+    dude.save()
+
+    data = serializers.serialize('json',notifications, indent = 4, extras = ('num_unread','second_username','username','title',))
     return HttpResponse(data,'application/javascript')
         
 
@@ -1095,14 +1095,16 @@ def profile_status(request):
 
 @login_required
 def profile_settings(request):
+    data = {}
+    user_profile = request.user.get_profile()
     if request.method=="POST":
-        form = SettingsForm(request.POST)
+        form = SettingsForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
+        data['form'] = form
+        data['message'] = True
         return render_to_response('profile/profile_settings.html',data,context_instance=RequestContext(request))
     else:
-        data = {}
-        user_profile = request.user.get_profile()
         form = SettingsForm(instance=user_profile)
         data['form'] = form
         data.update(csrf(request))
@@ -1140,12 +1142,18 @@ def profile_selling(request):
     user = request.user
 
     selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
-    sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)]
 
-    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=selling_ids).order_by('is_read','-newest_message_time')    
+    #sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)] #unused?? -seung
 
-    ifs_waiting_list = ItemForSale.objects.filter(owner = request.user).filter(pending_flag = False).filter(deleted=False)
-    ifs_sold  = ItemForSale.objects.filter(owner = request.user).filter(sold = True).filter(deleted=False)
+    my_threads = Thread.objects.filter(owner=user, post_id__in=selling_ids).order_by('is_read','-newest_message_time','-timestamp')
+
+
+    ifs_waiting_list = ItemForSale.objects.filter(owner=request.user, pending_flag=False, deleted=False).order_by('-time_created')
+    ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True, deleted=False).order_by('-time_created')
+
+    unsold_ids = [x.id for x in ifs_waiting_list]
+
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=selling_ids).exclude(post_id__in=unsold_ids).order_by('is_read','-newest_message_time')  
 
     for thread in my_threads:
         try:
@@ -1154,9 +1162,9 @@ def profile_selling(request):
             thread.post_deleted = True
             thread.save()
 
-    data['my_threads'] = my_threads
-    data['ifs_waiting_list'] = ifs_waiting_list
-    data['ifs_sold'] = ifs_sold
+    data['my_threads'] = my_threads                #pending (need to exclude unsold threads)
+    data['ifs_waiting_list'] = ifs_waiting_list    #unsold
+    data['ifs_sold'] = ifs_sold                    #sold
     
     user_profile = user.get_profile()
     user_profile.notifications = 0
@@ -1174,9 +1182,9 @@ def profile_buying(request):
     pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=False)]
     completed_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=True)]
 
-    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time')    
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time','-timestamp')
 
-    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time')
+    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
 
     for thread in my_threads:
         try:
@@ -1207,6 +1215,8 @@ def profile_buying(request):
 @login_required(redirect_field_name='/view_thread')
 def profile_view_thread(request,thread_id):
     thread = Thread.objects.get(id = thread_id)
+    if thread.owner != request.user:
+        return redirect('/')
     is_owner = False
 
     poast = 7

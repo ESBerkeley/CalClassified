@@ -1,0 +1,11 @@
+{% extends "base.email" %}
+
+{% block subject %}{{ seller }} Says {{ post_title }} Has Been Sold{% endblock %}
+{% block content %}
+  <p>Hi {{ buyer }},</p>
+  <p>{{ seller }} has indicated the item has been sold to you.</p>
+  <p>
+  Please contact us if this is not the case and has not kept his promise to sell you the item.
+  We take these complaints very seriously.
+  </p>
+{% endblock %}

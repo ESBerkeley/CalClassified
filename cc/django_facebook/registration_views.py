@@ -86,7 +86,7 @@ def register(request):
         verif.save()
 
         send_templated_mail(
-            template_name='change_email',
+            template_name='register',
             from_email='Buy Near Me <noreply@buynear.me>',
             recipient_list=[email],
             context={

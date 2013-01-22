@@ -1,0 +1,14 @@
+{% extends "base.email" %}
+
+{% block subject %}{{ item.title }} Comment - {{ commenter }}{% endblock %}
+{% block content %}
+  <p>Hi {{ seller }},</p>
+  <p>{{ commenter }}, has commented on your item! </p>
+  <p>Comment:</p>
+  <p>
+  {{ message }}
+  <br>
+    <a href="http://buynear.me{{ post.get_absolute_url }}#comments_section">Click here</a> to view the comment and the item!
+  <br>
+  </p>
+{% endblock %}

@@ -1,18 +1,15 @@
-{% block subject %}{{ post.title }} Response - {{ first_name }}{% endblock %}
-{% block html %}
-  <p>Hi {{ recipient_name}},</p>
-  <p>{{ full_name }}, has contacted you about your item! </p>
+{% extends "base.email" %}
+
+{% block subject %}{{ post.title }} Message - {{ sender }}{% endblock %}
+{% block content %}
+  <p>Hi {{ recipient }},</p>
+  <p>{{ sender }} has contacted you about your item! </p>
   <p>Message:</p>
   <p>
   {{ message }}
   <br>
-    <a href="http://buynear.me/{{ thread.get_absolute_url }}">Click here</a> to view the message thread
-    <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view your item!
+    <a href="http://buynear.me{{ thread.get_absolute_url }}">Click here</a> to view the message thread
+    <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view your item!
   <br>
   </p>
-  <p>Thanks,</p>
-  <p>BuyNearMe Team</p>
-  {% load static %}
-  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
-  <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 
 {% endblock %}

@@ -1,5 +1,7 @@
+{% extends "base.email" %}
+
 {% block subject %}{{ post.title }} by {{ full_name }}{% endblock %}
-{% block html %}
+{% block content %}
   <p>Hi {{ recipient_name }},</p>
     <br>
   <p>{{ full_name }} has listed a new item for sale! </p>
@@ -10,13 +12,8 @@
   <img style="max-width: 200px; max-height: 200px; height:auto; width:auto;" src="http://buynear.me/{{ post.get_thumbnail_url }}"></a>
   <ul>
     <li>
-        <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
+        <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
     </li>
   </ul>
   </p>
-  <p>Thanks,</p>
-  <p>BuyNearMe Team</p>
-  {% load static %}
-  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
-  <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 
 {% endblock %}

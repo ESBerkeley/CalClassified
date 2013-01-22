@@ -81,6 +81,20 @@ function clear_notif(){
   xhr_notif.send();
 }
 
+function clear_notif_number(){
+  var xhr_notif; 
+  if(window.XMLHttpRequest){xhr_notif = new XMLHttpRequest();}
+  else{xhr_notif = new ActiveXObject("Microsoft.XMLHTTP");}
+    xhr_notif.onreadystatechange=function(){
+      if(xhr_notif.readyState == 4 && xhr_notif.status == 200){
+        get_friend_notifications();
+      }
+    };
+  var notif_url = "/clear_notifications?justnum=true";
+  xhr_notif.open("GET",notif_url,true);
+  xhr_notif.send();
+}
+
 
 function get_friend_notifications(){  
     var xhr;
@@ -98,42 +112,49 @@ function get_friend_notifications(){
           var count = obj.length;
           var x = "";
 
-          
 
-//<<<<<<< .merge_file_Yjqavb
           if(count){
-            x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
-            x += "<ul class=\"dropdown-menu no-collapse\">";
+            x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">" + obj[0].extras.num_unread + "</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
+            x += "<ul class=\"dropdown-menu no-collapse pull-right\">";
 
-            for(var k = 0; k < count; k++){
-           if(obj[k].fields.type == 0){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 1){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 2){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 3){
-             x += "<li><a href=\"/accounts/profile/selling/\"><strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title + "</a></li>";
-           }
-           else if(obj[k].fields.type == 4){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete." + "</a></li>";
-           }
-           else if(obj[k].fields.type == 5){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
-           }
-           else if(obj[k].fields.type == 6){  //buyer "bob" has messaged you about your post "dogfood"
-             x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Buyer <strong>" + obj[k].extras.second_username + "</strong> has sent you a message about your post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
-           }
-           else{   //seller "bob" has messaged you about their post "dogfood"
-             x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has sent you a message about their post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
-           }
-            }
-            x+="<li> <a onclick = \"clear_notif()\">Clear notifications</a></li>";
-            x += "</ul>";
-          }
+            for(var k = 0; k < count-1; k++){
+
+              if(obj[k].fields.type == 0){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
+              }
+
+              else if(obj[k].fields.type == 1){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title + "</a></li>";
+              }
+
+              else if(obj[k].fields.type == 2){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title + "</a></li>";
+              }
+
+              else if(obj[k].fields.type == 3){
+                x += "<li><a href=\"/accounts/profile/selling/\"><strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title + "</a></li>";
+              }
+
+              else if(obj[k].fields.type == 4){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete." + "</a></li>";
+              }
+
+              else if(obj[k].fields.type == 5){
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
+              }
+
+              else if(obj[k].fields.type == 6){  //buyer "bob" has messaged you about your post "dogfood"
+                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Buyer <strong>" + obj[k].extras.second_username + "</strong> has sent you a message about your post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+              }
+         
+              else{   //seller "bob" has messaged you about their post "dogfood"
+                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has sent you a message about their post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+              }
+           } 
+
+         x+="<li> <a href = \"/accounts/profile/\">See All</a></li>";
+         x += "</ul>";
+         }
           else {
 x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
           }
@@ -141,7 +162,7 @@ x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"t
         }
       }       
     }
-    var url="/get_friend_notifications/";
+    var url="/get_friend_notifications/?cap=yup";
     xhr.open("GET",url,true);
     xhr.send();
 }
@@ -623,7 +644,7 @@ $("#modal-send").on("click", function(){
         url: "/ajax_contact_seller/",
         data: data,
         success: function(data){
-            $("#buynow-modal").modal('hide');
+            $(".msg-modal").modal('hide');
             $("#success-modal").modal('show');
         }
     });
