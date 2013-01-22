@@ -3,8 +3,11 @@
 {% block profile_title %}Settings{% endblock %}
 
 {% block profile_content %}
-<div >
-  <p>
+<div xmlns="http://www.w3.org/1999/html">
+    {% if message %}
+        <p style="color:red">Your settings have been updated! </p>
+    {% endif %}
+    <p>
     <h4> General</h4>
     <a href="{% url account_setup %}"> Change email </a><br>
     <a href="{% url auth_password_change %}"> Change password </a>
@@ -34,6 +37,7 @@
          </table>
     <input type="submit" class="btn btn-primary" type="button" value="Save Changes"/>
     </form>
+    </p>
   </p>
 </div>
 {% endblock %}

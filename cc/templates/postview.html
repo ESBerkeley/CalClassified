@@ -184,7 +184,11 @@
            {% else %}
               {% if request.user.is_authenticated %}
                   {% if post.sold %}
+                      <br>
+                      This item has been sold and is no longer listed.
                   {% elif post.pending_flag %}
+                      <br>
+                      This item is being purchased and is no longer listed.
                   {% elif post.owner != request.user %}
                 <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-shopping-cart"></i> Buy Now</button>
                   {% endif %}
@@ -289,7 +293,11 @@
           <div class="well">
             <form action="{{ request.path }}" method="post" id="comment-form"> {% csrf_token %}
           <p>
-            <label for="id_body">Questions? Ask public questions here:</label>
+            {% if request.user == post.owner %}
+              <label for="id_body">Add public comments here:</label>
+            {% else %}
+              <label for="id_body">Questions? Ask public questions here:</label>
+            {% endif %}
             <textarea id="id_body" type="text" name="body" maxlength="200" class="span5" rows="5"></textarea>
           </p>
               <button class="btn btn-primary" style="margin-left:-1px;" id="comment-btn" data-loading-text="Sending...">Comment</button>

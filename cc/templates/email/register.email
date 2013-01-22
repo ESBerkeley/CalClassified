@@ -1,4 +1,4 @@
-{% extends base.email %}
+{% extends "base.email" %}
 
 {% block subject %}BuyNearMe Account Registration{% endblock %}
 {% block content %}

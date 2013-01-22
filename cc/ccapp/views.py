@@ -310,7 +310,7 @@ class FeedbackView(FormView):
         send_templated_mail(
             template_name='feedback',
             from_email='noreply@buynear.me',
-            recipient_list=['contact@buynear.me'],
+            recipient_list=['feedback@buynear.me'],
             context={
                 'message':form.cleaned_data['message'],
                 'username':user.username,
@@ -469,8 +469,15 @@ def ajax_delete_post(request):
 
 @login_required
 def delete_notifications(request):
-    notifications = Notification.objects.filter(going_to = request.user.get_profile())
-    notifications.delete()
+
+    if not 'justnum' in request.GET:   
+        notifications = Notification.objects.filter(going_to = request.user.get_profile())
+        notifications.delete()
+
+    user_profile = request.user.get_profile()
+    user_profile.friend_notifications = 0
+    user_profile.save()
+
     return HttpResponse("winning")
     
 def deleteallposts(request):
@@ -754,17 +761,25 @@ def boxview(request):
 @login_required
 def ajax_friend_notifications(request):
     dude = request.user.get_profile()
-    notifications = Notification.objects.filter(going_to = dude)
+    
+    notifications = Notification.objects.filter(going_to = dude).order_by('-time_created')  
 
+    if 'cap' in request.GET:
+        notifications = notifications[:7]
+        
     for note in notifications:
         pfrom = note.post_from
         note.title = pfrom.title
         note.username = pfrom.owner.get_full_name()
         note.second_username = ""
+        note.num_unread = dude.friend_notifications
         if note.second_party:
             note.second_username = note.second_party.user.get_full_name()
 
-    data = serializers.serialize('json',notifications, indent = 4, extras = ('second_username','username','title',))
+#    dude.friend_notifications = 0
+    dude.save()
+
+    data = serializers.serialize('json',notifications, indent = 4, extras = ('num_unread','second_username','username','title',))
     return HttpResponse(data,'application/javascript')
         
 
@@ -1079,14 +1094,16 @@ def profile_status(request):
 
 @login_required
 def profile_settings(request):
+    data = {}
+    user_profile = request.user.get_profile()
     if request.method=="POST":
-        form = SettingsForm(request.POST)
+        form = SettingsForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
+        data['form'] = form
+        data['message'] = True
         return render_to_response('profile/profile_settings.html',data,context_instance=RequestContext(request))
     else:
-        data = {}
-        user_profile = request.user.get_profile()
         form = SettingsForm(instance=user_profile)
         data['form'] = form
         data.update(csrf(request))

@@ -1,4 +1,4 @@
-{% extends base.email %}
+{% extends "base.email" %}
 
 {% block subject %}{{ seller }} Says {{ post_title }} Has Been Sold{% endblock %}
 {% block content %}
