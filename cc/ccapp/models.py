@@ -229,6 +229,7 @@ class Notification(models.Model):
     type = models.IntegerField(default = 0)
     post_from = models.ForeignKey(ItemForSale)
     second_party = models.ForeignKey('django_facebook.FacebookProfile', blank=True, null=True, related_name='second_party')
+    thread_id = models.IntegerField(default = 0)
 
     def __unicode__(self):
         return self.post_from.title

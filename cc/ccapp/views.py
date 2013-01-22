@@ -643,6 +643,12 @@ def ajax_contact_seller(request):
         if first_message:
             buy_button_signal.send(sender = ItemForSale, instance = post)
 
+        else:
+            if request.user == post.owner: #sending a message to a buyer
+                message_to_buyer_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer)
+            else:   #sending a message to a seller
+                message_to_seller_signal.send(sender = ItemForSale, instance = post, target = post.owner)
+
         thread1.messages.add(message)
         thread2.messages.add(message)
         thread1.newest_message_time = message.time_created
@@ -651,7 +657,7 @@ def ajax_contact_seller(request):
         thread1.save()
         thread2.save()
         
-        rec_profile = recipient.get_profile()
+        rec_profile = recipient.get_profile()	
         rec_profile.notifications += 1
         rec_profile.save()
         recipient_name = recipient.get_full_name()
