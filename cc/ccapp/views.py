@@ -641,7 +641,7 @@ def ajax_contact_seller(request):
             thread2 = Thread.objects.create(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
 
         if first_message:
-            buy_button_signal.send(sender = ItemForSale, instance = post)
+            buy_button_signal.send(sender=ItemForSale, instance=post, message=message)
 
         else:
             if request.user == post.owner: #sending a message to a buyer

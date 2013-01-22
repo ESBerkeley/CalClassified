@@ -1,5 +1,5 @@
 {% block subject %}{{ post.title }} Response - {{ first_name }}{% endblock %}
-{% block html %}
+{% block content %}
   <p>Greetings {{ first_name }},</p>
   <p>
   You (or someone pretending to be you) have asked to register an account at <a href="http://buynear.me">BuyNearMe.</a>
@@ -12,9 +12,4 @@
       <a href="http://buynear.me/change_email/{{ auth_key }}">http://buynear.me/change_email/{{ auth_key }}</a>
       <br>
   </p>
-  <p>Thanks,</p>
-  <p>BuyNearMe Team</p>
-  {% load static %}
-  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
-  <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p> 
 {% endblock %}

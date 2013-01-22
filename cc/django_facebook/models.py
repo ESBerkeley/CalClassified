@@ -143,6 +143,8 @@ class FacebookProfile(FacebookProfileModel):
     friend_notifications = models.IntegerField(default=0)
     bookmarks = models.ManyToManyField(ItemForSale, related_name='bookmarked_user_set')
     message_email = models.BooleanField("buyer sends you a message", default=True)
+    comments_email = models.BooleanField('person comments on seller item', default=True)
+    replies_email = models.BooleanField('seller responds to your comment', default=True)
     friend_email = models.BooleanField("friend lists an item", default=True)
     first_time = models.BooleanField(default=True)
 
