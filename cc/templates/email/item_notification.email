@@ -1,3 +1,5 @@
+{% extends base.email %}
+
 {% block subject %}{{ post.title }} by {{ full_name }}{% endblock %}
 {% block content %}
   <p>Hi {{ recipient_name }},</p>
@@ -10,7 +12,7 @@
   <img style="max-width: 200px; max-height: 200px; height:auto; width:auto;" src="http://buynear.me/{{ post.get_thumbnail_url }}"></a>
   <ul>
     <li>
-        <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
+        <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
     </li>
   </ul>
   </p>

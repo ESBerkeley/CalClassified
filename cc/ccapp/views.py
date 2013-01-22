@@ -647,7 +647,7 @@ def ajax_contact_seller(request):
             if request.user == post.owner: #sending a message to a buyer
                 message_to_buyer_signal.send(sender=ItemForSale, instance=post, message=message)
             else:   #sending a message to a seller
-                message_to_seller_signal.send(sender= ItemForSale, instance=post, message=message)
+                message_to_seller_signal.send(sender=ItemForSale, instance=post, message=message)
 
         thread1.messages.add(message)
         thread2.messages.add(message)
@@ -660,22 +660,6 @@ def ajax_contact_seller(request):
         rec_profile = recipient.get_profile()	
         rec_profile.notifications += 1
         rec_profile.save()
-        recipient_name = recipient.get_full_name()
-        if rec_profile.message_email:
-            send_templated_mail(
-                template_name='message',
-                from_email='noreply@buynear.me',
-                recipient_list=[recipient.email],
-                context={
-                    'message':message.body,
-                    'thread':thread2,
-                    'post':post,
-                    'username':sender.username,
-                    'first_name':sender.first_name,
-                    'full_name':sender.get_full_name(),
-                    'recipient_name':recipient_name,
-                },
-            )
 
         # send_mail(post.title+" Response - "+recipient_name, post.body, 'noreply@buynear.me', [recipient.email])
         return HttpResponse("success")

@@ -142,10 +142,12 @@ class FacebookProfile(FacebookProfileModel):
     notifications = models.IntegerField(default=0)
     friend_notifications = models.IntegerField(default=0)
     bookmarks = models.ManyToManyField(ItemForSale, related_name='bookmarked_user_set')
-    message_email = models.BooleanField("buyer sends you a message", default=True)
-    comments_email = models.BooleanField('person comments on seller item', default=True)
-    replies_email = models.BooleanField('seller responds to your comment', default=True)
-    friend_email = models.BooleanField("friend lists an item", default=True)
+    message_email = models.BooleanField("Buyer/Seller sends you a message", default=True)
+    comments_email = models.BooleanField('User comments on your item', default=True)
+    replies_email = models.BooleanField('Seller responds to your comment', default=True)
+    friend_email = models.BooleanField('Friend lists an item', default=True)
+    sold_email = models.BooleanField('Seller confirms that the item has been sold to you as the buyer', default=True)
+    failed_to_sell_email = models.BooleanField('Seller has notified us that the item could not be sold to you and has re-listed the item', default=True)
     first_time = models.BooleanField(default=True)
 
     @property
@@ -201,4 +203,4 @@ if settings.AUTH_PROFILE_MODULE == 'django_facebook.FacebookProfile':
 class SettingsForm(forms.ModelForm):
     class Meta:
         model = FacebookProfile
-        fields = ('message_email', 'friend_email')
+        fields = ('message_email', 'comments_email', 'replies_email', 'friend_email', 'sold_email', 'failed_email' )

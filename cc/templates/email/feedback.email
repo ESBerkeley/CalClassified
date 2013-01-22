@@ -1,3 +1,5 @@
+{% extends base.email %}
+
 {% block subject %}Feedback - {{ full_name }}{% endblock %}
 {% block content %}
   <p>

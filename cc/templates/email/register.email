@@ -1,10 +1,10 @@
 {% extends base.email %}
 
-{% block subject %}BuyNearMe Email Change{% endblock %}
+{% block subject %}BuyNearMe Account Registration{% endblock %}
 {% block content %}
   <p>Greetings {{ first_name }},</p>
   <p>
-  You (or someone pretending to be you) have asked to change their email at <a href="http://buynear.me">BuyNearMe.</a>
+  You (or someone pretending to be you) have registered an account with us at <a href="http://buynear.me">BuyNearMe.</a>
       <br>
       If this wasn't you, please ignore this email and your address will be removed from our records.
       <br>

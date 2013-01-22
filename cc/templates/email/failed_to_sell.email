@@ -1,0 +1,13 @@
+{% extends base.email %}
+
+{% block subject %}{{ seller }} Says {{ post_title }} Could Not Be Sold{% endblock %}
+{% block content %}
+  <p>Hi {{ buyer }},</p>
+  <p>{{ seller }} has indicated the item could not be sold to you and has re-listed it.</p>
+  <p>
+  <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view the item.
+  <br>
+  Please contact us if this is not the case and has not kept his promise to sell you the item.
+  We take these complaints very seriously.
+  </p>
+{% endblock %}

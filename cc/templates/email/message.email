@@ -1,13 +1,15 @@
-{% block subject %}{{ post.title }} Response - {{ first_name }}{% endblock %}
+{% extends base.email %}
+
+{% block subject %}{{ post.title }} Message - {{ sender }}{% endblock %}
 {% block content %}
-  <p>Hi {{ recipient_name}},</p>
-  <p>{{ full_name }}, has contacted you about your item! </p>
+  <p>Hi {{ recipient }},</p>
+  <p>{{ sender }} has contacted you about your item! </p>
   <p>Message:</p>
   <p>
   {{ message }}
   <br>
-    <a href="http://buynear.me/{{ thread.get_absolute_url }}">Click here</a> to view the message thread
-    <a href="http://buynear.me/{{ post.get_absolute_url }}">Click here</a> to view your item!
+    <a href="http://buynear.me{{ thread.get_absolute_url }}">Click here</a> to view the message thread
+    <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view your item!
   <br>
   </p>
 {% endblock %}

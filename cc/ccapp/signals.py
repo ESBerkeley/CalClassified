@@ -190,6 +190,21 @@ def sale_complete_hndlr(sender, **kwargs):
         new_note.save()
         buyer.friend_notifications += 1
         buyer.save()
+
+        if buyer.sold_email:
+            try:
+                send_templated_mail(
+                    template_name='sold',
+                    from_email='noreply@buynear.me',
+                    recipient_list=[buyer.email],
+                    context={
+                        'post':item,
+                        'buyer':buyer.user.get_full_name(),
+                        'seller':seller.user.get_full_name()
+                    },
+                )
+            except:
+                pass
     return
 
 
@@ -203,6 +218,21 @@ def item_repost_hndlr(sender, **kwargs):
         new_note.save()
         buyer.friend_notifications += 1
         buyer.save()
+
+        if buyer.failed_to_sell_email:
+            try:
+                send_templated_mail(
+                    template_name='failed_to_sell',
+                    from_email='noreply@buynear.me',
+                    recipient_list=[buyer.email],
+                    context={
+                        'post':item,
+                        'buyer':buyer.user.get_full_name(),
+                        'seller':seller.user.get_full_name()
+                    },
+                )
+            except:
+                pass
     return
 
     
@@ -259,7 +289,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
             send_templated_mail(
                 template_name='message',
                 from_email='noreply@buynear.me',
-                recipient_list=[seller.email],
+                recipient_list=[buyer.email],
                 context={
                     'message':message.body,
                     'post':item,
