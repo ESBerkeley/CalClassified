@@ -10,6 +10,24 @@
         cursor: pointer;
     }
 </style>
+<script type="text/javascript">
+    checked=false;
+    function checkedAll (fb_groups_form) {
+        var aa= document.getElementById('fb_groups_form');
+        if (checked == false)
+        {
+            checked = true
+        }
+        else
+        {
+            checked = false
+        }
+        for (var i =0; i < aa.elements.length; i++)
+        {
+            aa.elements[i].checked = checked;
+        }
+    }
+</script>
 {% endblock %}
 
 {% block content %}
@@ -25,6 +43,9 @@
     <div class="container" style="width:950px; margin-top: 20px;">
 
         <div id="fbAdmin">
+            {% if formset %}
+                <input value="Submit" type="submit" class="btn btn-primary btn-large" style="margin-top: 20px; width: 450px;">
+            {% endif %}
             <table class="table table-bordered">
 
                 <caption><h2> New items </h2></caption>
@@ -34,7 +55,7 @@
                     <th> Title </th>
                     <th style="width:10px"> Price </th>
                     <th> Category </th>
-                    <th> Approved </th>
+                    <th> Approved <input type='checkbox' name='checkall' onclick='checkedAll(fb_groups_form);'></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -82,9 +103,6 @@
 
         <!--div id="fbOldGroup">
             <h2>Approved items</h2-->
-        {% if formset %}
-        <input value="Submit" type="submit" class="btn btn-primary btn-large" style="margin-top: 20px; width: 450px;">
-        {% endif %}
     </div>
 
 </form>
