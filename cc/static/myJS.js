@@ -537,7 +537,7 @@ $("#modal-send").on("click", function(){
         url: "/ajax_contact_seller/",
         data: data,
         success: function(data){
-            $("#buynow-modal").modal('hide');
+            $(".msg-modal").modal('hide');
             $("#success-modal").modal('show');
         }
     });
