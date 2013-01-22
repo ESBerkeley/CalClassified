@@ -117,10 +117,10 @@ function get_friend_notifications(){
             x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">" + obj[0].extras.num_unread + "</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
             x += "<ul class=\"dropdown-menu no-collapse pull-right\">";
 
-            for(var k = 0; k < count-1; k++){
+            for(var k = 0; k < count; k++){
 
               if(obj[k].fields.type == 0){
-                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> posted " + obj[k].extras.title + "</a></li>";
               }
 
               else if(obj[k].fields.type == 1){
@@ -193,7 +193,7 @@ function notification_table() {
               html += "<tr>";
               html += "<td><a href=\" "+notif[1]+" \"> "+notif[0]+" </a></td>";
               html += "<td> "+notif[2]+" </td>";
-              html += "<td><center><a class=\"icon-trash\"></a></center></td>";
+              //html += "<td><center><a class=\"icon-trash\"></a></center></td>";
               html += "</tr>";
             }
             $('.notification-hide').show();     //reveals table "delete all" button if there are notifications
@@ -215,7 +215,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   var notif = new Array();  //tuple containing a sentence string and the url. Includes html strong tagging.
   notif[0] = "";
   notif[1] = "";
-  notif[2] = "Zero Dark Thirty";
+  notif[2] = obj[k].fields.time_created.substring(0, 10);
 
   if(obj[k].fields.type == 0){
     notif[0] += obj[k].extras.username + " posted " + obj[k].extras.title;

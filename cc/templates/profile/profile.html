@@ -20,25 +20,25 @@
         <ul class="nav nav-tabs nav-stacked">
 
           <li>
-            <a href="{% url account_profile %}">My Profile</a>
+            <a href="{% url account_profile %}">Home</a>
           </li>
-
           <li>
             <a href="{% url account_buying %}">
               Buying
               {% if request.user.get_profile.buy_notifications %}
-                <span class="badge badge-success">{{ request.user.get_profile.buy_notifications }}</span>
+               <!-- <span class="badge badge-success">{{ request.user.get_profile.buy_notifications }}</span>-->
                 <i class="icon-envelope "></i>
               {% endif %}
             </a>
           </li>
+
           <li>
             <a href="{% url account_selling %}">
-                Selling
-                {% if request.user.get_profile.sell_notifications %}
-                    <span class="badge badge-success">{{ request.user.get_profile.sell_notifications }}</span>
-                    <i class="icon-envelope"></i>
-                {% endif %}
+              Selling
+              {% if request.user.get_profile.sell_notifications %}
+                <!--<span class="badge badge-success">{{ request.user.get_profile.sell_notifications }}</span>-->
+                <i class="icon-envelope"></i>
+              {% endif %}
             </a>
           </li>
           <li>

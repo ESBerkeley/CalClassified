@@ -1,8 +1,8 @@
 {% extends 'profile/profile.html' %}
 
-{% block profile_title %}My Profile {% endblock %}
+{% block profile_title %}Home {% endblock %}
 
-{% block title %}Account - Profile {% endblock %}
+{% block title %}Account - Home {% endblock %}
 
 {% block profile_content %}
       <div class="tabbable "> <!-- Only required for left/right tabs -->
@@ -16,9 +16,9 @@
             <table class="table notification-hide">
               <thead>
                 <tr>
-                  <th style="width:55%;"> Name </th>    <!--sum widths to 100% -->
-                  <th style="width:25%"> Time Created </th>
-                  <th style="width:20%;"><center>Delete</center></th>
+                  <th> Title </th>    <!--width 55--> <!--sum widths to 100% -->
+                  <th> Date </th> <!--width 25-->
+                  <!--<th style="width:20%;"><center>Delete</center></th>-->
                 </tr>
               </thead>
               <tbody id="notification-table">
@@ -26,7 +26,7 @@
               </tbody>
             </table>
 
-            <a class="btn notification-hide" onclick="clear_notif();" style="margin-left:83%;"><i class="icon-trash"></i> Delete all</a>
+            <a class="btn notification-hide" onclick="clear_notif();"><i class="icon-trash"></i> Delete all</a> <!--style width 83% -->
             
             <div class="notification-show">
               <h2>You have no notifications.</h2>
