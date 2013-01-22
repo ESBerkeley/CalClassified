@@ -5,11 +5,100 @@
 {% block title %}Account - Profile {% endblock %}
 
 {% block profile_content %}
-    <div>
+      <div class="tabbable "> <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs" style="margin-bottom: 0px;">
+          <li class="active"><a href="#tab1" data-toggle="tab">My Notifications</a></li>
+          <li><a href="#tab2" data-toggle="tab">Bookmarked Items</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab1">
 
-    boink
+            <table class="table notification-hide">
+              <thead>
+                <tr>
+                  <th style="width:55%;"> Name </th>    <!--sum widths to 100% -->
+                  <th style="width:25%"> Time Created </th>
+                  <th style="width:20%;"><center>Delete</center></th>
+                </tr>
+              </thead>
+              <tbody id="notification-table">
+                <!--javascript -->
+              </tbody>
+            </table>
 
-    </div>
+            <a class="btn notification-hide" onclick="clear_notif();" style="margin-left:83%;"><i class="icon-trash"></i> Delete all</a>
+            
+            <div class="notification-show">
+              <h2>You have no notifications.</h2>
+            </div>  
+          </div>
+     
+          <div class="tab-pane" id="tab2">
+            {% if bookmarks %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> Title </th>
+                  <th> Time Created </th>
+                    <th style="width:50px;"><center>Unbookmark</center></th>
+                </tr>
+              </thead>
+              <tbody>
+              
+              {% for post in bookmarks %}
+                <tr>
+                  <td><a href="{{ post.get_absolute_url }}"> {{ post.title }}</a></td>
+                  <td>{{ post.time_created }}</td>
+                  <td ><center><a class="icon-remove" data-toggle="modal" href="#unbookmark-modal-{{ post.id }}"></a></center></td>
+                </tr>
+
+                  <!--modal content -->
+                  <div class="modal fade hide" id="unbookmark-modal-{{ post.id }}">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                          <h3>Unbookmark Post</h3>
+                      </div>
+                      <div class="modal-body">
+                          <p>
+                              Are you sure you want to unbookmark post '{{ post.title }}'.
+                          </p>
+                      </div>
+                      <div class="modal-footer">
+                          <button class="btn btn-primary verify-unbookmark" value="{{ post.id }}" type="button" data-loading-text="Unbookmark...">Unbookmark</button>
+                          <button class="btn" data-dismiss="modal">Cancel</button>
+                      </div>
+                  </div>
+
+              {% endfor %}
+              </tbody>
+            </table>
+            
+            {%else %}
+            <h2>
+                You have no bookmarked posts.
+            </h2>
+                <h4>
+                    You can bookmark a post while viewing them!
+                </h4>
+            {% endif %}
+
+              <!-- success unbookmark modal content -->
+              <div class="modal fade hide" id="unbookmark-success-modal">
+                  <div class="modal-header">
+                      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+                      <h3>Unbookmark Post</h3>
+                  </div>
+                  <div class="modal-body">
+                      <p>Post unbookmarked!</p>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn close-refresh" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
 
 
 {% endblock %}
@@ -20,10 +109,36 @@
     <script type="text/javascript">
         $(document).ready( function() {
             $("#messages-tab").addClass("active");
-
+            $(".notification-show").hide();
+            $(".notification-hide").hide();
         });
 
         var csrf_token = "{{ csrf_token }}";
+
+        notification_table();
+
+        $(".verify-unbookmark").click(function(){
+          $(this).button('loading');
+          var post_pk = $(this).val();
+          data = {};
+          data['post_pk'] = post_pk;
+          data['csrfmiddlewaretoken'] = csrf_token;
+
+          $.ajax({
+            type: "POST",
+            url: "/bookmark/",
+            data: data,
+            success: function(){
+              $("#unbookmark-modal-"+post_pk).modal('hide');
+              $("#unbookmark-success-modal").modal('show');
+            }
+          })
+        })
+        
+        $(".close-refresh").click (function() {
+          location.reload();
+        })
     </script>
+
     <script src="{% get_static_prefix %}js/profile_messages.js"></script>
 {% endblock %}
