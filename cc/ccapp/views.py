@@ -579,7 +579,7 @@ def modify_post(request):
                 post.sold = True
                 post.save()
                 sale_complete_signal.send(sender = ItemForSale, instance = post)
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect("/accounts/profile/selling")
 
             elif action == "repost":
                 #the sald didnt work out, repost the item, and redirect seller
@@ -587,7 +587,7 @@ def modify_post(request):
                 post.pending_flag = False
                 post.pending_buyer = None
                 post.save()
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect("/"+str(post_pk))
             else:
                 return HttpResponse("Invalid Request")
 
@@ -1134,12 +1134,12 @@ def profile_selling(request):
     user = request.user
 
     selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
-    sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)]
+    #sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)] #unused?? -seung
 
-    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=selling_ids).order_by('is_read','-newest_message_time')    
+    my_threads = Thread.objects.filter(owner=user, post_id__in=selling_ids).order_by('is_read','-newest_message_time','-timestamp')
 
-    ifs_waiting_list = ItemForSale.objects.filter(owner = request.user).filter(pending_flag = False).filter(deleted=False)
-    ifs_sold  = ItemForSale.objects.filter(owner = request.user).filter(sold = True).filter(deleted=False)
+    ifs_waiting_list = ItemForSale.objects.filter(owner=request.user, pending_flag=False, deleted=False).order_by('-time_created')
+    ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True, deleted=False)
 
     for thread in my_threads:
         try:
@@ -1168,9 +1168,9 @@ def profile_buying(request):
     pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=False)]
     completed_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=True)]
 
-    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time')    
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time','-timestamp')
 
-    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time')
+    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
 
     for thread in my_threads:
         try:
@@ -1201,6 +1201,8 @@ def profile_buying(request):
 @login_required(redirect_field_name='/view_thread')
 def profile_view_thread(request,thread_id):
     thread = Thread.objects.get(id = thread_id)
+    if thread.owner != request.user:
+        return redirect('/')
     is_owner = False
 
     poast = 7

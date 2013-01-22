@@ -1,6 +1,6 @@
 {% extends 'profile/profile.html' %}
 
-{% block profile_title %} {{ thread.post_title }} {% if thread.post_deleted %}(Post Deleted){%endif%} {% endblock %}
+{% block profile_title %} <a href="{{ post.get_absolute_url }}">{{ thread.post_title }} {% if thread.post_deleted %}(Post Deleted){%endif%}</a> {% endblock %}
 
 {% block title %} Messages - {{ thread.post_title }} {% if thread.post_deleted %}(Post Deleted){%endif%} {% endblock %}
 
@@ -11,7 +11,7 @@
         <br><br>
         
         
-        <div class="modal fade hide" id="contact-modal">
+        <div class="modal fade hide msg-modal" id="contact-modal">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
           <h3>Reply</h3>
@@ -76,8 +76,8 @@
        
         </div>
         <div class="modal-footer">
-          <a id="confirm-yes" class="btn btn-danger btn-large" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=done"><i class="icon-white icon-star-empty"></i> It's done</a>
-          <button class="btn btn-large btn-inverse" data-dismiss="modal"><i class="icon-white icon-remove"></i> Cancel Purchase</button>
+          <a id="confirm-yes" class="btn btn-primary btn-large" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=done"><i class="icon-white icon-star-empty"></i> It's done</a>
+          <button class="btn btn-large btn-inverse" data-dismiss="modal"><i class="icon-white icon-remove"></i> Cancel</button>
         </div>
       </div>
 
@@ -93,7 +93,7 @@
        
         </div>
         <div class="modal-footer">
-          <a id="confirm-yes" class="btn btn-danger btn-large" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=repost"><i class="icon-white icon-star-empty"></i> Repost Item</a>
+          <a id="confirm-yes" class="btn btn-primary btn-large" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=repost"><i class="icon-white icon-star-empty"></i> Repost Item</a>
           <button class="btn btn-large btn-inverse" data-dismiss="modal"><i class="icon-white icon-remove"></i> Cancel</button>
         </div>
       </div>
@@ -106,7 +106,7 @@
             <div class = "span2"></div>
 
             <div class = "span6">
-              <a  class="btn btn-danger btn-large" data-toggle="modal" data-target="#confirm-modal">Sold It</a>
+              <a  class="btn btn-primary btn-large" data-toggle="modal" data-target="#confirm-modal">Sold It</a>
             </div>
 
             <div class = "span4">

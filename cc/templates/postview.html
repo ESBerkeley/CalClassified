@@ -33,12 +33,12 @@
 
     {% block content %} 
     
-    {% if new == 1 and request.user = post.owner%}
+    {% if new == 1 and request.user == post.owner %}
     <div id="new-post-alert" class="alert alert-block alert-info fade in container">
     <a class="close" data-dismiss="alert" href="#">&times;</a>
     <b> Item successfully posted! </b>
         <p> 
-            We recommend you share this on Facebook! 
+            You will be notified by email when you are contacted. We recommend you share this on Facebook!
             <a href="#" onclick="return false;"><img class="fb-publish" src="/static/images/fb-icon.gif" /></a>
         </p>
     </div>
@@ -55,24 +55,32 @@
     <div id="post-container" class="container">
     
     <div class="small-title small-title-post">
-      <center><h2 id="post-title">{{ post.title }}</h2></center>
+      <center><h2 id="post-title">{{ post.title }}
+          {% if post.sold %}
+              <span style="color:red;">(This item has been sold)</span>
+          {% elif post.pending_flag %}
+              <span style="color:red;">(This item is being purchased)</span>
+          {% endif %}
+      </h2></center>
     </div>
     
     <div class="">
     <div class="row post-top">
 
       <!-- buy now modal -->
-      <div class="modal fade hide" id="buynow-modal">
+      <div class="modal fade hide msg-modal" id="buynow-modal">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
           <h3>Almost there!</h3>
         </div>
         <div class="modal-body">
-            <p>The item will be reserved with you. Send a message to the seller with the form below to hash out the details of your purchase.</p>
+            <p>The item will be reserved with you. Send a message to the seller to hash out the details of your purchase, such as when and where you want to meet up!</p>
           <textarea class="input-xlarge field span7" id="modal-message" rows="5"></textarea>
+            <br><br>
+            <p><b>Note:</b> Once you buy the product, this item will no longer be searchable for other users. So please buy accordingly!</p>
         </div>
         <div class="modal-footer">
-          <button id="modal-send" class="btn btn-primary" type="button" data-loading-text="Sending...">Confirm</button>
+          <button id="modal-send" class="btn btn-primary" type="button" data-loading-text="Sending...">Buy</button>
           <button class="btn" data-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -89,7 +97,7 @@
             <p> Message Sent!</p>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-large btn-inverse close-refresh" data-dismiss="modal">Close</button>
+            <button class="btn btn-large close-refresh" data-dismiss="modal">Close</button>
         </div>
       </div>
           
@@ -135,7 +143,7 @@
         
     </div><!-- end row -->
       <div class="span3 post-sidebar">
-          <div class="">
+          <div>
               <ul class="nav nav-list">
                   <li class="nav-header"><h2>Seller:</h2></li>
                   {% if post.owner.get_full_name %}
@@ -149,48 +157,20 @@
                   <li> {{ post.time_created.date }}</li>
                   <li class="nav-header"><h2>Category:</h2></li>
                   <li> {{ post.category.name }}</li>
+
+                  <!--
                   <li class="nav-header"><h2>Posted In:</h2></li>
                   {% for circle in post.circles.all %}
                       {% if circle.is_public or circle in request.user.get_profile.my_circles.all %}
                           <li><a href="{{ circle.get_absolute_url }}">{{ circle }}</a></li>
                       {% endif %}
                   {% endfor %}
+                  -->
+
               </ul>
           </div><!--/.well -->
 
-        <div class="">
-          <!--<ul class="nav nav-list">
-            {% if request.user.is_authenticated %}
-            <li class="nav-header"><h2>Options</h2></li>
-            <li>
-                {% if request.user == post.owner %}
-                  <li>
-                      <a id="delete-post" style="cursor:pointer;">
-                          <i class="icon-trash side-icon"></i>
-                          Delete Post
-                      </a>
-                  </li>
-                {% endif %}
-                <li>
-
-                  <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
-                      <i class="icon-tag side-icon bookmark-activate"></i>
-                      Bookmark Post
-                  </a>
-
-                    <a href="" onclick="return false;" id="not-active-bookmark" class="bookmark-activate" >
-                        <i class="icon-remove side-icon bookmark-activate"></i>
-                        Unbookmark Post
-                    </a>
-                </li>
-                <br>
-                <li>
-
-                </li>
-            </li>
-             <br>
-            {% endif %}
-          </ul>-->
+        <div>
           
          <br>
            {% if post.is_facebook_post %}
@@ -201,10 +181,6 @@
                {% endif %}
                <i class="icon-question-sign tooltips" style="margin-left:5px; margin-top:4px;" rel="tooltips" data-placement="bottom"
                   data-original-title="View the Facebook post connected to this listing on the Facebook group Free & For Sale or Textbook Exchange."></i>
-           {% elif post.pending_flag %}
-              [Sale Pending - this listing will be removed shortly.]
-           {% elif post.sold %}
-              [Sale Completed!]
            {% else %}
               {% if request.user.is_authenticated %}
               {% if post.owner != request.user %}
@@ -219,35 +195,46 @@
     
     </div>
     <div class="post-lower">
-        <h3 style="font-weight: 400;">Product Description:</h3>
-          <p id="post-body" style="white-space:pre-wrap">{{ post.body }}</p>
-            <hr style="margin-bottom: 15px;">
-            <fb:share-button href="#" type="button"></fb:share-button>
-            <br>
+        <div class="span12" style="margin-left: 0;">
+        <div class="span9" style="margin-left: 0;">
+            <h3 style="font-weight: 400;">Product Description:</h3>
+            <p id="post-body" style="white-space:pre-wrap">{{ post.body }}</p>
+        </div>
+        <br>
+        <div class="span2" style="margin-left: 40px;">
+            <!-- <fb:share-button href="#" type="button"></fb:share-button> -->
             {% if request.user.is_authenticated %}
-            <br>
-            {% if request.user == post.owner %}
+                <h4 style="margin-top: 0;">More:</h4>
 
-            <p style="margin-left: 20px;">
-              <a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Post</a>
-            </p>
-            {% endif %}
-            <p style="margin-left: 20px;">
-                  <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
-                      <i class="icon-tag side-icon bookmark-activate"></i>
-                      Bookmark Post
-                  </a>
+                {% if request.user == post.owner %}
+
+                    <p>
+                        <a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Post</a>
+                    </p>
+                {% endif %}
+                <p>
+                    <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
+                        <i class="icon-tag side-icon bookmark-activate"></i>
+                        Bookmark Post
+                    </a>
 
                     <a href="" onclick="return false;" id="not-active-bookmark" class="bookmark-activate" >
                         <i class="icon-remove side-icon bookmark-activate"></i>
                         Unbookmark Post
                     </a>
-            </p>
+                </p>
             {% endif %}
-
+        </div>
+        </div> <!-- end span12 -->
         <br>
+
+        <hr style="margin-bottom: 15px;">
+
+
         {% if not post.is_facebook_post %}
         <a name = "comments_section"></a><h3 style="font-weight: 400;">Comments:</h3>
+
+        {% if comments %}
         <table class = "table">
         {% for comment in comments %}
           <tr>
@@ -260,17 +247,19 @@
             {% else %}
               {% if post.owner == request.user and comment.sender != request.user %}
                 <!-- Button to trigger modal -->
-                <a href="#modal-response" role="button" class="btn btn-primary" data-toggle="modal">Respond</a>
+                <a href="#modal-response" data-toggle="modal">Respond</a>
      
                 <!-- Modal -->
-                <div id="modal-response" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-response-label" aria-hidden="true">
+                <div id="modal-response" class="modal hide fade" >
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 id="modal-response-label">Seller Response</h3>
                   </div>
-                  
+
+
+                  <form action = "{{ request.path }}?sr={{ comment.id }}" method = "post" style="margin: 0"> {% csrf_token %}
                   <div class="modal-body">
-                  <form action = "{{ request.path }}?sr={{ comment.id }}" method = "post"> {% csrf_token %}
+
                       <p>
                         <textarea id="id_seller_response" type="text" name="seller_response" maxlength="200" class="input-xlarge field span7" rows="5"></textarea>
                       </p>
@@ -278,8 +267,9 @@
                   <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                     <button class="btn btn-primary">Respond</button>
-                  </form>
+
                   </div>
+                  </form>
                 </div>
               {% endif %}
             {% endif %}
@@ -288,17 +278,19 @@
           </tr>
         {% endfor %}
         </table>
+        {% else %}
+            <p style="padding-bottom: 10px;">No comments currently exist.</p>
+        {% endif %}
 
-        <br>
         <div>
         {% if request.user.is_authenticated %}
-          <div class = "span4">
-            <form action="{{ request.path }}" method="post"> {% csrf_token %}
+          <div class="well">
+            <form action="{{ request.path }}" method="post" id="comment-form"> {% csrf_token %}
           <p>
-            <label for="id_body">Questions? Ask here:</label> 
-            <textarea id="id_body" type="text" name="body" maxlength="200" class="span5" rows="5";/></textarea>
+            <label for="id_body">Questions? Ask public questions here:</label>
+            <textarea id="id_body" type="text" name="body" maxlength="200" class="span5" rows="5"></textarea>
           </p>
-              <button class="btn btn-primary" style="margin-left:-1px;">Submit</button><font color="red">
+              <button class="btn btn-primary" style="margin-left:-1px;" id="comment-btn" data-loading-text="Sending...">Comment</button>
             </form>
           </div>
         {% else %}
@@ -322,6 +314,7 @@
 {% endblock %}
 
 {% block post_js %}
+<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
 <script type="text/javascript">
 
 $(document).ready( function() {
@@ -331,7 +324,19 @@ $(document).ready( function() {
     $(".fb-publish").click(function() {
         publishStream();
     })
-    
+
+    $("#comment-form").validate({
+        rules: {
+            body: {
+                required: true,
+            },
+        },
+        submitHandler: function() {
+            $("#comment-btn").button('loading');
+            $(form).ajaxSubmit();
+        },
+    });
+
     function streamPublish(name, description, caption, hrefLink, picLink){
         FB.ui(
         {
@@ -376,9 +381,13 @@ $(document).ready( function() {
         }
       });
 
-      $('#contact-modal').on('shown', function () {
+      $('#buynow-modal').on('shown', function () {
           $('#modal-message').focus();
       });
+
+    $('#modal-response').on('shown', function () {
+        $('#id_seller_response').focus();
+    });
 
 $.cookie('onpost',null); 
   $.cookie('onpost','t', { expires: 1, path: '/' } );

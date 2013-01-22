@@ -79,25 +79,39 @@
     </td>
     </tr>
     {% endfor %}
-
-
-    {% for item in ifs_sold %} 
-    <tr>
-      <td>
-         {{ item.title }} 
-      </td>
-      <td> 
-        sold to <strong> {{ item.pending_buyer.first_name }} {{ item.pending_buyer.last_name }} <strong>
-      </td>
-<td></td>
-      <td>
-    </td>
-    </tr>
-    {% endfor %}
-
-
     </tbody>
     </table>
+
+        <br>
+    {% if ifs_sold %}
+        <table class="table">
+            <caption><h4> Sold Items </h4></caption>
+
+            <thead>
+            <tr>
+                <th>Item Title</th>
+                <th>Sold To</th>
+            </tr>
+            </thead>
+
+        <tbody>
+        {% for item in ifs_sold %}
+        <tr>
+          <td>
+              <a href="{{ item.get_absolute_url }}">
+             {{ item.title }}
+              </a>
+          </td>
+          <td>
+            {{ item.pending_buyer.first_name }} {{ item.pending_buyer.last_name }}
+          </td>
+        </tr>
+        {% endfor %}
+
+
+        </tbody>
+        </table>
+    {% endif %}
 
     {% else %}
         <h2> You are not currently selling anything.</h2>
