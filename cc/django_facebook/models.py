@@ -4,7 +4,7 @@ from django_facebook import model_managers
 from django.conf import settings
 from django.contrib.auth.models import User
 from django import forms
-from ccapp.models import Circle,ItemForSale
+from ccapp.models import *
 import os, random, hashlib
 
 
@@ -145,6 +145,19 @@ class FacebookProfile(FacebookProfileModel):
     message_email = models.BooleanField("buyer sends you a message", default=True)
     friend_email = models.BooleanField("friend lists an item", default=True)
     first_time = models.BooleanField(default=True)
+
+    @property
+    def sell_notifications(self):
+        sell_ids = [x.id for x in ItemForSale.objects.filter(owner=self.user).filter(sold=False)]
+        sell_threads_unread = Thread.objects.filter(owner=self.user).filter(post_id__in=sell_ids).filter(is_read=False)
+        return len(sell_threads_unread)
+        
+    @property
+    def buy_notifications(self):
+        buy_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=self.user).filter(sold=False)]
+        buy_threads_unread = Thread.objects.filter(owner=self.user).filter(post_id__in=buy_ids).filter(is_read=False)
+        return len(buy_threads_unread)
+
     
 class FacebookProfileForm(forms.Form):
     # this will be the username as well

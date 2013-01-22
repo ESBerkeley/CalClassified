@@ -426,7 +426,8 @@ def ajax_delete_post(request):
         post_id = request.POST['post_id']
         post = ItemForSale.objects.get(pk=post_id)
         if post.owner == request.user:
-            post.delete()
+            post.deleted = True
+            post.save()
             return HttpResponse("Success")
 
 @login_required
@@ -722,16 +723,21 @@ def boxview(request):
         return_dict['q'] = query_string
     return render_to_response('box.html', return_dict ,context_instance=RequestContext(request))
 
+
 @login_required
 def ajax_friend_notifications(request):
     dude = request.user.get_profile()
     notifications = Notification.objects.filter(going_to = dude)
+
     for note in notifications:
         pfrom = note.post_from
         note.title = pfrom.title
         note.username = pfrom.owner.get_full_name()
-    data = serializers.serialize('json',notifications, indent = 4, extras = ('username','title',))
-#    notifications.delete()
+        note.second_username = ""
+        if note.second_party:
+            note.second_username = note.second_party.user.get_full_name()
+
+    data = serializers.serialize('json',notifications, indent = 4, extras = ('second_username','username','title',))
     return HttpResponse(data,'application/javascript')
         
 
@@ -824,7 +830,6 @@ def ajax_box(request):
                         fatty_cheese_wheel.append(search_result.object)
                 else:
                     fatty_cheese_wheel.append(search_result.object)
-                
         else:
             foreveralone(found_entries,fbf, fatty_cheese_wheel)
     else:
@@ -832,10 +837,10 @@ def ajax_box(request):
 
 
     #kludge until someone can get haystack to work
-    #filter out all the pending items for sales
+    #filter out all the pending items for sales, filter out the deleted ones, filter out the already sold ones
     fatty_cheese2 = []
     for x in fatty_cheese_wheel:
-        if not x.sold:
+        if not x.sold and not x.pending_flag and not x.deleted:
             fatty_cheese2.append(x)
     fatty_cheese_wheel = fatty_cheese2
 
@@ -1041,15 +1046,11 @@ def ajax_delete_thread(request):
         
 @login_required
 def profile_status(request):
-    return redirect('account_posts')
-                            
-@login_required
-def profile_posts(request):
     user = request.user
     posts = ItemForSale.objects.filter(owner=user).order_by('-time_created')
     user_profile = user.get_profile()
     bookmarks = user_profile.bookmarks.all().order_by('-time_created')
-    return render_to_response('profile/profile_posts.html', 
+    return render_to_response('profile/profile_default.html', 
                             {'posts':posts, 'bookmarks':bookmarks},
                             context_instance=RequestContext(request))
 
@@ -1074,7 +1075,7 @@ def profile_messages(request):
     data = {}
     user = request.user
 
-    selling_ids = [poast.pk for poast in ItemForSale.objects.filter(owner=user).filter(pending_flag = False)]
+    selling_ids = [poast.pk for poast in ItemForSale.objects.filter(owner=user).filter(pending_flag = False).filter(deleted=False)]
 
     my_threads = Thread.objects.filter(owner=user).filter(post_id__in = selling_ids).order_by('is_read','-newest_message_time')
 
@@ -1099,10 +1100,13 @@ def profile_selling(request):
     data = {}
     user = request.user
 
-    selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user)]
+    selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
+    sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)]
+
     my_threads = Thread.objects.filter(owner=user).filter(post_id__in=selling_ids).order_by('is_read','-newest_message_time')    
 
-    ifs_waiting_list = ItemForSale.objects.filter(owner = request.user).filter(pending_flag = False)
+    ifs_waiting_list = ItemForSale.objects.filter(owner = request.user).filter(pending_flag = False).filter(deleted=False)
+    ifs_sold  = ItemForSale.objects.filter(owner = request.user).filter(sold = True).filter(deleted=False)
 
     for thread in my_threads:
         try:
@@ -1113,6 +1117,7 @@ def profile_selling(request):
 
     data['my_threads'] = my_threads
     data['ifs_waiting_list'] = ifs_waiting_list
+    data['ifs_sold'] = ifs_sold
     
     user_profile = user.get_profile()
     user_profile.notifications = 0
@@ -1174,14 +1179,15 @@ def profile_view_thread(request,thread_id):
     except:
         thread.post_deleted = True  
 
+    thread.is_read = True
+    thread.save()
+
     messages = thread.messages.all().order_by('-time_created')
     data = {"thread":thread, "messages": messages, "is_owner":is_owner}
 
     if not thread.post_deleted:
         data['post'] = poast
 
-    thread.is_read = True
-    thread.save()
     return render_to_response('profile/profile_view_thread.html',data,context_instance=RequestContext(request))
 
 

@@ -111,19 +111,19 @@ function get_friend_notifications(){
              x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 1){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].fields.second_party.username + " commented on " + obj[k].extras.title + "</a></li>";
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 2){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " replied to your comment on " + obj[k].extras.title + "</a></li>";
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "#comments_section\"><strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 3){
-             x += "<li><a href=\"{% url xxx %}\">" + obj[k].extras.username + " has purchased your item: " + obj[k].extras.title + "</a></li>";
+             x += "<li><a href=\"/accounts/profile/selling/\"><strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title + "</a></li>";
            }
            else if(obj[k].fields.type == 4){
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has marked the sale of " + obj[k].extras.title + "as complete." + "</a></li>";
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete." + "</a></li>";
            }
            else{
-             x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
+             x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title + ".</a></li>";
            }
          }
 

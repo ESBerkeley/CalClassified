@@ -7,7 +7,7 @@
 {% block profile_content %}
     <div>
 
-    {% if my_threads %}
+    {% if my_threads or completed_threads %}
     <table class="table">
     <caption><h4> Buying </h4></caption>
     <thead>
@@ -15,7 +15,7 @@
             <th>Item Title</th>
             <th>Seller</th>
             <th>Recent Message</th>
-            <th style="width:50px;"><center>Delete</center></th>
+            <th style="width:50px;"><center></center></th>
         </tr>
     </thead>
     <tbody>
@@ -46,27 +46,7 @@
           <td>
             {{ thread.newest_message_time }}
           </td>
-          <td ><center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ thread.pk }}"></a></center></td>
-
-
-          <!--modal content -->
-        <div class="modal fade hide" id="delete-modal-{{ thread.pk }}">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
-                <h3>Delete Message</h3>
-            </div>
-            <div class="modal-body">
-                <p>
-                    Are you sure you want to delete all messages about "{{ thread.post_title }}" from {{ thread.other_person.first_name }}.
-                    <br><br>
-                    This action is permanent.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary verify-delete" value="{{ thread.id }}" type="button" data-loading-text="Deleting...">Delete</button>
-                <button class="btn" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
+          <td ></td>
 
         </tr>
     {% endfor %}
@@ -95,26 +75,7 @@
           <td>
             {{ thread.newest_message_time }}
           </td>
-          <td ><center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ thread.pk }}"></a></center></td>
-
-          <!--modal content -->
-        <div class="modal fade hide" id="delete-modal-{{ thread.pk }}">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
-                <h3>Delete Message</h3>
-            </div>
-            <div class="modal-body">
-                <p>
-                    Are you sure you want to delete all messages about "{{ thread.post_title }}" from {{ thread.other_person.first_name }}.
-                    <br><br>
-                    This action is permanent.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary verify-delete" value="{{ thread.id }}" type="button" data-loading-text="Deleting...">Delete</button>
-                <button class="btn" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
+          <td ></td>
 
         </tr>
     {% endfor %}
@@ -129,19 +90,7 @@
     {% endif %}
     </div>
 
-    <!-- success modal content -->
-    <div class="modal fade hide" id="success-modal">
-        <div class="modal-header">
-            <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
-            <h3>Delete Message</h3>
-        </div>
-        <div class="modal-body">
-            <p>Success, message deleted!</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn close-refresh" data-dismiss="modal">Close</button>
-        </div>
-    </div>
+
 {% endblock %}
 
 {% block post_js %}
@@ -151,7 +100,8 @@
         $(document).ready( function() {
             $("#messages-tab").addClass("active");
 
-        })
+        });
+
         var csrf_token = "{{ csrf_token }}";
     </script>
     <script src="{% get_static_prefix %}js/profile_messages.js"></script>

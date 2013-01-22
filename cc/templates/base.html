@@ -105,8 +105,8 @@
 
 
             <li id="fat-menu">
-            <a class="tooltips" href="{% url account_messages %}" style="color: orange;" rel="tooltip" data-placement="bottom" title="New Messages">
-                <span class="badge badge-success">{{ request.user.get_profile.notifications }}</span>
+            <a class="tooltips" href="{% url account_profile %}" style="color: orange;" rel="tooltip" data-placement="bottom" title="New Messages">
+                {% if request.user.get_profile.notifications %}<span class="badge badge-success">{{ request.user.get_profile.notifications }}</span> {% endif %}
                 <i class="icon-envelope "></i>
             </a>
             </li>

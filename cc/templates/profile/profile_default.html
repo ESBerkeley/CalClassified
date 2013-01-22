@@ -1,0 +1,29 @@
+{% extends 'profile/profile.html' %}
+
+{% block profile_title %}My Profile {% endblock %}
+
+{% block title %}Account - Profile {% endblock %}
+
+{% block profile_content %}
+    <div>
+
+    boink
+
+    </div>
+
+
+{% endblock %}
+
+{% block post_js %}
+    {% load static %}
+
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $("#messages-tab").addClass("active");
+
+        });
+
+        var csrf_token = "{{ csrf_token }}";
+    </script>
+    <script src="{% get_static_prefix %}js/profile_messages.js"></script>
+{% endblock %}
