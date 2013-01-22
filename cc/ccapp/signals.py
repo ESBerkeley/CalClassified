@@ -256,7 +256,7 @@ def message_to_seller_hndlr(sender, **kwargs):
                 send_templated_mail(
                     template_name='message',
                     from_email='noreply@buynear.me',
-                    recipient_list=[seller.email],
+                    recipient_list=[seller.user.email],
                     context={
                         'message':message.body,
                         'post':item,
@@ -289,7 +289,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
             send_templated_mail(
                 template_name='message',
                 from_email='noreply@buynear.me',
-                recipient_list=[buyer.email],
+                recipient_list=[buyer.user.email],
                 context={
                     'message':message.body,
                     'post':item,
