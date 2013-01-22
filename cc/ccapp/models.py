@@ -95,6 +95,9 @@ class ItemForSale(Post):
     pending_flag = models.BooleanField(default = False)
     sold = models.BooleanField(default = False)
 
+    deleted = models.BooleanField(default = False)
+
+
     def get_formatted_price(self):
         return "%01.2f" % self.price
     
@@ -195,7 +198,7 @@ class ItemForSaleForm(ModelForm):
     body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
     class Meta:
         model = ItemForSale
-        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'approved','circles')
+        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'deleted', 'approved','circles')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
@@ -266,7 +269,7 @@ class MessageForm(ModelForm):
         
 class Thread(models.Model):
     # owner and other_person are meant so msging backen d can be more fluent.
-    # owner should either be the sender or recipient and other_person should be the one owner isn't  <-- real helpful
+    # owner should either be the sender or recipient and other_person should be the one owner isn't  <-- 10/10 real helpful
     owner = models.ForeignKey(User, related_name='owner_msg_set',null=True)
     other_person =  models.ForeignKey(User, related_name='other_msg_set',null=True)
     #post = models.ForeignKey(ItemForSale, null=True, blank=True)

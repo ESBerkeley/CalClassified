@@ -247,7 +247,7 @@
 
         <br>
         {% if not post.is_facebook_post %}
-        <h3 style="font-weight: 400;">Comments:</h3>
+        <a name = "comments_section"></a><h3 style="font-weight: 400;">Comments:</h3>
         <table class = "table">
         {% for comment in comments %}
           <tr>
@@ -367,18 +367,18 @@ $(document).ready( function() {
     
       $(".close-refresh").click (function() {
           location.reload();
-      })
+      });
 
       
       $("#delete-post").click(function(){
         if (confirm("Are you sure you want to delete this post?")) {
             window.location.href="/delete/{{ post.pk }}" 
         }
-      })
+      });
 
       $('#contact-modal').on('shown', function () {
           $('#modal-message').focus();
-      })
+      });
 
 $.cookie('onpost',null); 
   $.cookie('onpost','t', { expires: 1, path: '/' } );

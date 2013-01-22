@@ -1,3 +1,4 @@
+/*
 $(".verify-delete").click(function(){
     $(this).button('loading');
     var thread_pk = $(this).val()
@@ -15,8 +16,30 @@ $(".verify-delete").click(function(){
         }
     })
 })
-
+*/
 
 $(".close-refresh").click (function() {
     location.reload();
-})
+});
+
+ 
+//$(document).ready( function() {
+
+  $(".verify-delete").click(function(){
+    $(this).button('loading');
+    var post_id = $(this).val();
+    data= {};
+    data['csrfmiddlewaretoken'] = csrf_token;
+    data['post_id'] = post_id;
+    $.ajax({
+      type: "POST",
+      url: "/ajax_delete_post/",
+      data: data,
+      success: function(data){
+        $("#delete-modal-"+post_id).modal('hide');
+        $("#success-modal").modal('show');
+      }
+    });
+  });
+
+//};
