@@ -152,7 +152,7 @@
                   <li class="nav-header"><h2>Posted In:</h2></li>
                   {% for circle in post.circles.all %}
                       {% if circle.is_public or circle in request.user.get_profile.my_circles.all %}
-                          <li><a href="{{ circle.get_absolute_url }}">{{ circle }}</a></li>
+                          <li>{{ circle }}</li>
                       {% endif %}
                   {% endfor %}
               </ul>
