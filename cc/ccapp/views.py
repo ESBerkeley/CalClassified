@@ -1124,12 +1124,18 @@ def profile_selling(request):
     user = request.user
 
     selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
+
     #sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)] #unused?? -seung
 
     my_threads = Thread.objects.filter(owner=user, post_id__in=selling_ids).order_by('is_read','-newest_message_time','-timestamp')
 
+
     ifs_waiting_list = ItemForSale.objects.filter(owner=request.user, pending_flag=False, deleted=False).order_by('-time_created')
     ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True, deleted=False)
+
+    unsold_ids = [x.id for x in ifs_waiting_list]
+
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=selling_ids).exclude(post_id__in=unsold_ids).order_by('is_read','-newest_message_time')  
 
     for thread in my_threads:
         try:
@@ -1138,9 +1144,9 @@ def profile_selling(request):
             thread.post_deleted = True
             thread.save()
 
-    data['my_threads'] = my_threads
-    data['ifs_waiting_list'] = ifs_waiting_list
-    data['ifs_sold'] = ifs_sold
+    data['my_threads'] = my_threads                #pending (need to exclude unsold threads)
+    data['ifs_waiting_list'] = ifs_waiting_list    #unsold
+    data['ifs_sold'] = ifs_sold                    #sold
     
     user_profile = user.get_profile()
     user_profile.notifications = 0
