@@ -768,9 +768,10 @@ body {
     margin-right: 0px;
     margin-top: -20px; /* cancel out the bottom margin from small-title */
     padding-top: 20px;
+    padding-right: 10px;
     padding-bottom: 20px;
     margin-left: 33px;
-    padding-left:20px;
+    padding-left:10px;
     min-height: 325px;
     background-color: #fbfbfb
 }
