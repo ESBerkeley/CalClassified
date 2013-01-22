@@ -126,6 +126,7 @@ def buy_button_hndlr(sender, **kwargs):
         buyer = item.pending_buyer.get_profile()
 
         new_note = Notification(post_from = item, going_to = seller, type = 3)
+        new_note.second_party = buyer
         new_note.save()
         seller.friend_notifications += 1
         seller.save()

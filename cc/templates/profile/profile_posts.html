@@ -156,23 +156,7 @@
     <script type="text/javascript">
         var csrf_token = "{{ csrf_token }}";
 
-        $(document).ready( function() {
-            $(".verify-delete").click(function(){
-                $(this).button('loading');
-                var post_id = $(this).val();
-                data= {};
-                data['csrfmiddlewaretoken'] = csrf_token;
-                data['post_id'] = post_id;
-                $.ajax({
-                    type: "POST",
-                    url: "/ajax_delete_post/",
-                    data: data,
-                    success: function(data){
-                        $("#delete-modal-"+post_id).modal('hide');
-                        $("#success-modal").modal('show');
-                    }
-                })
-            })
+
 
             $(".verify-unbookmark").click(function(){
                 $(this).button('loading');
