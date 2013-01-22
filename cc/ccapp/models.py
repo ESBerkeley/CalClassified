@@ -203,7 +203,7 @@ class ItemForSaleForm(ModelForm):
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
 class FacebookPost(ItemForSale):
-    user_id = models.BigIntegerField(blank=True, null=True)
+    user_id = models.BigIntegerField()
     facebook_id = models.BigIntegerField()
     post_url = models.URLField(blank=True, null=True)
     thumbnail_url = models.URLField(blank=True, null=True)
