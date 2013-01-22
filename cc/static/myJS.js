@@ -460,8 +460,8 @@ function notification_sentence(obj, k) {    //list of notifications, position in
 
         function forcefit(obj,grid){
             var x,y;
-            for(x = force_x; x < numx; x++){
-                for(y = (!x)*force_y; y < numy; y++){
+            for(y = 0; y < numy; y++){
+                for(x = 0; x < numx; x++){
                     if(!(check(x,y,obj,grid))){  //true on success
                         set(x,y,obj,grid);
                         force_x = x;
@@ -486,7 +486,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
         }
 
 
-        if(obj.length < fitx_small*fity_small || 1){ //very few results. let's promote everything to max size (when doing a restrictive search)
+        if(obj.length < fitx_small*fity_small && 0){ //very few results. let's promote everything to max size (when doing a restrictive search)
         
             for(var y = 0; y < fity; y++){
                 for(var x = 0; x < fitx; x++){ 
@@ -500,7 +500,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
         else{                                        // there are more than a few results, so use multi-size standard boxfitting technique (most of the time)
             for(var i = 0; i < sizes.length; i++){ 
                 failing = 0;
-                fail_threshold = 100;
+                fail_threshold = -100;
                 force_x = 0;
                 force_y = 0;
                 demoting = 0;
