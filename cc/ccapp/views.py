@@ -494,7 +494,7 @@ def deleteallposts(request):
 
 
 
-def showpost(request,pid,super_cat):
+def showpost(request, pid, super_cat):
     post = get_object_or_404(super_cat, pk=pid)    
 
     if request.method == 'POST' and request.user.is_authenticated():
@@ -564,7 +564,11 @@ def showpost(request,pid,super_cat):
 
         if "new" in request.GET and int(request.GET['new']) == 1:
             ecks['new'] = 1
-    
+
+        if post.pending_flag and post.pending_buyer == request.user:
+            thread = Thread.objects.filter(owner=request.user, other_person=post.owner, post_id=post.id)
+            if thread:
+                ecks['thread'] = thread[0]
         ecks['this_is_a_post'] = True
 
             
