@@ -495,7 +495,12 @@ def deleteallposts(request):
 
 
 def showpost(request, pid, super_cat):
-    post = get_object_or_404(super_cat, pk=pid)    
+    post = get_object_or_404(super_cat, pk=pid)
+    if post.deleted:
+        data = {}
+        data['title'] = 'Item Deleted'
+        data['message'] = 'Sorry, this item has been deleted and is no longer viewable.'
+        return render_to_response('message.html', data, context_instance=RequestContext(request))
 
     if request.method == 'POST' and request.user.is_authenticated():
         user = request.user
