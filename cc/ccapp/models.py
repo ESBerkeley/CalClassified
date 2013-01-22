@@ -230,6 +230,7 @@ class Notification(models.Model):
     post_from = models.ForeignKey(ItemForSale)
     second_party = models.ForeignKey('django_facebook.FacebookProfile', blank=True, null=True, related_name='second_party')
     thread_id = models.IntegerField(default = 0)
+    time_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __unicode__(self):
         return self.post_from.title

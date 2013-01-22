@@ -104,7 +104,7 @@
             <li><div class="dropdown"><div id="friend_notifications_dropdown"></div></div></li>
 
             <li id="fat-menu">
-
+<!--
             <a class="tooltips" href="{% url account_profile %}" rel="tooltip" data-placement="bottom" title="New Messages">
                 {% if request.user.get_profile.notifications %}
                 <span class="badge badge-warning">{{ request.user.get_profile.notifications }}</span>
@@ -113,7 +113,7 @@
                 {% endif %}
                 <i class="icon-envelope " style="margin-top:3px;"></i>
 
-            </a>
+            </a>   -->
             </li>
 
             <li><a href="/accounts/profile"></i> Account</a></li>
@@ -196,6 +196,11 @@
             }
         });
     });
+
+    $('#friend_notifications_dropdown').click(function(){
+      clear_notif_number();
+    });
+
     </script>
     {% endblock %}
 
