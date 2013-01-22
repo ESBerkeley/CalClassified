@@ -5,9 +5,9 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import Signal
 
-from ccapp.models import ItemForSale, Notification, Comment
+from ccapp.models import ItemForSale, Notification, Comment, Thread
 from django_facebook.models import FacebookUser, FacebookProfile
-
+from templated_email import send_templated_mail
 
 
 def fb_user_registration_hndlr(sender, **kwargs): #im not sure how to spell handeler right so no vowels
@@ -44,7 +44,8 @@ seller_response_signal = Signal()
 buy_button_signal = Signal() 
 sale_complete_signal = Signal()
 repost_signal = Signal()
-
+message_to_seller_signal = Signal()
+message_to_buyer_signal = Signal()
 
 #@receiver(post_save, dispatch_uid="AAAAARGH")
 def post_save_hndlr(sender, **kwargs):
@@ -91,11 +92,26 @@ def comment_save_hndlr(sender, **kwargs):
         seller = item.owner.get_profile()
         commenter = comment.sender.get_profile()
         
-        new_note = Notification(post_from = item, going_to = seller, type = 1)
+        new_note = Notification(post_from=item, going_to=seller, type=1)
         new_note.second_party = commenter
         new_note.save()
         seller.friend_notifications += 1
         seller.save()
+        if seller.comments_email:
+            try:
+                send_templated_mail(
+                    template_name='user_comment',
+                    from_email='noreply@buynear.me',
+                    recipient_list=[seller.user.email],
+                    context={
+                        'message':comment.body,
+                        'commenter':commenter.user.get_full_name(),
+                        'item':item,
+                        'seller':seller.user.get_full_name(),
+                        },
+                )
+            except:
+                pass
 
     return
 
@@ -113,6 +129,21 @@ def seller_response_hndlr(sender, **kwargs):
         new_note.save()
         commenter.friend_notifications += 1
         commenter.save()
+        if commenter.replies_email:
+            try:
+                send_templated_mail(
+                    template_name='seller_reply',
+                    from_email='noreply@buynear.me',
+                    recipient_list=[commenter.user.email],
+                    context={
+                        'message':comment.body,
+                        'commenter':commenter.user.get_full_name(),
+                        'item':item,
+                        'seller':seller.user.get_full_name(),
+                        },
+                )
+            except:
+                pass
 
     return
  
@@ -122,6 +153,7 @@ def buy_button_hndlr(sender, **kwargs):
 
     if sender == ItemForSale:
         item = kwargs['instance']
+        message = kwargs['message']
         seller = item.owner.get_profile()
         buyer = item.pending_buyer.get_profile()
 
@@ -130,6 +162,21 @@ def buy_button_hndlr(sender, **kwargs):
         new_note.save()
         seller.friend_notifications += 1
         seller.save()
+        try:
+            send_templated_mail(
+                template_name='buy_item',
+                from_email='noreply@buynear.me',
+                recipient_list=[seller.user.email],
+                context={
+                    'message':message.body,
+                    'buyer':buyer.user.get_full_name(),
+                    'item':item,
+                    'seller':seller.user.get_full_name(),
+                    },
+            )
+        except:
+            pass
+
     return
 
 
@@ -151,13 +198,77 @@ def item_repost_hndlr(sender, **kwargs):
     if sender == ItemForSale:
         item = kwargs['instance']
         seller = item.owner.get_profile()
-        buyer = kwargs['target']
+        buyer = item.pending_buyer.get_profile()
         new_note = Notification(post_from = item, going_to = buyer, type = 5)
         new_note.save()
         buyer.friend_notifications += 1
         buyer.save()
     return
+
     
+def message_to_seller_hndlr(sender, **kwargs):
+    ''''notify the seller that the buyer has sent him a message'''
+    if sender == ItemForSale:
+        item = kwargs['instance']
+        seller = item.owner.get_profile()
+        buyer = item.pending_buyer.get_profile()
+        message = kwargs['message']
+        new_note = Notification(post_from = item, going_to = seller, type = 6)
+        new_note.second_party = buyer
+        thread = Thread.objects.get(owner = seller.user, post_id = item.id)
+        new_note.thread_id = thread.id
+        new_note.save()
+        seller.friend_notifications += 1
+        seller.save()
+
+        if seller.message_email:
+            try:
+                send_templated_mail(
+                    template_name='message',
+                    from_email='noreply@buynear.me',
+                    recipient_list=[seller.email],
+                    context={
+                        'message':message.body,
+                        'post':item,
+                        'sender':buyer.user.get_full_name(),
+                        'target':seller.user.get_full_name(),
+                        'thread':thread
+                        },
+                )
+            except:
+                pass
+
+    return
+
+
+def message_to_buyer_hndlr(sender, **kwargs):
+    ''''notify the seller that the buyer has sent him a message'''
+    if sender == ItemForSale:
+        item = kwargs['instance']
+        seller = item.owner.get_profile()
+        buyer = item.pending_buyer.get_profile()
+        message = kwargs['message']
+        new_note = Notification(post_from = item, going_to = buyer, type = 7)
+        thread = Thread.objects.get(owner = buyer.user, post_id = item.id)
+        new_note.thread_id = thread.id
+        new_note.save()
+        buyer.friend_notifications += 1
+        buyer.save()
+
+        if buyer.message_email:
+            send_templated_mail(
+                template_name='message',
+                from_email='noreply@buynear.me',
+                recipient_list=[seller.email],
+                context={
+                    'message':message.body,
+                    'post':item,
+                    'sender':seller.user.get_full_name(),
+                    'target':buyer.user.get_full_name(),
+                    'thread':thread
+                    },
+            )
+    return
 
 
 new_comment_signal.connect(comment_save_hndlr, sender = Comment, dispatch_uid = "yolo")
@@ -165,4 +276,6 @@ seller_response_signal.connect(seller_response_hndlr, sender = Comment, dispatch
 buy_button_signal.connect(buy_button_hndlr, sender = ItemForSale, dispatch_uid = "11")
 sale_complete_signal.connect(sale_complete_hndlr, sender = ItemForSale, dispatch_uid = "123")
 repost_signal.connect(item_repost_hndlr, sender = ItemForSale, dispatch_uid = "333")
+message_to_seller_signal.connect(message_to_seller_hndlr, sender = ItemForSale, dispatch_uid = "234")
+message_to_buyer_signal.connect(message_to_buyer_hndlr, sender = ItemForSale, dispatch_uid = "woodchip")
 

@@ -1,5 +1,5 @@
 {% block subject %}Feedback - {{ full_name }}{% endblock %}
-{% block html %}
+{% block content %}
   <p>
   Name: {{ full_name }}<br>
   Email: {{ email }}<br>

@@ -229,17 +229,17 @@ class Notification(models.Model):
     type = models.IntegerField(default = 0)
     post_from = models.ForeignKey(ItemForSale)
     second_party = models.ForeignKey('django_facebook.FacebookProfile', blank=True, null=True, related_name='second_party')
+    thread_id = models.IntegerField(default = 0)
 
     def __unicode__(self):
         return self.post_from.title
 
-
 class Comment(models.Model):
     sender = models.ForeignKey(User)
-    item = models.ForeignKey(ItemForSale, null = False, blank = False)
-    body = models.CharField(max_length=200,default = "",blank = False)
-    seller_response = models.CharField(max_length=200, default = "", blank = True)
-    time_created = models.DateTimeField(auto_now_add = True, null = True)
+    item = models.ForeignKey(ItemForSale, null=False, blank=False)
+    body = models.CharField(max_length=200, default="", blank=False)
+    seller_response = models.CharField(max_length=200, default="", blank=True)
+    time_created = models.DateTimeField(auto_now_add=True, null=True)
 
 class CommentForm(ModelForm):
     class Meta:
