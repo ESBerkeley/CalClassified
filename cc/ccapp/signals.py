@@ -211,27 +211,32 @@ def message_to_seller_hndlr(sender, **kwargs):
     if sender == ItemForSale:
         item = kwargs['instance']
         seller = item.owner.get_profile()
-        buyer = item.pending_buyer
+        buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
         new_note = Notification(post_from = item, going_to = seller, type = 6)
-        new_note.second_party = buyer.get_profile()
-        new_note.thread_id = Thread.objects.get(owner = seller.user, post_id = item.id).id
+        new_note.second_party = buyer
+        thread = Thread.objects.get(owner = seller.user, post_id = item.id)
+        new_note.thread_id = thread.id
         new_note.save()
         seller.friend_notifications += 1
         seller.save()
 
         if seller.message_email:
-            send_templated_mail(
-                template_name='message',
-                from_email='noreply@buynear.me',
-                recipient_list=[seller.email],
-                context={
-                    'message':message.body,
-                    'post':item,
-                    'sender':buyer.get_full_name(),
-                    'target':seller.user.get_full_name(),
-                    },
-            )
+            try:
+                send_templated_mail(
+                    template_name='message',
+                    from_email='noreply@buynear.me',
+                    recipient_list=[seller.email],
+                    context={
+                        'message':message.body,
+                        'post':item,
+                        'sender':buyer.user.get_full_name(),
+                        'target':seller.user.get_full_name(),
+                        'thread':thread
+                        },
+                )
+            except:
+                pass
 
     return
 
@@ -240,16 +245,17 @@ def message_to_buyer_hndlr(sender, **kwargs):
     ''''notify the seller that the buyer has sent him a message'''
     if sender == ItemForSale:
         item = kwargs['instance']
-        seller = item.owner
+        seller = item.owner.get_profile()
         buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
         new_note = Notification(post_from = item, going_to = buyer, type = 7)
-        new_note.thread_id = Thread.objects.get(owner = buyer.user, post_id = item.id).id
+        thread = Thread.objects.get(owner = buyer.user, post_id = item.id)
+        new_note.thread_id = thread.id
         new_note.save()
         buyer.friend_notifications += 1
         buyer.save()
 
-        if seller.message_email:
+        if buyer.message_email:
             send_templated_mail(
                 template_name='message',
                 from_email='noreply@buynear.me',
@@ -257,8 +263,9 @@ def message_to_buyer_hndlr(sender, **kwargs):
                 context={
                     'message':message.body,
                     'post':item,
-                    'sender':seller.get_full_name(),
+                    'sender':seller.user.get_full_name(),
                     'target':buyer.user.get_full_name(),
+                    'thread':thread
                     },
             )
     return
