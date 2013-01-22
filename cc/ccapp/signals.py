@@ -106,7 +106,7 @@ def comment_save_hndlr(sender, **kwargs):
                     context={
                         'message':comment.body,
                         'commenter':commenter.user.get_full_name(),
-                        'item':item,
+                        'post':item,
                         'seller':seller.user.get_full_name(),
                         },
                 )
@@ -138,7 +138,7 @@ def seller_response_hndlr(sender, **kwargs):
                     context={
                         'message':comment.body,
                         'commenter':commenter.user.get_full_name(),
-                        'item':item,
+                        'post':item,
                         'seller':seller.user.get_full_name(),
                         },
                 )
@@ -170,7 +170,7 @@ def buy_button_hndlr(sender, **kwargs):
                 context={
                     'message':message.body,
                     'buyer':buyer.user.get_full_name(),
-                    'item':item,
+                    'post':item,
                     'seller':seller.user.get_full_name(),
                     },
             )
