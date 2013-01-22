@@ -188,8 +188,12 @@
            {% else %}
               {% if request.user.is_authenticated %}
                   {% if post.sold %}
+                    {% if post.pending_buyer == request.user %}
+                      You bought this item! Hooray!
+                    {% else %}
                       <br>
                       This item has been sold and is no longer listed.
+                    {% endif %}
                   {% elif post.pending_flag %}
                       {% if thread %}
                         <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
