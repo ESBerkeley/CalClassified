@@ -504,7 +504,6 @@ def showpost(request, pid, super_cat):
 
     if request.method == 'POST' and request.user.is_authenticated():
         user = request.user
-    
 
         if request.GET.get('sr'):   #sr is the id of the comment that the seller is responding to
             rForm = SellerResponseForm(request.POST)
