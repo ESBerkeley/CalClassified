@@ -119,7 +119,7 @@ function get_friend_notifications(){
             for(var k = 0; k < count-1; k++){
 
               if(obj[k].fields.type == 0){
-                x += "<li><a href=\"/" + obj[k].fields.post_from + "\">" + obj[k].extras.username + " posted " + obj[k].extras.title + "</a></li>";
+                x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> posted " + obj[k].extras.title + "</a></li>";
               }
 
               else if(obj[k].fields.type == 1){
