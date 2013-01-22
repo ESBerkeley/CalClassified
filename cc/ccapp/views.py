@@ -310,7 +310,7 @@ class FeedbackView(FormView):
         send_templated_mail(
             template_name='feedback',
             from_email='noreply@buynear.me',
-            recipient_list=['contact@buynear.me'],
+            recipient_list=['feedback@buynear.me'],
             context={
                 'message':form.cleaned_data['message'],
                 'username':user.username,
@@ -1079,14 +1079,16 @@ def profile_status(request):
 
 @login_required
 def profile_settings(request):
+    data = {}
+    user_profile = request.user.get_profile()
     if request.method=="POST":
-        form = SettingsForm(request.POST)
+        form = SettingsForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
+        data['form'] = form
+        data['message'] = True
         return render_to_response('profile/profile_settings.html',data,context_instance=RequestContext(request))
     else:
-        data = {}
-        user_profile = request.user.get_profile()
         form = SettingsForm(instance=user_profile)
         data['form'] = form
         data.update(csrf(request))
