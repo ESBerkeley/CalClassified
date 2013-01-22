@@ -71,8 +71,9 @@ function clear_notif(){
   if(window.XMLHttpRequest){xhr_notif = new XMLHttpRequest();}
   else{xhr_notif = new ActiveXObject("Microsoft.XMLHTTP");}
     xhr_notif.onreadystatechange=function(){
-      if(xhr_notif.readyState == 4 && xhr_notif.status == 200){
+      if(xhr_notif.readyState == 4 && xhr_notif.status == 200){        
         get_friend_notifications();
+        window.location.reload();
       }
     };
   var notif_url = "/clear_notifications";
@@ -143,6 +144,91 @@ x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"t
     var url="/get_friend_notifications/";
     xhr.open("GET",url,true);
     xhr.send();
+}
+
+function notification_table() {
+  var xhr;
+  if(window.XMLHttpRequest){ xhr = new XMLHttpRequest();}
+  else{ xhr = new ActiveXObject("Microsoft.XMLHTTP");}
+    
+  xhr.onreadystatechange = function(){
+    var element = document.getElementById("notification-table");
+    if ( element){
+      if (xhr.readyState==4 && xhr.status == 200){
+        var obj = eval ("(" + xhr.responseText + ")");
+        var count = obj.length;
+        var html = "";
+        var notif;
+
+        if(count){
+            for(var k = 0; k < count; k++){
+              notif = notification_sentence(obj, k);
+                /*HTML FORMAT
+                  <tr>
+                  <td><a href="{{ post.get_absolute_url }}"> {{ post.title }}</a></td>
+                  <td>{{ post.time_created }}</td>
+                  <td ><center><a class="icon-trash"></a></center></td>
+                  </tr>*/
+              html += "<tr>";
+              html += "<td><a href=\" "+notif[1]+" \"> "+notif[0]+" </a></td>";
+              html += "<td> "+notif[2]+" </td>";
+              html += "<td><center><a class=\"icon-trash\"></a></center></td>";
+              html += "</tr>";
+            }
+            $('.notification-hide').show();     //reveals table "delete all" button if there are notifications
+            
+        }
+        else {
+            $(".notification-show").show()      //shows "No notifications" text
+        }
+        element.innerHTML = html;
+      }
+    }       
+  }
+  var url="/get_friend_notifications/";
+  xhr.open("GET",url,true);
+  xhr.send();
+}
+
+function notification_sentence(obj, k) {    //list of notifications, position in list. Returns the notification in tuple form.
+  var notif = new Array();  //tuple containing a sentence string and the url. Includes html strong tagging.
+  notif[0] = "";
+  notif[1] = "";
+  notif[2] = "Zero Dark Thirty";
+
+  if(obj[k].fields.type == 0){
+    notif[0] += obj[k].extras.username + " posted " + obj[k].extras.title;
+    notif[1] += "/" +obj[k].fields.post_from;
+  }
+  else if(obj[k].fields.type == 1){
+    notif[0] += "<strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title;
+    notif[1] += "/" +obj[k].fields.post_from + "#comments_section";
+  }
+  else if(obj[k].fields.type == 2){
+    notif[0] += "<strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title;
+    notif[1] += "/" +obj[k].fields.post_from + "#comments_section";
+  }
+  else if(obj[k].fields.type == 3){
+    notif[0] += "<strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title;
+    notif[1] += "/accounts/profile/selling/";
+  }
+  else if(obj[k].fields.type == 4){
+    notif[0] += "<strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete.";
+    notif[1] += "/" +obj[k].fields.post_from;
+  }
+  else if(obj[k].fields.type == 5){
+    notif[0] += "<strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title;
+    notif[1] += "/" +obj[k].fields.post_from;
+  }
+  else if(obj[k].fields.type == 6){  //buyer "bob" has messaged you about your post "dogfood"
+    notif[0] += "Buyer <strong>" + obj[k].extras.second_username + "</strong> has sent you a message about your post  <strong>" + obj[k].extras.title + "</strong>.";
+    notif[1] += "/accounts/profile/messages/" + obj[k].fields.thread_id;
+  }
+  else {   //seller "bob" has messaged you about their post "dogfood"
+    notif[0] += "Seller <strong>" + obj[k].extras.username + "</strong> has sent you a message about their post  <strong>" + obj[k].extras.title + "</strong>";
+    notif[1] += "/accounts/profile/messages/" + obj[k].fields.thread_id;
+  }
+  return notif;
 }
 
 
