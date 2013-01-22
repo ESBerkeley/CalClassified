@@ -99,7 +99,7 @@
       <div class="span8" style="padding-right:25px;">
         <div class="span8">
           
-            <div id="postCarousel" class="carousel slide">
+            <div id="postCarousel" class="carousel slide" {% if post.is_category_image %}style="background-color:white" {% endif %}>
               <!-- Carousel items -->
               <div class="carousel-inner">
                 {% if post.is_facebook_post %}
@@ -195,17 +195,25 @@
           </ul>-->
           
          <br>
-           {% if post.pending_flag %}
+           {% if post.is_facebook_post %}
+               {% if request.user.is_authenticated %}
+                   <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="{{ post.facebookpost.post_url }}">View FB Post</a>
+               {% else %}
+                   <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
+               {% endif %}
+               <i class="icon-question-sign tooltips" style="margin-left:5px; margin-top:4px;" rel="tooltips" data-placement="bottom"
+                  data-original-title="View the Facebook post connected to this listing on the Facebook group Free & For Sale or Textbook Exchange."></i>
+           {% elif post.pending_flag %}
               [Sale Pending - this listing will be removed shortly.]
+           {% elif post.sold %}
+              [Sale Completed!]
            {% else %}
-
               {% if request.user.is_authenticated %}
               {% if post.owner != request.user %}
-              
-              <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-shopping-cart"></i> Buy Now</button> 
+                <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px;" data-toggle="modal" href="#contact-modal"><i class="icon-white icon-shopping-cart"></i> Buy Now</button>
               {% endif %}
               {% else %}
-              <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
+                <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
               {% endif %}
            {% endif %}
         </div><!--/.well -->

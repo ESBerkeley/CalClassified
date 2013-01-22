@@ -94,7 +94,6 @@ class ItemForSale(Post):
     pending_buyer = models.ForeignKey(User, null=True, default=None, related_name='buyer')
     pending_flag = models.BooleanField(default = False)
     sold = models.BooleanField(default = False)
-    
 
     def get_formatted_price(self):
         return "%01.2f" % self.price
@@ -109,7 +108,7 @@ class ItemForSale(Post):
             return [self.get_category_image_url()]
     
     def get_category_image_url(self):
-        return '/static/images/%s.jpg' % str(self.category).lower()
+        return '/static/images/%s.png' % str(self.category).lower()
     
     def get_first_image_url(self):
         try:
@@ -146,6 +145,13 @@ class ItemForSale(Post):
             thumb_url = im.url
             urls.append(thumb_url)
         return urls
+
+    def is_category_image(self):
+        try:
+            self.image_set.all()[0].image.url
+            return False
+        except:
+            return True
    
     @property
     def key_generate(self):
