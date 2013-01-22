@@ -189,6 +189,7 @@
               {% if request.user.is_authenticated %}
                   {% if post.sold %}
                     {% if post.pending_buyer == request.user %}
+                      <br>
                       You bought this item! Hooray!
                     {% else %}
                       <br>

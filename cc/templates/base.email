@@ -1,3 +1,4 @@
+{% block subject %}BuyNearMe{% endblock %}
 {% block html %}
 {% block content %}
 {% endblock %}
@@ -8,6 +9,6 @@
   <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
   <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!</p>
   <p>Replies to this message to noreply@buynear.me will not be read</p>
-  <p>Change your email settings at <a href="{% url account_settings %}">{% url account_settings %}</a></p>
+  <p>Change your email settings at <a href="http://buynear.me{% url account_settings %}">{% url account_settings %}</a></p>
 {% endblock %}
 {% endblock %}
