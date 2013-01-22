@@ -165,7 +165,7 @@ def message_to_seller_hndlr(sender, **kwargs):
         seller = item.owner.get_profile()
         buyer = kwargs['target']
         new_note = Notification(post_from = item, going_to = seller, type = 6)
-        new_note.second_party = buyer.get_profile()
+        new_note.second_party = item.pending_buyer.get_profile() #buyer.get_profile()
         new_note.thread_id = Thread.objects.get(owner = seller.user, post_id = item.id).id
         new_note.save()
         seller.friend_notifications += 1
@@ -176,7 +176,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
     if sender == ItemForSale:
         item = kwargs['instance']
         seller = item.owner.get_profile()
-        buyer = kwargs['target']
+        buyer = kwargs['target'].get_profile()
         new_note = Notification(post_from = item, going_to = buyer, type = 7)
         new_note.thread_id = Thread.objects.get(owner = buyer.user, post_id = item.id).id
         new_note.save()
