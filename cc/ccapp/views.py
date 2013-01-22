@@ -125,7 +125,7 @@ def fb_items(request):
                 last_name='Bot',
                 email='noreply@buynear.me',
                 username='noreply@buynear.me')
-            category, created = Category.objects.get_or_create(name='Uncategorized')
+            category, created = Category.objects.get_or_create(name='Facebook Post')
             for item in items:
                 try:
                     item_id = item.get('id').split('_')[1]
@@ -245,7 +245,6 @@ def fb_import(request):
                 existing_groups = Circle.objects.filter(is_public=True).exclude(id__in=my_circles_id).order_by('?')[:5]
 
             if not existing_groups:
-                print(my_circles_id)
                 existing_groups = Circle.objects.filter(is_public=True).exclude(id__in=my_circles_id).order_by('?')[:5]
 
             data['existing_groups'] = existing_groups
@@ -771,7 +770,7 @@ def boxview(request):
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = str(request.GET['q'])
         return_dict['q'] = query_string
-    return render_to_response('box.html', return_dict ,context_instance=RequestContext(request))
+    return render_to_response('box.html', return_dict, context_instance=RequestContext(request))
 
 
 @login_required
@@ -828,7 +827,8 @@ def ajax_box(request):
 
     checked_circles = map(int,checked_circles)
     checked_categories = map(int, checked_categories)
-    
+    if len(checked_categories) == 11:
+        checked_categories == range(1, 5) + range(6, 12) #take out Facebook Post Category
     
     """ #OLD NON-HAYSTACK SEARCH
     if ('q' in request.GET) and request.GET['q'].strip():
@@ -1292,7 +1292,6 @@ def account_setup(request):
 
             verif = VerificationEmailID(user=user, auth_key=auth_key, email=email)
             verif.save()
-            print(auth_key)
             send_templated_mail(
                 template_name='change_email',
                 from_email='Buy Near Me <noreply@buynear.me>',

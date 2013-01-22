@@ -328,7 +328,9 @@
     } else {
       for (index in categories) {
         cat = categories[index];
-        cat_object2[cat] = true;
+        if (index != 5) { //TAKE OUT FACEBOOK POSTS FROM NORMAL BOX UNLESS CLICKED ON!
+           cat_object2[cat] = true;
+        }
       }
       return cat_object2;
     }
