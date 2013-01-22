@@ -254,7 +254,7 @@
             {% else %}
               {% if post.owner == request.user and comment.sender != request.user %}
                 <!-- Button to trigger modal -->
-                <a href="modal-response" role="button" class="btn btn-primary" data-toggle="modal">Respond</a>
+                <a href="#modal-response" role="button" class="btn btn-primary" data-toggle="modal">Respond</a>
      
                 <!-- Modal -->
                 <div id="modal-response" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-response-label" aria-hidden="true">
