@@ -518,7 +518,8 @@ def showpost(request,pid,super_cat):
                 comment.item = post
                 comment.seller_response = ""
                 comment.save()
-                new_comment_signal.send(sender = Comment, instance = comment) 
+                if user != post.owner:
+                    new_comment_signal.send(sender = Comment, instance = comment) 
                 #the signal handeler for this, and the above takes care of adding an appropriate nofitication  
             
         return HttpResponseRedirect(request.path)
