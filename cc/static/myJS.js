@@ -97,9 +97,10 @@ function get_friend_notifications(){
           var count = obj.length;
           var x = "";
 
-          x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\"icon-envelope\" style=\"margin-top:5px;\"></i></a>";
+          
 
           if(count){
+            x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
             x += "<ul class=\"dropdown-menu no-collapse\">";
 
             for(var k = 0; k < count; k++){
@@ -124,6 +125,9 @@ function get_friend_notifications(){
             }
             x+="<li> <a onclick = \"clear_notif()\">Clear notifications</a></li>";
             x += "</ul>";
+          }
+          else {
+x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
           }
           element_in_question.innerHTML = x;
         }
@@ -530,21 +534,4 @@ $("#modal-send").on("click", function(){
         }
     });
 });
-
-/*$(".modal-seller-respond").on("click", function(){
-    $(this).button('loading');
-    var message = $(".modal-seller-mesage").val();
-    data = {};
-    data['csrfmiddlewaretoken'] = csrf_token;
-    data['seller_response'] = message;
-    $.ajax({
-        type: "POST",
-        url: "/" + post_pk + "?sr=" + comment_id,
-        data: data,
-        success: function(data){
-            $("#buynow-modal").modal('hide');
-        }
-    });
-});*/
-
 
