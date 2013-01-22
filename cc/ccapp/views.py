@@ -179,7 +179,8 @@ def fb_items(request):
                         new_item.save()
                         new_items.append(new_item)
                     except:
-                        continue
+                        new_item.delete()
+                        pass
             circle = Circle.objects.get(name='Berkeley')
             circle.itemforsale_set.add(*new_items)
 
