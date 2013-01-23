@@ -115,10 +115,15 @@ def fb_items(request):
     if request.method == 'POST':
         if request.user.is_authenticated():
             existing_items = FacebookPost.objects.all()
-            graph = get_facebook_graph(request)
-            facebook = FacebookUserConverter(graph)
-            ffs_items = facebook.get_free_for_sale()
-            txtbook_items = facebook.get_textbook_exchange()
+            try:
+                graph = get_facebook_graph(request)
+                facebook = FacebookUserConverter(graph)
+                ffs_items = facebook.get_free_for_sale()
+                txtbook_items = facebook.get_textbook_exchange()
+            except:
+                data['title'] = 'Relogin to Facebook'
+                data['message'] = 'Your login has expired. Relogin ya doof.'
+                return render_to_response('message.html', data, context_instance=RequestContext(request))
             items = ffs_items + txtbook_items
             owner, created = User.objects.get_or_create(
                 first_name='Facebook',
