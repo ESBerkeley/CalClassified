@@ -6,6 +6,7 @@ from ccapp.forms import EmailForm, FeedbackForm
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core import serializers
+from django.db import connection
 from django.db.models import Avg, Max, Min, Count
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
@@ -185,7 +186,7 @@ def fb_items(request):
                         new_item.save()
                         new_items.append(new_item)
                     except:
-                        pass
+                        connection._rollback()
             circle = Circle.objects.get(name='Berkeley')
             circle.itemforsale_set.add(*new_items)
 
