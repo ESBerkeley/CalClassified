@@ -278,7 +278,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
         seller = item.owner.get_profile()
         buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
-        new_note = Notification(post_from = item, going_to = buyer, type = 7)
+        new_note = Notification(post_from=item, going_to=buyer, type=7)
         thread = Thread.objects.get(owner = buyer.user, post_id = item.id)
         new_note.thread_id = thread.id
         new_note.save()

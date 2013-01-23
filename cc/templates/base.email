@@ -1,5 +1,14 @@
 {% block subject %}BuyNearMe: {% block subj %}{% endblock %}{% endblock %}
 {% block html %}
+<head>
+<style>
+p {
+ font-size:larger;
+ font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+</style>
+</head>
+<body>
 {% block content %}
 {% endblock %}
 {% block signature %}
@@ -8,8 +17,9 @@
   BuyNearMe Team</p>
   {% load static %}
   <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
-  <p><a href="mailto:contact@buynear.me">Contact Us at contact@buynear.me</a> if you have any concerns!<br>
+  <p><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!<br>
   Replies to this email will not be read<br>
-  Change your email settings at <a href="http://buynear.me{% url account_settings %}">here.</a></p>
+  Change your email settings <a href="http://buynear.me{% url account_settings %}">here</a>.</p>
 {% endblock %}
+</body>
 {% endblock %}

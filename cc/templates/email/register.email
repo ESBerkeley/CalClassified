@@ -12,6 +12,5 @@
       here</a> or click the following link:
       <br>
       <a href="http://buynear.me/change_email/{{ auth_key }}">http://buynear.me/change_email/{{ auth_key }}</a>
-      <br>
   </p>
 {% endblock %}
