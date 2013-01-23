@@ -134,9 +134,10 @@ def fb_items(request):
             for item in items:
                 try:
                     item_id = item.get('id').split('_')[1]
+                    item_exists = existing_items.filter(facebook_id=item_id).exists()
                 except:
                     continue
-                if not existing_items.filter(facebook_id=item_id).exists():
+                if not item_exists:
                     user_id = item.get('from').get('id')
                     seller_name = item.get('from').get('name')
                     post_url = item.get('actions')[0].get('link')
