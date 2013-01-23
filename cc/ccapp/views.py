@@ -181,8 +181,6 @@ def fb_items(request):
                                         category=category,
                                         approved=False,
                                         created_time=created_time)
-                        new_item.clean_fields()
-                        new_item.validate_unique()
                         new_item.save()
                         new_items.append(new_item)
                     except:
