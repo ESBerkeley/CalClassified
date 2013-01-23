@@ -261,7 +261,7 @@ def message_to_seller_hndlr(sender, **kwargs):
                         'message':message.body,
                         'post':item,
                         'sender':buyer.user.get_full_name(),
-                        'target':seller.user.get_full_name(),
+                        'recipient':seller.user.get_full_name(),
                         'thread':thread
                         },
                 )
@@ -294,7 +294,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
                     'message':message.body,
                     'post':item,
                     'sender':seller.user.get_full_name(),
-                    'target':buyer.user.get_full_name(),
+                    'recipient':buyer.user.get_full_name(),
                     'thread':thread
                     },
             )

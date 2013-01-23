@@ -5,15 +5,11 @@
   <p>Hi {{ recipient_name }},</p>
     <br>
   <p>{{ full_name }} has listed a new item for sale! </p>
-  <h3>Item: {{ post.title }}</h3>
+  <br>
+  <p>Item: {{ post.title }}</p>
   <p>
   {{ post.body }}
-  </p>
-  <img style="max-width: 200px; max-height: 200px; height:auto; width:auto;" src="http://buynear.me/{{ post.get_thumbnail_url }}"></a>
-  <ul>
-    <li>
-        <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
-    </li>
-  </ul>
+  <img style="max-width: 200px; max-height: 200px; height:auto; width:auto;" src="http://buynear.me{{ post.get_thumbnail_url }}"></a>
+  <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view the item!</p>
   </p>
 {% endblock %}

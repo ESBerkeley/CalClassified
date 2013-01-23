@@ -3,8 +3,9 @@
 {% block subj %}{{ seller }} Says {{ post_title }} Could Not Be Sold{% endblock %}
 {% block content %}
   <p>Hi {{ buyer }},</p>
-  <p>{{ seller }} has indicated the item could not be sold to you and has re-listed it.</p>
-  <p>
+  <br>
+  <p>{{ seller }} has indicated the item could not be sold to you and has re-listed it.
+  <br>
   <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view the item.
   <br>
   Please contact us if this is not the case and has not kept his promise to sell you the item.
