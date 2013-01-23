@@ -1,4 +1,4 @@
-{% block subject %}BuyNearMe{% endblock %}
+{% block subject %}BuyNearMe: {% block subj %}{% endblock %}{% endblock %}
 {% block html %}
 {% block content %}
 {% endblock %}

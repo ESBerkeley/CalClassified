@@ -1,6 +1,6 @@
 {% extends "base.email" %}
 
-{% block subject %}{{ post.title }} by {{ full_name }}{% endblock %}
+{% block subj %}{{ post.title }} by {{ full_name }}{% endblock %}
 {% block content %}
   <p>Hi {{ recipient_name }},</p>
     <br>

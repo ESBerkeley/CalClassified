@@ -282,7 +282,7 @@ class Thread(models.Model):
     is_read = models.BooleanField(default=True)
     newest_message_time = models.DateTimeField(null=True)
     def get_absolute_url(self):
-        return 'accounts/profile/messages/%i' % self.id
+        return '/accounts/profile/messages/%i' % self.id
 
 class CaseInsensitiveModelBackend(ModelBackend):
     """

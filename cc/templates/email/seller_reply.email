@@ -1,6 +1,6 @@
 {% extends "base.email" %}
 
-{% block subject %}{{ item.title }} Reply - {{ seller }}{% endblock %}
+{% block subj %}{{ item.title }} Reply - {{ seller }}{% endblock %}
 {% block content %}
   <p>Hi {{ commenter }},</p>
   <p>{{ seller }}, has replied to you about your comment! </p>

@@ -1,6 +1,6 @@
 {% extends "base.email" %}
 
-{% block subject %}{{ seller }} Says {{ post_title }} Has Been Sold{% endblock %}
+{% block subj %}{{ seller }} Says {{ post_title }} Has Been Sold{% endblock %}
 {% block content %}
   <p>Hi {{ buyer }},</p>
   <p>{{ seller }} has indicated the item has been sold to you.</p>

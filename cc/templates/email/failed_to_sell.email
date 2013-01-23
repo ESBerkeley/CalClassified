@@ -1,6 +1,6 @@
 {% extends "base.email" %}
 
-{% block subject %}{{ seller }} Says {{ post_title }} Could Not Be Sold{% endblock %}
+{% block subj %}{{ seller }} Says {{ post_title }} Could Not Be Sold{% endblock %}
 {% block content %}
   <p>Hi {{ buyer }},</p>
   <p>{{ seller }} has indicated the item could not be sold to you and has re-listed it.</p>
