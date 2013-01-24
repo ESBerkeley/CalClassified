@@ -357,7 +357,8 @@ function notification_sentence(obj, k) {    //list of notifications, position in
               for(var i = 0; i < lenk; i++){
                   scraps[i].extras.boxsize=0;
                   scraps[i].priority=1;
-                  obj.unshift(scraps[lenk-1-i]);
+                 // obj.unshift(scraps[lenk-1-i]);
+                  obj.unshift(scraps[i]);
               }
               scraps=[];
           }
