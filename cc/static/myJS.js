@@ -340,12 +340,12 @@ function notification_sentence(obj, k) {    //list of notifications, position in
    //     var sizes = [[2,2],[1,1]];  //gogo tetris mode
         var sizes = [[1,1],[1,1]];
         var w = 916;
-        var h = 1400;
+        var h = 2800;
 
     //    var numx = 6;
     //    var numy = 12;
         var numx = 3;
-        var numy = 6;
+        var numy = 12;
         var width = (w-(w%numx))/numx;
         var height = (h-(h%numy))/numy;
         ogrid = [];
@@ -357,7 +357,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
               for(var i = 0; i < lenk; i++){
                   scraps[i].extras.boxsize=0;
                   scraps[i].priority=1;
-                  obj.unshift(scraps[i]);
+                  obj.unshift(scraps[lenk-1-i]);
               }
               scraps=[];
           }
@@ -485,6 +485,8 @@ function notification_sentence(obj, k) {    //list of notifications, position in
             $("#myBox").html("<h2>Sorry, there were no items that matched your search.</h2>");
         }
 
+        
+/*
 
         if(obj.length < fitx_small*fity_small && 0){ //very few results. let's promote everything to max size (when doing a restrictive search)
         
@@ -528,6 +530,28 @@ function notification_sentence(obj, k) {    //list of notifications, position in
                 }
             }  
         }  
+*/
+        
+        var cur_x = 0;
+        var cur_y = 0;
+        for(var j = 0; j < obj.length; j++){
+            
+            set(cur_x,cur_y,obj[j],ogrid);
+
+            cur_x++;
+            if(cur_x == numx){
+                cur_x = 0;
+                cur_y = cur_y + 1;
+                if(cur_y == numy){
+                    for(var k = j; k < obj.length; k++){
+                        obj[k].extras.boxsize = sizes.length;
+                        obj[k].priority = 1;
+                    }
+                    j = obj.length;
+                }
+            }
+        }
+
 
         for(var j = 0; j < obj.length; j++){
             if(obj[j].extras.boxsize == sizes.length){ 
