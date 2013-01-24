@@ -544,7 +544,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
                 cur_x = 0;
                 cur_y = cur_y + 1;
                 if(cur_y == numy){
-                    for(var k = j; k < obj.length; k++){
+                    for(var k = j+1; k < obj.length; k++){
                         obj[k].extras.boxsize = sizes.length;
                         obj[k].priority = 1;
                     }
