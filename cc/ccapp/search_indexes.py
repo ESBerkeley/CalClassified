@@ -15,6 +15,8 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
 
     pending_buyer = indexes.CharField(model_attr='pending_buyer', null=True)
     pending_flag = indexes.BooleanField(model_attr='pending_flag')
+    sold = indexes.BooleanField(model_attr='sold')
+    deleted = indexes.BooleanField(model_attr='deleted')
     
     category = indexes.MultiValueField()
     circles = indexes.MultiValueField()
@@ -23,6 +25,21 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
 
     def prepare_approved(self, obj):
         if obj.approved==False:
+            return ''
+        return True
+
+    def prepare_pending_flag(self, obj):
+        if obj.pending_flag==False:
+            return ''
+        return True
+
+    def prepare_sold(self, obj):
+        if obj.sold==False:
+            return ''
+        return True
+
+    def prepare_deleted(self, obj):
+        if obj.deleted==False:
             return ''
         return True
 

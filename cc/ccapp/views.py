@@ -854,8 +854,11 @@ def ajax_box(request):
             circles__in=checked_circles,
             category__in=checked_categories,
             price__range=(min_price,max_price),
-            approved=True
-        ).order_by('-time_created')
+            approved=True,
+            sold=False,
+            pending_flag=False,
+            deleted=False
+        ).order_by('-time_created')[(100*p):(100*(p+1))]
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
     else:
@@ -863,12 +866,12 @@ def ajax_box(request):
             circles__in=checked_circles,
             category__in=checked_categories,
             price__range=(min_price,max_price),
-            approved=True
-        ).order_by('-time_created')
+            approved=True,
+            sold=False,
+            pending_flag=False,
+            deleted=False
+        ).order_by('-time_created')[(100*p):(100*(p+1))]
 
-
-
-    found_entries = found_entries[(100*p):(100*(p+1))]
 
     #is user logged in? highlight his friends' posts
     #TODO: this could be very inefficient. consider performance optimization... perhaps store facebook user id of creator in post model...
@@ -906,21 +909,20 @@ def ajax_box(request):
 
     #kludge until someone can get haystack to work
     #filter out all the pending items for sales, filter out the deleted ones, filter out the already sold ones
-    fatty_cheese2 = []
-    for x in fatty_cheese_wheel:
-        if not x.sold and not x.pending_flag and not x.deleted:
-            fatty_cheese2.append(x)
-    fatty_cheese_wheel = fatty_cheese2
+    #fatty_cheese2 = []
+    #for x in fatty_cheese_wheel:
+    #    if not x.sold and not x.pending_flag and not x.deleted:
+    #        fatty_cheese2.append(x)
+    #fatty_cheese_wheel = fatty_cheese2
 
-    
-    """
-    for x in found_entries:
-        if fbf:
-            if x.object.friend:
-                fatty_cheese_wheel.append(x.object)
-        else:
-            fatty_cheese_wheel.append(x.object)
-    """
+
+
+    #for x in found_entries:
+    #    if fbf:
+    #        if x.object.friend:
+    #            fatty_cheese_wheel.append(x.object)
+    #    else:
+    #        fatty_cheese_wheel.append(x.object)
     
 
     data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','pending_flag','friend','friendname','get_thumbnail_url','score'))
