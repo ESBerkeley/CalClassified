@@ -8,9 +8,9 @@
       <br>
       If this wasn't you, please ignore this email and your address will be removed from our records.
       <br>
-      To activate this account, please click <a href="http://buynear.me/change_email/{{ auth_key }}">
+      To activate this account, please click <a href="http://buynear.me/verify_user/{{ auth_key }}">
       here</a> or click the following link:
       <br>
-      <a href="http://buynear.me/change_email/{{ auth_key }}">http://buynear.me/change_email/{{ auth_key }}</a>
+      <a href="http://buynear.me/verify_user/{{ auth_key }}">http://buynear.me/verify_user/{{ auth_key }}</a>
   </p>
 {% endblock %}
