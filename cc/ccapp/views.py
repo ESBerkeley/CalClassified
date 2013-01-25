@@ -826,7 +826,11 @@ def ajax_box(request):
     checked_categories = request.GET.getlist('category')
     
     min_price = 0
-    max_price = float(ItemForSale.objects.aggregate(Max('price'))['price__max'])
+    
+    try:
+        max_price = float(ItemForSale.objects.aggregate(Max('price'))['price__max']) #
+    except TypeError as e: #error occurs if nothing in db and the operand of float returns None
+        max_price = 0 
     if ('max_price' in request.GET) and request.GET['max_price'].strip() and float(request.GET['max_price'])>= 0:
         max_price = float(request.GET['max_price'])
     if ('min_price' in request.GET) and request.GET['min_price'].strip() and float(request.GET['min_price'])>= 0:

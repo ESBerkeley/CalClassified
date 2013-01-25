@@ -302,6 +302,8 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   }
 
   function loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,page){
+    //load pacman
+    $("#pac-ajax").show();
 
     //going first makes sure icons are hidden so the page doesnt look weird during the load
     if(query) {      //hides and shows cancel button in search bar
@@ -574,6 +576,9 @@ function notification_sentence(obj, k) {    //list of notifications, position in
           filters = "<li> None </li>";
         }
         //document.getElementById("active-filter").innerHTML = filters;
+        
+        //go away pacman
+        $("#pac-ajax").hide();
       }
     }
   }

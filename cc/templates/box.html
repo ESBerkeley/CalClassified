@@ -120,8 +120,6 @@
 {% endblock %}
 
 {% block content %}
-    <!--div style="width:100px; height: 100px; background-color: black; position: fixed; margin-left: 40%; margin-top: 30%;"></div-->
-
 
     <div id="boxDiv" class="span9 offset3">
       {% if cc_circs|length == 0 %}
@@ -138,7 +136,8 @@
       {% endif %}
     </div>
   </div>
-</div>
+</div><!-- end sidebar -->
+    <img id="pac-ajax" src="{{ STATIC_URL }}images/pacman-ajax.gif" style="position: fixed;top: 50%;left: 50%; display: none;" />
 
   <form style="display: none;" id="session">
    <textarea id="sfield">3</textarea>
