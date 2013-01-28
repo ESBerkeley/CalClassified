@@ -433,7 +433,8 @@ div.friend_boxxx .box-text {
 
 #banner-text {
     padding-top: 50px;
-    padding-left: 80px;
+    /*padding-left: 80px;*/
+    width:1130px;
     
 }
 
@@ -458,12 +459,11 @@ div.friend_boxxx .box-text {
 #why-us {
   padding-top: 20px;
   padding-bottom: 20px;
+  width:1130px;
 }
 
 #why-text {
-  padding-left: 100px;
-  padding-right: 10px;
-  width: 60%;
+  width: 70%;
   float: left;
 }
 
