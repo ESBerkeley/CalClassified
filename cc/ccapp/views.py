@@ -221,7 +221,7 @@ def fb_admin(request):
         formset = FacebookFormSet(request.POST, queryset=FacebookPost.objects.filter(approved=False))
         if formset.is_valid():
             items = formset.save()
-        last_week = datetime.datetime.now()-datetime.timedelta(weeks=-1)
+        last_week = datetime.datetime.now()-datetime.timedelta(days=-4)
         old_items = FacebookPost.objects.filter(created_time__gte=last_week)
         old_items.delete()
         data['approved_items'] = items
