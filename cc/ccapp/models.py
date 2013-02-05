@@ -273,9 +273,9 @@ class Thread(models.Model):
     # owner should either be the sender or recipient and other_person should be the one owner isn't  <-- 10/10 real helpful
     owner = models.ForeignKey(User, related_name='owner_msg_set',null=True)
     other_person =  models.ForeignKey(User, related_name='other_msg_set',null=True)
-    #post = models.ForeignKey(ItemForSale, null=True, blank=True)
+    post = models.ForeignKey(ItemForSale, null=True, blank=True)
     post_title = models.CharField(max_length=50,default="",blank=True)
-    post_id = models.IntegerField(null=True,blank=True)
+    post_id = models.IntegerField(null=True,blank=True) #IS NO LONGER GOING TO BE USED AS NORMAL post GENERATES A post_id FIELD, however left here for old models
     post_deleted = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=True,null=True)
     messages = models.ManyToManyField("Message")

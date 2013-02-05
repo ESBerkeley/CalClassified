@@ -67,7 +67,7 @@
     {% if request.user.is_authenticated %}
     <div class="panel-item"><a href="{% url my_items %}">My Items</a></div>
     <div class="border" style="border-top-color:#474747"></div>
-    <div class="panel-item"><a href="{% url view_messages %}">Messages</a></div>
+    <div class="panel-item"><a href="{% url view_messages %}">What I'm Buying</a></div>
     <div class="border" style="border-top-color:#474747"></div>
     <div class="panel-item"><a href="/logout">Logout</a></div>
     {% else %}
@@ -107,5 +107,6 @@
 
 </div><!-- /page -->
 {% endblock %}
+{% block after_page %}{% endblock %}
 </body>
 </html>
