@@ -162,6 +162,7 @@ def buy_button_hndlr(sender, **kwargs):
         new_note.save()
         seller.friend_notifications += 1
         seller.save()
+        thread = Thread.objects.get(owner=seller.user, post_id=item.id)
         try:
             send_templated_mail(
                 template_name='buy_item',
@@ -172,6 +173,7 @@ def buy_button_hndlr(sender, **kwargs):
                     'buyer':buyer.user.get_full_name(),
                     'post':item,
                     'seller':seller.user.get_full_name(),
+                    'thread':thread
                     },
             )
         except:
@@ -243,9 +245,9 @@ def message_to_seller_hndlr(sender, **kwargs):
         seller = item.owner.get_profile()
         buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
-        new_note = Notification(post_from = item, going_to = seller, type = 6)
+        new_note = Notification(post_from=item, going_to=seller, type=6)
         new_note.second_party = buyer
-        thread = Thread.objects.get(owner = seller.user, post_id = item.id)
+        thread = Thread.objects.get(owner=seller.user, post_id=item.id)
         new_note.thread_id = thread.id
         new_note.save()
         seller.friend_notifications += 1
@@ -279,7 +281,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
         buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
         new_note = Notification(post_from=item, going_to=buyer, type=7)
-        thread = Thread.objects.get(owner = buyer.user, post_id = item.id)
+        thread = Thread.objects.get(owner=buyer.user, post_id=item.id)
         new_note.thread_id = thread.id
         new_note.save()
         buyer.friend_notifications += 1

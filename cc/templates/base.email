@@ -5,7 +5,7 @@
 p, p2 {
  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-p {
+p, blockquote {
  font-size:larger;
 }
 </style>
@@ -14,14 +14,15 @@ p {
 {% block content %}
 {% endblock %}
 {% block signature %}
-  <br>
   <p>Thanks,<br>
   BuyNearMe Team</p>
   {% load static %}
-  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"></a>
-  <p2><a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!<br>
-  Replies to this email will not be read<br>
-  Change your email settings <a href="http://buynear.me{% url account_settings %}">here</a>.</p2>
+  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"><br>
+  <p2>
+      <a href="mailto:contact@buynear.me">Contact Us</a> if you have any concerns!<br>
+      Replies to this email will not be read.<br>
+      Change your email settings <a href="http://buynear.me{% url account_settings %}">here</a>.
+  </p2>
 {% endblock %}
 </body>
 {% endblock %}
