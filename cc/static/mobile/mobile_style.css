@@ -196,3 +196,13 @@ label.error {
 #filter-options {
     padding: 0% 3% 1% 3%;
 }
+
+#table-title {
+    background-color: white;
+    padding: 3% 0 3% 0;
+    border-top: 1px solid #b2b2b2;
+    /*color: white;*/
+}
+#table-title h3 {
+    margin: 0;
+}

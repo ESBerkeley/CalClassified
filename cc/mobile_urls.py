@@ -29,6 +29,8 @@ urlpatterns = patterns('ccapp.mobile_views',
     #ACCOUNT URLS
     url(r'^view_messages/$',"view_messages", name="view_messages"),
     url(r'^view_messages/(?P<thread_id>\d+)/$',"view_thread"),
+    
+    url(r'^admin/', include(admin.site.urls)),
 
                         ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

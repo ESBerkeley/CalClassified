@@ -4,11 +4,34 @@
 {% block header_title %}My Items{% endblock %}
 {% block body_content %}
     <div>
-
-        {% if items %}
-
+        <h2>My Items</h2>
+        {% if my_threads %}
+        <div id="table-title">
+            <center><h3>Being Purchased</h3></center>
+        </div>
             <ul data-role="listview" id="browse-list">
-                {% for item in items %}
+                {% for thread in my_threads %}
+
+                <li>
+                <a href="{{ thread.post.get_absolute_url }}" rel="external">
+                    <img src="{{ thread.post.cached_thumb }}" />
+                    <h3>
+                        {{ thread.post_title }}
+                    </h3>
+                    <p>With: <b>{{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</b></p>
+                </a>
+                </li>
+
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <br>
+        {% if ifs_waiting_list %}
+        <div id="table-title">
+            <center><h3>Awaiting Purchase</h3></center>
+        </div>
+            <ul data-role="listview" id="browse-list">
+                {% for item in ifs_waiting_list%}
 
                 <li>
                 <a href="{{ item.get_absolute_url }}" rel="external">
@@ -22,12 +45,7 @@
 
                 {% endfor %}
             </ul>
-
-        {% else %}
-            <h2 style="text-align: center;"> You have no items.</h2>
         {% endif %}
-
-
 
 
     </div>

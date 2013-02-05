@@ -1,5 +1,5 @@
-from ccapp.models import *
-from templated_email import send_templated_mail
+from ccapp.views import *
+#from templated_email import send_templated_mail
 
 def send_bnm_message(request):
     body = request.POST['message']
@@ -9,6 +9,17 @@ def send_bnm_message(request):
     sender = request.user
     recipient = User.objects.get(id=int(recipient_pk))
 
+    if post.pending_flag:
+        if request.user not in [post.owner, post.pending_buyer]:
+            
+            return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username) #crap someone else got it before you, sorrym8
+
+    else:
+        post.pending_buyer = request.user
+        post.pending_flag = True
+        post.save()
+    
+    
     message = Message()
     message.body = body
     message.post_title = post.title
@@ -16,16 +27,27 @@ def send_bnm_message(request):
     message.recipient = recipient
     message.save()
 
+    first_message = False        
+
     #Create 2 Threads for both ends
     try: #see if thread exists, if not create it
-        thread1 = Thread.objects.get(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
+        thread1 = Thread.objects.get(owner=sender, other_person=recipient, post_title=post.title, post=post)
     except:
-        thread1 = Thread.objects.create(owner=sender,other_person=recipient,post_title=post.title,post_id =post_pk)
-
+        thread1 = Thread.objects.create(owner=sender, other_person=recipient, post_title=post.title, post=post)
+        first_message = True
     try: #see if thread exists, if not create it
-        thread2 = Thread.objects.get(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
+        thread2 = Thread.objects.get(owner=recipient,other_person=sender, post_title=post.title, post=post)
     except:
-        thread2 = Thread.objects.create(owner=recipient,other_person=sender,post_title=post.title,post_id =post_pk)
+        thread2 = Thread.objects.create(owner=recipient,other_person=sender, post_title=post.title, post=post)
+
+    if first_message:
+        buy_button_signal.send(sender=ItemForSale, instance=post, message=message)
+
+    else:
+        if request.user == post.owner: #sending a message to a buyer
+            message_to_buyer_signal.send(sender=ItemForSale, instance=post, message=message)
+        else:   #sending a message to a seller
+            message_to_seller_signal.send(sender=ItemForSale, instance=post, message=message)
 
     thread1.messages.add(message)
     thread2.messages.add(message)
@@ -34,26 +56,7 @@ def send_bnm_message(request):
     thread2.is_read = False
     thread1.save()
     thread2.save()
-
-    rec_profile = recipient.get_profile()
+    
+    rec_profile = recipient.get_profile()	
     rec_profile.notifications += 1
     rec_profile.save()
-    recipient_name = recipient.get_full_name()
-    if rec_profile.message_email:
-        try:
-            send_templated_mail(
-                template_name='message',
-                from_email='Buy Near Me <noreply@buynear.me>',
-                recipient_list=[recipient.email],
-                context={
-                    'message':message.body,
-                    'thread':thread2,
-                    'post':post,
-                    'username':sender.username,
-                    'first_name':sender.first_name,
-                    'full_name':sender.get_full_name(),
-                    'recipient_name':recipient_name,
-                    },
-            )
-        except:
-            pass
