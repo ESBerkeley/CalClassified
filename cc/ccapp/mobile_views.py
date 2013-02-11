@@ -33,7 +33,7 @@ RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 def home(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('view_messages'))
+        return HttpResponseRedirect(reverse('my_items'))
     else:
         data = {}
         if "next" in request.GET:
@@ -88,6 +88,7 @@ def sell(request):
             circleQuery = Circle.objects.filter(name="Berkeley")
             model.circles = circleQuery
             model.save()
+            model.get_thumbnail_url() #generate thumbnail
 
             post_created_signal.send(sender = ItemForSale, instance = model)
 
@@ -180,10 +181,11 @@ def my_items(request):
     unsold_ids = [x.id for x in ifs_waiting_list]
 
     my_threads = Thread.objects.filter(owner=user,post_id__in=selling_ids).exclude(post_id__in=unsold_ids).order_by('is_read','-newest_message_time')  
-
+    
     for thread in my_threads:
         try:
-            ItemForSale.objects.get(id=thread.post_id)
+            ifs = ItemForSale.objects.get(id=thread.post_id)
+            thread.post = ifs
         except:
             thread.post_deleted = True
             thread.save()
@@ -199,10 +201,50 @@ def my_items(request):
     return render_to_response('mobile/my_items.html',
         data,
         context_instance=RequestContext(request))
+        
+@login_required
+def buying(request):
+    data = {}
+    user = request.user
+
+    pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=False)]
+    completed_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=True)]
+
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time','-timestamp')
+
+    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
+
+    for thread in my_threads:
+        try:
+            ifs = ItemForSale.objects.get(id=thread.post_id)
+            thread.post = ifs
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    for thread in completed_threads:
+        try:
+            ItemForSale.objects.get(id=thread.post_id)
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    data['my_threads'] = my_threads
+    data['completed_threads'] = completed_threads
+    
+    user_profile = user.get_profile()
+    user_profile.notifications = 0
+    user_profile.save()
+    return render_to_response('mobile/buying.html',data,context_instance=RequestContext(request))
 
 def view_item(request,pid):
     if request.method == "GET":
         item = ItemForSale.objects.get(id = pid)
+        if item.deleted:
+            data = {}
+            data['message'] = "The item you are looking for has been deleted."
+            return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+        
         image_set = item.get_image_set_urls()
         data = {}
         data['item'] = item
@@ -250,6 +292,8 @@ def view_messages(request):
 @login_required
 def view_thread(request,thread_id):
     thread = Thread.objects.get(id = thread_id)
+    if thread.owner != request.user:
+        return redirect('/')
 
     try:
         item = ItemForSale.objects.get(id=thread.post_id)
@@ -261,3 +305,8 @@ def view_thread(request,thread_id):
     thread.is_read = True
     thread.save()
     return render_to_response('mobile/view_thread.html',data,context_instance=RequestContext(request))
+    
+@login_required
+def notifications(request):
+    data = {}
+    return render_to_response('mobile/notifications.html',data,context_instance=RequestContext(request))

@@ -402,6 +402,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 #model.circles = circleQuery
                 model.circles = user_profile.my_circles.all()
                 model.save()
+                model.get_thumbnail_url() #generrate thumbnail
 
                 #MULTIUPLOADER
                 #for image in images:

@@ -109,7 +109,9 @@ def next_redirect(request, default='/', additional_params=None,
     from django.http import HttpResponseRedirect
     if not isinstance(next_key, (list, tuple)):
         next_key = [next_key]
-
+    
+    url = request.build_absolute_uri()
+    
     # get the redirect url
     if not redirect_url:
         for key in next_key:
@@ -119,7 +121,7 @@ def next_redirect(request, default='/', additional_params=None,
                 if len(next)>1:
                     redirect_url = next[1]
                     break
-            if request.user.get_profile().first_time:
+            if request.user.get_profile().first_time and "m." not in url:
                 redirect_url = '/account_setup/'
                 break
             if redirect_url == '/accounts/logout/' or redirect_url == '/accounts/login/':

@@ -9,12 +9,8 @@
         - {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</h3>
 
 
-    <form id="message-form">{% csrf_token %}
-        <input type="hidden" name="post_pk" value="{{ item.pk }}" />
-        <input type="hidden" name="recipient_pk" value="{{ item.owner.pk }}" />
-        <textarea id="message-text" name="message"></textarea>
-        <input type="submit" value="Send Message" data-theme="b"/>
-    </form>
+    
+    <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Reply</a>
 <br>
 <ul data-role="listview">
     {% for message in messages %}
@@ -35,9 +31,41 @@
 
 {% endblock %}
 
+{% block after_page %}
+<!-- modal -->
+<div data-role="page" id="modal">
+
+    <script type="text/javascript" src="{{ STATIC_URL }}mobile/mobile-js.js"></script>
+
+    
+    <div data-role="header">
+        <h1>Reply</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">    
+        <textarea id="message-text" placeholder="Can you meet at Dwinelle this Friday at 12pm? Thanks!"></textarea>
+        
+        <p id="no-modal-msg" style="color:red; display: none;">Please enter a message</p>
+        
+        
+    
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a"><a href="{{ item.get_absolute_url }}" data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+        <div class="ui-block-b"><button id="modal-send" data-theme="b">Send</button></div>	   
+    </fieldset>
+    
+    </div><!-- /content -->
+
+
+    
+</div><!-- /page modal -->
+{% endblock %}
+
+
 {% block javascript %}
     <script type="text/javascript">
-        var recipient_pk = {{ item.owner.pk }}
+        var recipient_pk = {{ thread.other_person.id }}
         var post_pk = {{ item.pk }}
         var csrfmiddlewaretoken = "{{ csrf_token }}";
         var view_thread = true;

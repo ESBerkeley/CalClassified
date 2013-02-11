@@ -24,7 +24,7 @@ function search(pageNum){
                    for (index in data) {
                        var entry = data[index];
                        browseHtml += "<li><a href='/"+entry['pk']+"' rel='external'>"
-                       browseHtml += "<img src='" + entry['fields']['cached_thumb'] + "' />"
+                       browseHtml += "<img src='" + entry['fields']['cached_thumb'] + "' style='max-height: 100%;'/>"
                        browseHtml += "<h3>" + entry['fields']['title'] + "</h3>"
                        browseHtml += "<p>$" + entry['fields']['price'] + "</p></a></li>"
                    }
@@ -151,8 +151,8 @@ $("#modal-send").click(function(){
             if (view_thread == false){
                 alert("Message Sent!");
             }
-            refreshPage();
-
+            //refreshPage();
+            location.reload(true);
         }
 
     })

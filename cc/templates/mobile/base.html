@@ -10,6 +10,14 @@
     <link href="{% get_static_prefix %}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
 
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script language="text/javascript">
+    // disable ajax in jqm 
+    $(document).bind("mobileinit", function () {
+        $.mobile.ajaxEnabled = false;
+        $.mobile.ajaxLinksEnabled(false);
+    });
+    </script>
+    
     <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
     <!-- script src="{% get_static_prefix %}/mobile/jquery.mobile-1.2.0.js"></script -->
     <link rel="shortcut icon" href="{% get_static_prefix %}1255.ico">
@@ -55,19 +63,20 @@
 <div data-role="header" data-theme="c">
     <div data-role="navbar">
 		<ul>
-            <li style="width:30%;"><img src="/static/124ta-beta.png" alt="Buy Near Me" id="nav-logo"></li>
-			<li style="width:30%;"><a href="{% url browse %}" class="font-400">Browse</a></li>
-			<li style="width:30%;"><a href="{% url sell %}" class="font-400">Sell</a></li>
-			<li style="width:10%;"><a id="flip"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
+			<li style="width:33%;"><a href="{% url browse %}" class="font-400">Browse</a></li>
+			<li style="width:33%;"><a href="{% url sell %}" class="font-400">Sell</a></li>
+			<li style="width:34%;"><a id="flip"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
 		</ul>
 	</div><!-- /navbar -->
 </div>
 
 <div id="panel">
     {% if request.user.is_authenticated %}
+    <div class="panel-item"><a href="{% url notifications %}">Notifications</a></div>
+    <div class="border" style="border-top-color:#474747"></div>
     <div class="panel-item"><a href="{% url my_items %}">My Items</a></div>
     <div class="border" style="border-top-color:#474747"></div>
-    <div class="panel-item"><a href="{% url view_messages %}">What I'm Buying</a></div>
+    <div class="panel-item"><a href="{% url buying %}">What I'm Buying</a></div>
     <div class="border" style="border-top-color:#474747"></div>
     <div class="panel-item"><a href="/logout">Logout</a></div>
     {% else %}
@@ -85,7 +94,7 @@
                 <li><a href="{% url browse %}" id="footer-browse">Browse</a></li>
                 <li><a href="{% url sell %}">Sell</a></li>
                 <li><a href="{% url my_items %}">My Items</a></li>
-                <li><a href="{% url view_messages %}">Messages</a></li>
+                <li><a href="">Messages</a></li>
             </ul>
         </div>
     </div>-->

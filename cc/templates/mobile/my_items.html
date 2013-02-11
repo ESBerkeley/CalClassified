@@ -4,7 +4,16 @@
 {% block header_title %}My Items{% endblock %}
 {% block body_content %}
     <div>
-        <h2>My Items</h2>
+        <center><h2 style="font-weight: 400; margin: 8px;">My Items</h2></center>
+        
+        {% if not my_threads and not ifs_waiting_list %}
+            <center>
+            <p>
+            You aren't selling anything :(
+            </p>
+            </center>
+        {% endif %}
+        
         {% if my_threads %}
         <div id="table-title">
             <center><h3>Being Purchased</h3></center>
@@ -13,10 +22,13 @@
                 {% for thread in my_threads %}
 
                 <li>
-                <a href="{{ thread.post.get_absolute_url }}" rel="external">
-                    <img src="{{ thread.post.cached_thumb }}" />
+                <a href="{{ thread.get_mobile_url }}" rel="external">
+                    <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;"/>
                     <h3>
                         {{ thread.post_title }}
+                        {% if not thread.is_read %}
+                        (Unread)
+                        {% endif %}
                     </h3>
                     <p>With: <b>{{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</b></p>
                 </a>
@@ -35,7 +47,7 @@
 
                 <li>
                 <a href="{{ item.get_absolute_url }}" rel="external">
-                    <img src="{{ item.cached_thumb }}" />
+                    <img src="{{ item.cached_thumb }}" style="max-height: 100%;"/>
                     <h3>
                         {{ item.title }}
                     </h3>
