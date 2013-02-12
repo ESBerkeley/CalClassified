@@ -79,8 +79,8 @@ h4 {
     margin: 0 10px 0 10px;
 }
 
-#panel {
-
+.panel {
+    display:none;
     background-image: url("/static/low_contrast_linen.png");
 }
 
@@ -91,7 +91,7 @@ h4 {
     font-size:14px;
 }
 
-#panel a {
+#panel-id a {
     text-decoration:none;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 300;
