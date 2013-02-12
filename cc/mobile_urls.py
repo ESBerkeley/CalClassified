@@ -13,8 +13,10 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^sell/$',"sell", name="sell"),
     url(r'^features',"features", name="features"),
     url(r'^my_items/$',"my_items", name="my_items"),
+    url(r'^buying/$',"buying", name="buying"),
     url(r'^(?P<pid>\d+)$','view_item'),
-    url(r'^dialog/message_sent/$','message_sent', name="message_sent"),
+    url(r'^notifications/$','notifications', name="notifications"),
+    url(r'^dialog/message_sent/$','message_sent', name="message_sent"), #i dont think its used atm
 
     url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/home.html'},name='auth_login'),
 
@@ -27,8 +29,10 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^ajax/send_message/$',"ajax_message_send", name="ajax_message_send"),
 
     #ACCOUNT URLS
-    url(r'^view_messages/$',"view_messages", name="view_messages"),
+    #url(r'^view_messages/$',"view_messages", name="view_messages"),
     url(r'^view_messages/(?P<thread_id>\d+)/$',"view_thread"),
+    
+    url(r'^admin/', include(admin.site.urls)),
 
                         ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

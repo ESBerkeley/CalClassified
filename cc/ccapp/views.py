@@ -1,6 +1,6 @@
 from ccapp.models import *
 from ccapp.signals import *
-from ccapp.utils import *
+from utils import *
 from ccapp.forms import EmailForm, FeedbackForm
 
 from django.contrib.auth.decorators import login_required
@@ -402,6 +402,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 #model.circles = circleQuery
                 model.circles = user_profile.my_circles.all()
                 model.save()
+                model.get_thumbnail_url() #generrate thumbnail
 
                 #MULTIUPLOADER
                 #for image in images:
@@ -632,66 +633,7 @@ def modify_post(request):
 def ajax_contact_seller(request):
     if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
 
-        #send_bnm_message(request)
-
-        body = request.POST['message']
-        recipient_pk = request.POST['recipient_pk']
-        post_pk = request.POST['post_pk']
-        post = ItemForSale.objects.get(id=int(post_pk))
-        sender = request.user
-        recipient = User.objects.get(id=int(recipient_pk))
-
-        if post.pending_flag:
-            if request.user not in [post.owner, post.pending_buyer]:
-                
-                return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username) #crap someone else got it before you, sorrym8
-
-        else:
-            post.pending_buyer = request.user
-            post.pending_flag = True
-            post.save()
-        
-        
-        message = Message()
-        message.body = body
-        message.post_title = post.title
-        message.sender = sender
-        message.recipient = recipient
-        message.save()
-
-        first_message = False        
-
-        #Create 2 Threads for both ends
-        try: #see if thread exists, if not create it
-            thread1 = Thread.objects.get(owner=sender, other_person=recipient, post_title=post.title, post_id=post_pk)
-        except:
-            thread1 = Thread.objects.create(owner=sender, other_person=recipient, post_title=post.title, post_id=post_pk)
-            first_message = True
-        try: #see if thread exists, if not create it
-            thread2 = Thread.objects.get(owner=recipient,other_person=sender, post_title=post.title, post_id=post_pk)
-        except:
-            thread2 = Thread.objects.create(owner=recipient,other_person=sender, post_title=post.title, post_id=post_pk)
-
-        if first_message:
-            buy_button_signal.send(sender=ItemForSale, instance=post, message=message)
-
-        else:
-            if request.user == post.owner: #sending a message to a buyer
-                message_to_buyer_signal.send(sender=ItemForSale, instance=post, message=message)
-            else:   #sending a message to a seller
-                message_to_seller_signal.send(sender=ItemForSale, instance=post, message=message)
-
-        thread1.messages.add(message)
-        thread2.messages.add(message)
-        thread1.newest_message_time = message.time_created
-        thread2.newest_message_time = message.time_created
-        thread2.is_read = False
-        thread1.save()
-        thread2.save()
-        
-        rec_profile = recipient.get_profile()	
-        rec_profile.notifications += 1
-        rec_profile.save()
+        send_bnm_message(request)#in utils.py
 
         # send_mail(post.title+" Response - "+recipient_name, post.body, 'noreply@buynear.me', [recipient.email])
         return HttpResponse("success")
@@ -1175,9 +1117,6 @@ def profile_selling(request):
     selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
 
     #sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)] #unused?? -seung
-
-    my_threads = Thread.objects.filter(owner=user, post_id__in=selling_ids).order_by('is_read','-newest_message_time','-timestamp')
-
 
     ifs_waiting_list = ItemForSale.objects.filter(owner=request.user, pending_flag=False, deleted=False).order_by('-time_created')
     ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True, deleted=False).order_by('-time_created')

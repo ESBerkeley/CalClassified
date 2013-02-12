@@ -91,7 +91,7 @@ class ItemForSale(Post):
     circles = models.ManyToManyField(Circle)
     cached_thumb = models.CharField(max_length=200, default = '')
 
-    pending_buyer = models.ForeignKey(User, null=True, default=None, related_name='buyer')
+    pending_buyer = models.ForeignKey(User, null=True, default=None,  related_name='buyer')
     pending_flag = models.BooleanField(default = False)
     sold = models.BooleanField(default = False)
 
@@ -283,6 +283,8 @@ class Thread(models.Model):
     newest_message_time = models.DateTimeField(null=True)
     def get_absolute_url(self):
         return '/accounts/profile/messages/%i' % self.id
+    def get_mobile_url(self):
+        return '/view_messages/%i/' % self.id
 
 class CaseInsensitiveModelBackend(ModelBackend):
     """

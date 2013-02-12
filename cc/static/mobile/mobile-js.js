@@ -24,7 +24,7 @@ function search(pageNum){
                    for (index in data) {
                        var entry = data[index];
                        browseHtml += "<li><a href='/"+entry['pk']+"' rel='external'>"
-                       browseHtml += "<img src='" + entry['fields']['cached_thumb'] + "' />"
+                       browseHtml += "<img src='" + entry['fields']['cached_thumb'] + "' style='max-height: 100%;'/>"
                        browseHtml += "<h3>" + entry['fields']['title'] + "</h3>"
                        browseHtml += "<p>$" + entry['fields']['price'] + "</p></a></li>"
                    }
@@ -94,6 +94,65 @@ $("#message-form").submit(function(event){
                 }
                 refreshPage();
 
+        }
+
+    })
+
+    return false;
+
+})
+
+$("#modal-send").click(function(){
+
+    if ($("#message-text").val() == "") {
+        $("#no-modal-msg").show();
+        return;
+    }
+
+    $('#modal-send').button('disable');
+
+    $.mobile.loading( 'show', {
+        text: 'Sending Message...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+    });
+
+    data = {}
+    data['recipient_pk'] = recipient_pk
+    data['post_pk'] = post_pk
+    data['message'] = $("#message-text").val();
+    data['csrfmiddlewaretoken'] = csrfmiddlewaretoken;
+
+    $.ajax({
+        type: "POST",
+        url: "/ajax/send_message/",
+        data: data,
+        success: function(data){
+
+        },
+        error: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+            alert("Oops! Something went wrong. Please contact support.")
+
+        },
+        success: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+            if (view_thread == false){
+                alert("Message Sent!");
+            }
+            //refreshPage();
+            location.reload(true);
         }
 
     })

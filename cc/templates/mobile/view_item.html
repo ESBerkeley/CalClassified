@@ -9,7 +9,16 @@
 
 {% block body_content %}
 
-<h2 style="padding: 0 3% 0 3%; margin-bottom: 0; text-align: center; font-weight: 400;">{{ item.title }}</h2>
+<h2 style="padding: 0 3% 0 3%; margin-bottom: 0; text-align: center; font-weight: 400;">{{ item.title }}
+          {% if item.sold %}
+              <span style="color:red;">(This item has been sold)</span>
+          {% elif item.pending_flag %}
+              {% if thread %}
+                  <span style="color: red">(You are purchasing this item)</span>
+              {% else %}
+                  <span style="color:red;">(This item is being purchased)</span>
+              {% endif %}
+          {% endif %}</h2>
 
 <div id="Gallery">
     {% if post.is_facebook_post %}
@@ -33,9 +42,9 @@
     </div>
 
     <div id="item-details">
-    <h3>Item Details</h3>
+    <!--h3>Item Details</h3-->
 
-    <h4>Price: <span class="item-details-span" style="color: #2e8b57;">$ {{ item.price }}</span></h4>
+    <h4 class="push-up">Price: <span class="item-details-span" style="color: #2e8b57;">$ {{ item.price }}</span></h4>
 
     <h4 class="push-up">
         Seller:
@@ -63,7 +72,8 @@
 
     </div>
 
-    {% if request.user.is_authenticated %}
+
+    <!--
     <br>
 
     <label style="padding: 3%;">Send a message to the owner:</label>
@@ -73,11 +83,69 @@
     <textarea id="message-text" name="message"></textarea>
     <input type="submit" value="Send Message" data-theme="b"/>
     </form>
-    {% else %}
-        <a href="/?next={{ item.get_absolute_url }}" data-role="button">Login to Buy/Contact</a>
-    {% endif %}
+    -->
+
+    
+    {% if request.user.is_authenticated %}
+        <center>
+          {% if item.sold %}
+            {% if item.pending_buyer == request.user %}
+
+              You bought this item! Hooray!
+            {% else %}
+
+              This item has been sold and is no longer listed.
+            {% endif %}
+          {% elif item.pending_flag %}
+              {% if thread %}
+                <a href="{{ thread.get_mobile_url }}" data-role="button">View Messages</a>
+              {% else %}
+
+                This item is being purchased and is no longer listed.
+              {% endif %}
+          {% elif item.owner != request.user %}
+                <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Buy Now</a> 
+          {% endif %}
+          </center>
+      {% else %}
+        <a href="/?next={{ item.get_absolute_url }}" data-role="button">Login to Buy</a>
+   {% endif %}
+   <br>
+    
 
 
+{% endblock %}
+
+{% block after_page %}
+<!-- modal -->
+<div data-role="page" id="modal">
+
+    <script type="text/javascript" src="{{ STATIC_URL }}mobile/mobile-js.js"></script>
+
+    
+    <div data-role="header">
+        <h1>Buy Now</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">    
+        <p>Send a message to the seller to hash out the details of your purchase, such as when and where you want to meet up!</p>
+        <textarea id="message-text" placeholder="Can you meet at Dwinelle this Friday at 12pm? Thanks!"></textarea>
+        
+        <p id="no-modal-msg" style="color:red; display: none;">Please enter a message</p>
+        
+        <p><b>Note:</b> Once you buy the product, this item will no longer be listed. So please buy accordingly!</p>      
+    
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a"><a href="{{ item.get_absolute_url }}" data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+        <div class="ui-block-b"><button id="modal-send" data-theme="b">Buy</button></div>	   
+    </fieldset>
+    
+    </div><!-- /content -->
+
+
+    
+</div><!-- /page modal -->
 {% endblock %}
 
 {% block javascript %}
@@ -86,7 +154,7 @@
 
 
     <script type="text/javascript">
-
+    $("#IDME").click(function(){ alert("ASD") });
 
 
         //$(document).bind('pageinit', function(){

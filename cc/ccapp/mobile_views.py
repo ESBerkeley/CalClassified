@@ -33,7 +33,7 @@ RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 def home(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('view_messages'))
+        return HttpResponseRedirect(reverse('my_items'))
     else:
         data = {}
         if "next" in request.GET:
@@ -46,7 +46,12 @@ def features(request):
 def browse(request):
     data = {}
     data['categories'] = Category.objects.all()
-    data['max_price'] = int(ceil(ItemForSale.objects.aggregate(Max('price'))['price__max']))
+    max_price = ItemForSale.objects.aggregate(Max('price'))['price__max']
+    if max_price is None:
+        max_price = 0
+    else:
+        max_price = ceil(float(max_price))
+    data['max_price'] = max_price
     return render_to_response('mobile/browse.html',data,context_instance = RequestContext(request))
 
 @login_required
@@ -83,6 +88,7 @@ def sell(request):
             circleQuery = Circle.objects.filter(name="Berkeley")
             model.circles = circleQuery
             model.save()
+            model.get_thumbnail_url() #generate thumbnail
 
             post_created_signal.send(sender = ItemForSale, instance = model)
 
@@ -107,7 +113,12 @@ def ajax_browse(request):
             checked_categories.append(category.id)
 
     min_price = 0
-    max_price = float(ItemForSale.objects.aggregate(Max('price'))['price__max'])
+    max_price = ItemForSale.objects.aggregate(Max('price'))['price__max']
+    if max_price is None:
+        max_price = 0
+    else:
+        max_price = float(max_price)
+        
     if ('max_price' in request.GET) and request.GET['max_price'].strip() and float(request.GET['max_price'])>= 0:
         max_price = float(request.GET['max_price'])
     if ('min_price' in request.GET) and request.GET['min_price'].strip() and float(request.GET['min_price'])>= 0:
@@ -128,9 +139,22 @@ def ajax_browse(request):
 
     if ('searchText' in request.GET) and request.GET['searchText'].strip():
         query_string = request.GET['searchText']
-        found_entries = SearchQuerySet().filter_or(text=query_string,category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
+        found_entries = SearchQuerySet().filter_or(
+            text=query_string,
+            category__in=checked_categories,
+            approved=True,
+            sold=False,
+            pending_flag=False,
+            deleted=False,
+            price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
     else:
-        found_entries = SearchQuerySet().filter_or(category__in=checked_categories,price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
+        found_entries = SearchQuerySet().filter_or(
+            category__in=checked_categories,
+            approved=True,
+            sold=False,
+            pending_flag=False,
+            deleted=False,
+            price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
 
     list_entries = []
     for entry in found_entries:
@@ -141,27 +165,99 @@ def ajax_browse(request):
 
 @login_required
 def my_items(request):
+
+    #bookmarks = user_profile.bookmarks.all().order_by('-time_created')
+    
+    data = {}
     user = request.user
-    items = ItemForSale.objects.filter(owner=user).order_by('-time_created')
+
+    selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
+
+    #sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)] #unused?? -seung
+
+    ifs_waiting_list = ItemForSale.objects.filter(owner=request.user, pending_flag=False, deleted=False).order_by('-time_created')
+    ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True, deleted=False).order_by('-time_created')
+
+    unsold_ids = [x.id for x in ifs_waiting_list]
+
+    my_threads = Thread.objects.filter(owner=user,post_id__in=selling_ids).exclude(post_id__in=unsold_ids).order_by('is_read','-newest_message_time')  
+    
+    for thread in my_threads:
+        try:
+            ifs = ItemForSale.objects.get(id=thread.post_id)
+            thread.post = ifs
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    data['my_threads'] = my_threads                #pending (need to exclude unsold threads)
+    data['ifs_waiting_list'] = ifs_waiting_list    #unsold
+    data['ifs_sold'] = ifs_sold                    #sold
+    
     user_profile = user.get_profile()
-    bookmarks = user_profile.bookmarks.all().order_by('-time_created')
+    user_profile.notifications = 0
+    user_profile.save()
+    
     return render_to_response('mobile/my_items.html',
-        {'items':items, 'bookmarks':bookmarks},
+        data,
         context_instance=RequestContext(request))
+        
+@login_required
+def buying(request):
+    data = {}
+    user = request.user
+
+    pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=False)]
+    completed_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=True)]
+
+    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time','-timestamp')
+
+    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
+
+    for thread in my_threads:
+        try:
+            ifs = ItemForSale.objects.get(id=thread.post_id)
+            thread.post = ifs
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    for thread in completed_threads:
+        try:
+            ItemForSale.objects.get(id=thread.post_id)
+        except:
+            thread.post_deleted = True
+            thread.save()
+
+    data['my_threads'] = my_threads
+    data['completed_threads'] = completed_threads
+    
+    user_profile = user.get_profile()
+    user_profile.notifications = 0
+    user_profile.save()
+    return render_to_response('mobile/buying.html',data,context_instance=RequestContext(request))
 
 def view_item(request,pid):
     if request.method == "GET":
         item = ItemForSale.objects.get(id = pid)
+        if item.deleted:
+            data = {}
+            data['message'] = "The item you are looking for has been deleted."
+            return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+        
         image_set = item.get_image_set_urls()
         data = {}
         data['item'] = item
         data['image_set'] = image_set
+        
+        if item.pending_flag and item.pending_buyer == request.user:
+            thread = Thread.objects.filter(owner=request.user, other_person=item.owner, post_id=item.id)
+            if thread:
+                data['thread'] = thread[0]
+        
         return render_to_response("mobile/view_item.html",data,context_instance = RequestContext(request))
-    else:
-        if request.is_ajax() and request.user.is_authenticated() and "message" in request.POST:
-            send_bnm_message(request) # in utils.py
-
-            return HttpResponse()
+    
+   
 
 def ajax_message_send(request):
     if request.is_ajax() and request.user.is_authenticated() and request.method=="POST" and "message" in request.POST:
@@ -196,6 +292,8 @@ def view_messages(request):
 @login_required
 def view_thread(request,thread_id):
     thread = Thread.objects.get(id = thread_id)
+    if thread.owner != request.user:
+        return redirect('/')
 
     try:
         item = ItemForSale.objects.get(id=thread.post_id)
@@ -207,3 +305,8 @@ def view_thread(request,thread_id):
     thread.is_read = True
     thread.save()
     return render_to_response('mobile/view_thread.html',data,context_instance=RequestContext(request))
+    
+@login_required
+def notifications(request):
+    data = {}
+    return render_to_response('mobile/notifications.html',data,context_instance=RequestContext(request))
