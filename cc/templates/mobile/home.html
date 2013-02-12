@@ -1,10 +1,11 @@
 {% extends "mobile/base.html" %}
 
 {% block body_content %}
-<!--<div id="home-logo" data-inset="true">
-        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 40px;"></center>
+<div>
+<div id="home-logo" data-inset="true">
+        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 37px;"></center>
         <center><h2 style="font-size:15px; margin-top:5px;"> Buy and Sell Your Things</h2></center>
-</div>-->
+</div>
 
     {% if next %}
     <p style="color:red; font-size:13px; margin-top:0px; margin-bottom:5px; text-align: center;">Please log in to continue.</p>
@@ -58,13 +59,12 @@
 
         {% endif %}
     </div>
-
+</div>
 {% endblock %}
 
 {% block javascript %}
 
 <script type="text/javascript">
-
     $("#body-page").live("pageinit", function(event){
         // THIS IS HOW TO DO DOCUMENT READY
         {% if form.errors %}

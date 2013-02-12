@@ -80,7 +80,7 @@
     <div class="border" style="border-top-color:#474747"></div>
     <div class="panel-item"><a href="/logout">Logout</a></div>
     {% else %}
-    <div class="panel-item"><a href="{% url home %}">Login</a></div>
+    <div class="panel-item"><a style="cursor: pointer;" onclick="window.location.href='{% url home %}';">Login</a></div>
     {% endif %}
 </div>
 
@@ -102,7 +102,7 @@
     <script type="text/javascript">
         $("#body-page").die("pageinit");
         $("#body-page").live("pageinit", function(event){
-            $(".flipclass").click(function() {
+            $(".flipclass").tap(function() {
                 $(".panel").slideToggle("slow");
             });
         });
