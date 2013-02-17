@@ -20,20 +20,17 @@ label.error {
 <div id="signup-container" class="container">
   <div id="signup-box" class="span12">
 
-  
   <div class="small-title">
     <h2> Sell Item</h2>
   </div>
     
-  
   <div class="small-body">
   {% if no_circles %}
   <p style="color:red">
       You haven't named your <a href="{% url account_circles %}">location</a> yet so you can't sell anything!<br><br>
-
   </p>
   {% endif %}
-  <form action="."  method="post" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+  <form action="."  method="POST" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
   <div id="fields form">
     {% for field in form %}
     
@@ -96,7 +93,6 @@ label.error {
   
   </div>
 </div>
-    
 {% endblock %}
 
 {% block post_js %}
@@ -182,7 +178,6 @@ $(document).ready(function(){
           $(".after-image").append(max_images)
       }
     })
-  
 </script>
 {% endblock %}
 

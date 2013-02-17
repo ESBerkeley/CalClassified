@@ -18,21 +18,13 @@
 {% endblock %}
 
 {% block head %}
-
-
-
-  <style type="text/css">
-    
-  </style>
-
 {% endblock %}
-
-
 
 {% block sidebar %}{% endblock %}
 
     {% block content %} 
     
+    {% comment %} <!--redudant due to modal -->
     {% if new == 1 and request.user == post.owner %}
     <div id="new-post-alert" class="alert alert-block alert-info fade in container">
     <a class="close" data-dismiss="alert" href="#">&times;</a>
@@ -51,6 +43,7 @@
         </p>
     </div>
     {% endif %}
+    {% endcomment %}
     
     <div id="post-container" class="container">
     
@@ -90,8 +83,6 @@
         </div>
       </div>
 
-
-
       <!-- this modal activates when message is sent -->
       <div class="modal fade hide" id="success-modal">
         <div class="modal-header">
@@ -106,7 +97,6 @@
         </div>
       </div>
           
-    
       <div class="span8" style="padding-right:25px;">
         <div class="span8">
           
@@ -162,16 +152,6 @@
                   <li> {{ post.time_created.date }}</li>
                   <li class="nav-header"><h2>Category:</h2></li>
                   <li> {{ post.category.name }}</li>
-
-                  <!--
-                  <li class="nav-header"><h2>Posted In:</h2></li>
-                  {% for circle in post.circles.all %}
-                      {% if circle.is_public or circle in request.user.get_profile.my_circles.all %}
-                          <li>{{ circle }}</li>
-                      {% endif %}
-                  {% endfor %}
-                  -->
-
               </ul>
           </div><!--/.well -->
 
@@ -326,6 +306,22 @@
   </div><!--sidebar-container-->
   
 </div>
+
+<!--sharing modal -->
+<div id="sellModal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Almost there</h3>
+  </div>
+  <div class="modal-body">
+    <p>Hey there handsome! We've already posted your item for you. If you want, we can also FB? CRAIGSLIST? post here. You can also do this later from your accounts page. </p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Not Now</a>
+    <a href="#" method="" class="btn btn-primary">Share</a>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block pre_js %}
@@ -413,15 +409,18 @@ $(document).ready( function() {
         $('#id_seller_response').focus();
     });
 
-$.cookie('onpost',null); 
-  $.cookie('onpost','t', { expires: 1, path: '/' } );
+    $.cookie('onpost',null); 
+    $.cookie('onpost','t', { expires: 1, path: '/' } );
 
-{% if not is_bookmarked %}
-    //toggler("bookmark-icon")
-      $("#active-bookmark").show()
-      $("#not-active-bookmark").hide()
-{% endif %}
+    {% if not is_bookmarked %}
+        //toggler("bookmark-icon")
+        $("#active-bookmark").show()
+        $("#not-active-bookmark").hide()
+    {% endif %}
 
+    {% if new == 1 and request.user == post.owner %}
+        $('#sellModal').modal('show');
+    {% endif %}
 })
 </script>
 
