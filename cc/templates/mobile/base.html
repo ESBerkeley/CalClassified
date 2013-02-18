@@ -74,7 +74,7 @@
     {% if request.user.is_authenticated %}
     <div class="panel-item"><a href="{% url notifications %}">Notifications</a></div>
     <div class="border" style="border-top-color:#474747"></div>
-    <div class="panel-item"><a href="{% url my_items %}">My Items</a></div>
+    <div class="panel-item"><a href="{% url my_items %}">What I'm Selling</a></div>
     <div class="border" style="border-top-color:#474747"></div>
     <div class="panel-item"><a href="{% url buying %}">What I'm Buying</a></div>
     <div class="border" style="border-top-color:#474747"></div>
@@ -112,10 +112,11 @@
 
     {% include 'django_facebook/_facebook_js.html' %}
 
-    <script type="text/javascript" src="{% get_static_prefix %}mobile/mobile-js.js"></script>   <!-- jquery site says to put this last after any custom js-->
-
 </div><!-- /page -->
 {% endblock %}
 {% block after_page %}{% endblock %}
+
+    <script type="text/javascript" src="{% get_static_prefix %}mobile/mobile-js.js"></script>   <!-- jquery site says to put this last after any custom js-->
+
 </body>
 </html>
