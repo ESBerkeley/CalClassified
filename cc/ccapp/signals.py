@@ -91,27 +91,28 @@ def comment_save_hndlr(sender, **kwargs):
         item = comment.item
         seller = item.owner.get_profile()
         commenter = comment.sender.get_profile()
-        
-        new_note = Notification(post_from=item, going_to=seller, type=1)
-        new_note.second_party = commenter
-        new_note.save()
-        seller.friend_notifications += 1
-        seller.save()
-        if seller.comments_email:
-            try:
-                send_templated_mail(
-                    template_name='user_comment',
-                    from_email='noreply@buynear.me',
-                    recipient_list=[seller.user.email],
-                    context={
-                        'message':comment.body,
-                        'commenter':commenter.user.get_full_name(),
-                        'post':item,
-                        'seller':seller.user.get_full_name(),
-                        },
-                )
-            except:
-                pass
+        if seller != commenter: #if you comment on your own item, dont notify
+            
+            new_note = Notification(post_from=item, going_to=seller, type=1)
+            new_note.second_party = commenter
+            new_note.save()
+            seller.friend_notifications += 1
+            seller.save()
+            if seller.comments_email:
+                try:
+                    send_templated_mail(
+                        template_name='user_comment',
+                        from_email='noreply@buynear.me',
+                        recipient_list=[seller.user.email],
+                        context={
+                            'message':comment.body,
+                            'commenter':commenter.user.get_full_name(),
+                            'post':item,
+                            'seller':seller.user.get_full_name(),
+                            },
+                    )
+                except:
+                    pass
 
     return
 
@@ -159,10 +160,12 @@ def buy_button_hndlr(sender, **kwargs):
 
         new_note = Notification(post_from = item, going_to = seller, type = 3)
         new_note.second_party = buyer
-        new_note.save()
+        
         seller.friend_notifications += 1
         seller.save()
-        thread = Thread.objects.get(owner=seller.user, post_id=item.id)
+        thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person=buyer.user)
+        new_note.thread_id = thread.id
+        new_note.save()
         try:
             send_templated_mail(
                 template_name='buy_item',
@@ -247,7 +250,7 @@ def message_to_seller_hndlr(sender, **kwargs):
         message = kwargs['message']
         new_note = Notification(post_from=item, going_to=seller, type=6)
         new_note.second_party = buyer
-        thread = Thread.objects.get(owner=seller.user, post_id=item.id)
+        thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person = buyer.user)
         new_note.thread_id = thread.id
         new_note.save()
         seller.friend_notifications += 1
@@ -274,14 +277,15 @@ def message_to_seller_hndlr(sender, **kwargs):
 
 
 def message_to_buyer_hndlr(sender, **kwargs):
-    ''''notify the seller that the buyer has sent him a message'''
+    ''''notify the buyer that the seller has sent him a message'''
     if sender == ItemForSale:
         item = kwargs['instance']
         seller = item.owner.get_profile()
         buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
         new_note = Notification(post_from=item, going_to=buyer, type=7)
-        thread = Thread.objects.get(owner=buyer.user, post_id=item.id)
+        new_note.second_party = seller
+        thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)
         new_note.thread_id = thread.id
         new_note.save()
         buyer.friend_notifications += 1

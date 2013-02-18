@@ -4,9 +4,9 @@
 {% block header_title %}Messages{% endblock %}
 {% block body_content %}
 
-    <h3 class="source-font" style="text-align: center;">
-        <a href="{{ item.get_absolute_url }}" rel="external">{{ thread.post_title }}</a>
-        - {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</h3>
+    <h3 class="source-font" style="text-align: center; margin-bottom: 0;">
+        <a href="{{ item.get_absolute_url }}" rel="external">{{ thread.post_title }}</a></h3>
+    <p style="text-align:center; margin-top:0;">with: {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</p>
 
 
     
@@ -28,15 +28,18 @@
 
     {% endfor %}
 </ul>
+<br>
+<fieldset class="ui-grid-a">
+    <div class="ui-block-a"><a href="#sell-fail-modal" data-rel="dialog" data-role="button" data-theme="c">Sale Failed</a></div>
+    <div class="ui-block-b"><a href="#sell-success-modal" data-rel="dialog" data-role="button" data-theme="c">Sold!</a></div>	   
+</fieldset>
+<center><p style="margin-top: 0"> Tap the buttons to learn more about them! <br>Don't worry you'll be given a confirmation before an action is taken. </p></center>
 
 {% endblock %}
 
 {% block after_page %}
 <!-- modal -->
 <div data-role="page" id="modal">
-
-    <script type="text/javascript" src="{{ STATIC_URL }}mobile/mobile-js.js"></script>
-
     
     <div data-role="header">
         <h1>Reply</h1>
@@ -51,9 +54,57 @@
         
     
     <fieldset class="ui-grid-a">
-        <div class="ui-block-a"><a href="{{ item.get_absolute_url }}" data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+        <div class="ui-block-a"><a data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
         <div class="ui-block-b"><button id="modal-send" data-theme="b">Send</button></div>	   
     </fieldset>
+    
+    </div><!-- /content -->
+
+
+    
+</div><!-- /page modal -->
+
+<!-- sell-fail modal -->
+<div data-role="page" id="sell-fail-modal">
+    
+    <div data-role="header">
+        <h1>Transaction Failed</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">
+        <p>If you did not successfully sell your item or you do not wish to wait for the buyer anymore, please press the Failed Button</p>
+        <br>
+        <b>Your item is no longer viewable to the public unless you claim the transaction has failed!</b>
+    
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><a data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+            <div class="ui-block-b"><a href="{% url item_action %}?action=fail&id={{ item.id }}" data-role="button" data-theme="a">Failed</a></div>	   
+        </fieldset>
+    
+    </div><!-- /content -->
+
+
+    
+</div><!-- /page modal -->
+
+<!-- sell-success modal -->
+<div data-role="page" id="sell-success-modal">
+    
+    <div data-role="header">
+        <h1>Item Sold</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">
+        <p>If you successfully sold your item, please press the Sold Button</p>
+        <br>
+        <b>Your item is no longer viewable to the public while a transcation is happening</b>
+    
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><a data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+            <div class="ui-block-b"><a href="{% url item_action %}?action=sold&id={{ item.id }}" data-role="button" data-theme="a">Sold</a></div>	   
+        </fieldset>
     
     </div><!-- /content -->
 
@@ -66,7 +117,7 @@
 {% block javascript %}
     <script type="text/javascript">
         var recipient_pk = {{ thread.other_person.id }}
-        var post_pk = {{ item.pk }}
+        var post_pk = {{ item.id }}
         var csrfmiddlewaretoken = "{{ csrf_token }}";
         var view_thread = true;
     </script>

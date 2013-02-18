@@ -17,6 +17,8 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^(?P<pid>\d+)$','view_item'),
     url(r'^notifications/$','notifications', name="notifications"),
     url(r'^dialog/message_sent/$','message_sent', name="message_sent"), #i dont think its used atm
+    url(r'^delete_item/(?P<pid>\d+)/$','delete_item', name="delete_item"),
+    url(r'^item_action/$','item_action', name="item_action"), #REQUIRES GET PARAMETERS look at view
 
     url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/home.html'},name='auth_login'),
 
@@ -27,6 +29,9 @@ urlpatterns = patterns('ccapp.mobile_views',
     #AJAX URLS
     url(r'^ajax/browse/$',"ajax_browse", name="ajax_browse"),
     url(r'^ajax/send_message/$',"ajax_message_send", name="ajax_message_send"),
+    url(r'^ajax/send_comment/$', "ajax_send_comment"),
+    url(r'^ajax/reply_comment/$', "ajax_reply_comment"),
+    url(r'^ajax/delete_notifications/$', "ajax_delete_notifications"),
 
     #ACCOUNT URLS
     #url(r'^view_messages/$',"view_messages", name="view_messages"),

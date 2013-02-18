@@ -128,9 +128,7 @@ $("#modal-send").click(function(){
         type: "POST",
         url: "/ajax/send_message/",
         data: data,
-        success: function(data){
 
-        },
         error: function(){
             $.mobile.loading( 'hide', {
                 text: 'foo',
@@ -172,3 +170,164 @@ function refreshPage() {
         }
     );
 }
+
+$("#comment-send").click(function(){
+    send_comment();
+})
+
+function send_comment() {
+    if ($('#comment-text').val()   == "") {
+        $("#no-comment-msg").show();
+        return;
+    }
+    var commentText = $('#comment-txt').val()  
+    $("#comment-send").button('disable');
+
+    $.mobile.loading( 'show', {
+        text: 'Sending...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+    });
+
+    data = {}
+    data['post_pk'] = post_pk;
+    data['commentText'] = commentText;
+    data['csrfmiddlewaretoken'] = csrfmiddlewaretoken;
+
+    $.ajax({
+        type: "POST",
+        url: "/ajax/send_comment/",
+        data: data,
+        cache: false,
+
+        error: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+            alert("Oops! Something went wrong. Please contact support.")
+
+        },
+        success: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+
+            //refreshPage();
+            location.reload(true);
+        }
+
+    })
+
+    return false;
+}
+
+$(".reply-comment-button").click(function(){
+    
+    var commentID = $(this).attr('id');
+    var replyText = $('#reply-comment-'+commentID).val()
+    
+    
+    if (replyText == "") {
+        alert("Please write a message")
+        return;
+    }
+    
+    $(this).button('disable');
+
+    $.mobile.loading( 'show', {
+        text: 'Replying...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+    });
+
+    data = {}
+    data['commentID'] = commentID;
+    data['replyText'] = replyText;
+    data['csrfmiddlewaretoken'] = csrfmiddlewaretoken;
+
+    $.ajax({
+        type: "POST",
+        url: "/ajax/reply_comment/",
+        data: data,
+
+        error: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+            alert("Oops! Something went wrong. Please contact support.")
+
+        },
+        success: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+
+            //refreshPage();
+            location.reload(true);
+        }
+
+    })
+
+    return false;
+    
+})
+
+$("#delete-notif-btn").click(function(){
+    $(this).button('disable');
+
+    $.mobile.loading( 'show', {
+        text: 'Deleting...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+    });
+
+    data = {}
+    data['csrfmiddlewaretoken'] = csrfmiddlewaretoken;
+
+    $.ajax({
+        type: "POST",
+        url: "/ajax/delete_notifications/",
+        data: data,
+
+        error: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+            alert("Oops! Something went wrong. Please contact support.")
+
+        },
+        success: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+
+            //refreshPage();
+            location.reload(true);
+        }
+
+    })
+
+    return false;
+})
+

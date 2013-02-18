@@ -1149,7 +1149,7 @@ def profile_buying(request):
     data = {}
     user = request.user
 
-    pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=False)]
+    pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user, pending_flag=True).filter(sold=False)]
     completed_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=True)]
 
     my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time','-timestamp')

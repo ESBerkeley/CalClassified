@@ -224,7 +224,17 @@ class FacebookPost(ItemForSale):
 
 FacebookFormSet = modelformset_factory(FacebookPost, max_num=0, fields=('title','price','category', 'approved'))
 
-class Notification(models.Model): 
+class Notification(models.Model):
+    """
+    TYPES:
+    1 - notify the seller that someone commented
+    2 - notify the commenter that the seller replied
+    3 - notify the seller that someone clicked buy
+    4 - notify the buyer that the seller has marked the sale complete
+    5 - notify the buyer that the seller has given up on them, and reposted the item
+    6 - notify the seller that the buyer has sent him a message
+    7 - notify the buyer that the seller has sent him a message
+    """
     going_to  = models.ForeignKey('django_facebook.FacebookProfile')
     type = models.IntegerField(default = 0)
     post_from = models.ForeignKey(ItemForSale)

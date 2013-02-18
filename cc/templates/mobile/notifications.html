@@ -1,12 +1,66 @@
 {% extends "mobile/base.html" %}
-
+{% block title %}Notifications{% endblock %}
+{% block header_title %}Notifications{% endblock %}
 {% block body_content %}
-NOTIFICATIONS HALP
-{% endblock %}
+<center><h2 style="font-weight: 400; margin: 8px;">Notifications</h2></center>
+{% if not notifications %}
+<center> You have no notifications. </center>
+
+{% else %}
+<ul data-role="listview">
+{% for note in notifications %}
+    <li >
+    {% if note.type == 1 %} <!--notify the seller that someone commented-->
+        <a href="{{ note.post_from.get_absolute_url }}" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has commented on your item "{{ note.post_from.title }}"</p></a>
+    {% elif note.type == 2 %} <!-- notify the commenter that the seller replied -->
+        <a href="{{ note.post_from.get_absolute_url }}" rel="external"><p style="white-space:normal">The seller has replied to your comment on the item "{{ note.post_from.title }}"</p></a>
+    {% elif note.type == 3 %} <!-- notify the seller that someone clicked buy -->
+        <a href="/view_messages/{{ note.thread_id }}/" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has purchased your item "{{ note.post_from.title }}"</p></a>
+    {% elif note.type == 4 %} <!-- notify the buyer that the seller has marked the sale complete -->
+        <a href="{{ note.post_from.get_absolute_url }}" rel="external"><p style="white-space:normal"><b>{{ note.post_from.owner.get_full_name }}</b> has marked your purchase of "{{ note.post_from.title }}" complete</p></a>
+    {% elif note.type == 5 %} <!--- notify the buyer that the seller has given up on them, and reposted the item -->
+        <a href="{{ note.post_from.get_absolute_url }}" rel="external"><p style="white-space:normal"><b>{{ note.post_from.owner.get_full_name }}</b> has marked your purchase of "{{ note.post_from.title }}" incomplete</p></a>
+    {% elif note.type == 6 %} <!-- notify the seller that the buyer has sent him a message -->
+        <a href="/view_messages/{{ note.thread_id }}/" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has sent you a message about "{{ note.post_from.title }}"</p></a>
+    {% elif note.type == 7 %} <!-- notify the buyer that the seller has sent him a message -->
+        <a href="/view_messages/{{ note.thread_id }}/" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has sent you a message about "{{ note.post_from.title }}"</p></a>
+    {% endif %}
+    </li>
+{% endfor %}
+</ul>
+<br>
+<a href="#delete-notif-modal" data-rel="dialog" data-role="button" data-theme="a">Delete Notifications</a>
+{% endif %}
+
+{% endblock %} <!-- end body_content block -->
 
 {% block javascript %}
-
-
-
+<script type="text/javascript">
+var csrfmiddlewaretoken = "{{ csrf_token }}";
+</script>
 {% endblock %}
 
+{% block after_page %}
+<!-- modal -->
+<div data-role="page" id="delete-notif-modal">
+    
+    <div data-role="header">
+        <h1>Delete Notifications</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">    
+
+        <p>Are you sure you want to delete your notifications? This action is permanent.</p>
+
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a"><a data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+        <div class="ui-block-b"><button id="delete-notif-btn" data-theme="a">Delete</button></div>	   
+    </fieldset>
+    
+    </div><!-- /content -->
+
+
+    
+</div><!-- /page modal -->
+{% endblock %}

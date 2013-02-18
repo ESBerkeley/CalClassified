@@ -8,13 +8,15 @@ def send_bnm_message(request):
     post = ItemForSale.objects.get(id=int(post_pk))
     sender = request.user
     recipient = User.objects.get(id=int(recipient_pk))
-    print(recipient)
+    first_message = False
+    
     if post.pending_flag:
         if request.user not in [post.owner, post.pending_buyer]:
             
             return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username) #crap someone else got it before you, sorrym8
 
     else:
+        first_message = True
         post.pending_buyer = request.user
         post.pending_flag = True
         post.save()
@@ -27,14 +29,14 @@ def send_bnm_message(request):
     message.recipient = recipient
     message.save()
 
-    first_message = False        
+          
 
     #Create 2 Threads for both ends
     try: #see if thread exists, if not create it
         thread1 = Thread.objects.get(owner=sender, other_person=recipient, post_title=post.title, post_id=post.id)
     except:
         thread1 = Thread.objects.create(owner=sender, other_person=recipient, post_title=post.title, post_id=post.id)
-        first_message = True
+        
     try: #see if thread exists, if not create it
         thread2 = Thread.objects.get(owner=recipient,other_person=sender, post_title=post.title, post_id=post.id)
     except:

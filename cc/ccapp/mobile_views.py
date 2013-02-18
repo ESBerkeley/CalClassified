@@ -1,5 +1,5 @@
 from ccapp.models import *
-from ccapp.signals import post_created_signal
+from ccapp.signals import *
 from ccapp.utils import *
 
 from django.contrib.auth.decorators import login_required
@@ -207,7 +207,7 @@ def buying(request):
     data = {}
     user = request.user
 
-    pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=False)]
+    pending_buying_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user,pending_flag=True,sold=False)]
     completed_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=request.user).filter(sold=True)]
 
     my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time','-timestamp')
@@ -254,6 +254,13 @@ def view_item(request,pid):
             thread = Thread.objects.filter(owner=request.user, other_person=item.owner, post_id=item.id)
             if thread:
                 data['thread'] = thread[0]
+        elif item.pending_flag and item.owner == request.user:
+            thread = Thread.objects.filter(owner=item.owner, post_id=item.id)
+            if thread:
+                data['thread'] = thread[0]
+                
+        relevant_comments = Comment.objects.filter(item = item).order_by('time_created')
+        data['comments'] = relevant_comments
         
         return render_to_response("mobile/view_item.html",data,context_instance = RequestContext(request))
     
@@ -308,5 +315,100 @@ def view_thread(request,thread_id):
     
 @login_required
 def notifications(request):
+    """
+    TYPES:
+    1 - notify the seller that someone commented
+    2- notify the commenter that the seller replied
+    3 - notify the seller that someone clicked buy
+    4 - notify the buyer that the seller has marked the sale complete
+    5 - notify the buyer that the seller has given up on them, and reposted the item
+    6 - notify the seller that the buyer has sent him a message
+    7 - notify the buyer that the seller has sent him a message
+    """
+    user_profile = request.user.get_profile()
+    notifications = Notification.objects.filter(going_to = user_profile).order_by('-time_created')
     data = {}
+    data['notifications'] = notifications
     return render_to_response('mobile/notifications.html',data,context_instance=RequestContext(request))
+    
+@login_required
+def delete_item(request,pid):
+    item = ItemForSale.objects.get(id=pid)
+    if item.owner == request.user:
+        item.deleted = True
+        item.save()
+        data = {}
+        data['message'] = 'Your item has been deleted.'
+        Notification.objects.filter(post_from=item).delete()
+        return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+    else: #no permission
+        data = {}
+        data['message'] = "You don't have permission to do that, tsk tsk! >:("
+        return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+        
+@login_required
+def item_action(request):
+    #get request parameters required are
+    # action - sold/fail  (self explanatory)
+    # id - int of item id
+    if "action" in request.GET and "id" in request.GET:
+        data = {}
+        action = request.GET['action']
+        pid = request.GET['id']
+        item = ItemForSale.objects.get(id=pid)
+        if item.owner == request.user:        
+            if action == "sold":
+                item.sold = True
+                item.save()
+                data['title'] = "Transaction Complete"
+                data['message'] = "Success! You have successfully marked your transaction as sold."
+                sale_complete_signal.send(sender = ItemForSale, instance = item)
+            elif action == "fail":
+                repost_signal.send(sender = ItemForSale, instance = item, target = item.pending_buyer.get_profile())
+                item.pending_flag = False
+                item.save()
+                data['title'] = "Transaction Failed"
+                data['message'] = "You have marked the transaction to have failed and the item has been reposted."
+                
+            return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+                
+        else:
+            data = {}
+            data['message'] = "You don't have permission to do that, tsk tsk! >:("
+            return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+            
+            
+@login_required
+def ajax_reply_comment(request):
+    if request.method == "POST":
+        commentID = request.POST['commentID']
+        replyText = request.POST['replyText']
+        comment = Comment.objects.get(id = commentID)
+        if comment.item.owner == request.user:
+            comment.seller_response = replyText
+            comment.save()
+            seller_response_signal.send(sender = Comment, instance = comment)
+            return HttpResponse()
+
+def ajax_send_comment(request):
+    if request.method == "POST" and request.is_ajax():
+        
+        
+        post_pk = request.POST['post_pk']
+        item = ItemForSale.objects.get(id = int(post_pk))
+       
+        commentText = request.POST['commentText']
+        comment = Comment.objects.create(sender=request.user, body=commentText, item=item)
+        new_comment_signal.send(sender = Comment, instance = comment)
+        return HttpResponse()
+        
+def ajax_delete_notifications(request):
+    if request.method == "POST" and request.is_ajax():
+        notifications = Notification.objects.filter(going_to = request.user.get_profile())
+        notifications.delete()
+
+        user_profile = request.user.get_profile()
+        user_profile.friend_notifications = 0
+        user_profile.save()
+        return HttpResponse()
+        

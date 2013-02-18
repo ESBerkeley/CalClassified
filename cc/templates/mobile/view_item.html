@@ -13,7 +13,7 @@
           {% if item.sold %}
               <span style="color:red;">(This item has been sold)</span>
           {% elif item.pending_flag %}
-              {% if thread %}
+              {% if item.pending_buyer == request.user %}
                   <span style="color: red">(You are purchasing this item)</span>
               {% else %}
                   <span style="color:red;">(This item is being purchased)</span>
@@ -69,7 +69,11 @@
     </h4>
 
     <h4 class="push-up">Category: <span class="item-details-span">{{ item.category.name }}</span></h4>
-
+    
+    {% if request.user.is_authenticated and request.user == item.owner and not item.pending_flag %}
+        <a href="#delete-modal" id="delete-btn" data-role="button" data-rel="dialog" data-theme="a">Delete Item</a>
+    {% endif %}
+    
     </div>
 
 
@@ -109,8 +113,51 @@
           </center>
       {% else %}
         <a href="/?next={{ item.get_absolute_url }}" data-role="button">Login to Buy</a>
-   {% endif %}
+    {% endif %}
+    
+    
    <br>
+   
+   <div id="comments-section" style="border-top: 1px solid #bebebe">
+       <h3 style="margin:0; border-bottom: solid #4c4c4c 1px;">Comments</h3>
+       {% if comments %}
+        <ul data-role="listview">
+        {% for comment in comments %}
+          <li style="padding: 0;">
+            {% if comment.seller_response == "" and item.owner == request.user and comment.sender != request.user %}
+            <a href="#comment-modal-{{ comment.id }}" data-rel="dialog" style="padding: 0">
+            {% endif %}
+            
+            <h3>
+            {% if comment.sender == item.owner %}
+                <span style="color:green">[Seller] {{comment.sender.get_full_name }}</span>
+            {% else %} 
+                {{comment.sender.get_full_name }}
+            {% endif %}
+            </h3>
+            <p>"{{comment.body}}"</p>
+            
+            {% if comment.seller_response != "" %}
+              <br>
+              <p style="color:green">Seller Response: "{{ comment.seller_response }}"</p>
+            {% endif %}
+            
+            {% if comment.seller_response == "" and item.owner == request.user and comment.sender != request.user %}
+            <br>
+            <p><b>Tap to respond to commenter!</b></p>
+            </a>
+            {% endif %}
+        </li>
+
+        {% endfor %}
+        </ul>
+        {% else %}
+            <p>No comments currently exist.</p>
+        {% endif %}
+   {% if request.user.is_authenticated %}
+   <a href="#comment-modal" data-role="button" data-rel="dialog">Comment</a>
+   {% endif %}
+   </div><!-- /div id=comments-section -->
     
 
 
@@ -119,10 +166,7 @@
 {% block after_page %}
 <!-- modal -->
 <div data-role="page" id="modal">
-
-    <script type="text/javascript" src="{{ STATIC_URL }}mobile/mobile-js.js"></script>
-
-    
+   
     <div data-role="header">
         <h1>Buy Now</h1>
 
@@ -146,6 +190,84 @@
 
     
 </div><!-- /page modal -->
+
+<!-- delete modal -->
+<div data-role="page" id="delete-modal">
+    
+    <div data-role="header">
+        <h1>Delete</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">    
+        <p>Are you sure you want to delete your item "{{ item.title }}"?</p>  
+    
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a"><a href="{{ item.get_absolute_url }}" data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+        <div class="ui-block-b"><a href="/delete_item/{{ item.id }}/" data-role="button" id="delete-item" data-theme="a">Delete</a></div>	   
+    </fieldset>
+    
+    </div><!-- /content -->
+</div><!-- /page modal -->
+
+<!-- comment modal -->
+<div data-role="page" id="comment-modal">
+
+    
+
+    
+    <div data-role="header">
+        <h1>Comment</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">    
+        <p>Comment on the item "{{ item.title }}".</p>
+        <textarea id="comment-txt"></textarea>
+        
+        <p id="no-comment-msg" style="color:red; display: none;">Please enter a message</p>
+    
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a"><a data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+        <div class="ui-block-b"><button id="comment-send" data-theme="b">Comment</button></div>	   
+    </fieldset>
+    
+    </div><!-- /content -->
+    
+</div><!-- /page modal -->
+
+<!-- comment modals for owner responses -->
+{% for comment in comments %}
+
+    <!-- comment modal -->
+        <div data-role="page" id="comment-modal-{{ comment.id }}">
+
+            
+
+            
+            <div data-role="header">
+                <h1>Reply</h1>
+
+            </div><!-- /header -->
+
+            <div data-role="content" data-theme="d">
+                <p>Reply to <b>{{ comment.sender.get_full_name }}</b>!
+                <br>
+                "{{ comment.body }}"
+                </p>
+                <textarea id="reply-comment-{{ comment.id }}"></textarea>
+            
+                <fieldset class="ui-grid-a">
+                    <div class="ui-block-a"><a data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+                    <div class="ui-block-b"><button id="{{ comment.id }}" class="reply-comment-button" data-theme="b">Reply</button></div>	   
+                </fieldset>
+            
+            </div><!-- /content -->
+            
+        </div><!-- /page modal -->
+
+{% endfor %}
+
 {% endblock %}
 
 {% block javascript %}
@@ -154,7 +276,7 @@
 
 
     <script type="text/javascript">
-    $("#IDME").click(function(){ alert("ASD") });
+
 
 
         //$(document).bind('pageinit', function(){
