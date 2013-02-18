@@ -10,14 +10,6 @@
     <link href="{% get_static_prefix %}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
 
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-    <script language="text/javascript">
-    // disable ajax in jqm 
-    $(document).bind("mobileinit", function () {
-        $.mobile.ajaxEnabled = false;
-        $.mobile.ajaxLinksEnabled(false);
-    });
-    </script>
-    
     <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
     <!-- script src="{% get_static_prefix %}/mobile/jquery.mobile-1.2.0.js"></script -->
     <link rel="shortcut icon" href="{% get_static_prefix %}1255.ico">
@@ -80,7 +72,7 @@
     <div class="border" style="border-top-color:#474747"></div>
     <div class="panel-item"><a href="/logout">Logout</a></div>
     {% else %}
-    <div class="panel-item"><a style="cursor: pointer;" onclick="window.location.href='{% url home %}';">Login</a></div>
+    <div class="panel-item"><a href="{% url home %}">Login</a></div>
     {% endif %}
 </div>
 
@@ -100,6 +92,10 @@
     </div>-->
 
     <script type="text/javascript">
+      $(document).live("mobileinit", function(){
+        $.mobile.ajaxLinksEnabled = false;
+      });
+
         $("#body-page").die("pageinit");
         $("#body-page").live("pageinit", function(event){
             $(".flipclass").tap(function() {

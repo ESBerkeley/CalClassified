@@ -49,8 +49,7 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript">
-
+  <script type="text/javascript">
     var pageNum = 1;
     var preloaded = false;
     $('#body-page').live('pageshow', function () {
@@ -95,5 +94,5 @@
         pageNum += 1;
         search(pageNum);
     })
-    </script>
+  </script>
 {% endblock %}
