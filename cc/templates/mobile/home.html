@@ -65,7 +65,7 @@
 {% block javascript %}
 
 <script type="text/javascript">
-    $("#body-page").live("pageinit", function(event){
+    $('#body-page').live('pageshow', function () {
         // THIS IS HOW TO DO DOCUMENT READY
         {% if form.errors %}
             $("#login-error").show();
