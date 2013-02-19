@@ -96,8 +96,9 @@
         $.mobile.ajaxLinksEnabled = false;
       });
 
-        $("#body-page").die("pageinit");
+        //$("#body-page").die("pageinit");
         $("#body-page").live("pageinit", function(event){
+            $(".flipclass").unbind(‘tap’).bind(‘tap’,handler);
             $(".flipclass").tap(function() {
                 $(".panel").slideToggle(400); //400 is "normal speed" in ms
             });
