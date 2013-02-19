@@ -49,7 +49,7 @@ def register(request):
         #gender = request.POST['gender']
         password = request.POST['password']
         try:
-            # user = authenticate(username=email,password=password)
+            # user = authenticate(username=email,password=password) # This code doesn't work as intended use
             user = User.objects.get(username=email)
             if user.is_active == False: #if user has not yet activated, resend data
                 user.delete()
@@ -59,9 +59,7 @@ def register(request):
             form = FacebookProfileForm(request.POST)
             data['form'] = form
             return render_to_response('registration/registration_form.html',data,context_instance = RequestContext(request))
-        except User.DoesNotExist: #errors if email doesn't exist which is good
-            pass
-        except:
+        except: #errors if email doesn't exist which is good
             pass
 
         new_user = User()
