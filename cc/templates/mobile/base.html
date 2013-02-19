@@ -1,134 +1,84 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>{% load static %}
+  <head>{% load static %}
     <title>{% block title %}Buy Near Me Mobile{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
-    <!--link rel="stylesheet" href="{% get_static_prefix %}mobile/jquery.mobile-1.2.0.css" /-->
     <link href="{% get_static_prefix %}mobile/mobile_style.css" rel="stylesheet">
     <link href="{% get_static_prefix %}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
 
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-    <!-- script src="{% get_static_prefix %}/mobile/jquery.mobile-1.2.0.js"></script -->
     <link rel="shortcut icon" href="{% get_static_prefix %}1255.ico">
-
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,200,400,500,600' rel='stylesheet' type='text/css'>
 
     <!-- ANALYTICS -->
     <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-34571639-1']);
-        _gaq.push(['_trackPageview']);
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34571639-1']);
+      _gaq.push(['_trackPageview']);
 
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
     </script>  <!-- END ANALYTICS -->
-
     {% block end_head %}{% endblock %}
+  </head>
 
-</head>
-
-<body>
-{% block data-role-page %}
-<div id="body-page" data-role="page" data-theme="d" class="div-page">
-
-    <!--<div data-role="header" data-theme="b">
-        {% if request.user.is_authenticated %}
-        <a href="/logout" class="ui-btn-right">Log Out</a>
-        {% else %}
-            <a href="{% url home %}" class="ui-btn-right">Log In</a>
-        {% endif %}
-
-        <h1>{% block header_title %}Buy Near Me{% endblock %}</h1>
-    </div><!-- /header -->
-
-    <!--{% if request.user.is_authenticated %}
-    <a href="/logout" data-role="button" data-inline="true" data-mini="true">Log Out</a>
-    {% endif %}<img src="/static/124ta-beta.png" alt="Buy Near Me" style="height:10px;">-->
-
-
-<div data-role="header" data-theme="c">
-    <div data-role="navbar">
-		<ul>
-			<li style="width:33%;"><a href="{% url browse %}" rel="external" class="font-400">Browse</a></li>
-			<li style="width:33%;"><a href="{% url sell %}" rel="external" class="font-400">Sell</a></li>
-			<li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div>
-
-<div id="panel-id" class="panel">   <!-- both ids and classes are necessary, otherwise jquery implodes -->
-    {% if request.user.is_authenticated %}
-    <div class="panel-item"><a href="{% url notifications %}" rel="external">Notifications</a></div>
-    <div class="border" style="border-top-color:#474747"></div>
-    <div class="panel-item"><a href="{% url my_items %}" rel="external">What I'm Selling</a></div>
-    <div class="border" style="border-top-color:#474747"></div>
-    <div class="panel-item"><a href="{% url buying %}" rel="external">What I'm Buying</a></div>
-    <div class="border" style="border-top-color:#474747"></div>
-    <div class="panel-item"><a href="/logout" rel="external">Logout</a></div>
-    {% else %}
-    <div class="panel-item"><a href="{% url home %}" rel="external">Login</a></div>
-    {% endif %}
-</div>
-
-{% block body_content %}{% endblock %}
-
-    <!--<div data-role="footer" data-tap-toggle="false" data-position="fixed" data-id="foo1" data-theme="a">
+  <body>
+    {% block data-role-page %}
+    <div id="body-page" data-role="page" data-theme="d" class="div-page">
+      <div data-role="header" data-theme="c">
         <div data-role="navbar">
-            <ul>
-                <li><a href="{% url browse %}" id="footer-browse">Browse</a></li>
-                <li><a href="{% url sell %}">Sell</a></li>
-                <li><a href="{% url my_items %}">My Items</a></li>
-                <li><a href="">Messages</a></li>
-            </ul>
-        </div>
-    </div>-->
+          <ul>  
+            <li style="width:33%;"><a href="{% url browse %}" rel="external" class="font-400">Browse</a></li>
+		    <li style="width:33%;"><a href="{% url sell %}" rel="external" class="font-400">Sell</a></li>
+		    <li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
+	      </ul>
+        </div><!-- /navbar -->
+      </div>
 
-</div><!-- /page -->
+      <div id="panel-id" class="panel">   <!-- both ids and classes are necessary, otherwise jquery implodes -->
+        {% if request.user.is_authenticated %}
+        <div class="panel-item"><a href="{% url notifications %}" rel="external">Notifications</a></div>
+        <div class="border" style="border-top-color:#474747"></div>
+        <div class="panel-item"><a href="{% url my_items %}" rel="external">What I'm Selling</a></div>
+        <div class="border" style="border-top-color:#474747"></div>
+        <div class="panel-item"><a href="{% url buying %}" rel="external">What I'm Buying</a></div>
+        <div class="border" style="border-top-color:#474747"></div>
+        <div class="panel-item"><a href="/logout" rel="external">Logout</a></div>
+        {% else %}
+        <div class="panel-item"><a href="{% url home %}" rel="external">Login</a></div>
+        {% endif %}
+      </div>
+
+      {% block body_content %}{% endblock %}
+
+    </div><!-- /page -->
 
     <script type="text/javascript">
-        $("#body-page").die("pageinit");
-        $("#body-page").live("pageinit", function(event){
-            $.mobile.ajaxLinksEnabled = false;
-            //$(".flipclass").unbind(‘tap’).bind(‘tap’,handler);
-            $(".flipclass").tap(function(e) {
-                //if  (isJQMGhostClick(e)) { return; }
-                e.preventDefault();
-                $(".panel").slideToggle(350); //400 is "normal speed" in ms
-                return false;
-            });
-        });
-
-      
-
-      var lastclickpoint, curclickpoint;
-      function isJQMGhostClick(event){
-        curclickpoint = event.clientX+'x'+event.clientY;
-        if (lastclickpoint === curclickpoint) {
-          lastclickpoint = '';
-          return true;
-        } else {
-          //alert(lastclickpoint);
-          lastclickpoint = curclickpoint;
+      $("#body-page").die("pageinit");
+      $("#body-page").live("pageinit", function(event){
+        $.mobile.ajaxLinksEnabled = false;
+        $(".flipclass").tap(function(e) {
+          e.preventDefault();     //disables default function of button; removes blue highlight + stops tap from firing twice
+          $(".panel").slideToggle(350); //400 is "normal speed" in ms
           return false;
-        }
-      }
+        });
+      });
     </script>
 
     {% block javascript %}{% endblock %}
 
     {% include 'django_facebook/_facebook_js.html' %}
 
+    {% endblock %}
 
-{% endblock %}
-{% block after_page %}{% endblock %}
+    {% block after_page %}{% endblock %}
 
     <script type="text/javascript" src="{% get_static_prefix %}mobile/mobile-js.js"></script>   <!-- jquery site says to put this last after any custom js-->
-
-</body>
+  </body>
 </html>
