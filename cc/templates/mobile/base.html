@@ -76,8 +76,6 @@
     {% endif %}
 </div>
 
-
-
 {% block body_content %}{% endblock %}
 
     <!--<div data-role="footer" data-tap-toggle="false" data-position="fixed" data-id="foo1" data-theme="a">
@@ -91,39 +89,42 @@
         </div>
     </div>-->
 
-    <script type="text/javascript">
-      $(document).live("mobileinit", function(){
-        $.mobile.ajaxLinksEnabled = false;
-      });
+</div><!-- /page -->
 
+    <script type="text/javascript">
         $("#body-page").die("pageinit");
         $("#body-page").live("pageinit", function(event){
+            $.mobile.ajaxLinksEnabled = false;
             //$(".flipclass").unbind(‘tap’).bind(‘tap’,handler);
             $(".flipclass").tap(function(e) {
-                if  (isJQMGhostClick(e)) { return; }
-                $(".panel").slideToggle(400); //400 is "normal speed" in ms
+                //if  (isJQMGhostClick(e)) { return; }
+                e.preventDefault();
+                $(".panel").slideToggle(350); //400 is "normal speed" in ms
+                return false;
             });
         });
 
-        var lastclickpoint, curclickpoint;
-        function isJQMGhostClick(event){
-            curclickpoint = event.clientX+'x'+event.clientY;
-            if (lastclickpoint === curclickpoint) {
-                lastclickpoint = '';
-                return true;
-            } else {
-                //alert(lastclickpoint);
-                lastclickpoint = curclickpoint;
-                return false;
-            }
-  }
+      
+
+      var lastclickpoint, curclickpoint;
+      function isJQMGhostClick(event){
+        curclickpoint = event.clientX+'x'+event.clientY;
+        if (lastclickpoint === curclickpoint) {
+          lastclickpoint = '';
+          return true;
+        } else {
+          //alert(lastclickpoint);
+          lastclickpoint = curclickpoint;
+          return false;
+        }
+      }
     </script>
 
     {% block javascript %}{% endblock %}
 
     {% include 'django_facebook/_facebook_js.html' %}
 
-</div><!-- /page -->
+
 {% endblock %}
 {% block after_page %}{% endblock %}
 
