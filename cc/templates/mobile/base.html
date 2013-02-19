@@ -96,15 +96,27 @@
         $.mobile.ajaxLinksEnabled = false;
       });
 
-        //$("#body-page").die("pageinit");
+        $("#body-page").die("pageinit");
         $("#body-page").live("pageinit", function(event){
             //$(".flipclass").unbind(‘tap’).bind(‘tap’,handler);
-            $(function() {
-            $(".flipclass").tap(function() {
+            $(".flipclass").tap(function(e) {
+                if  (isJQMGhostClick(e)) { return; }
                 $(".panel").slideToggle(400); //400 is "normal speed" in ms
             });
-            });
         });
+
+        var lastclickpoint, curclickpoint;
+        function isJQMGhostClick(event){
+            curclickpoint = event.clientX+'x'+event.clientY;
+            if (lastclickpoint === curclickpoint) {
+                lastclickpoint = '';
+                return true;
+            } else {
+                //alert(lastclickpoint);
+                lastclickpoint = curclickpoint;
+                return false;
+            }
+  }
     </script>
 
     {% block javascript %}{% endblock %}
