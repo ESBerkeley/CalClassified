@@ -791,8 +791,8 @@ def ajax_box(request):
 
     checked_circles = map(int,checked_circles)
     checked_categories = map(int, checked_categories)
-    if len(checked_categories) == 11:
-        checked_categories == range(1, 5) + range(6, 12) #take out Facebook Post Category
+    #if len(checked_categories) == 11:
+    #    checked_categories == range(1, 5) + range(6, 12) #take out Facebook Post Category
     
     """ #OLD NON-HAYSTACK SEARCH
     if ('q' in request.GET) and request.GET['q'].strip():
