@@ -98,9 +98,11 @@
 
         //$("#body-page").die("pageinit");
         $("#body-page").live("pageinit", function(event){
-            $(".flipclass").unbind(‘tap’).bind(‘tap’,handler);
+            //$(".flipclass").unbind(‘tap’).bind(‘tap’,handler);
+            $(function() {
             $(".flipclass").tap(function() {
                 $(".panel").slideToggle(400); //400 is "normal speed" in ms
+            });
             });
         });
     </script>
