@@ -52,7 +52,7 @@
           {% if post.sold %}
               <span style="color:red;">(This item has been sold)</span>
           {% elif post.pending_flag %}
-              {% if thread %}
+              {% if thread and request.user != post.owner %}
                   <span style="color: red">(You are purchasing this item)</span>
               {% else %}
                   <span style="color:red;">(This item is being purchased)</span>
@@ -307,7 +307,7 @@
   
 </div>
 
-<!--sharing modal -->
+<!--sharing modal
 <div id="sellModal" class="modal hide fade">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -320,7 +320,7 @@
     <a href="#" class="btn" data-dismiss="modal">Not Now</a>
     <a href="#" method="" class="btn btn-primary">Share</a>
   </div>
-</div>
+</div>-->
 
 {% endblock %}
 

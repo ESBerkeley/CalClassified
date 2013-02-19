@@ -1,4 +1,4 @@
-{% block subject %}BuyNearMe: {% block subj %}{% endblock %}{% endblock %}
+{% block subject %}{% block subj %}{% endblock %}{% endblock %}
 {% block html %}
 <head>
 <style>

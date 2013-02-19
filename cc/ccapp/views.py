@@ -107,6 +107,7 @@ def friendslist(request):
     return render_to_response('friendslist.html',{'items':items},
         context_instance=RequestContext(request))
 
+
 @login_required
 def fb_items(request):
     ''
@@ -228,6 +229,7 @@ def fb_admin(request):
         update_index.Command().handle(using='default', remove=True)
         return render_to_response('fb_admin.html', data, context_instance=RequestContext(request))
 
+
 @login_required
 def fb_import(request):
     if request.method == 'GET':
@@ -287,6 +289,7 @@ def fb_import(request):
 
         return redirect('/accounts/profile/groups/?msg=Groups have been successfully updated!')
 
+
 """@login_required
 def friends(request):
     if request.user.is_authenticated():
@@ -344,7 +347,7 @@ class ThanksView(TemplateView):
         context['message'] = 'We hope you had a great experience, and we hope to make it even better!'
         return context
 
-def confirmview(request,pid,secret,super_cat):
+"""def confirmview(request,pid,secret,super_cat):
     try:
         post = super_cat.objects.get(pk=pid)
         if post.is_confirmed == True:
@@ -362,7 +365,7 @@ def confirmview(request,pid,secret,super_cat):
         return HttpResponse('Post Does Not Exist')
 
 def confirmviewIFS(request,pid,secret):
-    confirmview(request,pid,secret,ItemForSale)
+    confirmview(request,pid,secret,ItemForSale)"""
 
 
 def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
@@ -586,10 +589,15 @@ def showpost(request, pid, super_cat):
         if "new" in request.GET and int(request.GET['new']) == 1:
             ecks['new'] = 1
 
-        if post.pending_flag and post.pending_buyer == request.user:
-            thread = Thread.objects.filter(owner=request.user, other_person=post.owner, post_id=post.id)
-            if thread:
-                ecks['thread'] = thread[0]
+        if post.pending_flag:
+            if post.pending_buyer == request.user:
+                thread = Thread.objects.filter(owner=request.user, other_person=post.owner, post_id=post.id)
+                if thread:
+                    ecks['thread'] = thread[0]
+            if post.owner == request.user:
+                thread = Thread.objects.filter(owner=request.user, other_person=post.pending_buyer, post_id=post.id)
+                if thread:
+                    ecks['thread'] = thread[0]
         ecks['this_is_a_post'] = True
 
             

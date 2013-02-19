@@ -12,8 +12,8 @@ def send_bnm_message(request):
     
     if post.pending_flag:
         if request.user not in [post.owner, post.pending_buyer]:
-            
-            return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username) #crap someone else got it before you, sorrym8
+            return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username)
+            #crap someone else got it before you, sorrym8
 
     else:
         first_message = True
@@ -38,9 +38,9 @@ def send_bnm_message(request):
         thread1 = Thread.objects.create(owner=sender, other_person=recipient, post_title=post.title, post_id=post.id)
         
     try: #see if thread exists, if not create it
-        thread2 = Thread.objects.get(owner=recipient,other_person=sender, post_title=post.title, post_id=post.id)
+        thread2 = Thread.objects.get(owner=recipient, other_person=sender, post_title=post.title, post_id=post.id)
     except:
-        thread2 = Thread.objects.create(owner=recipient,other_person=sender, post_title=post.title, post_id=post.id)
+        thread2 = Thread.objects.create(owner=recipient, other_person=sender, post_title=post.title, post_id=post.id)
 
     if first_message:
         buy_button_signal.send(sender=ItemForSale, instance=post, message=message)

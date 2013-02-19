@@ -36,7 +36,7 @@ urlpatterns = patterns('',
     url(r'^fb_admin/$', 'ccapp.views.fb_admin', name='approve_fb_items'),
 
     #??? not sure if functional still
-    url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),
+    #url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),
 
     #BACK-END -------
     url(r'^note/$',"ccapp.views.note"),

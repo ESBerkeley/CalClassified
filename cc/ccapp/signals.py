@@ -65,7 +65,7 @@ def post_save_hndlr(sender, **kwargs):
                 if dude.message_email:
                     send_templated_mail(
                         template_name='item_notification',
-                        from_email='noreply@buynear.me',
+                        from_email='BuyNearMe <noreply@buynear.me>',
                         recipient_list=[dude.user.email],
                         context={
                             'recipient_name':dude.get_full_name(),
@@ -102,7 +102,7 @@ def comment_save_hndlr(sender, **kwargs):
                 try:
                     send_templated_mail(
                         template_name='user_comment',
-                        from_email='noreply@buynear.me',
+                        from_email='BuyNearMe <noreply@buynear.me>',
                         recipient_list=[seller.user.email],
                         context={
                             'message':comment.body,
@@ -134,7 +134,7 @@ def seller_response_hndlr(sender, **kwargs):
             try:
                 send_templated_mail(
                     template_name='seller_reply',
-                    from_email='noreply@buynear.me',
+                    from_email='BuyNearMe <noreply@buynear.me>',
                     recipient_list=[commenter.user.email],
                     context={
                         'message':comment.body,
@@ -169,7 +169,7 @@ def buy_button_hndlr(sender, **kwargs):
         try:
             send_templated_mail(
                 template_name='buy_item',
-                from_email='noreply@buynear.me',
+                from_email='BuyNearMe <noreply@buynear.me>',
                 recipient_list=[seller.user.email],
                 context={
                     'message':message.body,
@@ -200,7 +200,7 @@ def sale_complete_hndlr(sender, **kwargs):
             try:
                 send_templated_mail(
                     template_name='sold',
-                    from_email='noreply@buynear.me',
+                    from_email='BuyNearMe <noreply@buynear.me>',
                     recipient_list=[buyer.email],
                     context={
                         'post':item,
@@ -228,7 +228,7 @@ def item_repost_hndlr(sender, **kwargs):
             try:
                 send_templated_mail(
                     template_name='failed_to_sell',
-                    from_email='noreply@buynear.me',
+                    from_email='BuyNearMe <noreply@buynear.me>',
                     recipient_list=[buyer.email],
                     context={
                         'post':item,
@@ -250,7 +250,7 @@ def message_to_seller_hndlr(sender, **kwargs):
         message = kwargs['message']
         new_note = Notification(post_from=item, going_to=seller, type=6)
         new_note.second_party = buyer
-        thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person = buyer.user)
+        thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person=buyer.user)
         new_note.thread_id = thread.id
         new_note.save()
         seller.friend_notifications += 1
@@ -260,7 +260,7 @@ def message_to_seller_hndlr(sender, **kwargs):
             try:
                 send_templated_mail(
                     template_name='message',
-                    from_email='noreply@buynear.me',
+                    from_email='BuyNearMe <noreply@buynear.me>',
                     recipient_list=[seller.user.email],
                     context={
                         'message':message.body,
@@ -294,7 +294,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
         if buyer.message_email:
             send_templated_mail(
                 template_name='message',
-                from_email='noreply@buynear.me',
+                from_email='BuyNearMe <noreply@buynear.me>',
                 recipient_list=[buyer.user.email],
                 context={
                     'message':message.body,

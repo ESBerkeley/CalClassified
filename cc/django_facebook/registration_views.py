@@ -52,6 +52,10 @@ def register(request):
             # user = authenticate(username=email,password=password) # This code doesn't work as intended use
             user = User.objects.get(username=email)
             if user.is_active == False: #if user has not yet activated, resend data
+                try:
+                    user.get_profile().delete()
+                except:
+                    pass
                 user.delete()
                 raise User.DoesNotExist
             data['title'] = "Registration Error"
