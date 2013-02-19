@@ -102,7 +102,7 @@
             {% endif %}
           {% elif item.pending_flag %}
               {% if thread %}
-                <a href="{{ thread.get_mobile_url }}" data-role="button">View Messages</a>
+                <a href="{{ thread.get_mobile_url }}" data-role="button" rel="external">View Messages</a>
               {% else %}
 
                 This item is being purchased and is no longer listed.
