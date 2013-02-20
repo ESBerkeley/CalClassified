@@ -28,12 +28,14 @@
 
     {% endfor %}
 </ul>
+{% if item.owner == request.user %}
 <br>
 <fieldset class="ui-grid-a">
     <div class="ui-block-a"><a href="#sell-fail-modal" data-rel="dialog" data-role="button" data-theme="c">Sale Failed</a></div>
     <div class="ui-block-b"><a href="#sell-success-modal" data-rel="dialog" data-role="button" data-theme="c">Sold!</a></div>	   
 </fieldset>
 <center><p style="margin-top: 0"> Tap the buttons to learn more about them! <br>Don't worry you'll be given a confirmation before an action is taken. </p></center>
+{% endif %}
 
 {% endblock %}
 
