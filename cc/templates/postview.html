@@ -44,7 +44,17 @@
     </div>
     {% endif %}
     {% endcomment %}
-    
+
+    <!-- Facebook stuff -->
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
     <div id="post-container" class="container">
     
     <div class="small-title small-title-post">
@@ -224,6 +234,21 @@
                     </a>
                 </p>
             {% endif %}
+            <!--p>
+            <a href="http://www.facebook.com/sharer.php?u=buynear.me{{ post.get_absolute_url }}">
+            Share: <img src="/static/images/fb-icon.gif" /></a>
+            </p-->
+            <!-- AddThis Button BEGIN -->
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+                <a class="addthis_button_preferred_1"></a>
+                <a class="addthis_button_preferred_2"></a>
+                <a class="addthis_button_preferred_3"></a>
+                <a class="addthis_button_preferred_4"></a>
+                <!--a class="addthis_counter addthis_bubble_style"></a-->
+            </div>
+            <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+            <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-512aa338203f9795"></script>
+            <!-- AddThis Button END -->
         </div>
         </div> <!-- end span12 -->
         <br>
