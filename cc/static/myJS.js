@@ -112,7 +112,6 @@ function get_friend_notifications(){
           var count = obj.length;
           var x = "";
 
-
           if(count){
             x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">" + obj[0].extras.num_unread + "</span> <i class=\" icon-exclamation-sign\" style=\"margin-top:3px;\"></i></a>";
             x += "<ul class=\"dropdown-menu no-collapse pull-right\">";
@@ -270,7 +269,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     runloadBox(pg);
   }
 
-  function toggler(control) {  //should really be renamed to togglr . this is web 2.0 you know....
+  function toggler(control) {
     var id = document.getElementById(control);
     $(id).toggle();
   }

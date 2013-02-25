@@ -22,38 +22,35 @@ label.error {
 {% block content %}
 <div id="signup-container" class="container">
   <div id="signup-box" class="span12">
-
-  <div class="small-title">
-    <h2>Change your email</h2>
-    <p style="font-size:12px;">Receive messages at this email when your item has been sold and other notifications</p>
-  </div>
-    
+    <div class="small-title">
+      <h2>Change your e-mail</h2>
+      <p style="font-size:13px; margin-top:18px; margin-bottom:1px;" >Receive messages at this e-mail when your item has been sold and other notifications.</p>
+      <p style="font-size:13px; font-weight:bold;">By default, we will use your Facebook e-mail.</p>
+    </div>
   
-  <div class="small-body" style="padding:20px 40px 20px 40px">
-  {% if message %}
-  <p style="color:red">{{ message }}</p>
-  {% endif %}
-  <p>Current Email: {{ request.user.email }}</p>
-  <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
-  <div id="fields form">
-    {% for field in form %}
-      <div class="control-group">
-        {{ field.errors }}
-        <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
-        <div class="controls ">
-        {{ field }}
-          <span class="help-block">{{ field.help_text }}</span>
+    <div class="small-body" style="padding:20px 40px 20px 40px">
+      {% if message %}
+      <p style="color:red">{{ message }}</p>
+      {% endif %}
+      <p>Current e-mail: &nbsp;&nbsp;&nbsp;{{ request.user.email }}</p>
+      <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
+        <div id="fields form">
+          {% for field in form %}
+            <div class="control-group">
+              {{ field.errors }}
+              <label class="control-label" id="{{field.html_name}}">New e-mail:</label>
+              <div class="controls ">
+                {{ field }}
+                <span class="help-block">{{ field.help_text }}</span>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-      </div>
-    {% endfor %}
-  </div>
+        <input type="submit" class="btn loading" data-loading-text="Sending..." value="Set New Email" />
+        <a href="{% url account_profile %}" class="btn btn-primary" />Keep Default</a>
+      </form>
+    </div>
 
-  <input type="submit" class="btn btn-primary loading" data-loading-text="Sending..." value="Send Verification Email" />
-      <br><br>
-  <a href="{% url account_profile %}" class="btn" />Skip</a>
-  </form>
-
-  </div>
   </div>
 </div>
 {% endblock %}
@@ -61,10 +58,9 @@ label.error {
 
 {% block post_js %}
 <script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+
 <script type="text/javascript">
-
-
-$(document).ready(function(){
+  $(document).ready(function(){
     $("#sellForm").validate({
       rules: {
         email: {
@@ -78,8 +74,6 @@ $(document).ready(function(){
             form.submit();
         }
     });
-    
-
   });
 </script>
 {% endblock %}
