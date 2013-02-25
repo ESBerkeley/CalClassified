@@ -503,6 +503,23 @@ class FacebookUserConverter(object):
         fb_response = self.open_facebook.get(url)
         return fb_response
 
+    def set_free_for_sale(self, item):
+        '''
+        Post to Facebook FFSale wall
+        '''
+        response = self.open_facebook.set('266259930135554/feed', link='http://buynear.me'+item.get_absolute_url(), message='Selling '+ item.title+'!')
+        return response
+
+    def set_fb_group(self, item, url):
+        '''
+        Post to any group wall
+        :param item: ItemForSale model
+        :param url: #group/feed, eg. '24124/feed'
+        :return: response
+        '''
+        response = self.open_facebook.set(url, link='http://buynear.me'+item.get_absolute_url(), message='Selling '+item.title+'!')
+        return response
+
     def store_free_for_sale(self, items):
         '''
         Given a user and likes store these in the db

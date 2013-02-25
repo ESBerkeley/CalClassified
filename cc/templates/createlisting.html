@@ -57,6 +57,18 @@ label.error {
                     <span class="help-block">{{ field.help_text }}</span>
                 </div>
             </div>
+        {% elif field.html_name == "post_to_ffs" %}
+            <div class="control-group">
+                {{ field.errors }}
+                <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+                <div class="controls ">
+                    {{ field }}
+                    <span class="help-block">{{ field.help_text|safe }}
+                        <!--i class="icon-question-sign tooltips" style="margin-left:5px; margin-top:4px;" rel="tooltips" data-placement="bottom"
+                           data-original-title="Post to the Facebook group Free & For Sale if you are a member. Nothing will happen if you are not."></i-->
+                    </span>
+                </div>
+            </div>
 
         {% else %}
           <div class="control-group">

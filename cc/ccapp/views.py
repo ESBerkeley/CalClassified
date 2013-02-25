@@ -16,7 +16,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
 from django_facebook.models import *
-from django_facebook.api import get_facebook_graph, FacebookUserConverter
+from django_facebook.api import get_facebook_graph, get_persistent_graph, FacebookUserConverter
 from open_facebook.exceptions import OpenFacebookException
 
 from haystack.query import SearchQuerySet
@@ -411,10 +411,22 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 #for image in images:
                 #    image.post = model
                 #    image.save()
-
+                post_to_ffs = form.cleaned_data['post_to_ffs']
+                fb_success = True
+                if post_to_ffs:
+                    try:
+                        graph = get_persistent_graph(request)
+                        facebook = FacebookUserConverter(graph)
+                        facebook.set_free_for_sale(model)
+                    except:
+                        fb_success = False
                 post_created_signal.send(sender = ItemForSale, instance = model)
-
-                return redirect(model.get_absolute_url()+"?new=1")
+                if fb_success and post_to_ffs:
+                    return redirect(model.get_absolute_url()+"?new=1&postffs=1")
+                elif not fb_success:
+                    return redirect(model.get_absolute_url()+"?new=1&postffs=0")
+                else:
+                    return redirect(model.get_absolute_url()+"?new=1")
 
             else:
                 return render_to_response('createlisting.html',{'form':form},context_instance=RequestContext(request))
@@ -550,7 +562,6 @@ def showpost(request, pid, super_cat):
 
     
     else:
-
         related_posts = []
 
         # category_posts = super_cat.objects.filter(category=post.category).exclude(id=pid)
@@ -588,7 +599,8 @@ def showpost(request, pid, super_cat):
 
         if "new" in request.GET and int(request.GET['new']) == 1:
             ecks['new'] = 1
-
+        if "postffs" in request.GET:
+            ecks['post_ffs'] = int(request.GET['postffs'])
         if post.pending_flag:
             if post.pending_buyer == request.user:
                 thread = Thread.objects.filter(owner=request.user, other_person=post.owner, post_id=post.id)

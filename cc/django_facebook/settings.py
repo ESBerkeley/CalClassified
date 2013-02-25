@@ -5,7 +5,7 @@ from django.conf import settings
 FACEBOOK_APP_ID = getattr(settings, 'FACEBOOK_APP_ID', None)
 FACEBOOK_APP_SECRET = getattr(settings, 'FACEBOOK_APP_SECRET', None)
 FACEBOOK_DEFAULT_SCOPE = getattr(settings, 'FACEBOOK_DEFAULT_SCOPE', [
-    'email', 'user_about_me', 'user_groups', 'user_likes', 'user_location', 'friends_groups'])
+    'email', 'user_about_me', 'user_groups', 'user_likes', 'user_location', 'publish_actions'])
 
 # Absolute canvas page url as per facebook standard
 FACEBOOK_CANVAS_PAGE = getattr(settings, 'FACEBOOK_CANVAS_PAGE',

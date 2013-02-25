@@ -45,6 +45,36 @@
     {% endif %}
     {% endcomment %}
 
+    {% if post_ffs == 0 or post_ffs == 1 and request.user == post.owner %}
+        <div id="new-post-alert" class="alert alert-block alert-info fade in container">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            {% if post_ffs == 1 %}
+            <b> Item successfully posted to Free & For Sale! </b>
+            <p>
+                You will be notified by email when you are contacted. <br>
+                Share elsewhere with the buttons below!
+            </p>
+            {% else %}
+            <b> Item successfully posted! </b>
+            <p>
+                You will be notified by email when you are contacted. Unfortunately, we weren't able to post to Free & For Sale.
+                <br>Share it using the buttons below!
+            </p>
+            {% endif %}
+            <!-- AddThis Button BEGIN -->
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+                <a class="addthis_button_preferred_1"></a>
+                <a class="addthis_button_preferred_2"></a>
+                <a class="addthis_button_preferred_3"></a>
+                <a class="addthis_button_preferred_4"></a>
+                <!--a class="addthis_counter addthis_bubble_style"></a-->
+            </div>
+            <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+            <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-512aa338203f9795"></script>
+            <!-- AddThis Button END -->
+        </div>
+    {% endif %}
+
     <!-- Facebook stuff -->
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
