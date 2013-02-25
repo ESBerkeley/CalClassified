@@ -4,95 +4,89 @@
 {% block header_title %}Browse{% endblock %}
 {% block body_content %}
 <div id="filter-container">
-    <div id="filter-options">
-        <form action="javascript: search(pageNum);" id="search-form">
-          <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" data-mini="true"/>
-        </form>
-        <div data-role="fieldcontain">
-            <fieldset data-role="controlgroup" data-mini="true">
-                <p style="margin-top: 0; font-size:14px;">Filter by as many categories you'd like!</p>
-
-                {% for category in categories %}
-
-                <input type="checkbox" name="categories" id="id_category_{{ category.id }}" value="{{ category.id }}"/>
-                <label for="id_category_{{ category.id }}">{{ category.name }}</label>
-                {% endfor %}
-
-            </fieldset>
-        </div>
-
-        <label for="min-price">Min Price</label>
-        <input type="range" id="min-price" value="0" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
-        <br>
-        <label for="max-price">Max Price</label>
-        <input type="range" id="max-price" value="{{ max_price }}" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
+  <div id="filter-options">
+    <form action="javascript: search(pageNum);" id="search-form">
+      <input type="search" name="search" id="search-basic" placeholder="Search Keywords..." value="" data-mini="true"/>
+    </form>
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-mini="true">
+        <p style="margin-top: 0; font-size:14px;">Filter by as many categories you'd like!</p>
+        {% for category in categories %}
+          <input type="checkbox" name="categories" id="id_category_{{ category.id }}" value="{{ category.id }}"/>
+          <label for="id_category_{{ category.id }}">{{ category.name }}</label>
+        {% endfor %}
+      </fieldset>
     </div>
 
-    <div id="filter-button-container">  <!--necessary for jquery hide() to work)-->
-        <button id="filter-button" data-icon="gear" data-mini="true">Filter Options</button>
-    </div>
+    <label for="min-price">Min Price</label>
+    <input type="range" id="min-price" value="0" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
+    <br>
+    <label for="max-price">Max Price</label>
+    <input type="range" id="max-price" value="{{ max_price }}" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
+  </div>
 
-    <fieldset class="ui-grid-a">
-	    <div class="ui-block-a"><button id="search-button" data-icon="search" data-mini="true">Search</button></div>
-	    <div class="ui-block-b"><button id="cancel-button" data-icon="arrow-u" data-mini="true">Close</button></div>	   
-    </fieldset>
+  <div id="filter-button-container">  <!--necessary for jquery hide() to work)-->
+    <button id="filter-button" data-icon="gear" data-mini="true">Search</button>
+  </div>
 
+  <fieldset class="ui-grid-a">
+    <div class="ui-block-a"><button id="search-button" data-icon="search" data-mini="true">Search</button></div>
+    <div class="ui-block-b"><button id="cancel-button" data-icon="arrow-u" data-mini="true">Close</button></div>	   
+  </fieldset>
 </div>
 
-        <div>
-            <ul data-role="listview" id="browse-list">
-                <!-- list of items -->
-            </ul>
-
-            <div id="load-more-div" style="display: none;"><button id="load-more">Tap here to load more items</button></div>
-        </div>
+<div>
+  <ul data-role="listview" id="browse-list">
+    <!-- list of items -->
+  </ul>
+  <div id="load-more-div" style="display: none;"><button id="load-more">Tap here to load more items</button></div>
+</div>
 {% endblock %}
 
 {% block javascript %}
-  <script type="text/javascript">
-    var pageNum = 1;
-    var preloaded = false;
-    $('#body-page').live('pageshow', function () {
-        // THIS IS HOW TO DO DOCUMENT READY
-        var pathname = window.location.pathname;
-        pathname = pathname.split("/")
-        if(pathname.length > 1 && pathname[1]=="browse" && !preloaded){
-            pageNum = 1;
-            search(pageNum);
-            preloaded = true
-        }
-    });
+<script type="text/javascript">
+  var pageNum = 1;
+  var preloaded = false;
+  $('#body-page').live('pageshow', function () {
+    var pathname = window.location.pathname;
+    pathname = pathname.split("/")
+    if(pathname.length > 1 && pathname[1]=="browse" && !preloaded){
+      pageNum = 1;
+      search(pageNum);
+      preloaded = true
+    }
+  });
 
-    $(".ui-grid-a").hide();
-    $("#filter-options").hide();
+  $(".ui-grid-a").hide();
+  $("#filter-options").hide();
 
-    $('.ui-input-clear').live('tap', function () {
-        $("#search-basic").val("");
-        pageNum = 1;
-        search(pageNum);
-    });
+  $('.ui-input-clear').live('tap', function () {
+  $("#search-basic").val("");
+    pageNum = 1;
+    search(pageNum);
+  });
 
-    $("#filter-button").click(function(){
-        $("#filter-button-container").hide();
-        //$("#filter-button").html("Search").button("refresh");
-        $(".ui-grid-a").show();   
-        $("#filter-options").slideDown(); 
-    });
+  $("#filter-button").click(function(){
+    $("#filter-button-container").hide();
+      //$("#filter-button").html("Search").button("refresh");
+      $(".ui-grid-a").show();   
+      $("#filter-options").slideDown(); 
+  });
 
-    $("#search-button").click(function(){
-        pageNum = 1;
-        search(pageNum);
-    });
+  $("#search-button").click(function(){
+    pageNum = 1;
+    search(pageNum);
+  });
 
-    $("#cancel-button").click(function(){
-        $("#filter-button-container").show();
-        $(".ui-grid-a").hide();   
-        $("#filter-options").slideUp(); 
-    });
+  $("#cancel-button").click(function(){
+    $("#filter-button-container").show();
+    $(".ui-grid-a").hide();   
+    $("#filter-options").slideUp(); 
+  });
 
-    $("#load-more").click(function(){
-        pageNum += 1;
-        search(pageNum);
-    })
-  </script>
+  $("#load-more").click(function(){
+    pageNum += 1;
+    search(pageNum);
+  })
+</script>
 {% endblock %}
