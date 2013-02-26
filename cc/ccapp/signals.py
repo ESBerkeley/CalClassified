@@ -7,8 +7,8 @@ from django.dispatch.dispatcher import Signal
 
 from ccapp.models import ItemForSale, Notification, Comment, Thread
 from django_facebook.models import FacebookUser, FacebookProfile
-from templated_email import send_templated_mail
 
+from ccapp.tasks import *
 
 def fb_user_registration_hndlr(sender, **kwargs): #im not sure how to spell handeler right so no vowels
 
@@ -63,7 +63,7 @@ def post_save_hndlr(sender, **kwargs):
                 dude.friend_notifications += 1
                 dude.save()
                 if dude.message_email:
-                    send_templated_mail(
+                    send_email_task.delay(
                         template_name='item_notification',
                         from_email='noreply@buynear.me',
                         recipient_list=[dude.user.email],
@@ -100,7 +100,7 @@ def comment_save_hndlr(sender, **kwargs):
             seller.save()
             if seller.comments_email:
                 try:
-                    send_templated_mail(
+                    send_email_task.delay(
                         template_name='user_comment',
                         from_email='noreply@buynear.me',
                         recipient_list=[seller.user.email],
@@ -132,7 +132,7 @@ def seller_response_hndlr(sender, **kwargs):
         commenter.save()
         if commenter.replies_email:
             try:
-                send_templated_mail(
+                send_email_task.delay(
                     template_name='seller_reply',
                     from_email='noreply@buynear.me',
                     recipient_list=[commenter.user.email],
@@ -157,7 +157,6 @@ def buy_button_hndlr(sender, **kwargs):
         message = kwargs['message']
         seller = item.owner.get_profile()
         buyer = item.pending_buyer.get_profile()
-
         new_note = Notification(post_from = item, going_to = seller, type = 3)
         new_note.second_party = buyer
         
@@ -166,21 +165,21 @@ def buy_button_hndlr(sender, **kwargs):
         thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person=buyer.user)
         new_note.thread_id = thread.id
         new_note.save()
-        try:
-            send_templated_mail(
-                template_name='buy_item',
-                from_email='noreply@buynear.me',
-                recipient_list=[seller.user.email],
-                context={
-                    'message':message.body,
-                    'buyer':buyer.user.get_full_name(),
-                    'post':item,
-                    'seller':seller.user.get_full_name(),
-                    'thread':thread
-                    },
-            )
-        except:
-            pass
+    #    try:
+        send_email_task.delay(
+            template_name='buy_item',
+            from_email='noreply@buynear.me',
+            recipient_list=[seller.user.email],
+            context={
+                'message':message.body,
+                'buyer':buyer.user.get_full_name(),
+                'post':item.id,
+                'seller':seller.user.get_full_name(),
+                'thread':thread.id
+                },
+        )
+   #     except:
+   #         pass
 
     return
 
@@ -198,7 +197,7 @@ def sale_complete_hndlr(sender, **kwargs):
 
         if buyer.sold_email:
             try:
-                send_templated_mail(
+                send_email_task.delay(
                     template_name='sold',
                     from_email='noreply@buynear.me',
                     recipient_list=[buyer.email],
@@ -226,7 +225,7 @@ def item_repost_hndlr(sender, **kwargs):
 
         if buyer.failed_to_sell_email:
             try:
-                send_templated_mail(
+                send_email_task.delay(
                     template_name='failed_to_sell',
                     from_email='noreply@buynear.me',
                     recipient_list=[buyer.email],
@@ -258,7 +257,7 @@ def message_to_seller_hndlr(sender, **kwargs):
 
         if seller.message_email:
             try:
-                send_templated_mail(
+                send_email_task.delay(
                     template_name='message',
                     from_email='noreply@buynear.me',
                     recipient_list=[seller.user.email],
@@ -292,7 +291,7 @@ def message_to_buyer_hndlr(sender, **kwargs):
         buyer.save()
 
         if buyer.message_email:
-            send_templated_mail(
+            send_email_task.delay(
                 template_name='message',
                 from_email='noreply@buynear.me',
                 recipient_list=[buyer.user.email],
