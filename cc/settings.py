@@ -1,5 +1,26 @@
 import os
 import django
+
+
+
+#This block is all celery related things. broker_backend must be changed for use in production!
+import djcelery
+djcelery.setup_loader()
+
+#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+"""
+NOTE! FOR PRODUCTION USE, BROKER_BACKEND MUST BE COMMENTED OUT. (IE, THE ABOVE LINE!)
+"""
+BROKER_HOST = "localhost"
+BROKER_PORT = 5672
+BROKER_USER = "CCBROKER"
+BROKER_PASSWORD = "CCBROKERPW"
+BROKER_VHOST = "/"
+
+
+
+
+
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_DOC_ROOT = '/media'
 # Django settings for cc project.
@@ -153,7 +174,9 @@ INSTALLED_APPS = (
     'haystack',
     'templated_email',
     'django_resized',
-    'widget_tweaks'
+    'widget_tweaks',
+    'djkombu',                           #This needs to be changed for server production
+    'djcelery'
     # 'django.contrib.admindocs',
 )
 
