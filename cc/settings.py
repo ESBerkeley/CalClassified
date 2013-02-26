@@ -7,7 +7,7 @@ import django
 import djcelery
 djcelery.setup_loader()
 
-#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 """
 NOTE! FOR PRODUCTION USE, BROKER_BACKEND MUST BE COMMENTED OUT. (IE, THE ABOVE LINE!)
 """
