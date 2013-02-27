@@ -10,7 +10,6 @@ import os, random, hashlib
 
 
 
-
 PROFILE_IMAGE_PATH = os.path.join('images','facebook_profiles/%Y/%m/%d')
 
 
