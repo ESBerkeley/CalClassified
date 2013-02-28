@@ -397,6 +397,8 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                     obj.key_data = obj.key_generate
                     obj.post = model
                     obj.save()
+                    model.save()
+                    #model.image_set.add(obj)
 
                 #circles weren't being saved cause commit=False, and a pk was need to add
                 #manytomany relations
