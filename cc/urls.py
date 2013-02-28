@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^$', MainView.as_view(), name='mainview'),
     url(r'^browse/$','ccapp.views.boxview',name="browse"),
     url(r'^sell/$','ccapp.views.createlistingviewIFS',name="createIFS"),
-    url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS"), #delete in future, in case for hard links
+    url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS2"), #delete in future, in case for hard links
     url(r'^about/$', AboutView.as_view()),
     url(r'^contact/$', ContactView.as_view()),
     url(r'^privacy/', TemplateView.as_view(template_name = 'privacy_policy.html')),
