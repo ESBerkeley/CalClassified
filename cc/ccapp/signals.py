@@ -69,7 +69,7 @@ def post_save_hndlr(sender, **kwargs):
                         recipient_list=[dude.user.email],
                         context={
                             'recipient_name':dude.get_full_name(),
-                            'post':post,
+                            'post':post.id,
                             'full_name':owner_profile.facebook_name(),
                         },
                     )
@@ -107,7 +107,7 @@ def comment_save_hndlr(sender, **kwargs):
                         context={
                             'message':comment.body,
                             'commenter':commenter.user.get_full_name(),
-                            'post':item,
+                            'post':item.id,
                             'seller':seller.user.get_full_name(),
                             },
                     )
@@ -139,7 +139,7 @@ def seller_response_hndlr(sender, **kwargs):
                     context={
                         'message':comment.body,
                         'commenter':commenter.user.get_full_name(),
-                        'post':item,
+                        'post':item.id,
                         'seller':seller.user.get_full_name(),
                         },
                 )
@@ -174,9 +174,9 @@ def buy_button_hndlr(sender, **kwargs):
                 context={
                     'message':message.body,
                     'buyer':buyer.user.get_full_name(),
-                    'post':item,
+                    'post':item.id,
                     'seller':seller.user.get_full_name(),
-                    'thread':thread
+                    'thread':thread.id
                     },
             )
         except:
@@ -205,7 +205,7 @@ def sale_complete_hndlr(sender, **kwargs):
                     from_email='BuyNearMe <noreply@buynear.me>',
                     recipient_list=[buyer.email],
                     context={
-                        'post':item,
+                        'post':item.id,
                         'buyer':buyer.user.get_full_name(),
                         'seller':seller.user.get_full_name()
                     },
@@ -233,7 +233,7 @@ def item_repost_hndlr(sender, **kwargs):
                     from_email='BuyNearMe <noreply@buynear.me>',
                     recipient_list=[buyer.email],
                     context={
-                        'post':item,
+                        'post':item.id,
                         'buyer':buyer.user.get_full_name(),
                         'seller':seller.user.get_full_name()
                     },
@@ -266,10 +266,10 @@ def message_to_seller_hndlr(sender, **kwargs):
                     recipient_list=[seller.user.email],
                     context={
                         'message':message.body,
-                        'post':item,
+                        'post':item.id,
                         'sender':buyer.user.get_full_name(),
                         'recipient':seller.user.get_full_name(),
-                        'thread':thread
+                        'thread':thread.id
                         },
                 )
             except:
@@ -300,10 +300,10 @@ def message_to_buyer_hndlr(sender, **kwargs):
                 recipient_list=[buyer.user.email],
                 context={
                     'message':message.body,
-                    'post':item,
+                    'post':item.id,
                     'sender':seller.user.get_full_name(),
                     'recipient':buyer.user.get_full_name(),
-                    'thread':thread
+                    'thread':thread.id
                     },
             )
     return

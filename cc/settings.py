@@ -7,17 +7,11 @@ import django
 import djcelery
 djcelery.setup_loader()
 
+#This line must be enabled for local development (unless you want to install and configure rabbitmq)
 BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
-"""
-NOTE! FOR PRODUCTION USE, BROKER_BACKEND MUST BE COMMENTED OUT. (IE, THE ABOVE LINE!)
-"""
-BROKER_HOST = "localhost"
-BROKER_PORT = 5672
-BROKER_USER = "CCBROKER"
-BROKER_PASSWORD = "CCBROKERPW"
-BROKER_VHOST = "/"
 
-
+#The following line is for production, for use with a properly configured rabbitmq.
+BROKER_URL = 'amqp://CCBROKER:CCBROKERPW@localhost:5672//'
 
 
 
