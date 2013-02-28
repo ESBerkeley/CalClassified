@@ -476,7 +476,8 @@ class FacebookUserConverter(object):
         '''
         Parses free and for sale page
         '''
-        items_response = self.open_facebook.get('266259930135554/feed', limit=limit)
+   #     items_response = self.open_facebook.get('407167362711476/feed', limit=limit)   #This is for testing, it's the class of 2050 group id
+        items_response = self.open_facebook.get('266259930135554/feed', limit=limit)   #This is actually the free and for sale group.
         items = items_response and items_response.get('data')
         return items
 
@@ -507,7 +508,8 @@ class FacebookUserConverter(object):
         '''
         Post to Facebook FFSale wall
         '''
-        response = self.open_facebook.set('266259930135554/feed', link='http://buynear.me'+item.get_absolute_url(), message='Selling '+ item.title+'!')
+   #     response = self.open_facebook.set('407167362711476/feed', link='http://buynear.me'+item.get_absolute_url(), message='Selling '+ item.title+'!') #Testing 2050 group
+        response = self.open_facebook.set('266259930135554/feed', link='http://buynear.me'+item.get_absolute_url(), message='Selling '+ item.title+'!') #Real ffs group
         return response
 
     def set_fb_group(self, item, url):

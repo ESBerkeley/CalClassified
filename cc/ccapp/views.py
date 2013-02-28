@@ -411,7 +411,12 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 #for image in images:
                 #    image.post = model
                 #    image.save()
-                post_to_ffs = form.cleaned_data['post_to_ffs']
+
+                try:
+                    post_to_ffs = form.cleaned_data['post_to_ffs']
+                except:
+                    post_to_ffs = False
+
                 fb_success = True
                 if post_to_ffs:
                     try:
