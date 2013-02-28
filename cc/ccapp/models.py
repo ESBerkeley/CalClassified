@@ -103,7 +103,7 @@ class ItemForSale(Post):
     
     def get_image_set_urls(self):
         urls = []
-        for image in self.image_set.all(): #.order_by('upload_date'):
+        for image in self.image_set.order_by('id'): #.order_by('upload_date'):
             urls.append(image.image.url)
         if urls:
             return urls
@@ -115,7 +115,7 @@ class ItemForSale(Post):
     
     def get_first_image_url(self):
         try:
-            return self.image_set.all()[0].image.url
+            return self.image_set.order_by('id')[0].image.url
         except:
             return self.get_category_image_url()
     
@@ -125,7 +125,7 @@ class ItemForSale(Post):
                 return self.facebookpost.thumbnail_url
             if self.cached_thumb == '':
                 from sorl.thumbnail import get_thumbnail
-                image = self.image_set.all()[0]
+                image = self.image_set.order_by('id')[0]
                 im = get_thumbnail(image, "250x250", quality=50)
                 thumb_url = im.url
                 self.cached_thumb = thumb_url
@@ -142,7 +142,7 @@ class ItemForSale(Post):
         urls = []
 #        print('.')
         from sorl.thumbnail import get_thumbnail
-        for image in self.image_set.all():
+        for image in self.image_set.order_by('id'):
 #image quality
             im = get_thumbnail(image, "250x250", quality=50)
             thumb_url = im.url
@@ -151,7 +151,7 @@ class ItemForSale(Post):
 
     def is_category_image(self):
         try:
-            self.image_set.all()[0].image.url
+            self.image_set.order_by('id')[0].image.url
             return False
         except:
             return True
@@ -178,11 +178,13 @@ class ItemForSale(Post):
         except:
             return False
 
-    def delete(self): #If we're going to delete a post, let's delete its comments as well.
+    def delete(self): #If we're going to delete a post, let's delete its comments/images as well.
         comments = Comment.objects.filter(item = self)
         if len(comments):
             for comment in comments:
                 comment.delete()
+        for image in self.image_set.all():
+            image.delete()
         super(ItemForSale, self).delete()
 
 
