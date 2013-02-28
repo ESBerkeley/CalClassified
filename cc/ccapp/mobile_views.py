@@ -64,7 +64,6 @@ def sell(request):
         data['categories'] = Category.objects.all()
         return render_to_response('mobile/sell.html',data, context_instance = RequestContext(request))
     else:
-
         form = ItemForSaleForm(request.POST, request.FILES)#, instance=model_instance)
         #circles is generically added in front end
         if form.is_valid():

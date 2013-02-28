@@ -6,10 +6,10 @@
   <p>
   <ul>
     <li>
-        <a href="{{ thread.get_absolute_url }}">Click here</a> to view the message!</p>
+        <a href="{{ thread.get_absolute_url }}">Click here</a> to view the message!
     </li>
     <li>
-        <a href="{{ post.get_absolute_url }}">Click here</a> to view your item!</p>
+        <a href="{{ post.get_absolute_url }}">Click here</a> to view your item!
     </li>
   </ul>
   </p>
