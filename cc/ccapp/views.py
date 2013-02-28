@@ -390,45 +390,13 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 model.save()
 
                 files_list = request.FILES.getlist("images")
-                """for file in files_list:
-                    obj = MultiuploaderImage()
-                    obj.image = file
-                    obj.filename=str(file)
-                    obj.key_data = obj.key_generate
-                    obj.post = model
-                    obj.save()"""
-                try:
-                    file = files_list[0]
+                for file in files_list:
                     obj = MultiuploaderImage()
                     obj.image = file
                     obj.filename=str(file)
                     obj.key_data = obj.key_generate
                     obj.post = model
                     obj.save()
-                except:
-                    pass
-
-                try:
-                    file = files_list[1]
-                    obj = MultiuploaderImage()
-                    obj.image = file
-                    obj.filename=str(file)
-                    obj.key_data = obj.key_generate
-                    obj.post = model
-                    obj.save()
-                except:
-                    pass
-
-                try:
-                    file = files_list[2]
-                    obj = MultiuploaderImage()
-                    obj.image = file
-                    obj.filename=str(file)
-                    obj.key_data = obj.key_generate
-                    obj.post = model
-                    obj.save()
-                except:
-                    pass
 
                 #circles weren't being saved cause commit=False, and a pk was need to add
                 #manytomany relations
