@@ -39,5 +39,9 @@ class MultiuploaderImage(models.Model):
     def __unicode__(self):
         return self.image.name
         
+    def delete(self): #delete image on server
+        self.image.delete()
+        super(MultiuploaderImage, self).delete()
+        
 
 

@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Near Me - Edit Item{% endblock %}
+
+{% block head %}
+<style type='text/css'>
+label.error {
+ float: none;
+ color: red;
+ padding-left: .5em;
+ vertical-align: top;
+ }
+
+ </style>
+{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+    
+<div id="signup-container" class="container">
+  <div id="signup-box" class="span12">
+
+  <div class="small-title">
+    <h2> Edit Item</h2>
+  </div>
+    
+  <div class="small-body">
+  <form action="."  method="POST" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+      <div class="control-group">
+        <label class="control-label" id="title_label" for="title">Title</label>
+        <div class="controls">
+            <input id="title" type="text" name="title" value="{{ item.title }}"><br>
+        </div>
+      </div>
+          
+      <div class="control-group">
+        <label class="control-label" id="description_label" for="description">Description</label>
+        <div class="controls">
+            <textarea id="description" name="description" rows="7">{{ item.body }}</textarea><br>
+        </div>
+      </div>
+          
+          
+      <div class="control-group">
+        <label class="control-label" id="price_label" for="price">Price</label>
+        <div class="controls">
+            <input id="price" type="text" name="price" value="{{ item.price }}"><br>
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <label class="control-label" id="category_label" for="category_id">Category</label>
+        <div class="controls">
+            <select name="category_id">
+              {% for category in categories %}
+                <option value="{{ category.id }}" {% if category == item.category %}selected{%endif%}>{{category.name}}</option>
+              {% endfor %}
+            </select>
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <label class="control-label" id="images_label" for="images">Images</label>
+        <div class="controls">
+            {% for image_url in image_set %}
+              <div class="image_box" value="{{ forloop.counter0 }}">
+                <img src="{{ image_url }}" alt="Item Image" style="width: 100%; height: 200px;"/>
+                Click on an image to toggle whether you want to include it.<br>
+                <span id="include-{{ forloop.counter0 }}" class="included" style="color:#00b300">Included</span>
+                <span id="exclude-{{ forloop.counter0 }}" class="excluded" style="color:red; display: none;">Excluded</span>
+                
+              </div>
+            {% endfor %}
+            {% if image_set %}
+            <br style="clear: both">
+            {% endif%}
+            <span id="upload-images" > 
+            {% if image_set %}<br>{% endif %}
+            <b>Add more photos if you aren't over the limit!</b>
+            <p id="upload1" style="display: none;"><br><input name="images" type="file" ></p>
+            <p id="upload2" style="display: none;"><br><input name="images" type="file" ></p>
+            <p id="upload3" style="display: none;"><br><input name="images" type="file" ></p>
+            
+            </span>
+            <p>Maximum of 3 images</p>
+        </div>
+      </div>
+        
+        <!-- hidden inputs to see which files to keep -->
+        <input id="image0" type="hidden" name="image0" value="no">
+        <input id="image1" type="hidden" name="image1" value="no">
+        <input id="image2" type="hidden" name="image2" value="no">
+        
+      <br>
+      <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Submitting..." value="Submit">
+      <img id="ajax-loader" style="display: none;" src="/static/ajax-loader.gif" />
+      <br><br>
+  </form>
+  
+  </div>
+  
+  </div>
+</div>
+{% endblock %}
+
+{% block post_js %}
+
+<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript">
+var uploadImageCounter = 0;
+var boxes = [false, false, false]; //boxes represent whether a user wants to keep an image, index represents which box
+
+var upload1 = false;
+var upload2 = false;
+var upload3 = false;
+
+
+$(document).ready(function(){
+    $("#sellForm").validate({
+      rules: {
+        title: {
+          required: true,
+        },
+        body: {
+          required: true,
+        },
+        price: {
+          required: true,
+          number: true,
+          min: 0,
+        },
+        category: {
+          required: true,
+        },
+
+      },
+      submitHandler: function() { 
+        $("#ajax-loader").show(); 
+        $("#submit").button('loading');
+        $(form).ajaxSubmit();
+      },
+    });
+    
+    // require price only has 2 decimals
+    (function($) {
+        $.fn.currencyFormat = function() {
+            this.each( function( i ) {
+                $(this).change( function( e ){
+                    if( isNaN( parseFloat( this.value ) ) ) return;
+                    if (this.value.split(".").length >1) {
+                      this.value = parseFloat(this.value).toFixed(2);
+                    }
+                });
+            });
+            return this; //for chaining
+        }
+    })( jQuery );
+    
+    $( function() {
+        $('#price').currencyFormat();
+    });
+    // end price validation
+    
+    // add * to required fields
+    /**
+    var required = ['title','body','price','category','circles'];
+    for (index in required) {
+      try {
+        document.getElementById(required[index]).innerHTML += '*';
+        document.getElementById(required[index]).style.fontWeight = 'bold';
+      } catch (err) {}
+    }
+    **/
+
+  }); //end ready
+  
+  
+  
+  {% for image_url in image_set %}
+    boxes[uploadImageCounter] = true;
+    $("#image"+uploadImageCounter).attr("value","yes")
+    uploadImageCounter += 1;
+    
+  {% endfor %}
+  
+  while (uploadImageCounter < 3) {
+    uploadImageCounter += 1;
+    addImageInput()
+  }
+  
+  
+  $(".image_box").click(function(){
+    var box_num = $(this).attr('value');
+    box_bool = boxes[box_num]
+    if (box_bool) { // if the box is active, deactivate
+        boxes[box_num] = false;
+        addImageInput()
+        $("#include-"+box_num).css('display','none');
+        $("#exclude-"+box_num).css('display','inline');
+        $(this).css('background-color','#e9e9e9');
+        $("#image"+box_num).attr("value","no")
+    } else { //else activate
+        boxes[box_num] = true;
+        removeImageInput()
+        $("#include-"+box_num).css('display','inline');
+        $("#exclude-"+box_num).css('display','none');
+        $(this).css('background-color','white');
+        $("#image"+box_num).attr("value","yes")
+        
+    }
+
+  })
+
+    
+  function addImageInput(){
+    // adds one input in incremental order
+    if (upload1 == false) {
+        upload1 = true;
+        $("#upload1").css('display','inline');
+
+    } else if (upload2 == false) {
+        upload2 = true;
+        $("#upload2").css('display','inline');
+    } else if (upload3 == false) {
+        upload3 = true;
+        $("#upload3").css('display','inline');
+    }
+  } //end fn
+  
+  function removeImageInput(){
+    // delete one input in decremental order
+    if (upload3 == true) {
+        upload3 = false;
+        $("#upload3").css('display','none');
+
+    } else if (upload2 == true) {
+        upload2 = false;
+        $("#upload2").css('display','none');
+    } else if (upload1 == true) {
+        upload1 = false;
+        $("#upload1").css('display','none');
+    }
+  } //endfn
+
+
+</script>
+{% endblock %}
+

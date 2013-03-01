@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^note/$',"ccapp.views.note"),
 
     url(r'^delete/(?P<pid>\d+)$','ccapp.views.deletepostIFS'),
+    url(r'^edit/(?P<pid>\d+)/$','ccapp.views.edit_item', name='edit_item'),
     url(r'^delete/all/','ccapp.views.deletepostIFS'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^search/$','ccapp.views.search'),

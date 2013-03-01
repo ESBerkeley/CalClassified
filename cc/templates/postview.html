@@ -244,23 +244,25 @@
         <div class="span2" style="margin-left: 40px;">
             <!-- <fb:share-button href="#" type="button"></fb:share-button> -->
             {% if request.user.is_authenticated %}
-                <h4 style="margin-top: 0;">More:</h4>
+                <!--<h4 style="margin-top: 0; ">More:</h4> -->
 
                 {% if request.user == post.owner %}
-
                     <p>
-                        <a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Post</a>
+                        <a href="{% url edit_item post.id %}" id="edit-post" style="cursor:pointer;"><i class="icon-pencil side-icon"></i>Edit Details</a>
+                    </p>
+                    <p>
+                        <a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Item</a>
                     </p>
                 {% endif %}
                 <p>
                     <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
                         <i class="icon-tag side-icon bookmark-activate"></i>
-                        Bookmark Post
+                        Bookmark Item
                     </a>
 
                     <a href="" onclick="return false;" id="not-active-bookmark" class="bookmark-activate" >
                         <i class="icon-remove side-icon bookmark-activate"></i>
-                        Unbookmark Post
+                        Unbookmark Item
                     </a>
                 </p>
             {% endif %}
@@ -269,7 +271,7 @@
             Share: <img src="/static/images/fb-icon.gif" /></a>
             </p-->
             <!-- AddThis Button BEGIN -->
-            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style" style="margin-bottom: -50px; width: 110%;">
                 <a class="addthis_button_preferred_1"></a>
                 <a class="addthis_button_preferred_2"></a>
                 <a class="addthis_button_preferred_3"></a>

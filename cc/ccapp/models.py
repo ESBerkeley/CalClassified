@@ -137,6 +137,24 @@ class ItemForSale(Post):
             self.cached_thumb = self.get_category_image_url()
             self.save()
             return self.cached_thumb
+            
+    def reset_thumbnail_url(self):
+        try:
+            if self.is_facebook_post and self.facebookpost.thumbnail_url:
+                return self.facebookpost.thumbnail_url
+            
+            from sorl.thumbnail import get_thumbnail
+            image = self.image_set.order_by('id')[0]
+            im = get_thumbnail(image, "250x250", quality=50)
+            thumb_url = im.url
+            self.cached_thumb = thumb_url
+            self.save()
+            return thumb_url
+            
+        except:
+            self.cached_thumb = self.get_category_image_url()
+            self.save()
+            return self.cached_thumb
         
     def get_thumbnail_set_urls(self):
         urls = []

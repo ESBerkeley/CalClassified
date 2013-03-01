@@ -651,9 +651,73 @@ def modify_post(request):
                 return HttpResponse("Invalid Request")
 
         else:
-            return HttpResponse("I can not let you do that, dave")
+            return HttpResponse("I can not let you do that, Dave")
     else:
         return HttpResponse("please try again")
+
+@login_required
+def edit_item(request,pid):
+    #edits fields of a post model
+    #fields to be edited
+    # title, price, category, description, images
+    item = ItemForSale.objects.get(id = int(pid))
+    if item.owner == request.user:
+        data = {}
+        if request.method == "GET":
+            data['item'] = item
+            data['categories'] = Category.objects.all()
+            image_set = item.get_image_set_urls()
+            if image_set == [item.get_category_image_url()]:
+                image_set = []
+            data['image_set'] = image_set
+            return render_to_response('edit_item.html',data,context_instance=RequestContext(request))
+        else: #POST
+            item.title = request.POST["title"]
+            item.body = request.POST["description"]
+            item.price = request.POST["price"]
+            new_category_id = request.POST["category_id"]
+            item.category = Category.objects.get(id=int(new_category_id))
+            
+            num_kept = 3 #number of kept images
+            old_images = item.image_set.order_by('id')
+            if str(request.POST["image2"]) == "no" :
+                num_kept -= 1
+                if len(old_images) >= 3:
+                    image = old_images[2]
+                    image.delete()
+            
+            if str(request.POST["image1"]) == "no" :
+                num_kept -= 1
+                if len(old_images) >= 2:
+                    image = old_images[1]
+                    image.delete()
+            
+            if str(request.POST["image0"]) == "no" :
+                num_kept -= 1
+                if len(old_images) >= 1:
+                    image = old_images[0]
+                    image.delete()
+            
+            
+            files_list = request.FILES.getlist("images")
+            for file in files_list:
+                if num_kept <3:
+                    obj = MultiuploaderImage()
+                    obj.image = file
+                    obj.filename=str(file)
+                    obj.key_data = obj.key_generate
+                    obj.post = item
+                    obj.save()
+                    num_kept += 1
+                else:
+                    break
+            item.save()
+            item.reset_thumbnail_url()
+            return redirect('/'+str(item.id))
+    else:
+        message = "You do not own this item. I cannot let you do that Dave."
+        return render_to_response('message.html',{'message': message},context_instance=RequestContext(request))
+
 
 @login_required
 def ajax_contact_seller(request):

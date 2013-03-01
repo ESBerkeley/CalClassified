@@ -919,3 +919,13 @@ label.error {
     width: 900px;
     margin: auto;
 }
+
+.image_box {
+    width: 27%; 
+    height: 260px; 
+    border: solid 1px #d5d5d5; 
+    padding: 10px; 
+    float: left; 
+    margin-right: 10px;
+    cursor: pointer;
+}
