@@ -23,8 +23,8 @@ label.error {
 <div id="signup-container" class="container">
   <div id="signup-box" class="span12">
     <div class="small-title">
-      <h2>Change your e-mail</h2>
-      <p style="font-size:13px; margin-top:18px; margin-bottom:1px;" >Receive messages at this e-mail when your item has been sold and other notifications.</p>
+      <h2>Do you use this e-mail?</h2>
+      <p style="font-size:13px; margin-top:18px; margin-bottom:1px;" >We want to message you when someone buys your item, or you receive other notifications.</p>
       <p style="font-size:13px; font-weight:bold;">By default, we will use your Facebook e-mail.</p>
     </div>
   
@@ -46,8 +46,8 @@ label.error {
             </div>
           {% endfor %}
         </div>
-        <input type="submit" class="btn loading" data-loading-text="Sending..." value="Set New Email" />
-        <a href="{% url account_profile %}" class="btn btn-primary" />Keep Default</a>
+        <input type="submit" class="btn btn-primary loading" data-loading-text="Sending..." value="Send Verification E-Mail" />
+        <a href="{% url account_profile %}" class="btn" />Cancel</a>
       </form>
     </div>
 

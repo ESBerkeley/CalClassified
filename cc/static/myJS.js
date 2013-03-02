@@ -166,6 +166,42 @@ x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"t
     xhr.send();
 }
 
+function date_change(oldDate) {     //returns a date with year-month-day format into "May 1, 2027"
+  var newDate = "";
+  var splitString = oldDate.split("-");
+  var month = splitString[1];
+  var day = splitString[2];
+  var year = splitString[0];
+
+  if(month == 1)
+    newDate += "January ";
+  else if(month == 2)
+    newDate += "February ";
+  else if(month == 3)
+    newDate += "March ";
+  else if(month == 4)
+    newDate += "April ";
+  else if(month == 5)
+    newDate += "May ";
+  else if(month == 6)
+    newDate += "June ";
+  else if(month == 7)
+    newDate += "July ";
+  else if(month == 8)
+    newDate += "August ";
+  else if(month == 9)
+    newDate += "September ";
+  else if(month == 10)
+    newDate += "October ";
+  else if(month == 11)
+    newDate += "November ";
+  else
+    newDate += "December ";
+
+  newDate += day + ", " + year;
+  return newDate
+}
+
 function notification_table() {
   var xhr;
   if(window.XMLHttpRequest){ xhr = new XMLHttpRequest();}
@@ -191,7 +227,7 @@ function notification_table() {
                   </tr>*/
               html += "<tr>";
               html += "<td><a href=\" "+notif[1]+" \"> "+notif[0]+" </a></td>";
-              html += "<td> "+notif[2]+" </td>";
+              html += "<td> "+ date_change(notif[2]) +" </td>";
               //html += "<td><center><a class=\"icon-trash\"></a></center></td>";
               html += "</tr>";
             }
