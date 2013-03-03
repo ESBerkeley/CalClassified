@@ -427,7 +427,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
 
             }
            var imageHeight=(height*hh)-pfactor-27; //got rid of -36. !!PUT BACK THE 36
-           var imageWidth=(width*ww)-pfactor;
+           var imageWidth=(width*ww)-pfactor-10; // change with width
 
            if(!(obj.extras.get_thumbnail_url == null)){
                var thumbnail = obj.extras.get_thumbnail_url;
