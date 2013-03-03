@@ -391,9 +391,8 @@ p.box-text {
 }
 
 /*index*/
-#index-banner {
+/*#index-banner {
   background-image:url('/static/hk2.jpg');
-  /*background-size:2000px 540px;*/
   background-size:cover;
   background-repeat:no-repeat;
   border-top:solid 1px #669;
@@ -404,7 +403,7 @@ p.box-text {
   width:100%;
   height:95%;
   position:absolute;
-}
+}*/
 /*
 #index-container {
   width:940px;
@@ -474,13 +473,25 @@ p.box-text {
   height: 350px;
 }
 
+#top-banner-container {
+    background-image: url(/static/low_contrast_linen.png);
+}
+
 #top-banner {
     height:450px;
     background-image: url('/static/hk2.jpg');
     background-size: 100% 100%;
     min-width:1440px;
+    max-width:1440px;
     margin-top: -20px;
-
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
+    -moz-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
+    /*box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;*/
+    box-shadow: 25px 0px 25px -7px rgba(0,0,0,0.3), -25px 0px 25px -7px rgba(0,0,0,0.3);
+    opacity:1;
+    z-index:3;
 }
 
 #banner-text-container {
