@@ -264,7 +264,7 @@ div.boxxx{
     border: 1px solid #D3D3D3;
     padding: 3px;
     padding-top: 7px;
-    overflow: hidden;
+
 
 }
 
@@ -279,24 +279,41 @@ div.boxxx:hover, div.friend_boxxx:hover{
     -moz-transition:0.2s; /* Firefox 4 */
     -webkit-transition: 0.2s; /* Safari and Chrome */
     -o-transition: 0.2s; /* Opera */
+    /*font-weight: 600;*/
 }
 
 div.friend_boxxx{
     position: absolute; 
-    cursor:pointer; 
-    padding:0;
-    border:2px solid black;
-    /*border-radius: 3px;*/
+    cursor:pointer;  
     background-color: white;
+    /*border-radius: 3px;*/
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: 1px solid #D3D3D3;
+    padding: 3px;
+    padding-top: 7px;
 }
 
 div.friend_boxxx:hover{
     -moz-box-shadow: 0 0 3px 3px rgba(95,126,193,0.3);
     -webkit-box-shadow: 0 0 3px 3px rgba(95,126,193,0.3);
     box-shadow: 0 0 3px 3px rgba(95,126,193,0.3);
-    border-color: rgb(38,57,97);
+    /*border-color: #5f7ec1;*/
 }
 
+.box-friend-name {
+  position: absolute;
+  bottom: 25px;
+  left: 10px;
+  padding: 4px;
+  background-color: #278bff;
+  padding-left: 4px;
+  padding-right: 4px;
+  color:white;
+
+  font-size: 13px;
+  border-radius: 3px;
+  font-family: 'Source Sans Pro', sans-serif;
+}
 
 div.stopfloat{
   clear:both;
@@ -328,7 +345,11 @@ div.stopfloat{
 }
 
 div.friend_boxxx .box-text-div {
-  background-color: #3B5998;
+  /*background-color: #3B5998;*/
+}
+
+div.friend_boxxx .box-text {
+  /*color: white;*/
 }
 
 p.box-text {
@@ -340,7 +361,7 @@ p.box-text {
 
   line-height: 140%;
   padding: 0;
-  color: #278bff;
+  color: #0065da;
   
 }
 
@@ -362,8 +383,11 @@ p.box-text {
  font-family: 'Open Sans', sans-serif;
  display:inline-block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-div.friend_boxxx .box-text {
-  color: white;
+
+.box-fb-icon{
+ position: absolute;
+ left:0px;
+ top: 0px;
 }
 
 /*index*/

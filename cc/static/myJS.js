@@ -421,6 +421,11 @@ function notification_sentence(obj, k) {    //list of notifications, position in
            var moar = "<a OnClick=\"save_state('/" + obj.pk + "')\" class='empty-link' value='"+obj.pk+"' href='/"+obj.pk+"'><div "+stylin+">";
            moar += "<div class=\"box-div\">";
            moar += "<div class='price-of-box'>$"+ obj.fields.price +"</div>";
+           if(obj.extras.friend == 1){
+            moar += "<div class='box-friend-name'>"+obj.extras.friendname+"</div>"
+            moar += "<div class='box-fb-icon'><img src='/static/images/fb-icon.gif'/></div>" 
+
+            }
            var imageHeight=(height*hh)-pfactor-27; //got rid of -36. !!PUT BACK THE 36
            var imageWidth=(width*ww)-pfactor;
 
@@ -435,7 +440,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
            moar += " <div class=\"box-text-div\"><p class=\"box-text\">";
            if(obj.extras.pending_flag){moar += "[Sale Pending] ";}
            moar += "<span class='box-item-title'>"+obj.fields.title+"</span>";
-           if(obj.extras.friend == 1){moar += "<br>" + obj.extras.friendname;}
+           //if(obj.extras.friend == 1){moar += "<br>" + obj.extras.friendname;}
            // moar += " - $" + obj.fields.price + " </p></div>"; //OLD PRICE
            moar += "</div> </div></a>";
            return moar;
