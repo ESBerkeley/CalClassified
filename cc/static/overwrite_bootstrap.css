@@ -501,7 +501,7 @@ p.box-text {
 #banner-text {
     padding: 10px;
     margin-left:-100px;
-    width:650px;
+    width:630px;
     /*padding-left:500px;*/
     background:url(/static/images/shading_opacity.png);
     -webkit-border-radius:6px;
