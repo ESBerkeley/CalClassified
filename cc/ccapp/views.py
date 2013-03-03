@@ -674,7 +674,7 @@ def edit_item(request,pid):
         else: #POST
             item.title = request.POST["title"]
             item.body = request.POST["description"]
-            item.price = request.POST["price"]
+            item.price = float(request.POST["price"])
             new_category_id = request.POST["category_id"]
             item.category = Category.objects.get(id=int(new_category_id))
             
@@ -711,8 +711,9 @@ def edit_item(request,pid):
                     num_kept += 1
                 else:
                     break
-            item.save()
+            
             item.reset_thumbnail_url()
+            item.save()
             return redirect('/'+str(item.id))
     else:
         message = "You do not own this item. I cannot let you do that Dave."
@@ -965,7 +966,9 @@ def ajax_box(request):
     return HttpResponse(data,'application/javascript')
 
 def foreveralone(found_entries,fbf, fatty_cheese_wheel):
+    print(found_entries)
     for item in found_entries:
+        print("------SWAG"+str(item))
         item.object.friend = 0
         item.object.friendname = ""
         item.object.boxsize = 1

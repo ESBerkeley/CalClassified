@@ -260,16 +260,21 @@ div.boxxx{
     cursor:pointer;  
     background-color: white;
     /*border-radius: 3px;*/
-    border: 1px solid black;
-    padding: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: 1px solid #D3D3D3;
+    padding: 3px;
+    padding-top: 7px;
+    overflow: hidden;
+
 }
 
 div.boxxx:hover, div.friend_boxxx:hover{
     /* background-color:#C85A1F !important; */
     -moz-box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);
     -webkit-box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);
-    box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);
-    border-color: #e69500;
+    /*box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);*/
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+    border-color: #bbbbbb;
     transition:0.2s;
     -moz-transition:0.2s; /* Firefox 4 */
     -webkit-transition: 0.2s; /* Safari and Chrome */
@@ -313,28 +318,50 @@ div.stopfloat{
   display:table;
   bottom:0px;
   width:100.5%;
-  height:36px; /*fixed at 40*/
-  background-color: #141414;
+  /*height:36px; /*fixed at 40*/
+  /*background-color: #141414;*/
   opacity:0.85;
   filter:alpha(opacity=85);
   -moz-opacity:0.85;
-  border-top: 1px solid black;
+  /*border-top: 1px solid black;*/
+  padding: 2px;
 }
 
 div.friend_boxxx .box-text-div {
   background-color: #3B5998;
 }
 
-.box-text {
-  color:white;
+p.box-text {
+  /*color:white;*/
   display:table-cell;
-  vertical-align:middle;
-  text-align:center;
-  font-size: 15px;
-  font-weight:400;
+  /*vertical-align:middle;*/
+  /*text-align:center;*/
+  font-size: 16px;
+
   line-height: 140%;
+  padding: 0;
+  color: #278bff;
+  
 }
 
+.price-of-box {
+  position: absolute;
+  right: 10px;
+  padding: 2px;
+  background-color: #278bff;
+  padding-left: 4px;
+  padding-right: 4px;
+  color:white;
+
+  font-size: 18px;
+  border-radius: 3px;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.box-item-title{
+ font-family: 'Open Sans', sans-serif;
+ display:inline-block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
 div.friend_boxxx .box-text {
   color: white;
 }
@@ -921,7 +948,7 @@ label.error {
 }
 
 .image_box {
-    width: 27%; 
+    width: 202px; 
     height: 260px; 
     border: solid 1px #d5d5d5; 
     padding: 10px; 

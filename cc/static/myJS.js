@@ -416,12 +416,12 @@ function notification_sentence(obj, k) {    //list of notifications, position in
            var stylin = "";
            if(obj.extras.friend){stylin+="class=\"friend_boxxx\"";}
            else{stylin += 'class="boxxx '+obj.pk+' "';}
-           stylin += "style=\"left: " + x*width + "px; top: " + y*height + "px; height: " + ((height*hh)-pfactor) + "px; width: "+ ((width*ww)-pfactor) + "px\"";
+           stylin += "style=\"left: " + (x*width-10) + "px; top: " + y*height + "px; height: " + ((height*hh)-pfactor-5 ) + "px; width: "+ ((width*ww)-pfactor-10) + "px\"";
 
            var moar = "<a OnClick=\"save_state('/" + obj.pk + "')\" class='empty-link' value='"+obj.pk+"' href='/"+obj.pk+"'><div "+stylin+">";
            moar += "<div class=\"box-div\">";
-
-           var imageHeight=(height*hh)-pfactor-36; //got rid of -36. !!PUT BACK THE 36
+           moar += "<div class='price-of-box'>$"+ obj.fields.price +"</div>";
+           var imageHeight=(height*hh)-pfactor-27; //got rid of -36. !!PUT BACK THE 36
            var imageWidth=(width*ww)-pfactor;
 
            if(!(obj.extras.get_thumbnail_url == null)){
@@ -434,9 +434,9 @@ function notification_sentence(obj, k) {    //list of notifications, position in
 
            moar += " <div class=\"box-text-div\"><p class=\"box-text\">";
            if(obj.extras.pending_flag){moar += "[Sale Pending] ";}
-           moar += obj.fields.title;
+           moar += "<span class='box-item-title'>"+obj.fields.title+"</span>";
            if(obj.extras.friend == 1){moar += "<br>" + obj.extras.friendname;}
-           moar += " - $" + obj.fields.price + " </p></div>";
+           // moar += " - $" + obj.fields.price + " </p></div>"; //OLD PRICE
            moar += "</div> </div></a>";
            return moar;
         }
