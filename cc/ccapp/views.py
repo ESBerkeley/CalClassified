@@ -309,8 +309,13 @@ def friends(request):
 class FriendsView(TemplateView):
     template_name = 'friends.html'
 
-class MainView(TemplateView):
-    template_name = 'index.html'
+#class MainView(TemplateView):
+#    template_name = 'index.html'
+
+def index_home(request):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
+    return render_to_response('index.html',context_instance=RequestContext(request))
 
 class FeedbackView(FormView):
     template_name = 'feedback.html'
@@ -370,8 +375,14 @@ def confirmviewIFS(request,pid,secret):
 
 def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
     if request.user.is_authenticated():
+        
         user = request.user
         user_profile = user.get_profile()
+        
+        #damn you banners
+        if user.get_profile().is_banned:
+            return HttpResponse("cy@m8")
+        
         if request.method == 'POST':
             #try:
              #   model_instance = request.session['instance']
@@ -533,6 +544,8 @@ def deleteallposts(request):
 
 
 def showpost(request, pid, super_cat):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     post = get_object_or_404(super_cat, pk=pid)
     if post.deleted:
         data = {}
@@ -719,7 +732,42 @@ def edit_item(request,pid):
         message = "You do not own this item. I cannot let you do that Dave."
         return render_to_response('message.html',{'message': message},context_instance=RequestContext(request))
 
-
+@login_required
+def flag_item(request,pid):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
+    item = ItemForSale.objects.get(id=pid)
+    flag, created = ItemFlag.objects.get_or_create(flagger = request.user, item=item)
+    data = {}
+    if created == False:
+        data['title'] = "Item Flag Failed"
+        data['message'] = "It looks like you already flagged this item. Email contact@buynear.me for further assistance."
+        return render_to_response('message.html',data,context_instance=RequestContext(request)) 
+    
+    #check if more than 3 flags exist, if so get rid of the item and ban user
+    flagged = ItemFlag.objects.filter(item = item)
+    if len(flagged) >= 3 or request.user.is_staff:
+        item.deleted = True 
+        item.save()
+        owner = item.owner
+        op = owner.get_profile()
+        op.is_banned = True
+        op.save()
+        
+        bad_items = ItemForSale.objects.filter(owner=owner)
+        for bad in bad_items:
+            bad.deleted = True
+            bad.save()
+        
+        data['title'] = "Item Flagged"
+        data['message'] = "Thanks for reporting this item. The item and user have been taken down!"
+        return render_to_response('message.html',data,context_instance=RequestContext(request))
+    data['title'] = "Item Flagged"
+    data['message'] = "Thanks for reporting this item. If enough users report this item, it will be taken down. Please email contact@buynear.me for immediate moderation."
+    return render_to_response('message.html',data,context_instance=RequestContext(request))
+    
+    
+    
 @login_required
 def ajax_contact_seller(request):
     if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
@@ -793,6 +841,8 @@ def search(request):
     return render_to_response('index.html',{ 'query_string': query_string, 'cc_ifs': found_entries }, context_instance=RequestContext(request))
 
 def boxview(request):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     query_string = ''
     #found_entries = ItemForSale.objects.all()
     found_entries = 1 #This is a dummy value which isnt used at all
@@ -1151,6 +1201,8 @@ def ajax_delete_thread(request):
         
 @login_required
 def profile_status(request):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     user = request.user
     posts = ItemForSale.objects.filter(owner=user).order_by('-time_created')
     user_profile = user.get_profile()
@@ -1277,6 +1329,8 @@ def profile_buying(request):
     
 @login_required(redirect_field_name='/view_thread')
 def profile_view_thread(request,thread_id):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     thread = Thread.objects.get(id = thread_id)
     if thread.owner != request.user:
         return redirect('/')

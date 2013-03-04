@@ -111,7 +111,7 @@ def next_redirect(request, default='/', additional_params=None,
         next_key = [next_key]
     
     url = request.build_absolute_uri()
-    
+
     # get the redirect url
     if not redirect_url:
         for key in next_key:
