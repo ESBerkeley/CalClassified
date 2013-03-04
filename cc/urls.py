@@ -2,7 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from ccapp.views import ContactView, AboutView, MainView, FeedbackView, ThanksView
+from ccapp.views import ContactView, AboutView,  FeedbackView, ThanksView #,MainView
 from django.views.generic import TemplateView
 
 admin.autodiscover()
@@ -10,7 +10,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     #MAIN PAGES
-    url(r'^$', MainView.as_view(), name='mainview'),
+    #url(r'^$', MainView.as_view(), name='mainview'),
+    url(r'^$','ccapp.views.index_home',name="mainview"),
     url(r'^browse/$','ccapp.views.boxview',name="browse"),
     url(r'^sell/$','ccapp.views.createlistingviewIFS',name="createIFS"),
     url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS2"), #delete in future, in case for hard links
@@ -43,8 +44,9 @@ urlpatterns = patterns('',
 
     url(r'^delete/(?P<pid>\d+)$','ccapp.views.deletepostIFS'),
     url(r'^edit/(?P<pid>\d+)/$','ccapp.views.edit_item', name='edit_item'),
+    url(r'^flag/(?P<pid>\d+)/$','ccapp.views.flag_item', name='flag_item'),
     url(r'^delete/all/','ccapp.views.deletepostIFS'),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin_user/', include(admin.site.urls)),
     url(r'^search/$','ccapp.views.search'),
 
     url(r'^ajax_box/$','ccapp.views.ajax_box'),

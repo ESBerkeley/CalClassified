@@ -19,6 +19,7 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^dialog/message_sent/$','message_sent', name="message_sent"), #i dont think its used atm
     url(r'^delete_item/(?P<pid>\d+)/$','delete_item', name="delete_item"),
     url(r'^item_action/$','item_action', name="item_action"), #REQUIRES GET PARAMETERS look at view
+    url(r'^flag/(?P<pid>\d+)/$','flag_item', name='flag_item'),
 
     url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/home.html'},name='auth_login'),
 

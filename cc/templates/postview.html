@@ -265,6 +265,9 @@
                         Unbookmark Item
                     </a>
                 </p>
+                <p>
+                    <a id="flag-post" style="cursor:pointer;"><i class="icon-flag side-icon"></i>Flag as inappropriate</a>
+                </p>
             {% endif %}
             <!--p>
             <a href="http://www.facebook.com/sharer.php?u=buynear.me{{ post.get_absolute_url }}">
@@ -455,6 +458,12 @@ $(document).ready( function() {
       $("#delete-post").click(function(){
         if (confirm("Are you sure you want to delete this post?")) {
             window.location.href="/delete/{{ post.pk }}" 
+        }
+      });
+      
+      $("#flag-post").click(function(){
+        if (confirm("Are you sure you want to flag this post?")) {
+            window.location.href="/flag/{{ post.pk }}" 
         }
       });
 

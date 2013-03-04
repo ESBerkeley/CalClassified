@@ -32,6 +32,8 @@ import random
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 def home(request):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('my_items'))
     else:
@@ -56,6 +58,8 @@ def browse(request):
 
 @login_required
 def sell(request):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     user = request.user
     #user_profile = user.get_profile()
 
@@ -164,7 +168,8 @@ def ajax_browse(request):
 
 @login_required
 def my_items(request):
-
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     #bookmarks = user_profile.bookmarks.all().order_by('-time_created')
     
     data = {}
@@ -237,6 +242,8 @@ def buying(request):
     return render_to_response('mobile/buying.html',data,context_instance=RequestContext(request))
 
 def view_item(request,pid):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     if request.method == "GET":
         item = ItemForSale.objects.get(id = pid)
         if item.deleted:
@@ -263,7 +270,39 @@ def view_item(request,pid):
         
         return render_to_response("mobile/view_item.html",data,context_instance = RequestContext(request))
     
-   
+@login_required
+def flag_item(request,pid):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
+    item = ItemForSale.objects.get(id=pid)
+    flag, created = ItemFlag.objects.get_or_create(flagger = request.user, item=item)
+    data = {}
+    if created == False:
+        data['title'] = "Item Flag Failed"
+        data['message'] = "It looks like you already flagged this item. Email contact@buynear.me for further assistance."
+        return render_to_response('mobile/message.html',data,context_instance=RequestContext(request)) 
+    
+    #check if more than 3 flags exist, if so get rid of the item and ban user
+    flagged = ItemFlag.objects.filter(item = item)
+    if len(flagged) >= 3 or request.user.is_staff:
+        item.deleted = True
+        item.save()
+        owner = item.owner
+        op = owner.get_profile()
+        op.is_banned = True
+        op.save()
+        
+        bad_items = ItemForSale.objects.filter(owner=owner)
+        for bad in bad_items:
+            bad.deleted = True
+            bad.save()
+        
+        data['title'] = "Item Flagged"
+        data['message'] = "Thanks for reporting this item. The item and user have been taken down!"
+        return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+    data['title'] = "Item Flagged"
+    data['message'] = "Thanks for reporting this item. If enough users report this item, it will be taken down. Please email contact@buynear.me for immediate moderation."
+    return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
 
 def ajax_message_send(request):
     if request.is_ajax() and request.user.is_authenticated() and request.method=="POST" and "message" in request.POST:
@@ -297,6 +336,8 @@ def view_messages(request):
 
 @login_required
 def view_thread(request,thread_id):
+    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
+        return HttpResponse("cy@m8")
     thread = Thread.objects.get(id = thread_id)
     if thread.owner != request.user:
         return redirect('/')

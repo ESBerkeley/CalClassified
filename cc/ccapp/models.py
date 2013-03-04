@@ -316,7 +316,14 @@ class Thread(models.Model):
         return '/accounts/profile/messages/%i' % self.id
     def get_mobile_url(self):
         return '/view_messages/%i/' % self.id
-
+        
+#create ItemFlags if user flags
+class ItemFlag(models.Model):
+    flagger = models.ForeignKey(User) #who flagged an item
+    item = models.ForeignKey(ItemForSale) #item being flagged
+    def __unicode__(self):
+        return self.item.title
+    
 class CaseInsensitiveModelBackend(ModelBackend):
     """
     By default ModelBackend does case _sensitive_ username authentication, which isn't what is

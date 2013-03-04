@@ -110,8 +110,10 @@
           {% elif item.owner != request.user %}
                 <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Buy Now</a> 
           {% endif %}
+          <button id="item-flag-btn" data-icon="alert">Flag as inappropriate</button>
+          
           </center>
-      {% else %}
+    {% else %}
         <a href="/?next={{ item.get_absolute_url }}" data-role="button">Login to Buy</a>
     {% endif %}
     
@@ -277,7 +279,11 @@
 
     <script type="text/javascript">
 
-
+    $("#item-flag-btn").click(function(){
+        if (confirm("Are you sure you want to flag this post?")) {
+            window.location.href="/flag/{{ item.pk }}" 
+        }
+    })
 
         //$(document).bind('pageinit', function(){
 
