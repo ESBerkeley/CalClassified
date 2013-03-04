@@ -312,8 +312,18 @@
     return "whoops";
   }
 
+/* OLD
   function switchCat(category) {  //run on click, switches boolean
     cat_object[category] = !cat_object[category];
+  }
+*/
+
+  function switchCat(category) {  //sets all categories to false first, then sets specific one to true.
+    for(cat in cat_object) {
+      cat_object[cat] = 0;
+    }
+    cat_object[category] = true;
+    
   }
 
   function getCats() {

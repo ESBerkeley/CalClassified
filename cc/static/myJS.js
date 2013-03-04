@@ -306,6 +306,12 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   }
 
   function toggler(control) {
+    $(".side-icon").hide();
+    var id = document.getElementById(control);
+    $(id).show();
+  }
+
+  function toggler2(control) {
     var id = document.getElementById(control);
     $(id).toggle();
   }
