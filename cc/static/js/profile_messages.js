@@ -37,7 +37,7 @@ $(".close-refresh").click (function() {
       data: data,
       success: function(data){
         $("#delete-modal-"+post_id).modal('hide');
-        $("#success-modal").modal('show');
+        $("#delete-success-modal").modal('show');
       }
     });
   });

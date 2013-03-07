@@ -250,7 +250,9 @@
                         <a href="{% url edit_item post.id %}" id="edit-post" style="cursor:pointer;"><i class="icon-pencil side-icon"></i>Edit Details</a>
                     </p>
                     <p>
-                        <a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Item</a>
+                        <a style="cursor:pointer;" data-toggle="modal" href="#delete-modal-{{ post.id }}">
+                            <i class="icon-trash side-icon"></i>Delete Item</a>
+                        <!--a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Item</a-->
                     </p>
                 {% endif %}
                 <p>
@@ -380,6 +382,38 @@
   </div>
 </div>-->
 
+
+<!-- "are you sure you want to delete" modal window -->
+<div class="modal fade hide" id="delete-modal-{{ post.id }}">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Delete Post</h3>
+    </div>
+    <div class="modal-body">
+        <p>
+            Are you sure you want to delete your post '{{ post.title }}'?
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary verify-delete" value="{{ post.id }}" type="button" data-loading-text="Deleting...">Delete</button>
+        <button class="btn" data-dismiss="modal">Cancel</button>
+    </div>
+</div>
+
+<!-- success modal content -->
+<div class="modal fade hide" id="delete-success-modal">
+    <div class="modal-header">
+        <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Delete Post</h3>
+    </div>
+    <div class="modal-body">
+        <p>Success, post deleted!</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn close-refresh" data-dismiss="modal">Close</button>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block pre_js %}
@@ -406,13 +440,13 @@ $(document).ready( function() {
     $("#comment-form").validate({
         rules: {
             body: {
-                required: true,
-            },
+                required: true
+            }
         },
         submitHandler: function() {
             $("#comment-btn").button('loading');
             $(form).ajaxSubmit();
-        },
+        }
     });
 
     function streamPublish(name, description, caption, hrefLink, picLink){
@@ -489,5 +523,6 @@ $(document).ready( function() {
 </script>
 
 {% load static %}
+<script src="{% get_static_prefix %}js/profile_messages.js?v=1"></script>
 <script src="{% get_static_prefix %}js/postview.js"></script>
 {% endblock %}
