@@ -148,7 +148,8 @@ class FacebookProfile(FacebookProfileModel):
     sold_email = models.BooleanField('Seller confirms that the item has been sold to you as the buyer', default=True)
     failed_to_sell_email = models.BooleanField('Seller has notified us that the item could not be sold to you and has re-listed the item', default=True)
     first_time = models.BooleanField(default=True)
-
+    is_banned = models.BooleanField(default=False)
+    
     @property
     def sell_notifications(self):
         sell_ids = [x.id for x in ItemForSale.objects.filter(owner=self.user).filter(sold=False)]

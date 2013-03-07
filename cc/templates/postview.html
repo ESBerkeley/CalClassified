@@ -264,6 +264,9 @@
                         Unbookmark Item
                     </a>
                 </p>
+                <p>
+                    <a id="flag-post" style="cursor:pointer;"><i class="icon-flag side-icon"></i>Flag as inappropriate</a>
+                </p>
             {% endif %}
             <!--p>
             <a href="http://www.facebook.com/sharer.php?u=buynear.me{{ post.get_absolute_url }}">
@@ -287,7 +290,7 @@
 
 
         {% if not post.is_facebook_post %}
-        <a name = "comments_section"></a><h3 style="font-weight: 400;">Questions? Ask here:</h3>
+        <a name = "comments_section"></a><h3 style="font-weight: 400;">Questions:</h3>
 
         {% if comments %}
         <table class = "table">
@@ -334,7 +337,7 @@
         {% endfor %}
         </table>
         {% else %}
-            <p style="padding-bottom: 10px;">No questions currently exist.</p>
+            <p style="padding-bottom: 10px;">None currently exist.</p>
         {% endif %}
 
         <div>
@@ -345,7 +348,7 @@
             {% if request.user == post.owner %}
               <label for="id_body">Add public comments here:</label>
             {% else %}
-              <label for="id_body">Questions? Ask public questions here (seller will be notified):</label>
+              <label for="id_body">Ask your public questions here. The seller will be notified:</label>
             {% endif %}
             <textarea id="id_body" type="text" name="body" maxlength="200" class="span5" rows="5"></textarea>
           </p>
@@ -453,6 +456,12 @@ $(document).ready( function() {
       $("#delete-post").click(function(){
         if (confirm("Are you sure you want to delete this post?")) {
             window.location.href="/delete/{{ post.pk }}" 
+        }
+      });
+      
+      $("#flag-post").click(function(){
+        if (confirm("Are you sure you want to flag this post?")) {
+            window.location.href="/flag/{{ post.pk }}" 
         }
       });
 

@@ -26,6 +26,10 @@
         <div id="collapseOne" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
+              <li class="side-item">
+                <i id="Everything-icon" class="icon-ok-sign side-icon" type="hidden" onclick="allCat(); toggler('Everything-icon'); runloadBox();"></i>
+                <a id="Everything_category" class="category" onclick="allCat(); toggler('Everything-icon'); runloadBox();"> Everything </a>
+              </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
                 <li class="side-item">
@@ -155,6 +159,7 @@
 
 <script type="text/javascript">
   $(".side-icon").hide();  //hides sidebar icons initially
+  $("#Everything-icon").show(); //shows the Everything filter icon
   $(".popovers").popover({trigger:'hover'});
 
 
@@ -312,8 +317,23 @@
     return "whoops";
   }
 
+/* OLD
   function switchCat(category) {  //run on click, switches boolean
     cat_object[category] = !cat_object[category];
+  }
+*/
+
+  function switchCat(category) {  //sets all categories to false first, then sets specific one to true.
+    for(cat in cat_object) {
+      cat_object[cat] = false;
+    }
+    cat_object[category] = true;
+  }
+
+  function allCat() {
+    for(cat in cat_object) {
+      cat_object[cat] = true;
+    }
   }
 
   function getCats() {

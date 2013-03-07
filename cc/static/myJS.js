@@ -305,7 +305,13 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     runloadBox(pg);
   }
 
-  function toggler(control) {
+  function toggler(control) {   //hides everything, shows specific icon
+    $(".side-icon").hide();
+    var id = document.getElementById(control);
+    $(id).show();
+  }
+
+  function toggler2(control) {
     var id = document.getElementById(control);
     $(id).toggle();
   }
