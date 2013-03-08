@@ -16,6 +16,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
 from django_facebook.models import *
+from django_facebook.decorators import facebook_required
 from django_facebook.api import get_facebook_graph, get_persistent_graph, FacebookUserConverter
 from open_facebook.exceptions import OpenFacebookException
 
@@ -431,12 +432,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
 
                 fb_success = True
                 if post_to_ffs:
-                    try:
-                        graph = get_persistent_graph(request)
-                        facebook = FacebookUserConverter(graph)
-                        facebook.set_free_for_sale(model)
-                    except:
-                        fb_success = False
+                    fb_success = free_for_sale_post(request, model)
                 post_created_signal.send(sender = ItemForSale, instance = model)
                 if fb_success and post_to_ffs:
                     return redirect(model.get_absolute_url()+"?new=1&postffs=1")
@@ -486,6 +482,17 @@ def createlistingviewIFS(request):
     
 #def createIFSwithinCircle(request, url_key):
 #    return createlistingview(request,ItemForSaleForm,ItemForSale,url_key=url_key)
+
+@facebook_required(scope='publish_stream')
+def free_for_sale_post(request, item):
+    try:
+        graph = get_persistent_graph(request)
+        facebook = FacebookUserConverter(graph)
+        facebook.set_free_for_sale(item)
+        return True
+    except:
+        return False
+
 
 @login_required
 def deletepost(request, pid, super_cat):
