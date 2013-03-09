@@ -24,7 +24,8 @@ class Post(models.Model):
     key_data = models.CharField(max_length=30, unique=True, blank=True, null=True)
     owner = models.ForeignKey(User, null=True, default=None)
     approved = models.BooleanField(default=True)
-    
+    owner_facebook_id = models.BigIntegerField(blank=True, null=True)    
+
     class Meta:  #abstract base class. no actual db table
         abstract = True
 
@@ -219,7 +220,7 @@ class ItemForSaleForm(ModelForm):
     post_to_ffs = forms.BooleanField(label='Free & For Sale', initial=True, required=False, help_text='Post to the Facebook group Free & For Sale if you are a member.')
     class Meta:
         model = ItemForSale
-        exclude = ('time_created','images', 'key_data', 'owner','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'deleted', 'approved','circles')
+        exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'deleted', 'approved','circles')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
