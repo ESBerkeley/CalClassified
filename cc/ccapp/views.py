@@ -395,7 +395,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 #model.is_confirmed = True
                 #model.pk = request.POST[u'post_pk']
                 model.owner = user
-
+                model.owner_facebook_id = user.get_profile().facebook_id
                 #MULTIUPLOADER
                 #images = MultiuploaderImage.objects.filter(post_key_data=model.key_data)
 
