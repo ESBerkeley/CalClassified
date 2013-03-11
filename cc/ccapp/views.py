@@ -941,9 +941,22 @@ def ajax_box(request):
         found_entries = found_entries.filter(entry_query).order_by('-time_created')
     """
 
+    found_entries = SearchQuerySet()
+
+    friends = []
+    friend_ids = []
+
+    if request.user.is_authenticated():
+        friends = FacebookUser.objects.filter(user_id = request.user.id)
+        friend_ids = [x.facebook_id for x in friends]
+
+    if fbf:
+        found_entries = found_entries.filter(owner_facebook_id__in = friend_ids)
+
+
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
-        found_entries = SearchQuerySet().filter(
+        found_entries = found_entries.filter(
             text=query_string,
             circles__in=checked_circles,
             category__in=checked_categories,
@@ -956,7 +969,7 @@ def ajax_box(request):
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
     else:
-        found_entries = SearchQuerySet().filter(
+        found_entries = found_entries.filter(
             circles__in=checked_circles,
             category__in=checked_categories,
             price__range=(min_price,max_price),
@@ -974,7 +987,7 @@ def ajax_box(request):
             
     if request.user.is_authenticated(): 
         user = request.user
-        friends = FacebookUser.objects.filter(user_id = user.id)
+#        friends = FacebookUser.objects.filter(user_id = user.id)
 
         if friends:
             for search_result in found_entries:
@@ -988,12 +1001,14 @@ def ajax_box(request):
                     item.friend = 0
                     item.friendname = ""
                 item.boxsize = 1
-                
-                if fbf:
-                    if search_result.object.friend:
-                        fatty_cheese_wheel.append(search_result.object)
-                else:
-                    fatty_cheese_wheel.append(search_result.object)
+
+                fatty_cheese_wheel.append(search_result.object)             
+   
+             #   if fbf:
+             #       if search_result.object.friend:
+             #           fatty_cheese_wheel.append(search_result.object)
+             #   else:
+             #       fatty_cheese_wheel.append(search_result.object)
         else:
             foreveralone(found_entries,fbf, fatty_cheese_wheel)
     else:
@@ -1022,9 +1037,9 @@ def ajax_box(request):
     return HttpResponse(data,'application/javascript')
 
 def foreveralone(found_entries,fbf, fatty_cheese_wheel):
-    print(found_entries)
+#    print(found_entries)
     for item in found_entries:
-        print("------SWAG"+str(item))
+#        print("------SWAG"+str(item))
         item.object.friend = 0
         item.object.friendname = ""
         item.object.boxsize = 1
