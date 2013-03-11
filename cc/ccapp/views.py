@@ -987,16 +987,16 @@ def ajax_box(request):
             
     if request.user.is_authenticated(): 
         user = request.user
-#        friends = FacebookUser.objects.filter(user_id = user.id)
+    #    friends = FacebookUser.objects.filter(user_id = user.id)
 
         if friends:
             for search_result in found_entries:
                 item = search_result.object
                 item.score = search_result.score
                 try:
-                    friends.get(facebook_id = item.owner_facebook_id)
+                    m8 = friends.get(facebook_id = item.owner_facebook_id)
                     item.friend = 1
-                    item.friendname = op.facebook_name
+                    item.friendname = m8.name
                 except:
                     item.friend = 0
                     item.friendname = ""
