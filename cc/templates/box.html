@@ -120,6 +120,12 @@
           </div>
         </div>
       </div>
+
+      <div id="pac-ajax" style="">
+        <h4 style="float:left;">Loading</h4>
+        <img src="{{ STATIC_URL }}images/pacman-ajax.gif" style="float:left; margin: 6px 9px 0 15px;"/>
+        <h4 style="float:left;">...</h4>
+      </div>
     </div><!--span-->
 {% endblock %}
 
@@ -141,7 +147,7 @@
     </div>
   </div>
 </div><!-- end sidebar -->
-    <img id="pac-ajax" src="{{ STATIC_URL }}images/pacman-ajax.gif" style="position: fixed;top: 50%;left: 50%; display: none;" />
+    <!--<img id="pac-ajax" src="{{ STATIC_URL }}images/pacman-ajax.gif" style="position: fixed;top: 50%;left: 50%; display: none;" />-->
 
   <form style="display: none;" id="session">
    <textarea id="sfield">3</textarea>
