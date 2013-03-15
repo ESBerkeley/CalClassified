@@ -27,20 +27,20 @@
           <div class="accordion-inner">
             <ul class="unstyled">
               <li class="side-item">
-                <i id="Everything-icon" class="icon-ok-sign side-icon" type="hidden" onclick="allCat(); toggler('Everything-icon'); runloadBox();"></i>
-                <a id="Everything_category" class="category" onclick="allCat(); toggler('Everything-icon'); runloadBox();"> Everything </a>
+                <i id="Everything-icon" class="icon-ok-sign side-icon" type="hidden" onclick="allCat(); toggler('Everything-icon'); searchToggle('Everything'); runloadBox();"></i>
+                <a id="Everything_category" class="category" onclick="allCat(); toggler('Everything-icon'); searchToggle('Everything'); runloadBox();"> Everything </a>
               </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
                 <li class="side-item">
-                  <i id="{{cat.name}}-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); runloadBox();"></i>
-                  <a id="{{cat.name}}_category" class="category" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); runloadBox();"> {{cat.name}} </a>
+                  <i id="{{cat.name}}-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); searchToggle('{{cat.name}}'); runloadBox();"></i>
+                  <a id="{{cat.name}}_category" class="category" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); searchToggle('{{cat.name}}'); runloadBox();"> {{cat.name}} </a>
                 </li>
                 {% endif %}
               {% endfor %}
               <li class="side-item">
-                <i id="Other-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"></i>
-                <a id="Other_category" class="category" onclick="switchCat('Other'); toggler('Other-icon'); runloadBox();"> Other </a>
+                <i id="Other-icon" class="icon-ok-sign side-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"></i>
+                <a id="Other_category" class="category" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"> Other </a>
               </li>
 
               {% if user.get_profile.facebook_id %}

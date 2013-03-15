@@ -310,10 +310,10 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     var id = document.getElementById(control);
     $(id).show();
   }
-
-  function toggler2(control) {
-    var id = document.getElementById(control);
-    $(id).toggle();
+ 
+  function searchToggle(name) {
+    var id = document.getElementById('searchbar');
+    id.placeholder = 'Search in ' + name;
   }
 
   function runloadBox(pg) {
