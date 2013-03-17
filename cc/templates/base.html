@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-512aa338203f9795"></script>
+{% block analyticshead %}
+{% endblock %}
   <head>
       {% load static %}
     <meta charset="utf-8">
@@ -14,7 +14,7 @@
       <meta property="og:type" content="website"/>
       <meta property="og:url" content="http://buynear.me/"/>
       <meta property="og:image" content="http://buynear.me/{% get_static_prefix %}124ta-orange.png"/>
-      <meta property="og:site_name" content="Buy Near Me"/>
+      <meta property="og:site_name" content="BuyNearMe"/>
 
       <meta property="og:description"
             content="Buy and sell items to friends and classmates!"/>

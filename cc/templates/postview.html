@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Buy Near Me - {{post.title}}{% endblock %}
+{% block title %}BuyNearMe - {{post.title}}{% endblock %}
+
+{% block analyticshead %}
+    <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-512aa338203f9795"></script>
+{% endblock %}
 
 {% block metadata %}
 {% load static %}
