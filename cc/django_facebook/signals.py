@@ -14,9 +14,16 @@ facebook_post_store_friends = Signal(providing_args=['user', 'friends', 'current
 # Sent after storing the likes from graph to db
 facebook_post_store_likes = Signal(providing_args=['user', 'likes', 'current_likes', 'inserted_likes'])
 
+# Sent after storing the likes from graph to db
+facebook_post_store_groups = Signal(providing_args=['user', 'groups', 'current_groups', 'inserted_groups'])
+
 #Some signals for compatibility with Django Registration
 # A new user has registered.
 user_registered = Signal(providing_args=["user", "request"])
 
 # A user has activated his or her account.
 user_activated = Signal(providing_args=["user", "request"])
+
+# Run when the token extend finished
+facebook_token_extend_finished = Signal(
+    providing_args=["profile", "token_changed", "old_token"])

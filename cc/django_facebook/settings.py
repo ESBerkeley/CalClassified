@@ -5,7 +5,7 @@ from django.conf import settings
 FACEBOOK_APP_ID = getattr(settings, 'FACEBOOK_APP_ID', None)
 FACEBOOK_APP_SECRET = getattr(settings, 'FACEBOOK_APP_SECRET', None)
 FACEBOOK_DEFAULT_SCOPE = getattr(settings, 'FACEBOOK_DEFAULT_SCOPE', [
-    'email', 'user_about_me', 'user_groups', 'user_likes', 'user_location', 'publish_actions'])
+    'email', 'user_about_me', 'user_groups', 'user_location', 'publish_actions'])
 
 # Absolute canvas page url as per facebook standard
 FACEBOOK_CANVAS_PAGE = getattr(settings, 'FACEBOOK_CANVAS_PAGE',
@@ -26,6 +26,10 @@ FACEBOOK_STORE_GROUPS = getattr(settings, 'FACEBOOK_STORE_GROUPS', False)
 # recommended if you want to store friends or likes
 FACEBOOK_CELERY_STORE = getattr(settings, 'FACEBOOK_CELERY_STORE', False)
 
+# use celery for updating tokens, recommended since it's quite slow
+FACEBOOK_CELERY_TOKEN_EXTEND = getattr(
+    settings, 'FACEBOOK_CELERY_TOKEN_EXTEND', False)
+
 FACEBOOK_DEBUG_REDIRECTS = getattr(settings, 'FACEBOOK_DEBUG_REDIRECTS', False)
 FACEBOOK_STORE_ALL_ACCESS_TOKENS = getattr(settings, 'FACEBOOK_STORE_ALL_ACCESS_TOKENS', False) 
 
@@ -42,6 +46,10 @@ for setting_name in required_settings:
 # Allow custom registration template
 FACEBOOK_REGISTRATION_TEMPLATE = getattr(settings,
     'FACEBOOK_REGISTRATION_TEMPLATE', 'registration/registration_form.html')
+
+# Force profile update every login
+FACEBOOK_FORCE_PROFILE_UPDATE_ON_LOGIN = getattr(
+    settings, 'FACEBOOK_FORCE_PROFILE_UPDATE_ON_LOGIN', False)
 
 # Allow custom signup form
 FACEBOOK_REGISTRATION_FORM = getattr(settings,

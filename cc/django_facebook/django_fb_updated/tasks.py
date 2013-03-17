@@ -28,6 +28,23 @@ def store_likes(user, likes):
     FacebookUserConverter._store_likes(user, likes)
     return likes
 
+@task.task(ignore_result=True)
+def store_groups(user, groups):
+    '''
+    Inserting again will not cause any errors, so this is safe
+    for multiple executions
+
+    :param user: The user for which we are storing
+    :type user: User object
+
+    :param friends: List of your likes
+    :type friends: list
+    '''
+    from django_facebook.api import FacebookUserConverter
+    logger.info('celery is storing %s groups' % len(groups))
+    FacebookUserConverter._store_groups(user, groups)
+    return groups
+
 
 @task.task(ignore_result=True)
 def remove_share(share):
@@ -57,6 +74,30 @@ def get_and_store_likes(user, facebook):
     except IntegrityError, e:
         logger.warn(
             'get_and_store_likes failed for %s with error %s', user.id, e)
+
+@task.task(ignore_result=True)
+def get_and_store_groups(user, facebook):
+    '''
+    Since facebook is quite slow this version also runs the get
+    on the background
+
+    Inserting again will not cause any errors, so this is safe
+    for multiple executions
+
+    :param user: The user for which we are storing
+    :type user: User object
+
+    :param facebook: The graph connection to facebook
+    :type facebook: FacebookUserConverter object
+    '''
+    try:
+        logger.info('attempting to get and store groups for %s', user.id)
+        stored_groups = facebook._get_and_store_groups(user)
+        logger.info('celery is storing %s groups', len(stored_groups))
+        return stored_groups
+    except IntegrityError, e:
+        logger.warn(
+            'get_and_store_groups failed for %s with error %s', user.id, e)
 
 
 @task.task(ignore_result=True)

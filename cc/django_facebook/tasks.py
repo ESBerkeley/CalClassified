@@ -5,6 +5,12 @@ logger = logging.getLogger(__name__)
 
 
 @task.task(ignore_result=True)
+def extend_access_token(profile, access_token):
+    results = profile._extend_access_token(access_token)
+    return results
+
+
+@task.task(ignore_result=True)
 def store_likes(user, likes):
     '''
     Inserting again will not cause any errors, so this is safe
@@ -138,3 +144,36 @@ def async_connect_user(request, graph):
     It will be possible to run this command 1-N times
     '''
     pass
+
+@task.task(ignore_result=True)
+def retry_open_graph_share(share, reset_retries=False):
+    '''
+    We will retry open graph shares after 15m to make sure we dont miss out on any
+    shares if Facebook is having a minor outage
+    '''
+    logger.info('retrying open graph share %s', share)
+    share.retry(reset_retries=reset_retries)
+
+@task.task(ignore_result=True)
+def retry_open_graph_shares_for_user(user):
+    '''
+    We retry the open graph shares for a user when he gets a new access token
+    '''
+    from django_facebook.models import OpenGraphShare
+    shares = OpenGraphShare.objects.recently_failed().filter(user=user)[:1000]
+    shares = list(shares)
+    logger.info('retrying %s shares for user %s', len(shares), user)
+
+    for share in shares:
+        retry_open_graph_share(share, reset_retries=True)
+
+def token_extended_connect(sender, profile, token_changed, old_token, **kwargs):
+    from django_facebook import settings as facebook_settings
+    if facebook_settings.FACEBOOK_CELERY_TOKEN_EXTEND:
+        #This is only save to run if we are using Celery
+        user = profile.user
+        #make sure we don't have troubles caused by replication lag
+        retry_open_graph_shares_for_user.apply_async(args=[user], countdown=60)
+
+from django_facebook.signals import facebook_token_extend_finished
+facebook_token_extend_finished.connect(token_extended_connect)

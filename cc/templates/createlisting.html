@@ -12,6 +12,9 @@ label.error {
  }
 
  </style>
+{% load static %}
+<link rel="stylesheet" href="{% get_static_prefix %}css/chosen.css" />
+<link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap-fileupload.min.css" />
 {% endblock %}
 {% block sidebar %}{% endblock %}
 
@@ -32,6 +35,7 @@ label.error {
   {% endif %}
   <form action="."  method="POST" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
   <div id="fields form">
+    {% load widget_tweaks %}
     {% for field in form %}
     
     {% if specificCircleName and field.html_name == "circles" %}
@@ -58,41 +62,85 @@ label.error {
                 </div>
             </div>
         {% elif field.html_name == "post_to_ffs" %}
-            <div class="control-group">
-                {{ field.errors }}
-                <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
-                <div class="controls ">
-                    {{ field }}
-                    <span class="help-block">{{ field.help_text|safe }}
-                        <!--i class="icon-question-sign tooltips" style="margin-left:5px; margin-top:4px;" rel="tooltips" data-placement="bottom"
-                           data-original-title="Post to the Facebook group Free & For Sale if you are a member. Nothing will happen if you are not."></i-->
-                    </span>
-                </div>
-            </div>
-
+            <!-- Do Nothing, Form below -->
         {% else %}
           <div class="control-group">
             {{ field.errors }}
             <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
             <div class="controls ">
-            {{ field }}
+                {% if field.html_name == "category" %}
+                    {{ field|attr:'class="chzn-select" data-placeholder="Choose a Category..." required' }}
+                {% else %}
+                    {{ field }}
+                {% endif %}
               <span class="help-block">{{ field.help_text|safe }}</span>
             </div>
           </div>
         {% endif %}
       {% endif %}
     {% endfor %}
-    
-      <div class="control-group">
-        {{ field.errors }}
-        <label class="control-label" id="{{field.html_name}}">Upload Images</label>
-        <div class="controls ">
-        <input name="images" type="file">
-        <span id="upload-images"> </span>
-          <span class="help-block upload-more"><a style="cursor: pointer;">Click here to upload more images</a></span>
-            <span class="help-block after-image">The first uploaded photo will be the thumbnail</span>
+
+    {% if is_facebook %}
+
+        <!--div class="control-group">
+            <label class="control-label" id="{{ group.facebook_id }}">{{ group.name }}</label>
+            <div class="controls ">
+                <input type="checkbox" name="fb_group" value="{{ group.facebook_id }}" id="id_fb_group{{ forloop.counter }}">
+                <span class="help-block"></span>
+            </div>
+        </div-->
+        <div class="control-group">
+            <label class="control-label">Facebook</label>
+            <div class="controls">
+            <select name="fb_groups" data-placeholder="Share with your Facebook Groups..." style="width: 350px;" multiple class="chzn-select" tabindex="7">
+                <option value="" selected="selected"></option>
+                {% for group in fb_groups %}
+                    <option value="{{ group.facebook_id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+            </div>
         </div>
+        <!--tr>
+            <td>
+                {{ group.name }}
+            </td>
+            <td>
+                <input type="checkbox" name="fb_group" value="{{ group.facebook_id }}" id="id_fb_group{{ forloop.counter }}">
+            </td>
+        </tr-->
+
+    {% endif %}
+      {% if free_for_sale %}
+          <div class="control-group">
+              <label class="control-label" id="post_to_ffs">Free & For Sale</label>
+              <div class="controls ">
+                  <input checked="checked" type="checkbox" name="post_to_ffs" id="id_post_to_ffs" style="margin:10px 5px 10px 0;">
+                    Post to the Facebook group Free &amp; For Sale if you are a member.
+              </div>
+          </div>
+      {% endif %}
+
+      <div class="control-group">
+          <label class="control-label" id="images">Upload Images</label>
+          <div class="controls">
+              <div class="fileupload fileupload-new" data-provides="fileupload">
+                  <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                      <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                  </div>
+                  <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                  <span class="btn btn-file">
+                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="images" />
+                  </span>
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+              </div>
+          <span id="upload-images"> </span>
+          <span class="help-block upload-more"><a style="cursor: pointer;">Click here to upload more images</a></span>
+          <span class="help-block after-image">The first uploaded photo will be the thumbnail</span>
+          </div>
       </div>
+
   </div>
   <br />
   
@@ -109,12 +157,18 @@ label.error {
 
 {% block post_js %}
 
-<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-fileupload.min.js"></script>
+<script src="{% get_static_prefix %}js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(".chzn-select").chosen();
+</script>
 <script type="text/javascript">
 var uploadImageCounter = 1;
 
 $(document).ready(function(){
     $("#sellForm").validate({
+      ignore: ":hidden:not(select)",
       rules: {
         title: {
           required: true,
@@ -129,21 +183,16 @@ $(document).ready(function(){
         },
         category: {
           required: true,
-        },
-        circles: {
-          required: true,
-        },
-        post_to_ffs: {
-          required: false,
-        },
+        }
       },
-      submitHandler: function() { 
-        $("#ajax-loader").show(); 
+      submitHandler: function() {
+        $("#ajax-loader").show();
         $("#submit").button('loading');
         $(form).ajaxSubmit();
-      },
+      }
     });
-    
+
+
     // require price only has 2 decimals
     (function($) {
         $.fn.currencyFormat = function() {
@@ -184,7 +233,18 @@ $(document).ready(function(){
   {% endif %}
   
   $(".upload-more").click(function(){
-        var new_upload_html = '<br><input name="images" type="file">'
+        var new_upload_html = '<div class="fileupload fileupload-new" data-provides="fileupload">'+
+              '<div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">'+
+              '<img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />'+
+              '</div>'+
+              '<div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>'+
+              '<span class="btn btn-file">'+
+              '<span class="fileupload-new">Select image</span>'+
+      '<span class="fileupload-exists">Change</span>'+
+              '<input type="file" name="images" />'+
+              '</span>'+
+              '<a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>'+
+              '</div>'
         $("#upload-images").append(new_upload_html)
       uploadImageCounter += 1;
       if (uploadImageCounter == 3){

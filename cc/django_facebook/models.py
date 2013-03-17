@@ -1,16 +1,43 @@
 from django.db import models
 from django.core.urlresolvers import reverse
-from django_facebook import model_managers
+from django_facebook import model_managers, settings as facebook_settings
 from django.conf import settings
 from django.contrib.auth.models import User
 from django import forms
 from ccapp.models import *
 import os, random, hashlib
+from open_facebook.utils import json, camel_to_underscore
+from datetime import timedelta
 
+import logging
+import os
+logger = logging.getLogger(__name__)
 
 
 
 PROFILE_IMAGE_PATH = os.path.join('images','facebook_profiles/%Y/%m/%d')
+
+class FACEBOOK_OG_STATE:
+    class NOT_CONNECTED:
+        '''
+        The user has not connected their profile with Facebook
+        '''
+        pass
+
+    class CONNECTED:
+        '''
+        The user has connected their profile with Facebook, but isn't
+        setup for Facebook sharing
+        - sharing is either disabled
+        - or we have no valid access token
+        '''
+        pass
+
+    class SHARING(CONNECTED):
+        '''
+        The user is connected to Facebook and sharing is enabled
+        '''
+        pass
 
 
 class FacebookProfileModel(models.Model):
@@ -37,8 +64,18 @@ class FacebookProfileModel(models.Model):
         return self.user.__unicode__()
 
     class Meta:
-        abstract = True 
-        
+        abstract = True
+
+    @property
+    def facebook_og_state(self):
+        if not self.facebook_id:
+            state = FACEBOOK_OG_STATE.NOT_CONNECTED
+        elif self.access_token and self.facebook_open_graph:
+            state = FACEBOOK_OG_STATE.SHARING
+        else:
+            state = FACEBOOK_OG_STATE.CONNECTED
+        return state
+
     def likes(self):
         likes = FacebookLike.objects.filter(user_id=self.user_id)
         return likes
@@ -62,10 +99,54 @@ class FacebookProfileModel(models.Model):
         response.set_cookie('fresh_registration', self.user_id)
 
         return response
-    
+
+    def disconnect_facebook(self):
+        self.access_token = None
+        self.facebook_id = None
+
     def clear_access_token(self):
         self.access_token = None
         self.save()
+
+    def extend_access_token(self):
+        '''
+        https://developers.facebook.com/roadmap/offline-access-removal/
+        We can extend the token only once per day
+        Normal short lived tokens last 1-2 hours
+        Long lived tokens (given by extending) last 60 days
+
+        The token can be extended multiple times, supposedly on every visit
+        '''
+        logger.info('extending access token for user %s', self.user)
+        results = None
+        if facebook_settings.FACEBOOK_CELERY_TOKEN_EXTEND:
+            from django_facebook import tasks
+            tasks.extend_access_token.delay(self, self.access_token)
+        else:
+            results = self._extend_access_token(self.access_token)
+        return results
+
+    def _extend_access_token(self, access_token):
+        from open_facebook.api import FacebookAuthorization
+        results = FacebookAuthorization.extend_access_token(access_token)
+        access_token = results['access_token']
+        old_token = self.access_token
+        token_changed = access_token != old_token
+        message = 'a new' if token_changed else 'the same'
+        log_format = 'Facebook provided %s token, which expires at %s'
+        expires_delta = timedelta(days=60)
+        logger.info(log_format, message, expires_delta)
+        if token_changed:
+            logger.info('Saving the new access token')
+            self.access_token = access_token
+            self.save()
+
+        from django_facebook.signals import facebook_token_extend_finished
+        facebook_token_extend_finished.send(sender=self, profile=self,
+                                            token_changed=token_changed, old_token=old_token
+        )
+
+        return results
 
     def get_offline_graph(self):
         '''
@@ -123,7 +204,7 @@ class FacebookGroup(models.Model):
     user_id = models.IntegerField()
     facebook_id = models.BigIntegerField()
     name = models.TextField(blank=True, null=True)
-    bookmark_order = models.IntegerField()
+    bookmark_order = models.IntegerField(blank=True, null=True)
 
     class Meta:
         unique_together = ['user_id', 'facebook_id']

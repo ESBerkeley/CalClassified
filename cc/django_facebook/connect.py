@@ -126,6 +126,8 @@ def _update_likes_and_friends(request, user, facebook):
             facebook.get_and_store_likes(user)
         if facebook_settings.FACEBOOK_STORE_FRIENDS:
             facebook.get_and_store_friends(user)
+        if facebook_settings.FACEBOOK_STORE_GROUPS:
+            facebook.get_and_store_groups(user)
         transaction.savepoint_commit(sid)
     except IntegrityError, e:
         logger.warn(u'Integrity error encountered during registration, '
@@ -137,7 +139,8 @@ def _update_likes_and_friends(request, user, facebook):
              }
         })
         transaction.savepoint_rollback(sid)
-       
+
+
 def _update_access_token(user, graph):
     '''
     Conditionally updates the access token in the database
@@ -145,12 +148,17 @@ def _update_access_token(user, graph):
     profile = user.get_profile()
     #store the access token for later usage if the profile model supports it
     if hasattr(profile, 'access_token'):
-        # only update the access token if it is long lived or we are set to store all
-        if not graph.expires or facebook_settings.FACEBOOK_STORE_ALL_ACCESS_TOKENS:
-            # and not equal to the current token
-            if graph.access_token != profile.access_token:
-                profile.access_token = graph.access_token
-                profile.save()
+        # update if not equal to the current token
+        new_token = graph.access_token != profile.access_token
+        token_message = 'a new' if new_token else 'the same'
+        logger.info('found %s token', token_message)
+        if new_token:
+            logger.info('access token changed, updating now')
+            profile.access_token = graph.access_token
+            profile.save()
+            #see if we can extend the access token
+            #this runs in a task, after extending the token we fire an event
+            profile.extend_access_token()
         
         
 
@@ -349,8 +357,6 @@ def update_connection(request, graph):
     _update_likes_and_friends(request, user, facebook)
     _update_access_token(user, graph)
     return user
-
-
 
 
 

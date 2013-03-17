@@ -16,8 +16,8 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
 from django_facebook.models import *
-from django_facebook.decorators import facebook_required
-from django_facebook.api import get_facebook_graph, get_persistent_graph, FacebookUserConverter
+from django_facebook.decorators import facebook_required, facebook_required_lazy
+from django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
 from open_facebook.exceptions import OpenFacebookException
 
 from haystack.query import SearchQuerySet
@@ -379,7 +379,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
         
         user = request.user
         user_profile = user.get_profile()
-        
+
         #damn you banners
         if user.get_profile().is_banned:
             return HttpResponse("cy@m8")
@@ -424,19 +424,35 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 #for image in images:
                 #    image.post = model
                 #    image.save()
-
+                fb_success = False
+                ffs_success = True
+                fb_group_success = True
+                group_ids = request.POST.getlist('fb_groups')
+                links = []
+                for group_id in group_ids:
+                    # group = FacebookGroup.objects.get(facebook_id=group_id)
+                    if group_id: #first elem always empty
+                        success = fb_group_post(request, model, str(group_id)+'/feed')
+                        if success:
+                            try:
+                                links.append(tuple(success['id'].split('_')))
+                                fb_success = True
+                            except:
+                                fb_group_success = False
                 try:
                     post_to_ffs = form.cleaned_data['post_to_ffs']
                 except:
                     post_to_ffs = False
 
-                fb_success = True
                 if post_to_ffs:
-                    fb_success = free_for_sale_post(request, model)
+                    ffs_success = free_for_sale_post(request, model)
                 post_created_signal.send(sender = ItemForSale, instance = model)
-                if fb_success and post_to_ffs:
+                if fb_success:
+                    request.session['links'] = links
+                    return redirect(model.get_absolute_url()+"?new=1&postffs=2")
+                elif ffs_success and post_to_ffs:
                     return redirect(model.get_absolute_url()+"?new=1&postffs=1")
-                elif not fb_success:
+                elif not ffs_success or not fb_group_success:
                     return redirect(model.get_absolute_url()+"?new=1&postffs=0")
                 else:
                     return redirect(model.get_absolute_url()+"?new=1")
@@ -472,7 +488,13 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
             #    ecks['specificCircleName']=circle.name
             #    form = ItemForSaleForm(initial={'circles':circles},instance=model)
             ecks['form'] = form
-
+            if user_profile.facebook_id:
+                ecks['is_facebook'] = True
+                free_for_sale = FacebookGroup.objects.filter(user_id = user.id, facebook_id = 266259930135554)
+                if free_for_sale:
+                    ecks['free_for_sale'] = True
+                groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
+                ecks['fb_groups'] = groups
             ecks.update(csrf(request))
             return render_to_response('createlisting.html',ecks,context_instance=RequestContext(request))
         
@@ -483,15 +505,29 @@ def createlistingviewIFS(request):
 #def createIFSwithinCircle(request, url_key):
 #    return createlistingview(request,ItemForSaleForm,ItemForSale,url_key=url_key)
 
-@facebook_required(scope='publish_stream')
+@facebook_required_lazy(scope='publish_actions')
 def free_for_sale_post(request, item):
-    try:
-        graph = get_persistent_graph(request)
-        facebook = FacebookUserConverter(graph)
-        facebook.set_free_for_sale(item)
-        return True
-    except:
-        return False
+    graph = require_persistent_graph(request)
+    facebook = FacebookUserConverter(graph)
+    response = facebook.set_free_for_sale(item)
+    return response
+
+@facebook_required_lazy(scope='publish_actions')
+def fb_group_post(request, item, fb_group):
+    '''
+
+    :param request:
+    :param item: ItemForSale Model
+    :param fb_group: URL of group, e.g. '1223124/feed/'
+    :return: response if successful
+    '''
+#    try:
+    graph = require_persistent_graph(request)
+    facebook = FacebookUserConverter(graph)
+    response = facebook.set_fb_group(item, fb_group)
+    return response
+#    except:
+#        return None
 
 
 @login_required
@@ -622,6 +658,12 @@ def showpost(request, pid, super_cat):
                 #ecks['is_facebook'] = True
             if request.user == post.owner:
                 ecks['response_form'] = SellerResponseForm()
+
+        try:
+            links = request.session['links']
+            ecks['links'] = links
+        except:
+            pass
 
         if "new" in request.GET and int(request.GET['new']) == 1:
             ecks['new'] = 1

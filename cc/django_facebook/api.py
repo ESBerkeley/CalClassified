@@ -522,17 +522,12 @@ class FacebookUserConverter(object):
         response = self.open_facebook.set(url, link='http://buynear.me'+item.get_absolute_url(), message='Selling '+item.title+'!')
         return response
 
-    def store_free_for_sale(self, items):
-        '''
-        Given a user and likes store these in the db
-        Note this can be a heavy operation, best to do it
-        in the background using celery
-        '''
+    '''def store_free_for_sale(self, user, items):
         if facebook_settings.FACEBOOK_CELERY_STORE:
             from django_facebook.tasks import store_free_for_sale
-            store_free_for_sale.delay(items)
+            store_free_for_sale.delay(user, items)
         else:
-            self._store_likes(items)
+            self._store_free_for_sale(user, items)
 
     @classmethod
     def _store_free_for_sale(self, user, items):
@@ -577,7 +572,7 @@ class FacebookUserConverter(object):
             inserted_items=inserted_items,
         )
         return items
-
+    '''
     def store_likes(self, user, likes):
         '''
         Given a user and likes store these in the db
@@ -677,7 +672,6 @@ class FacebookUserConverter(object):
             for group in groups:
                 name = group.get('name')
                 bookmark_order = group.get('bookmark_order')
-                description = group.get('description')
                 default_dict[group['id']] = dict(
                     bookmark_order=bookmark_order,
                     name=name
@@ -692,9 +686,9 @@ class FacebookUserConverter(object):
         #based on the groups
         # NOT DONE YET
         signals.facebook_post_store_groups.send(sender=get_profile_class(),
-            user=user, groups=groups, current_groups=current_groups,
-            inserted_groups=inserted_groups,
-        )
+                                                user=user, groups=groups, current_groups=current_groups,
+                                                inserted_groups=inserted_groups,
+                                                )
         
         return groups
         
