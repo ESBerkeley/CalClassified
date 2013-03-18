@@ -42,6 +42,8 @@ function search(pageNum){
                        theme: 'a',
                        html: ""
                    });
+                   
+                   $("#cancel-button").click();
 
                    if (pageNum == 1) {
                        $("#browse-list").html(browseHtml).listview("refresh");

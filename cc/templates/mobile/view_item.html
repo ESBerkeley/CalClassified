@@ -127,6 +127,7 @@
         {% for comment in comments %}
           <li style="padding: 0;">
             {% if comment.seller_response == "" and item.owner == request.user and comment.sender != request.user %}
+            <!-- enables tap to respond for seller -->
             <a href="#comment-modal-{{ comment.id }}" data-rel="dialog" style="padding: 0">
             {% endif %}
             
@@ -137,11 +138,11 @@
                 {{comment.sender.get_full_name }}
             {% endif %}
             </h3>
-            <p>"{{comment.body}}"</p>
+            <p style="white-space: normal">"{{comment.body}}"</p>
             
             {% if comment.seller_response != "" %}
               <br>
-              <p style="color:green">Seller Response: "{{ comment.seller_response }}"</p>
+              <p style="color:green; white-space: normal">Seller Response: "{{ comment.seller_response }}"</p>
             {% endif %}
             
             {% if comment.seller_response == "" and item.owner == request.user and comment.sender != request.user %}
