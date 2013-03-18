@@ -3,6 +3,7 @@ from ccapp.signals import *
 from utils import *
 from ccapp.forms import EmailForm, FeedbackForm
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core import serializers
@@ -508,9 +509,11 @@ def createlistingviewIFS(request):
 @facebook_required_lazy(scope='publish_actions')
 def free_for_sale_post(request, item):
     graph = require_persistent_graph(request)
-    facebook = FacebookUserConverter(graph)
-    response = facebook.set_free_for_sale(item)
-    return response
+    if graph.is_authenticated():
+        facebook = FacebookUserConverter(graph)
+        response = facebook.set_free_for_sale(item)
+        return response
+    return None
 
 @facebook_required_lazy(scope='publish_actions')
 def fb_group_post(request, item, fb_group):
@@ -520,12 +523,34 @@ def fb_group_post(request, item, fb_group):
     :param item: ItemForSale Model
     :param fb_group: URL of group, e.g. '1223124/feed/'
     :return: response if successful
-    '''
-#    try:
+
+#   try:
+    import urllib2
+    code = urllib2.urlopen('https://www.facebook.com/dialog/oauth?client_id='+
+                           settings.FACEBOOK_APP_ID + '&redirect_uri='+
+                           settings.FACEBOOK_REDIRECT_URI + '&scope=read_stream')
+    f = urllib2.urlopen('https://graph.facebook.com/oauth/access_token?client_id='+
+                        settings.FACEBOOK_APP_ID + '&client_secret=' + settings.FACEBOOK_APP_SECRET +
+                        '&grant_type=client_credentials')
+
+    data = f.read()
+    print(data) # access_token=171685159547122|he8_Dw5MqyosrndHcDal9t588UQ
+    access_token = data.split('|')[0].lstrip('access_token=')
+    test = urllib2.urlopen(settings.FACEBOOK_REDIRECT_URI)
+    from open_facebook.api import FacebookAuthorization
+    token_response = FacebookAuthorization.convert_code(
+        code, redirect_uri=redirect_uri)
+    expires = token_response.get('expires')
+    access_token = token_response['access_token']
+    from django_facebook.connect import connect_user
+    action, user = connect_user(request)'''
+
     graph = require_persistent_graph(request)
-    facebook = FacebookUserConverter(graph)
-    response = facebook.set_fb_group(item, fb_group)
-    return response
+    if graph.is_authenticated():
+        facebook = FacebookUserConverter(graph)
+        response = facebook.set_fb_group(item, fb_group)
+        return response
+    return None
 #    except:
 #        return None
 

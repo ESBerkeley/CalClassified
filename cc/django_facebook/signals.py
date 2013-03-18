@@ -14,7 +14,7 @@ facebook_post_store_friends = Signal(providing_args=['user', 'friends', 'current
 # Sent after storing the likes from graph to db
 facebook_post_store_likes = Signal(providing_args=['user', 'likes', 'current_likes', 'inserted_likes'])
 
-# Sent after storing the likes from graph to db
+# Sent after storing the groups from graph to db
 facebook_post_store_groups = Signal(providing_args=['user', 'groups', 'current_groups', 'inserted_groups'])
 
 #Some signals for compatibility with Django Registration

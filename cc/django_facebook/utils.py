@@ -321,6 +321,31 @@ def replace_query_param(url, key, value):
 
 DROP_QUERY_PARAMS = ['code', 'signed_request', 'state']
 
+def to_bool(input, default=False):
+    '''
+    Take a request value and turn it into a bool
+    Never raises errors
+    '''
+    if input is None:
+        value = default
+    else:
+        int_value = to_int(input, default=None)
+        if int_value is None:
+            value = default
+        else:
+            value = bool(int_value)
+    return value
+
+def error_next_redirect(request, default='/', additional_params=None, next_key=None, redirect_url=None, canvas=False):
+    '''
+    Short cut for an error next redirect
+    '''
+    if not next_key:
+        next_key = ['error_next', 'next']
+
+    redirect = next_redirect(
+        request, default, additional_params, next_key, redirect_url, canvas)
+    return redirect
 
 def cleanup_oauth_url(redirect_uri):
     '''

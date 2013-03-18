@@ -49,7 +49,7 @@ class FacebookProfileModel(models.Model):
     about_me = models.TextField(blank=True)
     facebook_id = models.BigIntegerField(blank=True, unique=True, null=True)
     access_token = models.TextField(
-        blank=True, help_text='Facebook token for offline access')
+        blank=True, help_text='Facebook token for offline access', null=True)
     facebook_name = models.CharField(max_length=255, blank=True)
     facebook_profile_url = models.TextField(blank=True)
     website_url = models.TextField(blank=True)

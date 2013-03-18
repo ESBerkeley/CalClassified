@@ -295,7 +295,7 @@ class FacebookAuthorization(FacebookConnection):
     '''
     @classmethod
     def convert_code(cls, code,
-                     redirect_uri='http://local.mellowmorning.com:8000/facebook/connect/'):
+                     redirect_uri='http://test.buynear.me:8000/facebook/connect/'):
         '''
         Turns a code into an access token
         '''

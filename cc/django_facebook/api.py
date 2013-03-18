@@ -36,10 +36,10 @@ def get_persistent_graph(request, *args, **kwargs):
     '''
     if not request:
         raise(ValidationError,
-            'Request is required if you want to use persistent tokens')
-        
+              'Request is required if you want to use persistent tokens')
+
     graph = None
-    #some situations like an expired access token require us to refresh our graph
+    # some situations like an expired access token require us to refresh our graph
     require_refresh = False
     code = request.REQUEST.get('code')
     if code:
@@ -47,24 +47,24 @@ def get_persistent_graph(request, *args, **kwargs):
 
     local_graph = getattr(request, 'facebook', None)
     if local_graph:
-        #gets the graph from the local memory if available
+        # gets the graph from the local memory if available
         graph = local_graph
 
     if not graph:
-        #search for the graph in the session
+        # search for the graph in the session
         cached_graph = request.session.get('graph')
         if cached_graph:
             cached_graph._me = None
             graph = cached_graph
-            
+
     if not graph or require_refresh:
-        #gets the new graph, note this might do token conversions (slow) 
+        # gets the new graph, note this might do token conversions (slow)
         graph = get_facebook_graph(request, *args, **kwargs)
-        #if it's valid replace the old cache
+        # if it's valid replace the old cache
         if graph is not None and graph.access_token:
             request.session['graph'] = graph
 
-    #add the current user id and cache the graph at the request level
+    # add the current user id and cache the graph at the request level
     _add_current_user_id(graph, request.user)
     request.facebook = graph
 
@@ -92,34 +92,34 @@ def get_facebook_graph(request=None, access_token=None, redirect_uri=None, raise
     specify redirect_uri if you are not posting and recieving the code
     on the same page
     '''
-    #this is not a production flow, but very handy for testing
+    # this is not a production flow, but very handy for testing
     if not access_token and request.REQUEST.get('access_token'):
         access_token = request.REQUEST['access_token']
-    # should drop query params be included in the open facebook api,
+        # should drop query params be included in the open facebook api,
     # maybe, weird this...
     from open_facebook import OpenFacebook, FacebookAuthorization
     from django.core.cache import cache
     parsed_data = None
     expires = None
-    if hasattr(request, 'facebook'):
+    if hasattr(request, 'facebook') and request.facebook:
         graph = request.facebook
         _add_current_user_id(graph, request.user)
         return graph
 
     if not access_token:
-        #easy case, code is in the get
+        # easy case, code is in the get
         code = request.REQUEST.get('code')
         if code:
             logger.info('Got code from the request data')
         if not code:
-            #signed request or cookie leading, base 64 decoding needed
+            # signed request or cookie leading, base 64 decoding needed
             signed_data = request.REQUEST.get('signed_request')
             cookie_name = 'fbsr_%s' % facebook_settings.FACEBOOK_APP_ID
             cookie_data = request.COOKIES.get(cookie_name)
 
             if cookie_data:
                 signed_data = cookie_data
-                #the javascript api assumes a redirect uri of ''
+                # the javascript api assumes a redirect uri of ''
                 redirect_uri = ''
             if signed_data:
                 logger.info('Got signed data from facebook')
@@ -127,7 +127,7 @@ def get_facebook_graph(request=None, access_token=None, redirect_uri=None, raise
                     signed_data)
                 if parsed_data:
                     logger.info('Got parsed data from facebook')
-                    #parsed data can fail because of signing issues
+                    # parsed data can fail because of signing issues
                     if 'oauth_token' in parsed_data:
                         logger.info('Got access_token from parsed data')
                         # we already have an active access token in the data
@@ -151,22 +151,22 @@ def get_facebook_graph(request=None, access_token=None, redirect_uri=None, raise
                     # for other pages it should be the url
                     if not redirect_uri:
                         redirect_uri = ''
-    
+
                     # we need to drop signed_request, code and state
                     redirect_uri = cleanup_oauth_url(redirect_uri)
-    
+
                     try:
                         logger.info(
                             'trying to convert the code with redirect uri: %s',
                             redirect_uri)
-                        #This is realy slow, that's why it's cached
+                        # This is realy slow, that's why it's cached
                         token_response = FacebookAuthorization.convert_code(
                             code, redirect_uri=redirect_uri)
                         expires = token_response.get('expires')
                         access_token = token_response['access_token']
-                        #would use cookies instead, but django's cookie setting
-                        #is a bit of a mess
-                        cache.set(cache_key, access_token, 60*60*2)
+                        # would use cookies instead, but django's cookie setting
+                        # is a bit of a mess
+                        cache.set(cache_key, access_token, 60 * 60 * 2)
                     except open_facebook_exceptions.OAuthException, e:
                         # this sometimes fails, but it shouldnt raise because
                         # it happens when users remove your
@@ -178,7 +178,7 @@ def get_facebook_graph(request=None, access_token=None, redirect_uri=None, raise
                         else:
                             return None
             elif request.user.is_authenticated():
-                #support for offline access tokens stored in the users profile
+                # support for offline access tokens stored in the users profile
                 profile = request.user.get_profile()
                 access_token = getattr(profile, 'access_token', None)
                 if not access_token:
@@ -195,7 +195,7 @@ def get_facebook_graph(request=None, access_token=None, redirect_uri=None, raise
                     return None
 
     graph = OpenFacebook(access_token, parsed_data, expires=expires)
-    #add user specific identifiers
+    # add user specific identifiers
     if request:
         _add_current_user_id(graph, request.user)
 

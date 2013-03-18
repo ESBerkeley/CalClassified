@@ -202,28 +202,53 @@ AUTH_PROFILE_MODULE = 'django_facebook.FacebookProfile'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
         },
         'null': {
             'level':'DEBUG',
             'class':'django.utils.log.NullHandler',
+        },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
         },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
-            'propagate': True,
+            'propagate': False,
         },
         'django': {
             'handlers':['null'],
             'propagate': True,
             'level':'INFO',
         },
-    }
+    },
+    # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once
+    'root': {
+        'handlers': ['console', 'mail_admins'],
+        'level': 'INFO'
+    },
 }
 
 DJANGORESIZED_DEFAULT_SIZE = [800, 600]
@@ -234,12 +259,15 @@ FACEBOOK_LOGIN_DEFAULT_REDIRECT = '/accounts/profile/'
 FACEBOOK_STORE_FRIENDS = True
 FACEBOOK_STORE_GROUPS = True
 FACEBOOK_CELERY_STORE = True
+
+FACEBOOK_REDIRECT_URI = 'http://test.buynear.me:8000/facebook/connect/?facebook_login=1'
 #FACEBOOK_CELERY_TOKEN_EXTEND = True # Turn on later when we know it will work.
 
 CELERY_ALWAYS_EAGER = True # USE FOR DEVELOPMENT, TURN OFF ON PRODUCTION
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = SITE_ROOT + '/templates/email/'
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
+#TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django' # FOR PROD
+TEMPLATED_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # FOR DEV'T, emails sent to console
 
 # HANDLES SENDING EMAILS FROM DJANGO
 # supposedly you have to at least log into the HOST_USER at least once normally
@@ -249,7 +277,7 @@ EMAIL_HOST_USER = 'buynearme'
 EMAIL_HOST_PASSWORD = 'CalClassified'
 EMAIL_PORT = 587
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 #from django.core.mail import send_mail      
 #send_mail('Test', 'meow', 'noreply@buynear.me', ['seung.j@live.com']) 
