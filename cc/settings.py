@@ -134,6 +134,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'middleware.SubdomainsMiddleware', # this is for subdomain
+    'middleware.ActiveUserMiddleware', # this is to logout FB users that no longer have permissions
 )
 
 
@@ -170,7 +171,9 @@ INSTALLED_APPS = (
     'django_resized',
     'widget_tweaks',
     'djkombu',                           #This needs to be changed for server production
-    'djcelery'
+    'djcelery',
+#    'requests',
+#    'facepy',
     # 'django.contrib.admindocs',
 )
 

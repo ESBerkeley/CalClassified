@@ -2,6 +2,7 @@ __author__ = 'seung' #lol pycharm did this
 
 from django.conf import settings
 import re
+from django.contrib.auth import logout
 
 class SubdomainsMiddleware:
     def process_request(self, request):
@@ -19,3 +20,11 @@ class SubdomainsMiddleware:
             request.urlconf = 'cc.mobile_urls'
         else:
             request.urlconf = 'cc.urls'
+
+class ActiveUserMiddleware:
+    def process_request(self, request):
+        if not request.user.is_authenticated():
+            return
+        user_profile = request.user.get_profile()
+        if user_profile.facebook_id and not user_profile.is_connected(request):
+            logout(request)
