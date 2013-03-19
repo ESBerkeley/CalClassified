@@ -22,6 +22,7 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^flag/(?P<pid>\d+)/$','flag_item', name='flag_item'),
 
     url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/home.html'},name='auth_login'),
+    #url(r'^accounts/login/$','browse'),
 
     #FACEBOOK
     url(r'^facebook/', include('django_facebook.urls')),
@@ -37,6 +38,9 @@ urlpatterns = patterns('ccapp.mobile_views',
     #ACCOUNT URLS
     #url(r'^view_messages/$',"view_messages", name="view_messages"),
     url(r'^view_messages/(?P<thread_id>\d+)/$',"view_thread"),
+    
+    #Banned People
+    url(r'^banned/$','banned', name="banned"),
     
     url(r'^admin/', include(admin.site.urls)),
 

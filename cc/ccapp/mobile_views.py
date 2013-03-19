@@ -35,7 +35,7 @@ def home(request):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('my_items'))
+        return redirect(reverse('my_items'))
     else:
         data = {}
         if "next" in request.GET:
@@ -366,6 +366,8 @@ def notifications(request):
     7 - notify the buyer that the seller has sent him a message
     """
     user_profile = request.user.get_profile()
+    user_profile.friend_notifications = 0
+    user_profile.save()
     notifications = Notification.objects.filter(going_to = user_profile).order_by('-time_created')
     data = {}
     data['notifications'] = notifications
@@ -451,4 +453,7 @@ def ajax_delete_notifications(request):
         user_profile.friend_notifications = 0
         user_profile.save()
         return HttpResponse()
+        
+def banned(request):
+    return HttpResponse("It seems you're banned. If you want to appeal email contact@buynear.me")
         

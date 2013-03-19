@@ -14,7 +14,7 @@
     <div id="login-box">
         {% if request.user.is_authenticated %}
             <div>
-                Hi, {{ request.user.first_name }}! Hopefully you can logout soon!<br>
+                Hi, {{ request.user.first_name }}!<br>
                 <a href="/logout">logout</a>
             </div>
         {% else %}
