@@ -217,8 +217,7 @@ class ItemForSaleForm(ModelForm):
     """
     title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'placeholder':'e.g. Calvin and Hobbes'}))
     body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
-    post_to_ffs = forms.BooleanField(label='Free & For Sale', initial=True, required=False, help_text='Post to the Facebook group Free & For Sale if you are a member.')
-    category = ModelChoiceField(Category.objects.all(), empty_label="")
+    category = ModelChoiceField(Category.objects.order_by('name'), empty_label="")
     class Meta:
         model = ItemForSale
         exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'deleted', 'approved','circles')

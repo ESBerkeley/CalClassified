@@ -81,44 +81,22 @@ label.error {
     {% endfor %}
 
     {% if is_facebook %}
-
-        <!--div class="control-group">
-            <label class="control-label" id="{{ group.facebook_id }}">{{ group.name }}</label>
-            <div class="controls ">
-                <input type="checkbox" name="fb_group" value="{{ group.facebook_id }}" id="id_fb_group{{ forloop.counter }}">
-                <span class="help-block"></span>
-            </div>
-        </div-->
         <div class="control-group">
-            <label class="control-label">Facebook</label>
+            <label class="control-label">Facebook Groups</label>
             <div class="controls">
             <select name="fb_groups" data-placeholder="Share with your Facebook Groups..." style="width: 350px;" multiple class="chzn-select" tabindex="7">
                 <option value="" selected="selected"></option>
                 {% for group in fb_groups %}
-                    <option value="{{ group.facebook_id }}">{{ group.name }}</option>
+                    {% if group.name == "Free & For Sale" %}
+                        <option value="{{ group.facebook_id }}" selected="selected">{{ group.name }}</option>
+                    {% else %}
+                        <option value="{{ group.facebook_id }}">{{ group.name }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
             </div>
         </div>
-        <!--tr>
-            <td>
-                {{ group.name }}
-            </td>
-            <td>
-                <input type="checkbox" name="fb_group" value="{{ group.facebook_id }}" id="id_fb_group{{ forloop.counter }}">
-            </td>
-        </tr-->
-
     {% endif %}
-      {% if free_for_sale %}
-          <div class="control-group">
-              <label class="control-label" id="post_to_ffs">Free & For Sale</label>
-              <div class="controls ">
-                  <input checked="checked" type="checkbox" name="post_to_ffs" id="id_post_to_ffs" style="margin:10px 5px 10px 0;">
-                    Post to the Facebook group Free &amp; For Sale.
-              </div>
-          </div>
-      {% endif %}
 
       <div class="control-group">
           <label class="control-label" id="images">Upload Images</label>

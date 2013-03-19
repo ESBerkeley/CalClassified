@@ -426,7 +426,6 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                 #    image.post = model
                 #    image.save()
                 fb_success = False
-                ffs_success = True
                 fb_group_success = True
                 group_ids = request.POST.getlist('fb_groups')
                 links = []
@@ -440,20 +439,11 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                                 fb_success = True
                             except:
                                 fb_group_success = False
-                try:
-                    post_to_ffs = form.cleaned_data['post_to_ffs']
-                except:
-                    post_to_ffs = False
-
-                if post_to_ffs:
-                    ffs_success = free_for_sale_post(request, model)
                 post_created_signal.send(sender = ItemForSale, instance = model)
                 if fb_success:
                     request.session['links'] = links
                     return redirect(model.get_absolute_url()+"?new=1&postffs=2")
-                elif ffs_success and post_to_ffs:
-                    return redirect(model.get_absolute_url()+"?new=1&postffs=1")
-                elif not ffs_success or not fb_group_success:
+                elif not fb_group_success:
                     return redirect(model.get_absolute_url()+"?new=1&postffs=0")
                 else:
                     return redirect(model.get_absolute_url()+"?new=1")
@@ -491,9 +481,6 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
             ecks['form'] = form
             if user_profile.facebook_id:
                 ecks['is_facebook'] = True
-                free_for_sale = FacebookGroup.objects.filter(user_id = user.id, facebook_id = 266259930135554)
-                if free_for_sale:
-                    ecks['free_for_sale'] = True
                 groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
                 ecks['fb_groups'] = groups
             ecks.update(csrf(request))
