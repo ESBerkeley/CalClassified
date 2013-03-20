@@ -98,7 +98,7 @@ def sell(request):
             return redirect(model.get_absolute_url())
         else:
             data={}
-            data['categories'] = Category.objects.all()
+            data['categories'] = Category.objects.order_by('name')
             data['error'] = True
             data['form'] = form
             return render_to_response('mobile/sell.html',data,context_instance=RequestContext(request))
