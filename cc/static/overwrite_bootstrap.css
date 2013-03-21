@@ -391,6 +391,20 @@ p.box-text {
  top: 0px;
 }
 
+#pac-ajax {
+  width:160px;
+  height:45px;
+  padding-top:3px;
+  text-align:center;
+  background-color:rgba(0,0,0,0.9);
+  position:fixed;
+  top: 50%;
+  left: 50%;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  display:none;
+}
+
 /*index*/
 /*#index-banner {
   background-image:url('/static/hk2.jpg');
@@ -488,7 +502,6 @@ p.box-text {
     margin-right: auto;
     -webkit-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
     -moz-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
-    /*box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;*/
     box-shadow: 25px 0px 25px -7px rgba(0,0,0,0.3), -25px 0px 25px -7px rgba(0,0,0,0.3);
     opacity:1;
     z-index:3;
