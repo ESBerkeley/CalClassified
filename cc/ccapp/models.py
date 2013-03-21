@@ -43,7 +43,7 @@ class Circle(models.Model):
     is_public = models.BooleanField(default=False)
     is_city = models.BooleanField(default=False)
     url_key = models.CharField(max_length=20,unique=True)
-    creator = models.ForeignKey(User,null=True)
+    creator = models.ForeignKey(User, null=True)
     description = models.TextField(null=True, blank=True)
     fb_id = models.BigIntegerField(null=True, unique=True, blank=True)
     def __unicode__(self):
