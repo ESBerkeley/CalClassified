@@ -43,6 +43,7 @@
                 <a id="Other_category" class="category" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"> Other </a>
               </li>
 
+{% comment %}
               {% if user.get_profile.facebook_id %}
               <hr style="margin-top:6px; margin-bottom:3px;">
               <li class="side-item circle_side-item">
@@ -50,6 +51,7 @@
                 <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
               </li>
               {% endif %}
+{% endcomment %}
             </ul>
           </div>
         </div>
@@ -97,6 +99,26 @@
       </div>
       {% endif %} <!-- end if not circle -->
 {% endcomment %}
+
+      {% if user.get_profile.facebook_id %}
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+            <h2>Connections</h2>
+          </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+              <li class="side-item circle_side-item">
+                <i id="friend-icon" class="icon-ok-sign side-icon" type="hidden" onclick="toggle_friends_filter();"></i>
+                <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      {% endif %}
 
       <div class="accordion-group">
         <div class="accordion-heading">
