@@ -306,7 +306,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   }
 
   function toggler(control) {   //hides everything, shows specific icon
-    $(".side-icon").hide();
+    $(".cat-icon").hide();
     var id = document.getElementById(control);
     $(id).show();
   }
