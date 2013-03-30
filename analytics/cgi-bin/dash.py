@@ -61,7 +61,8 @@ for mon in monitors:
     except KeyError:
         monitor_data = {}
 
-    thedoc = insert(thedoc, mon.htmltag, mon.render(monitor_data))
+    if thedoc.find(mon.htmltag) >= 0:
+        thedoc = insert(thedoc, mon.htmltag, mon.render(monitor_data))
 
     for field in mon.fields:
         field_selector_list.append({'name': mon.name + ':' + field['name'], 'type': field['type']})
