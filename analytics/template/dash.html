@@ -208,6 +208,11 @@ if(respdata.length){
   for(var i = 0; i < respdata.length; i++){    
     ti = new Date(respdata[i]['TIME']['the_time']);
     target = respdata[i][selected_monitor];
+
+    if(target == undefined){
+      target = '-1';
+    }
+
     for(var j = 0; j < selected_statistic.split('.').length; j++){
       target = target[selected_statistic.split('.')[j]];
     }

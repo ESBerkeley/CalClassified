@@ -33,13 +33,13 @@ class SetQuery:
 
     def all(self): #Load data from all json files found
         self.data = []
-
-        for jsonfile in listdir("./"):
+        #@print listdir("../logs/")
+        for jsonfile in listdir("../logs/"):
 
             if len(jsonfile.split(".")) > 1:
 
                 if jsonfile.split(".")[1] == "json":
-                    fd = open(jsonfile, "r")
+                    fd = open("../logs/" + jsonfile, "r")
                     snippet = json.loads(fd.read())
 
                     for hourly_chunk in snippet:
