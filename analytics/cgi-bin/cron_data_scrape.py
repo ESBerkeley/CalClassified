@@ -11,7 +11,7 @@ import json
 
 now = date.today()
 
-filename = str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"
+filename = "../../logs/" + str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"
 
 
 todayslog = open(filename, "a+")
