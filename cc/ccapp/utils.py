@@ -1,4 +1,7 @@
 from ccapp.views import *
+from swamp_logging import logit, custom_log_message
+
+
 #from templated_email import send_templated_mail
 
 def send_bnm_message(request):
@@ -20,6 +23,7 @@ def send_bnm_message(request):
         post.pending_buyer = request.user
         post.pending_flag = True
         post.save()
+        custom_log_message("user " + str(request.user.id) + " bought item " + str(post_pk))
     
     
     message = Message()

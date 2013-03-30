@@ -1,3 +1,5 @@
+from swamp_logging import logit, custom_log_message
+
 from ccapp.models import *
 from ccapp.signals import *
 from utils import *
@@ -30,6 +32,7 @@ from django.core.mail import send_mail
 from templated_email import send_templated_mail
 
 from urlparse import urlparse, parse_qs
+
 
 import random
 import datetime
@@ -87,11 +90,11 @@ def friendslist(request):
         if thumbnail_url:
             link = item.get('link')
             fb_id = parse_qs(urlparse(link).query)['fbid'][0]
-            print(fb_id)
+ #           print(fb_id)
             picture = facebook.get_facebook_url(fb_id)
-            print(picture)
+ #           print(picture)
             picture_url = picture.get('source')
-            print(picture_url)
+ #           print(picture_url)
     #print items
     #friends = facebook.get_friends()
     #likes = facebook.get_likes()
@@ -233,6 +236,7 @@ def fb_admin(request):
 
 
 @login_required
+@logit
 def fb_import(request):
     if request.method == 'GET':
         existing_groups = []
@@ -319,6 +323,7 @@ def index_home(request):
         return HttpResponse("cy@m8")
     return render_to_response('index.html',context_instance=RequestContext(request))
 
+
 class FeedbackView(FormView):
     template_name = 'feedback.html'
     form_class = FeedbackForm
@@ -344,6 +349,7 @@ class FeedbackView(FormView):
                 },
         )
         return super(FeedbackView, self).form_valid(form)
+
 
 class ThanksView(TemplateView):
     template_name = 'message.html'
@@ -374,7 +380,7 @@ class ThanksView(TemplateView):
 def confirmviewIFS(request,pid,secret):
     confirmview(request,pid,secret,ItemForSale)"""
 
-
+@logit
 def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
     if request.user.is_authenticated():
         
@@ -493,6 +499,7 @@ def createlistingviewIFS(request):
 #def createIFSwithinCircle(request, url_key):
 #    return createlistingview(request,ItemForSaleForm,ItemForSale,url_key=url_key)
 
+
 @facebook_required_lazy(scope='publish_actions')
 def free_for_sale_post(request, item):
     graph = require_persistent_graph(request)
@@ -501,6 +508,7 @@ def free_for_sale_post(request, item):
         response = facebook.set_free_for_sale(item)
         return response
     return None
+
 
 @facebook_required_lazy(scope='publish_actions')
 def fb_group_post(request, item, fb_group):
@@ -543,6 +551,7 @@ def fb_group_post(request, item, fb_group):
 
 
 @login_required
+@logit
 def deletepost(request, pid, super_cat):
     if request.user.is_authenticated():
         user = request.user
@@ -561,6 +570,7 @@ def deletepostIFS(request, pid):
     return deletepost(request,pid,ItemForSale)
 
 @login_required
+@logit
 def ajax_delete_post(request):
     if request.method == "POST" and request.is_ajax():
         post_id = request.POST['post_id']
@@ -571,7 +581,9 @@ def ajax_delete_post(request):
             Notification.objects.filter(post_from=post).delete()
             return HttpResponse("Success")
 
+
 @login_required
+@logit
 def delete_notifications(request):
 
     if not 'justnum' in request.GET:   
@@ -584,6 +596,7 @@ def delete_notifications(request):
 
     return HttpResponse("winning")
     
+@logit
 def deleteallposts(request):
     if request.user.is_authenticated():
         user = request.user
@@ -597,7 +610,7 @@ def deleteallposts(request):
             return render_to_response('message.html', {'message':'No posts created by your account found.'},context_instance=RequestContext(request))
 
 
-
+@logit
 def showpost(request, pid, super_cat):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
@@ -701,6 +714,7 @@ def showpostIFS(request,pid):
     return showpost(request,pid,ItemForSale)
 
 @login_required
+@logit
 def modify_post(request):
     if request.method == "GET" and request.user.is_authenticated():
         post_pk = request.GET['post_pk']
@@ -711,6 +725,7 @@ def modify_post(request):
                 #the sale is complete (yay). delete post and redirect to profile page
                 post.sold = True
                 post.save()
+                custom_log_message('user ' + str(request.user.id) + ' sold item :) ' + str(post_pk))
                 sale_complete_signal.send(sender = ItemForSale, instance = post)
                 return HttpResponseRedirect("/accounts/profile/selling")
 
@@ -719,6 +734,7 @@ def modify_post(request):
                 repost_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer.get_profile())
                 post.pending_flag = False
                 post.pending_buyer = None
+                custom_log_message('user ' + str(request.user.id) + ' reposted item :( ' + str(post_pk))
                 post.save()
                 return HttpResponseRedirect("/"+str(post_pk))
             else:
@@ -730,6 +746,7 @@ def modify_post(request):
         return HttpResponse("please try again")
 
 @login_required
+@logit
 def edit_item(request,pid):
     #edits fields of a post model
     #fields to be edited
@@ -794,6 +811,7 @@ def edit_item(request,pid):
         return render_to_response('message.html',{'message': message},context_instance=RequestContext(request))
 
 @login_required
+@logit
 def flag_item(request,pid):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
@@ -830,6 +848,7 @@ def flag_item(request,pid):
     
     
 @login_required
+@logit
 def ajax_contact_seller(request):
     if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
 
@@ -838,6 +857,7 @@ def ajax_contact_seller(request):
         # send_mail(post.title+" Response - "+recipient_name, post.body, 'noreply@buynear.me', [recipient.email])
         return HttpResponse("success")
 
+@logit
 def bookmark_post(request):
     if request.is_ajax() and request.method == 'POST' and request.user.is_authenticated():
         user = request.user
@@ -850,7 +870,8 @@ def bookmark_post(request):
             #add post to bookmarks
             user_profile.bookmarks.add(post_pk)
         return HttpResponse(post_pk,'application/javascript')
-            
+  
+@logit          
 def sendmessage(request, receiver):
     if request.user.is_authenticated():
         user = request.user
@@ -900,6 +921,7 @@ def search(request):
         return HttpResponse(data,'application/javascript')"""
 
     return render_to_response('index.html',{ 'query_string': query_string, 'cc_ifs': found_entries }, context_instance=RequestContext(request))
+
 
 def boxview(request):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
@@ -1116,6 +1138,7 @@ def all_circles(request):
     return render_to_response('all_circles.html',{'all':all},context_instance=RequestContext(request))
     
 @login_required
+@logit
 def create_circle(request):
     if request.method == 'POST': 
         form = CircleForm(request.POST, request.FILES)
@@ -1159,7 +1182,8 @@ def create_circle(request):
         data = {'form':form}
         data.update(csrf(request))
         return render_to_response('create_circle.html',data,context_instance=RequestContext(request))
-        
+      
+  
 def view_circle(request,url_key):
     if request.user.is_authenticated():
         user = request.user
@@ -1205,6 +1229,7 @@ def view_circle(request,url_key):
 
         # this is where the user gets authenticated
 
+@logit
 def delete_group(request, url_key):
     if request.method == "POST":
         user = request.user
@@ -1216,6 +1241,7 @@ def delete_group(request, url_key):
             circle.delete()
             return HttpResponse("Success")
 
+@logit
 def update_group(request, url_key):
     if request.method=="POST":
         user = request.user
@@ -1227,6 +1253,7 @@ def update_group(request, url_key):
                 circle.save()
             return HttpResponse("Success")
 
+@logit
 def verify_user(request,auth_key):
     data = {}
     try:
@@ -1243,6 +1270,7 @@ def verify_user(request,auth_key):
         data['message'] = """Oops &ndash; it seems that your activation key is invalid.  Please check the url again."""
         return render_to_response('message.html',data,context_instance=RequestContext(request))
 
+@logit
 def change_email(request,auth_key):
     data = {}
     try:
@@ -1267,6 +1295,7 @@ def change_email(request,auth_key):
         return render_to_response('message.html', data,context_instance=RequestContext(request))
 
 @login_required
+@logit
 def ajax_delete_thread(request):
     if request.method=="POST":
         thread_pk = request.POST['thread_pk']
@@ -1454,6 +1483,7 @@ def profile_circles(request):
                              context_instance=RequestContext(request))
 
 @login_required
+@logit
 def account_setup(request):
     data = {}
     user = request.user

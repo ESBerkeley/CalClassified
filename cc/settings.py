@@ -234,6 +234,12 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
+        'swamp_handler':{
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple', 
+            'filename': '../logs/bnm_log.log'
+        },
     },
     'loggers': {
         'django.request': {
@@ -245,6 +251,11 @@ LOGGING = {
             'handlers':['null'],
             'propagate': True,
             'level':'INFO',
+        },
+        'swamp_logger':{
+            'handlers': ['swamp_handler'], 
+            'propagate': True,
+            'level': 'INFO',
         },
     },
     # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once
