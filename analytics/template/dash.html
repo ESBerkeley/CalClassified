@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Buy Near Me DASHBOARD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/css/custom.css" rel="stylesheet">
+
+    <link href="../assets/css/ui-darkness/jquery-ui-1.10.2.custom.css" rel="stylesheet">
+
+    <link href="../assets/rickshaw/rickshaw.css" rel="stylesheet">
+
+
+
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">synergy nodestrap bootcopter shim ALPHA v.001</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">This Page</a></li>
+              <li><a href="http://buynear.me">The Actual Page</a></li>
+              <li><a href="http://buynear.me/admin">BNM Admin</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <h1>Current System Status as of: <font color='green'>  %TIME%</font></h1>
+      <p>New data should be collected every half hour. If all data is reported as unavailabe, the data files got deleted, or perhaps you loaded this page at 12:00:01, right before cron script generated today's json file.</p>
+
+
+      <div class = "row">
+        <div class = "span4">
+          <h2>Hardware Status</h2>
+          %1% %1%
+          <hr>
+          <h3>BNM Data</h3>
+          %BNM% %BNM%
+          <hr>
+          <h3>Google Analytics</h3>
+          %GA% %GA%
+        </div>
+
+        <div class = "span8">
+
+          <h1>Graph Something</h1><i> you know you want to</i><hr>
+
+          <div id = "chart_container">
+            <div id="chart"></div>
+            <br>
+            <div id="slidery"></div>
+          </div>
+          <hr>
+          <h4>Graph What:</h4>
+          <div class = "row">
+            <div class = "span6">
+              <div class = "row">
+                <div class = "span3">
+                  <b>Monitor:</b>
+                  <div id = "monitorselector_div"></div>
+                </div>
+                <div class = "span3">
+                  <b>Statistic:</b>
+                  <div id = "fieldselector_div"></div>
+                </div>
+              </div>
+<br>
+          <h4>Graph When (you can also use the slider):</h4>
+          <div id="dateonoff">Date Filtering: off</div>
+              <div class = "row">
+                <div class = "span2">
+                  <button id="datebutton" class="btn btn-small btn-inverse">toggle</button>
+                </div>
+                <div class = "span2">
+                  <b>From:</b>
+                  <input type="text" id="start_picker" /></p>
+                </div>
+                <div class = "span2">
+                  <b>To:</b> 
+                  <input type="text" id="end_picker" /></p>
+                </div>
+              </div>
+            </div>
+
+            <div class = "span2">       
+              <button id="search_btn" class = "btn btn-large btn-custom">
+                graph it
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+
+ 
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+ <!--  <script src="../assets/js/jquery.js"></script>
+-->
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/jquery-ui.js"></script>
+    <script src="../assets/rickshaw/vendor/d3.v2.js"></script>
+    <script src="../assets/js/bootstrap.js"></script>
+    <script src="../assets/js/bootstrap-dropdown.js"></script>
+    <script src="../assets/rickshaw/rickshaw.js"></script>
+    <script src="../assets/js/jquery.base64.js"></script>
+
+
+
+
+<script>
+
+//The following is injected js data.
+%^@_@^% %^@_@^%  
+
+
+respdata = {};
+//var graph;
+var toto = [];
+//var slider;
+var monitorlist = [];
+var monitor_field_selectors = [];
+var date_filtering_enabled = 0;
+
+
+function inarr(arr, target){
+  for(var i = 0; i < arr.length; i++){
+    if(arr[i] == target){
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+function toggle_date_filtering(){
+  if(date_filtering_enabled){
+    date_filtering_enabled = 0;
+    $('#start_picker').hide();
+    $('#end_picker').hide();
+    $('#dateonoff').text('Date Filtering: off');
+  }
+  else{
+    date_filtering_enabled = 1;
+    $('#start_picker').show();
+    $('#end_picker').show();
+    $('#dateonoff').text('Date Filtering: on');
+  }
+}
+
+
+function render(){
+if(respdata.length){
+  var selected_monitor = $('#monitorselector').val();
+  var selected_statistic =$('#fieldselector').val();
+
+  document.getElementById('chart').innerHTML = "";
+  //document.getElementById('slidery').innerHTML =  "";
+
+  data = [];
+
+  t0  = new Date(respdata[0]['TIME']['the_time']);
+ 
+  for(var i = 0; i < respdata.length; i++){    
+    ti = new Date(respdata[i]['TIME']['the_time']);
+    target = respdata[i][selected_monitor];
+    for(var j = 0; j < selected_statistic.split('.').length; j++){
+      target = target[selected_statistic.split('.')[j]];
+    }
+    data[i] =  {x: ti/1000, y: parseFloat(target) };
+  }
+
+  toto = data;
+
+  var graph = new Rickshaw.Graph( {
+    element: document.querySelector("#chart"),
+    width: 700,
+    height: 400,
+    renderer: 'scatterplot',
+    series: [{
+      color: 'steelblue',
+      data: data,
+      name: selected_statistic
+      }]
+    });
+
+
+  graph.render();
+
+  var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+      graph: graph
+  } );
+
+  var slider = new Rickshaw.Graph.RangeSlider({
+    graph: graph,
+    element: $('#slidery')
+  });
+   
+
+  var xaxis = new Rickshaw.Graph.Axis.Time( {
+    graph: graph
+  });
+  
+  xaxis.render();
+
+  var yAxis = new Rickshaw.Graph.Axis.Y({
+    graph: graph
+  });
+
+  yAxis.render();
+}
+
+else{
+  $('#chart').html("No Results with selected Filters");
+}
+
+  
+
+}
+
+function update_field_selector(){
+  var ind = -1;
+
+  for(var i = 0; i < monitorlist.length; i++){
+    if($('#monitorselector').val() == monitorlist[i]){ ind = i;}
+  }
+
+  document.getElementById('fieldselector_div').innerHTML = monitor_field_selectors[ind];
+}
+
+
+
+$(document).ready(function(){ 
+
+  var monitorselector = "<select id='monitorselector' onchange='update_field_selector();'>";
+  monitor_field_selectors = [];
+  var j = -1;
+
+  for(var i = 0; i < field_selector_list.length; i++){
+      var monitorname = field_selector_list[i].name.split(':')[0];
+      var fieldname = field_selector_list[i].name.split(':')[1];
+
+      if(!inarr(monitorlist, monitorname)){
+          if(j>-1){
+            monitor_field_selectors[j] += '</select>';
+          }
+          j++;
+          monitor_field_selectors.push('<select id = "fieldselector">');
+          monitorlist.push(monitorname);
+          monitorselector += "<option value = '" + monitorname + "'>" + monitorname + "</option>";
+      }
+
+      monitor_field_selectors[j] += "<option value = '" + fieldname + "'>" + fieldname + "</option>";
+  }  
+  monitor_field_selectors[monitor_field_selectors.length - 1] += "</select>";
+  monitorselector += "</select>";
+
+  document.getElementById('monitorselector_div').innerHTML = monitorselector;
+
+  $('#search_btn').click(function(){
+    var query_url = "query.py?";
+    var query_filters = ".all()";
+    if(date_filtering_enabled){
+      query_filters = ".filter('TIME.the_time', gt, '" + $('#start_picker').val() + "').filter('TIME.the_time', lt, '" + $('#end_picker').val() + "')";
+    }
+
+    $.ajax({
+      url: query_url+$.base64.encode(query_filters), dataType: 'text'
+    }).done(function(p){
+      respdata = eval('(' + p.split("#J.S.O.N#")[1] + ')' );
+      render();
+    });
+  });
+
+  $('#datebutton').click(toggle_date_filtering);
+
+
+  $('#start_picker').datepicker({dateFormat: 'yy/mm/dd 00:00:00'});
+  $('#end_picker').datepicker({dateFormat: 'yy/mm/dd 00:00:00'});
+  $('#start_picker').hide();
+  $('#end_picker').hide();
+
+  update_field_selector();
+
+});
+</script> 
+
+
+</body>
+</html>
+
