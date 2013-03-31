@@ -8,6 +8,8 @@ from ccapp.models import *
 import os, random, hashlib
 from open_facebook.utils import json, camel_to_underscore
 from datetime import timedelta
+from django_facebook.api import require_persistent_graph, get_persistent_graph, FacebookUserConverter
+from open_facebook.exceptions import OAuthException
 
 import logging
 import os
@@ -59,6 +61,7 @@ class FacebookProfileModel(models.Model):
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=1, choices=(('m', 'Male'), ('f', 'Female')), blank=True, null=True)
     raw_data = models.TextField(blank=True)
+    facebook_open_graph = models.BooleanField(default=True, help_text='Determines if this user want to share via open graph')
 
     def __unicode__(self):
         return self.user.__unicode__()
@@ -75,6 +78,14 @@ class FacebookProfileModel(models.Model):
         else:
             state = FACEBOOK_OG_STATE.CONNECTED
         return state
+
+    def is_connected(self, request):
+        graph = get_persistent_graph(request)
+        try:
+            graph.is_authenticated()
+            return True
+        except OAuthException:
+            return False
 
     def likes(self):
         likes = FacebookLike.objects.filter(user_id=self.user_id)

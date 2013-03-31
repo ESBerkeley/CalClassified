@@ -1,82 +1,24 @@
 {% extends "mobile/base.html" %}
 
 {% block body_content %}
-<div>
 <div id="home-logo" data-inset="true">
-        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 37px;"></center>
-        <center><h2 style="font-size:15px; margin-top:5px;"> Buy and Sell Your Things</h2></center>
+  <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 40px;"></center>
 </div>
 
-    {% if next %}
-    <p style="color:red; font-size:13px; margin-top:0px; margin-bottom:5px; text-align: center;">Please log in to continue.</p>
-    {% endif %}
+<center><h2 style="font-size:15px; margin-top:5px;" class="font-600">Sell on the go!</h2></center>
+<center><h2 style="font-size:13px; margin-top:-10px; margin-bottom:20px;">Upload images directly from your mobile camera.</h2></center>
 
-    <div id="login-box">
-        {% if request.user.is_authenticated %}
-            <div>
-                Hi, {{ request.user.first_name }}!<br>
-                <a href="/logout">logout</a>
-            </div>
-        {% else %}
-
-        <div class="title">
-            <center><h2>Login</h2><center>
-        </div>
-
-        <form method="post" action="{% url auth_login %}">{% csrf_token %}
-            <label for="basic" class="font-400">Email:</label>
-            <input type="text" name="username" id="basic" value="" style="font-size:12px;"/>
-            <label for="basic" class="font-300">Password: </label>
-            <input type="password" name="password" value="" style="font-size:12px; margin-bottom:20px;" />
-            
-
-            {% if form.errors %}
-                <p id="login-error" style="color:red; font-size:13px; margin-top:0px; margin-bottom:0px; text-align: center;">Your E-mail or password was incorrect. Please try again.</p>
-            {% endif %}
-
-            <input type="submit" value="Log In" data-theme="d" />
-            {% if next %}
-                <input type="hidden" name="next" value="{{ next }}" />
-            {% else %}
-                <input type="hidden" name="next" value="/" />
-            {% endif %}
-
-        </form>
-
-            <div class="border"></div>
-
-
-            <button id="fake-login" data-theme="b">Log in with Facebook</button>
-
-            <div class="inner_content" style="display: none;">
-                <form action="{% url facebook_connect %}?facebook_login=1" method="post">
-                    <input type="hidden" value="{{ next }}" name="next" />
-                    <div id="facebook_login_jss">
-                        <input id="actual-fb-login" onclick="F.connect(this.parentNode.parentNode); return false;" type="image"/>
-                    </div>
-                </form>
-            </div>
-
-        {% endif %}
-    </div>
+<div class="box">
+  <a href="{% url login %}" data-role="button" data-theme="b" class="font-400">Login</a> 
+  <a href="{% url sell %}" data-role="button" data-theme="a" class="font-400">Sell</a>
 </div>
 {% endblock %}
 
 {% block javascript %}
-
 <script type="text/javascript">
     $('#body-page').live('pageshow', function () {
-        // THIS IS HOW TO DO DOCUMENT READY
-        {% if form.errors %}
-            $("#login-error").show();
-        {% endif %}
 
     });
-
-    $("#fake-login").click(function(){
-        $("#actual-fb-login").trigger("click");
-    })
 </script>
-
 {% endblock %}
 

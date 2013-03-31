@@ -5,7 +5,6 @@
 {% block extra_css %}
 body{
   background-image: url("/static/cream_dust.png");
-
 }
 {% endblock %}
 
@@ -32,67 +31,35 @@ body{
     <h3 style="font-size:22pt"> Meet on campus and trade with another Cal Bear!</h3>
   </div>
   <div id="why-buttons">
-    <a class="btn btn-custom btn-large" style="width:160px" href="{% url browse %}"> Browse Now</a>
-
+    <a class="btn btn-custom-blue btn-large" style="width:130px;" href="{% url browse %}">Browse</a>
+    <a class="btn btn-custom-orange btn-large" style="width:130px; margin-left:12px;" href="{% url createIFS %}">Sell</a>
   </div>
 </div>
 
-<section id="learn">
+
 <div id="low-banner" >
     <div class="row-fluid container index-row">
       <div class="span3">
           <h2>Login</h2>
           <p>See what your friends are offering by logging in with your Facebook.</p>
         </div>
-
-      <div class="span3">
+      <!--<div class="span3">
           <h2>Browse</h2>
           <p>View and find items quickly and easily by date listed.</p>
-      </div>
+      </div>-->
       <div class="span3">
           <h2>Buy</h2>
           <p>Buy an item and claim it forever. Exchange messages to collect your item.</p>
       </div>
       <div class="span3">
           <h2>Sell</h2>
-          <p>No more hassle haggling with buyers or
-              messaging multiple people at once</p>
+          <p>No more hassle haggling with buyers or messaging multiple people at once.</p>
+      </div>
+      <div class="span3">
+          <h2>Mobile</h2>
+          <p>Use our mobile site to upload images straight from your camera.</p>
       </div>
 
     </div>
 </div>
-</section>
-
-<!-- <div id="low-banner" >
-  <div class="container">
-    <div class="row-fluid index-row">
-      <div class="span3 index-border">
-        <div class="index-box-text">
-          <h2>Sell to people you trust</h2>
-          <p>Invite your friends from Facebook so you have a more focused area to trade.</p>
-        </div>
-      </div>
-      <div class="span3 index-border">
-        <div class="index-box-text">
-          <h2>Join and create groups</h2>
-          <p>You can create public or private groups for you to sell within your preferred community.</p>
-        </div>
-      </div>
-      <div cla`ss="span3 index-border">
-        <div class="index-box-text">
-          <h2>Find what you want</h2>
-          <p>Easy to use interface makes browsing a breeze.</p>
-        </div>
-      </div>
-      <div class="span3 index-border">
-        <div class="index-box-text">
-          <h2>sdfsdf</h2>
-          <p>Easy to use interface makes browsing a breeze.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
 {% endblock %}

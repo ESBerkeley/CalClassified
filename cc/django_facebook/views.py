@@ -18,11 +18,11 @@ from django_facebook.canvas import generate_oauth_url
 from django_facebook.connect import CONNECT_ACTIONS, connect_user
 from django_facebook.utils import next_redirect, get_registration_backend, \
     to_bool, error_next_redirect, replication_safe
-from django_facebook.decorators import (facebook_required,
-                                        facebook_required_lazy)
+from django_facebook.decorators import facebook_required, facebook_required_lazy
 from open_facebook.utils import send_warning
 from open_facebook.exceptions import OpenFacebookException
 from django.shortcuts import redirect
+from open_facebook import exceptions as open_facebook_exceptions
 
 
 logger = logging.getLogger(__name__)

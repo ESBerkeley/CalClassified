@@ -118,7 +118,7 @@ def next_redirect(request, default='/', additional_params=None,
             redirect_url = request.REQUEST.get(key)
             if redirect_url != None:
                 next = redirect_url.split('next=')
-                if len(next)>1:
+                if len(next)>1 and next[1]:
                     redirect_url = next[1]
                     break
             if request.user.get_profile().first_time and "m." not in url:

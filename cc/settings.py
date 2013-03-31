@@ -134,6 +134,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'middleware.SubdomainsMiddleware', # this is for subdomain
+    'middleware.ActiveUserMiddleware', # this is to logout FB users that no longer have permissions
 )
 
 
@@ -170,7 +171,9 @@ INSTALLED_APPS = (
     'django_resized',
     'widget_tweaks',
     'djkombu',                           #This needs to be changed for server production
-    'djcelery'
+    'djcelery',
+#    'requests',
+#    'facepy',
     # 'django.contrib.admindocs',
 )
 
@@ -231,6 +234,12 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
+        'swamp_handler':{
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple', 
+            'filename': '../logs/bnm_log.log'
+        },
     },
     'loggers': {
         'django.request': {
@@ -242,6 +251,11 @@ LOGGING = {
             'handlers':['null'],
             'propagate': True,
             'level':'INFO',
+        },
+        'swamp_logger':{
+            'handlers': ['swamp_handler'], 
+            'propagate': True,
+            'level': 'INFO',
         },
     },
     # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once

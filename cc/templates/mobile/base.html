@@ -39,7 +39,7 @@
             {% if request.user.is_authenticated %}
 		    <li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
             {% else %}
-            <li style="width:34%;"><a href="{% url home %}" rel="external" class="font-400">Login</a></li>
+            <li style="width:34%;"><a href="{% url login %}" rel="external" class="font-400">Login</a></li>
             {% endif %}
           </ul>
         </div><!-- /navbar -->
@@ -59,7 +59,7 @@
         <div class="border" style="border-top-color:#474747"></div>
         <div class="panel-item"><a href="/logout" rel="external">Logout</a></div>
         {% else %}
-        <div class="panel-item"><a href="{% url home %}" rel="external">Login</a></div>
+        <div class="panel-item"><a href="{% url login %}" rel="external">Login</a></div>
         {% endif %}
       </div>
 

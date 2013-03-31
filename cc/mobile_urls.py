@@ -9,6 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('ccapp.mobile_views',
     url(r'^$', "home", name='home'),
+    url(r'^login/$', "login", name='login'),
     url(r'^browse/$',"browse", name="browse"),
     url(r'^sell/$',"sell", name="sell"),
     url(r'^features',"features", name="features"),
@@ -21,7 +22,7 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^item_action/$','item_action', name="item_action"), #REQUIRES GET PARAMETERS look at view
     url(r'^flag/(?P<pid>\d+)/$','flag_item', name='flag_item'),
 
-    url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/home.html'},name='auth_login'),
+    url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/login.html'},name='auth_login'),
     #url(r'^accounts/login/$','browse'),
 
     #FACEBOOK

@@ -7,11 +7,14 @@ function restore(){
         var xxxx = eval('(' + sessionField_scroll.value + ')');
         
         if(xxxx === 3){
+          
             clear_restore();
             runloadBox();
+            in_restore = 0;
         }
         
-        else{
+        else {
+       
         
             mybox.innerHTML = sessionField.value;
         
@@ -30,6 +33,8 @@ function restore(){
             flags = xxxx["flags"];
             oflags = xxxx["oflags"];
             scraps = xxxx["scraps"];
+
+            in_restore = 0;
         
         }
         
@@ -306,7 +311,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   }
 
   function toggler(control) {   //hides everything, shows specific icon
-    $(".side-icon").hide();
+    $(".cat-icon").hide();
     var id = document.getElementById(control);
     $(id).show();
   }
