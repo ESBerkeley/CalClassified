@@ -154,7 +154,7 @@
 {% block content %}
 
     <div id="boxDiv" class="span9 offset3">
-      {% if cc_circs|length == 0 %}
+      {% if cc_circs|length == -1 %}
           <h2><a href="{% url account_circles %}">Join</a> groups to see what people are selling!</h2>
       {% else %}
       
