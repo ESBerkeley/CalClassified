@@ -4,6 +4,7 @@ from utils.hardwarestats import hardwareStats
 from utils.time import timeMonitor
 from utils.BNM_hooks import bnm_hooks
 from utils.GA import google_ga
+from utils.bnm_log_reader import bnm_log_reader
 
 from datetime import date, datetime
 import json
@@ -13,8 +14,10 @@ hwmon = hardwareStats()
 time = timeMonitor()
 ga = google_ga()
 bnm = bnm_hooks()
+blm = bnm_log_reader()
 
-monitors = [hwmon, time, ga, bnm]
+
+monitors = [hwmon, time, ga, bnm, blm]
 
 
 
@@ -25,7 +28,7 @@ def insert(doc, tag_string, instr):
 
 #try:
 now = date.today()
-filename = ""+str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"
+filename = "../logs/"+str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"
 todayslog = open(filename, "a+")
 todayslog.seek(0)
 log_data = json.loads(todayslog.read())
@@ -61,7 +64,8 @@ for mon in monitors:
     except KeyError:
         monitor_data = {}
 
-    thedoc = insert(thedoc, mon.htmltag, mon.render(monitor_data))
+    if thedoc.find(mon.htmltag) >= 0:
+        thedoc = insert(thedoc, mon.htmltag, mon.render(monitor_data))
 
     for field in mon.fields:
         field_selector_list.append({'name': mon.name + ':' + field['name'], 'type': field['type']})

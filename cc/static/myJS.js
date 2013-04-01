@@ -7,11 +7,14 @@ function restore(){
         var xxxx = eval('(' + sessionField_scroll.value + ')');
         
         if(xxxx === 3){
+          
             clear_restore();
             runloadBox();
+            in_restore = 0;
         }
         
-        else{
+        else {
+       
         
             mybox.innerHTML = sessionField.value;
         
@@ -30,6 +33,8 @@ function restore(){
             flags = xxxx["flags"];
             oflags = xxxx["oflags"];
             scraps = xxxx["scraps"];
+
+            in_restore = 0;
         
         }
         

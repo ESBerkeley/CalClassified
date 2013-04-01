@@ -25,10 +25,7 @@ that shows all data where the time of the entry is newer than 30 minutes ago
 
 '''
 
-'''
-os.system('sleep 1')
-os.system('beep')
-os.system('sleep 1')'''
+
 
 def insert(doc, tag_string, instr):
     return doc[1:doc.find(tag_string)] + instr + doc[doc.rfind(tag_string)+len(tag_string):]

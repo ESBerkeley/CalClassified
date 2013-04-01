@@ -3,6 +3,7 @@ from utils.hardwarestats import hardwareStats
 from utils.time import timeMonitor
 from utils.BNM_hooks import bnm_hooks
 from utils.GA import google_ga
+from utils.bnm_log_reader import bnm_log_reader
 
 
 
@@ -36,8 +37,10 @@ hwmon = hardwareStats()
 time = timeMonitor()
 ga = google_ga()
 bnm = bnm_hooks()
+blm = bnm_log_reader()
 
-monitors = [hwmon,time,ga,bnm]
+
+monitors = [hwmon,time,ga,bnm,blm]
 new_stats = {}
 
 for mon in monitors:
