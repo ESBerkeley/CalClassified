@@ -154,7 +154,7 @@
 {% block content %}
 
     <div id="boxDiv" class="span9 offset3">
-      {% if cc_circs|length == 0 %}
+      {% if cc_circs|length == -1 %}
           <h2><a href="{% url account_circles %}">Join</a> groups to see what people are selling!</h2>
       {% else %}
       
@@ -195,25 +195,31 @@
 
 
   $(window).scroll(function(){
-    if($(window).scrollTop() == $(document).height() - $(window).height()){
+
+
+    if(!in_restore && $(window).scrollTop() == $(document).height() - $(window).height()){
       current_page++;
       runloadBox(current_page);
 
     }
   });
 
+
   $(document).ready(function(){
       $(".navbar").addClass("navbar-fixed-top");
       $("body").css("padding-top","+=70px");
-      $(".navbar .container").css("min-width","96.5%")
+      $(".navbar .container").css("min-width","96.5%");
  
-    document.getElementById("searchbarform").setAttribute("action","javascript: runloadBox();")
+    document.getElementById("searchbarform").setAttribute("action","javascript: runloadBox();");
+//    document.getElementById("searchbarform").setAttribute("action","javascript: alert('asdfasd');")
+
     {% if q %}
-      document.getElementById('searchbar').value = "{{ q }}"
+      document.getElementById('searchbar').value = "{{ q }}";
     {% endif %}
     
      
     if($.cookie('onpost') === 't'){
+       in_restore = 1;
        $.cookie('onpost',null);
        $.cookie('onpost','f', { expires: 1, path: '/' } );
        restore();
@@ -223,10 +229,16 @@
         clear_restore();
         runloadBox();
     }
+
+
+
+
+
+
   });
 
 
-
+  var in_restore = 0;
   var ogrid,old_obj,scraps,oflags;
   scraps=[];
   oflags="";

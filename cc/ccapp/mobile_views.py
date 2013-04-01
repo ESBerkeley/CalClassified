@@ -32,6 +32,9 @@ import random
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 def home(request):
+    return render_to_response('mobile/home.html', context_instance = RequestContext(request))
+
+def login(request):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
     if request.user.is_authenticated():
@@ -40,10 +43,10 @@ def home(request):
         data = {}
         if "next" in request.GET:
             data['next'] = request.GET['next']
-        return render_to_response('mobile/home.html', data, context_instance = RequestContext(request))
+        return render_to_response('mobile/login.html', data, context_instance = RequestContext(request))
 
 def features(request):
-    return render_to_response('mobile/features.html',context_instance = RequestContext(request))
+    return render_to_response('mobile/features.html', context_instance = RequestContext(request))
 
 def browse(request):
     data = {}
