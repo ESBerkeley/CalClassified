@@ -32,6 +32,8 @@ import random
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 def home(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/browse/")
     return render_to_response('mobile/home.html', context_instance = RequestContext(request))
 
 def login(request):

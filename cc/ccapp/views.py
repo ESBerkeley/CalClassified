@@ -851,7 +851,22 @@ def flag_item(request,pid):
     data['message'] = "Thanks for reporting this item. If enough users report this item, it will be taken down. Please email contact@buynear.me for immediate moderation."
     return render_to_response('message.html',data,context_instance=RequestContext(request))
     
+def ajax_delete_comment(request, comment_id):
+    if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
+        comment = Comment.objects.get(id=comment_id)
+        if request.user == comment.sender:
+            comment.delete()
+            return HttpResponse()
+    return HttpResponse()
     
+def ajax_delete_response(request, comment_id):
+    if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
+        comment = Comment.objects.get(id=comment_id)
+        if request.user == comment.item.owner:
+            comment.seller_response = ""
+            comment.save()
+            return HttpResponse()
+    return HttpResponse()
     
 @login_required
 @logit
