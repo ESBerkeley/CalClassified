@@ -2,10 +2,10 @@ import logging
 import datetime
 
 
-#This decotrator will log what users access a wrapped view, along with the time of access.
+#This decorator will log what users access a wrapped view, along with the time of access.
 def logit(fn):
 
-    def asd(*fish):
+    def asd(*fish, **kwargs):
         #starfish[0] is request, other arguments are accepted to pass to the view.
 
         swamp_logger = logging.getLogger('swamp_logger')
@@ -23,7 +23,7 @@ def logit(fn):
 
         swamp_logger.info('logit_analytics: user ' + user + ' view ' + fname + ' time [' + timestr + ']')  
 
-        return fn(*fish)
+        return fn(*fish, **kwargs)
 
     return asd
 
