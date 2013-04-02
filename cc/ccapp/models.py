@@ -249,6 +249,7 @@ FacebookFormSet = modelformset_factory(FacebookPost, max_num=0, fields=('title',
 class Notification(models.Model):
     """
     TYPES:
+    0 - fb friend posted 
     1 - notify the seller that someone commented
     2 - notify the commenter that the seller replied
     3 - notify the seller that someone clicked buy

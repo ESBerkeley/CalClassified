@@ -43,7 +43,7 @@
 
     <input type="hidden" name="circles" value="1" />
 
-    <input type="submit" value="Submit" data-theme="b" />
+    <input id="sell-submit-btn" type="submit" value="Submit" data-theme="b" />
 
 
 </form>
@@ -91,11 +91,12 @@
                 }
             },
             submitHandler: function() {
+                $('#sell-submit-btn').button('disable');
                 $("#sell-form").submit(function(event){
-                    $('[type="submit"]').button('disable');
+                    //$('[type="submit"]').button('disable');
                 })
                 $.mobile.loading( 'show', {
-                    text: 'Sending Message...',
+                    text: 'Sending Message ...',
                     textVisible: false,
                     theme: 'a',
                     html: ""

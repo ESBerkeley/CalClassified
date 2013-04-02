@@ -126,6 +126,12 @@
         <ul data-role="listview">
         {% for comment in comments %}
           <li style="padding: 0;">
+            {% comment %}
+            {% if comment.sender == request.user %}
+            <div style="width: 85%; float: left;">
+            {% endif %}
+            {% endcomment %}
+          
             {% if comment.seller_response == "" and item.owner == request.user and comment.sender != request.user %}
             <!-- enables tap to respond for seller -->
             <a href="#comment-modal-{{ comment.id }}" data-rel="dialog" style="padding: 0">
@@ -150,7 +156,18 @@
             <p><b>Tap to respond to commenter!</b></p>
             </a>
             {% endif %}
-        </li>
+            
+            {% comment %}
+            {% if comment.sender == request.user %}
+            </div><!-- combine with .sender==.user up top-->
+            
+            <button data-icon="delete" data-iconpos="top" data-inline="true">Delete Comment</button>
+            
+            <div style="clear: both"></div>
+
+            {% endif %}
+            {% endcomment %}
+          </li>
 
         {% endfor %}
         </ul>

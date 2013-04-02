@@ -32,13 +32,16 @@ import random
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 def home(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/browse/")
     return render_to_response('mobile/home.html', context_instance = RequestContext(request))
 
 def login(request):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
     if request.user.is_authenticated():
-        return redirect(reverse('my_items'))
+        #return redirect(reverse('my_items'))
+        return HttpResponseRedirect("/browse/")
     else:
         data = {}
         if "next" in request.GET:
@@ -284,10 +287,8 @@ def flag_item(request,pid):
         data['title'] = "Item Flag Failed"
         data['message'] = "It looks like you already flagged this item. Email contact@buynear.me for further assistance."
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request)) 
-    
-    #check if more than 3 flags exist, if so get rid of the item and ban user
-    flagged = ItemFlag.objects.filter(item = item)
-    if len(flagged) >= 3 or request.user.is_staff:
+
+    if request.user.is_staff:
         item.deleted = True
         item.save()
         owner = item.owner
@@ -295,14 +296,22 @@ def flag_item(request,pid):
         op.is_banned = True
         op.save()
         
-        bad_items = ItemForSale.objects.filter(owner=owner)
-        for bad in bad_items:
-            bad.deleted = True
-            bad.save()
+        #uncomment these if u want to remove everythign from banned dude
+        #bad_items = ItemForSale.objects.filter(owner=owner)
+        #for bad in bad_items:
+            #bad.deleted = True
+            #bad.save()
         
         data['title'] = "Item Flagged"
         data['message'] = "Thanks for reporting this item. The item and user have been taken down!"
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+    
+    #check if more than 3 flags exist, if so send mail to admin
+    flagged = ItemFlag.objects.filter(item = item)
+    if len(flagged) >= 3: #send mail if non admins flag
+        send_mail('Item Flagged 3 Times', 'Item with id '+str(item.id)+'is flagged go take it down. http://buynear.me/'+str(item.id), 'noreply@buynear.me',
+        ['contact@buynear.me'], fail_silently=True)
+    
     data['title'] = "Item Flagged"
     data['message'] = "Thanks for reporting this item. If enough users report this item, it will be taken down. Please email contact@buynear.me for immediate moderation."
     return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))

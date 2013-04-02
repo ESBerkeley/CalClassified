@@ -75,6 +75,8 @@ urlpatterns = patterns('',
     url(r'^ajax_contact_seller/$','ccapp.views.ajax_contact_seller'),
     url(r'^ajax_delete_thread/$','ccapp.views.ajax_delete_thread'),
     url(r'^ajax_delete_post/$','ccapp.views.ajax_delete_post'),
+    url(r'^ajax/delete_comment/(?P<comment_id>\d+)/$','ccapp.views.ajax_delete_comment', name='ajax_delete_comment'),
+    url(r'^ajax/delete_response/(?P<comment_id>\d+)/$','ccapp.views.ajax_delete_response', name='ajax_delete_response'),
     url(r'^logout/$', 'django.contrib.auth.views.logout',
                           {'next_page': '/'}),
 

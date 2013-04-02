@@ -10,7 +10,9 @@
 <ul data-role="listview">
 {% for note in notifications %}
     <li >
-    {% if note.type == 1 %} <!--notify the seller that someone commented-->
+    {% if note.type == 0 %}
+        <a href="{{ note.post_from.get_absolute_url }}" rel="external"><p style="white-space:normal"><b>{{ note.post_from.owner.get_full_name }}</b> has posted "{{ note.post_from.title }}"</p></a>
+    {% elif note.type == 1 %} <!--notify the seller that someone commented-->
         <a href="{{ note.post_from.get_absolute_url }}" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has commented on your item "{{ note.post_from.title }}"</p></a>
     {% elif note.type == 2 %} <!-- notify the commenter that the seller replied -->
         <a href="{{ note.post_from.get_absolute_url }}" rel="external"><p style="white-space:normal">The seller has replied to your comment on the item "{{ note.post_from.title }}"</p></a>
