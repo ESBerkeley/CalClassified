@@ -550,6 +550,45 @@ p.box-text {
   text-shadow: 2px 2px rgba(0,0,0,1);
 }
 
+#speech-text-container {
+    padding-top: 125px;
+    padding-right:0px;
+}
+
+#speech-text {
+    margin-top:-25px;
+    margin-left:-80px;
+    padding-right:0px;
+    padding-left:10px;
+    padding-bottom:10px;
+    /*max-width:1440px;
+    min-width:200px;*/
+    width:300px;
+    text-align:center;
+    /*background-color:white;
+    background:url(/static/images/shading_opacity.png);*/
+    background-color:rgba(0,0,0,0.9);
+    -webkit-border-radius:6px;
+    -moz-border-radius:6px;
+    -ms-border-radius:6px;
+    -o-border-radius:6px;
+    border-radius:6px;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+}
+
+#speech-text h2 {
+    font-family: 'Proxima Nova', 'proxima-nova', 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: normal;
+    letter-spacing: 0px;
+    font-size: 20px;
+    /*text-shadow: 0 0 5px grey; */
+    color: white;
+    text-shadow: 2px 2px rgba(0,0,0,1);
+}
+
+
 #why-us {
   padding-top: 20px;
   padding-bottom: 20px;

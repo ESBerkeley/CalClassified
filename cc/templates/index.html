@@ -10,7 +10,7 @@ body{
 
 {% block navbar %}
 {% if request.user.is_authenticated %}
-  <li><a style="color: #6f6f6f;cursor: default;"> Hi, {{ request.user.first_name }}! </a></li>
+    <li xmlns="http://www.w3.org/1999/html"><a style="color: #6f6f6f;cursor: default;"> Hi, {{ request.user.first_name }}! </a></li>
 {% endif %}
 {% endblock %}
 
@@ -22,7 +22,20 @@ body{
         <h1>Buying and selling never felt so good</h1>
         <h2>Buy and sell items on the Berkeley campus!</h2>
       </div>
-    </div>   
+    </div>
+    <div id="speech-text-container" class="container">
+      <div id="speech-text">
+          <h2>
+              We endorse: <br>
+              <a href="https://www.facebook.com/chenchenhuo"> EVP Chen-Chen Huo</a> <br>
+              <a href="https://www.facebook.com/courtney.chow888">#181 Courtney Chow</a><br>
+              {% load static %}
+              <a href="http://studentaction.org">
+                <img style="height:50px;" src="{% get_static_prefix %}images/student_action.jpg">
+              </a>
+          </h2>
+      </div>
+    </div>
   </div>
 </div>
 
