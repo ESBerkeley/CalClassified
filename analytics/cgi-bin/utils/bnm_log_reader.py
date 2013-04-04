@@ -3,14 +3,19 @@
 
 '''
 import datetime
-
+from misc import is_live
 
 class bnm_log_reader():
 
     name = "bnm_log_reader"
     htmltag = '%BLR%'
 
-    logfile = '../../logs/bnm_log.log'
+    if is_live():
+        logfile = "/var/www/calclassified/logs/"
+    else:
+        logfile = "../../logs/"
+    
+    logfile += 'bnm_log.log'
 
     fields = [
         {'name': 'buybutton_clicks', 'type': 'number'},

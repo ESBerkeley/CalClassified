@@ -7,6 +7,7 @@
 from os import listdir
 import json
 
+from utils.misc import is_live
 from utils.hardwarestats import hardwareStats
 from utils.time import timeMonitor
 from utils.BNM_hooks import bnm_hooks
@@ -33,13 +34,18 @@ class SetQuery:
 
     def all(self): #Load data from all json files found
         self.data = []
-        #@print listdir("../logs/")
-        for jsonfile in listdir("../logs/"):
+
+        if is_live():
+            dir = "/var/www/calclassified/logs/"
+        else:
+            dir = "../logs/"
+
+        for jsonfile in listdir(dir):
 
             if len(jsonfile.split(".")) > 1:
 
                 if jsonfile.split(".")[1] == "json":
-                    fd = open("../logs/" + jsonfile, "r")
+                    fd = open(dir + jsonfile, "r")
                     snippet = json.loads(fd.read())
 
                     for hourly_chunk in snippet:

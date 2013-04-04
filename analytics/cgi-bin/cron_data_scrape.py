@@ -1,4 +1,4 @@
-
+from utils.misc import is_live
 from utils.hardwarestats import hardwareStats
 from utils.time import timeMonitor
 from utils.BNM_hooks import bnm_hooks
@@ -12,7 +12,12 @@ import json
 
 now = date.today()
 
-filename = "../../logs/" + str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"
+if is_live():
+    filename = "/var/www/calclassified/logs/"
+else:
+    filename = "../../logs/" 
+
+filename += str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"
 
 
 todayslog = open(filename, "a+")
