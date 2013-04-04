@@ -1452,7 +1452,8 @@ def profile_buying(request):
 
 
     
-@login_required(redirect_field_name='/view_thread')
+#@login_required(redirect_field_name='/view_thread')
+@login_required
 def profile_view_thread(request,thread_id):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
