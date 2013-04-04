@@ -29,10 +29,10 @@ def insert(doc, tag_string, instr):
 now = date.today()
 
 if is_live():
-    filename = "/var/www/calclassified/logs"
+    filename = "/var/www/calclassified/logs/"
 
 else:
-    filename = "../../logs"
+    filename = "../../logs/"
 
 filename += str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"   
 
