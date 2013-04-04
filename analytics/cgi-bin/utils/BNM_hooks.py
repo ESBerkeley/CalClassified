@@ -6,6 +6,7 @@ This scrapes custom data from bnm app.
 import sys
 from monitor import Monitor
 from django.core.management import setup_environ
+from misc import is_live
 
 class bnm_hooks(Monitor):
 
@@ -33,7 +34,10 @@ class bnm_hooks(Monitor):
         #Load up into django.
         #This path must obviously be changed.
         try:
-            sys.path.append('/home/rory/cc/CalClassified/cc')
+            if is_live():
+                sys.path.append('/var/www/calclassified/cc')
+            else:
+                sys.path.append('/home/rory/cc/CalClassified/cc')
             import settings
             setup_environ(settings)
             from ccapp.models import ItemForSale
@@ -65,7 +69,7 @@ class bnm_hooks(Monitor):
         try:
             browsehits = 0
 
-            f = open('/var/log/apache2/access.log')
+            f = open('/var/log/apache2/access.log','r')
             lines = f.readlines()
             l2 = []
             for line in lines:

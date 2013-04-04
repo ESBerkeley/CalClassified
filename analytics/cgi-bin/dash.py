@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from utils.misc import is_live
 from utils.hardwarestats import hardwareStats
 from utils.time import timeMonitor
 from utils.BNM_hooks import bnm_hooks
@@ -25,14 +26,19 @@ def insert(doc, tag_string, instr):
     return doc[0:doc.find(tag_string)] + instr + doc[doc.rfind(tag_string)+len(tag_string):]
 
 
-
-#try:
 now = date.today()
-filename = "../logs/"+str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"
-todayslog = open(filename, "a+")
+
+if is_live():
+    filename = "/var/www/calclassified/logs/"
+
+else:
+    filename = "../../logs/"
+
+filename += str(now.year) + "_" + str(now.month) + "_" + str(now.day) + ".json"   
+
+todayslog = open(filename, "r")
 todayslog.seek(0)
 log_data = json.loads(todayslog.read())
-#print(todayslog)
 
 
 
@@ -43,9 +49,8 @@ if len(log_data) > 0:
 else:
     most_recent_data = {}
 
-#print(log_data)
 
-#Load the html template
+#Load the html template, asshole
 f = open('template/dash.html','r')
 thedoc = f.read()
 
