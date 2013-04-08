@@ -509,7 +509,9 @@ class FacebookUserConverter(object):
         Post to Facebook FFSale wall
         '''
    #     response = self.open_facebook.set('407167362711476/feed', link='http://buynear.me'+item.get_absolute_url(), message='Selling '+ item.title+'!') #Testing 2050 group
-        response = self.open_facebook.set('266259930135554/feed', link='http://buynear.me'+item.get_absolute_url(), message='Selling '+ item.title+'!') #Real ffs group
+        response = self.open_facebook.set('266259930135554/feed',
+                                          link='http://buynear.me'+item.get_absolute_url(),
+                                          message='Selling '+ item.title + ', $'+ item.price + ' on buynear.me') #Real ffs group
         return response
 
     def set_fb_group(self, item, url):
@@ -519,7 +521,9 @@ class FacebookUserConverter(object):
         :param url: #group/feed, eg. '24124/feed'
         :return: response
         '''
-        response = self.open_facebook.set(url, link='http://buynear.me'+item.get_absolute_url(), message='Selling '+item.title+'!')
+        response = self.open_facebook.set(url,
+                                          link='http://buynear.me'+item.get_absolute_url(),
+                                          message='Selling '+ item.title + ', $'+ item.price + ' on buynear.me')
         return response
 
     '''def store_free_for_sale(self, user, items):
