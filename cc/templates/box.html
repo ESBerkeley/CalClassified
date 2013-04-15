@@ -111,14 +111,36 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       {% endif %} <!-- end if not circle -->
 {% endcomment %}
 
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse2">
+            <h2>Sort By</h2>
+          </a>
+        </div>
+        <div id="collapse2" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+              <li class="side-item">
+                <i id="" class="icon-ok-sign side-icon" onclick=""></i>
+                <a id="" class="" onclick=""/>Date: Newest First</a>
+              </li>
+              <li class="side-item">
+                <i id="" class="icon-ok-sign side-icon" onclick=""></i>
+                <a id="" class="" onclick=""/>Price </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       {% if user.get_profile.facebook_id %}
       <div class="accordion-group">
         <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse3">
             <h2>Connections</h2>
           </a>
         </div>
-        <div id="collapseTwo" class="accordion-body collapse">
+        <div id="collapse3" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
               <li class="side-item circle_side-item">
@@ -133,11 +155,11 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 
       <div class="accordion-group">
         <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse4">
             <h2>Price</h2>
           </a>
         </div>
-        <div id="collapseThree" class="accordion-body collapse">
+        <div id="collapse4" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
               <li class="side-item">
@@ -168,9 +190,8 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 
     <div id="boxDiv" class="span9 offset3">
       {% if cc_circs|length == -1 %}
-          <h2><a href="{% url account_circles %}">Join</a> groups to see what people are selling!</h2>
+        <!--<h2><a href="{% url account_circles %}">Join</a> groups to see what people are selling!</h2>-->
       {% else %}
-      
       <div class="stopfloat"><br/>
         <div id="myBox" style="position:relative; left:10px;">
           <div id="myBox0" style="position:relative; top:0px;">
