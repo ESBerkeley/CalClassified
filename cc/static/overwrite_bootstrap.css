@@ -356,16 +356,14 @@ div.friend_boxxx .box-text {
 }
 
 p.box-text {
-  /*color:white;*/
-  display:table-cell;
-  /*vertical-align:middle;*/
-  /*text-align:center;*/
-  font-size: 16px;
 
+  display:table-cell;
+  /*vertical-align:middle;
+  text-align:center;*/
+  font-size: 16px;
   line-height: 140%;
   padding: 0;
   color: #0065da;
-  
 }
 
 .price-of-box {
@@ -382,15 +380,20 @@ p.box-text {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-.box-item-title{
- font-family: 'Open Sans', sans-serif;
- display:inline-block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+.box-item-title {
+  font-family: 'Open Sans', sans-serif;
+  display:inline-block; 
+  max-width:280px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  vertical-align: top;
 }
 
 .box-fb-icon{
- position: absolute;
- left:0px;
- top: 0px;
+  position: absolute;
+  left:0px;
+  top: 0px;
 }
 
 #pac-ajax {
