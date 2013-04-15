@@ -23,17 +23,26 @@ function search(pageNum){
                    var browseHtml = ""
                    for (index in data) {
                        var entry = data[index];
-                       browseHtml += "<li><a href='/"+entry['pk']+"' rel='external'>"
+                       browseHtml += "<li class='browse-item'><a href='/"+entry['pk']+"' rel='external'>"
                        browseHtml += "<img src='" + entry['fields']['cached_thumb'] + "' style='max-height: 100%;'/>"
                        browseHtml += "<h3>" + entry['fields']['title'] + "</h3>"
                        browseHtml += "<p>$" + entry['fields']['price'] + "</p></a></li>"
                    }
-
+                    
+                   $("#no-search-results").hide(); // always hide no search results for any search and add it later
+                   $("#browse-list").show();
+                   
+                   if (data.length == 0 && pageNum == 1) {
+                       $("#no-search-results").show();
+                       $("#browse-list").hide();
+                   }
 
                    if(data.length == 25) {
                        $("#load-more-div").show();
-                   } else {
+                       $("#browse-list-footer").hide();
+                   } else { //nothing else to laod
                        $("#load-more-div").hide();
+                       $("#browse-list-footer").show();
                    }
 
                    $.mobile.loading( 'hide', {

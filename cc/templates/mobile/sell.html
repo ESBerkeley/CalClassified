@@ -4,6 +4,8 @@
 {% block header_title %}Sell{% endblock %}
 
 {% block body_content %}
+<center><h2 id="colored-page-header">Sell Item</h2></center>
+
 <div id="sell-container">
 <form id="sell-form" action="{% url sell %}" method="post" enctype="multipart/form-data" data-ajax="false">
     {% csrf_token %}
@@ -11,35 +13,44 @@
     <p style="color: red;">Sorry, something went wrong. Please try again or contact an admin.</p>
         {{ form.errors }}
     {% endif %}
+    
+    <div class="sell-input-group">
+        <label>What are you selling?</label><br>
+        <input type="text" name="title" placeholder="Math 1A Textbook" />
+        <span class="insert-space"></span>
+    </div>
+    <div class="sell-input-group">
+        <label>Take a picture!</label><br>
+        <input name="images" type="file">
+        <span id="upload-images"> </span>
+        <br>
+        <span class="upload-more"><a>+ Tap to upload more images!</a></span>
+    </div>
 
-    <label>What are you selling?</label><br>
-    <input type="text" name="title" placeholder="Math 1A Textbook" />
-    <br><span class="insert-space"></span>
+    
+    <div class="sell-input-group">
+        <label>Describe your item.</label><label class="error"></label>
+        <textarea name="body"></textarea>
+        <span class="insert-space"></span>
+    </div>
+    
+    <div class="sell-input-group">
+        <label>How much do you want for it?</label>
+        <input type="text" name="price" placeholder="50.00" />
+        <span class="insert-space"></span>
+    </div>
 
-    <label>Take a picture!</label><br>
-    <input name="images" type="file">
-    <span id="upload-images"> </span>
-    <br>
-
-    <span class="upload-more"><a>+ Tap to upload more images!</a></span>
-    <br><br>
-
-    <label>Describe your item.</label><label class="error"></label>
-    <textarea name="body"></textarea>
-    <br><span class="insert-space"></span>
-
-    <label>How much do you want for it?</label>
-    <input type="text" name="price" placeholder="50.00" />
-    <br><span class="insert-space"></span>
-
-    <label>What kind of item is it?</label>
-    <select name="category" id="id_category">
-        <option value="" selected="selected">---------</option>
-        {% for entry in categories %}
-            <option value="{{ entry.id }}">{{ entry.name }}</option>
-        {% endfor %}
-    </select>
-    <br><span class="insert-space"></span>
+    
+    <div class="sell-input-group">
+        <label>What kind of item is it?</label>
+        <select name="category" id="id_category">
+            <option value="" selected="selected">---------</option>
+            {% for entry in categories %}
+                <option value="{{ entry.id }}">{{ entry.name }}</option>
+            {% endfor %}
+        </select>
+        <span class="insert-space"></span>
+    </div>
 
     <input type="hidden" name="circles" value="1" />
 

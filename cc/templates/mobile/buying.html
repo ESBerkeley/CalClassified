@@ -4,7 +4,7 @@
 {% block header_title %}What I'm Buying{% endblock %}
 {% block body_content %}
     <div>
-        <center><h2 style="font-weight: 400; margin: 8px;">What I'm Buying</h2></center>
+        <center><h2 id="colored-page-header">What I'm Buying</h2></center>
         
         {% if not my_threads %}
             <center>
@@ -15,13 +15,13 @@
         {% endif %}
         
         {% if my_threads %}
-        <div id="table-title">
-            <center><h3>I'm Buying</h3></center>
+        <div id="browse-list-header">
+            I'm Buying
         </div>
             <ul data-role="listview" id="browse-list">
                 {% for thread in my_threads %}
 
-                <li>
+                <li class="browse-item">
                 <a href="{{ thread.get_mobile_url }}" rel="external">
                     <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;" />
                     <h3>
