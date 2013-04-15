@@ -1054,7 +1054,7 @@ def ajax_box(request):
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
         found_entries = found_entries.filter(
-            text=query_string,
+            text=found_entries.query.clean(query_string),
             circles__in=checked_circles,
             category__in=checked_categories,
             price__range=(min_price,max_price),
@@ -1062,7 +1062,7 @@ def ajax_box(request):
             sold=False,
             pending_flag=False,
             deleted=False
-        ).order_by('-time_created')[(100*p):(100*(p+1))]
+        ).order_by('-time_created').load_all()[(100*p):(100*(p+1))]
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
     else:
@@ -1074,7 +1074,7 @@ def ajax_box(request):
             sold=False,
             pending_flag=False,
             deleted=False
-        ).order_by('-time_created')[(100*p):(100*(p+1))]
+        ).order_by('-time_created').load_all()[(100*p):(100*(p+1))]
 
 
     #is user logged in? highlight his friends' posts
@@ -1107,9 +1107,9 @@ def ajax_box(request):
              #   else:
              #       fatty_cheese_wheel.append(search_result.object)
         else:
-            foreveralone(found_entries,fbf, fatty_cheese_wheel)
+            foreveralone(found_entries, fbf, fatty_cheese_wheel)
     else:
-        foreveralone(found_entries,fbf, fatty_cheese_wheel)
+        foreveralone(found_entries, fbf, fatty_cheese_wheel)
 
 
     #kludge until someone can get haystack to work
@@ -1133,7 +1133,7 @@ def ajax_box(request):
     data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','pending_flag','friend','friendname','get_thumbnail_url','score'))
     return HttpResponse(data,'application/javascript')
 
-def foreveralone(found_entries,fbf, fatty_cheese_wheel):
+def foreveralone(found_entries, fbf, fatty_cheese_wheel):
 #    print(found_entries)
     for item in found_entries:
 #        print("------SWAG"+str(item))
