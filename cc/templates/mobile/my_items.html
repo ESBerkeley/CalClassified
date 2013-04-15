@@ -4,7 +4,7 @@
 {% block header_title %}My Items{% endblock %}
 {% block body_content %}
     <div>
-        <center><h2 style="font-weight: 400; margin: 8px;">What I'm Selling</h2></center>
+        <center><h2 id="colored-page-header">What I'm Selling</h2></center>
         
         {% if not my_threads and not ifs_waiting_list %}
             <center>
@@ -15,13 +15,13 @@
         {% endif %}
         
         {% if my_threads %}
-        <div id="table-title">
-            <center><h3>Being Purchased</h3></center>
+        <div id="browse-list-header">
+            Being Purchased
         </div>
             <ul data-role="listview" id="browse-list">
                 {% for thread in my_threads %}
 
-                <li>
+                <li class="browse-item">
                 <a href="{{ thread.get_mobile_url }}" rel="external">
                     <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;"/>
                     <h3>
@@ -39,13 +39,13 @@
         {% endif %}
         <br>
         {% if ifs_waiting_list %}
-        <div id="table-title">
-            <center><h3>Awaiting Purchase</h3></center>
+        <div id="browse-list-header">
+            Awaiting Purchase
         </div>
             <ul data-role="listview" id="browse-list">
                 {% for item in ifs_waiting_list%}
 
-                <li>
+                <li class="browse-item">
                 <a href="{{ item.get_absolute_url }}" rel="external">
                     <img src="{{ item.cached_thumb }}" style="max-height: 100%;"/>
                     <h3>
@@ -57,6 +57,7 @@
 
                 {% endfor %}
             </ul>
+            <br>
         {% endif %}
 
 

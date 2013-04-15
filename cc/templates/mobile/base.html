@@ -31,13 +31,13 @@
   <body>
     {% block data-role-page %}
     <div id="body-page" data-role="page" data-theme="d" class="div-page" {% block extra-page-details %}{% endblock %}>
-      <div data-role="header" data-theme="c">
+      <div data-role="header" data-theme="b">
         <div data-role="navbar">
           <ul>  
-            <li style="width:33%;"><a href="{% url browse %}" rel="external" class="font-400">Browse</a></li>
+            <li style="width:33%;"><a href="{% url browse %}" rel="external" class="font-400" >Browse</a></li>
 		    <li style="width:33%;"><a href="{% url sell %}" rel="external" class="font-400">Sell</a></li>
             {% if request.user.is_authenticated %}
-		    <li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
+		    <li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear-white.png" style="height:17px; margin-left:-3px;"></a></li>
             {% else %}
             <li style="width:34%;"><a href="{% url login %}" rel="external" class="font-400">Login</a></li>
             {% endif %}
@@ -47,19 +47,19 @@
 
       <div id="panel-id" class="panel">   <!-- both ids and classes are necessary, otherwise jquery implodes -->
         {% if request.user.is_authenticated %}
-        <div class="panel-item">
-            <a href="{% url notifications %}" rel="external">
+        <a href="{% url notifications %}" rel="external">
+            <div class="panel-item">
             Notifications ({{ request.user.get_profile.friend_notifications }})
-            </a>
-        </div>
+            </div>
+        </a>
         <div class="border" style="border-top-color:#474747"></div>
-        <div class="panel-item"><a href="{% url my_items %}" rel="external">What I'm Selling</a></div>
+        <a href="{% url my_items %}" rel="external" style="width: 100%;"><div class="panel-item">What I'm Selling</div></a>
         <div class="border" style="border-top-color:#474747"></div>
-        <div class="panel-item"><a href="{% url buying %}" rel="external">What I'm Buying</a></div>
+        <a href="{% url buying %}" rel="external"><div class="panel-item">What I'm Buying</div></a>
         <div class="border" style="border-top-color:#474747"></div>
-        <div class="panel-item"><a href="/logout" rel="external">Logout</a></div>
+        <a href="/logout" rel="external"><div class="panel-item">Logout</div></a>
         {% else %}
-        <div class="panel-item"><a href="{% url login %}" rel="external">Login</a></div>
+        <a href="{% url login %}" rel="external"><div class="panel-item">Login</div></a>
         {% endif %}
       </div>
 

@@ -9,7 +9,7 @@
 
 {% block body_content %}
 
-<h2 style="padding: 0 3% 0 3%; margin-bottom: 0; text-align: center; font-weight: 400;">{{ item.title }}
+<h2 id="view-item-title">{{ item.title }}
           {% if item.sold %}
               <span style="color:red;">(This item has been sold)</span>
           {% elif item.pending_flag %}
@@ -20,7 +20,7 @@
               {% endif %}
           {% endif %}</h2>
 
-<div id="Gallery">
+<div id="Gallery" style="padding-top:0;">
     {% if post.is_facebook_post %}
             <li><a href="{{ item.facebookpost.get_picture }}"><img src="{{ item.facebookpost.get_picture }}" alt="{{ item.title  }} Image" /></a></li>
     {% else %}
@@ -37,7 +37,7 @@
     <center><caption>Touch photo to view more and enlarge.</caption></center>
 
     <div id="item-info">
-        <h3 style="margin-bottom: 0;">Description:</h3>
+        <h3 style="margin-bottom: 0; font-weight: bold;">Description:</h3>
         <p style="margin-top: 5px; margin-bottom: 0; white-space:pre-wrap">{{ item.body }}</p>
     </div>
 
