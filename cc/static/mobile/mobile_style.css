@@ -304,3 +304,46 @@ label.error {
         border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 }
+
+.select-new-image {
+    border: 1px solid #0080ff;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: #1a8dff;
+    color: white;
+    text-shadow: none;
+}
+
+.change-image {
+    border: 1px solid #e69500;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: #ffa500;
+    color: white;
+    text-shadow: none;
+    margin-right: 5px;
+}
+
+.remove-image {
+    border: 1px solid #ff1a6b;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: #ff4d8c;
+    color: white !important;
+    text-shadow: none;
+    margin-right: 5px;
+    text-decoration: none;
+    font-weight: normal !important;
+}
+
+.upload-more {
+    border: 1px solid #00b374;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: #00cd85;
+    color: white !important;
+    text-shadow: none;
+    margin-right: 5px;
+    text-decoration: none;
+    font-weight: normal !important;
+}
