@@ -12,6 +12,8 @@ label.error {
  }
 
  </style>
+{% load static %}
+    <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap-fileupload.min.css" />
 {% endblock %}
 {% block sidebar %}{% endblock %}
 
@@ -77,9 +79,48 @@ label.error {
             <span id="upload-images" > 
             {% if image_set %}<br>{% endif %}
             <b>Add more photos if you aren't over the limit!</b>
-            <p id="upload1" style="display: none;"><br><input name="images" type="file" ></p>
-            <p id="upload2" style="display: none;"><br><input name="images" type="file" ></p>
-            <p id="upload3" style="display: none;"><br><input name="images" type="file" ></p>
+            <div id="upload1" style="display: none;">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                    <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                        <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                    </div>
+                    <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                  <span class="btn btn-file">
+                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="images" />
+                  </span>
+                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                </div>
+            </div>
+            <div id="upload2" style="display: none;">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                    <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                        <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                    </div>
+                    <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                  <span class="btn btn-file">
+                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="images" />
+                  </span>
+                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                </div>
+            </div>
+            <div id="upload3" style="display: none;">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                    <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                        <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                    </div>
+                    <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                  <span class="btn btn-file">
+                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="images" />
+                  </span>
+                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                </div>
+            </div>
             
             </span>
             <p>Maximum of 3 images</p>
@@ -106,6 +147,7 @@ label.error {
 {% block post_js %}
 
 <script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-fileupload.min.js"></script>
 <script type="text/javascript">
 var uploadImageCounter = 0;
 var boxes = [false, false, false]; //boxes represent whether a user wants to keep an image, index represents which box
