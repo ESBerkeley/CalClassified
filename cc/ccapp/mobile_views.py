@@ -54,12 +54,14 @@ def features(request):
 def browse(request):
     data = {}
     data['categories'] = Category.objects.all()
+    """
     max_price = ItemForSale.objects.aggregate(Max('price'))['price__max']
     if max_price is None:
         max_price = 0
     else:
         max_price = ceil(float(max_price))
     data['max_price'] = max_price
+    """
     return render_to_response('mobile/browse.html',data,context_instance = RequestContext(request))
 
 @login_required

@@ -20,12 +20,18 @@
         {% endfor %}
       </fieldset>
     </div>
-
-    <label for="min-price">Min Price</label>
-    <input type="range" id="min-price" value="0" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
-    <br>
-    <label for="max-price">Max Price</label>
-    <input type="range" id="max-price" value="{{ max_price }}" min="0" max="{{ max_price }}" data-highlight="true" style="font-size:12px;"/>
+    
+    <fieldset class="ui-grid-a" style="padding-top: 3px;">
+        <div class="ui-block-a">
+            <label for="min-price">Min Price</label>
+            <input type="text" id="min-price" data-highlight="true" style="font-size:12px; width: 90%;"/>
+        </div>
+        <div class="ui-block-b">
+            <label for="max-price">Max Price</label>
+            <input type="text" id="max-price" data-highlight="true" style="font-size:12px; width: 90%;"/>
+        </div>	   
+    </fieldset>
+    
   </div>
 
   <div id="filter-button-container">  <!--necessary for jquery hide() to work)-->
