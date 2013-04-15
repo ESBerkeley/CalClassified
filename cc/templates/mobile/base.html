@@ -37,7 +37,7 @@
             <li style="width:33%;"><a href="{% url browse %}" rel="external" class="font-400" >Browse</a></li>
 		    <li style="width:33%;"><a href="{% url sell %}" rel="external" class="font-400">Sell</a></li>
             {% if request.user.is_authenticated %}
-		    <li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear.png" style="height:17px; margin-left:-3px;"></a></li>
+		    <li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear-white.png" style="height:17px; margin-left:-3px;"></a></li>
             {% else %}
             <li style="width:34%;"><a href="{% url login %}" rel="external" class="font-400">Login</a></li>
             {% endif %}
