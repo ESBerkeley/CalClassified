@@ -227,6 +227,9 @@
                     {% else %}
                       <br>
                       This item has been sold and is no longer listed.
+                      {% if thread %}
+                        <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
+                      {% endif %}
                     {% endif %}
                   {% elif post.pending_flag %}
                       {% if thread %}
