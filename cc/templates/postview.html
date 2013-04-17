@@ -222,14 +222,17 @@
               {% if request.user.is_authenticated %}
                   {% if post.sold %}
                     {% if post.pending_buyer == request.user %}
-                      <br>
-                      You bought this item! Hooray!
+                        {% if thread %}
+                            <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
+                        {% endif %}
+                        <br><br>
+                        You bought this item! Hooray!
                     {% else %}
-                      <br>
-                      This item has been sold and is no longer listed.
-                      {% if thread %}
-                        <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
-                      {% endif %}
+                        {% if thread %}
+                            <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
+                        {% endif %}
+                        <br><br>
+                        This item has been sold and is no longer listed.
                     {% endif %}
                   {% elif post.pending_flag %}
                       {% if thread %}
@@ -368,7 +371,7 @@
         {% endif %}
 
         <div>
-        {% if not post.sold and request.user.is_authenticated %}
+        {% if not post.pending_flag and request.user.is_authenticated %}
           <div class="well">
             <form action="{{ request.path }}" method="post" id="comment-form"> {% csrf_token %}
           <p>
@@ -382,6 +385,8 @@
               <button class="btn btn-primary" style="margin-left:-1px;" id="comment-btn" data-loading-text="Sending...">Comment</button>
             </form>
           </div>
+        {% elif post.pending_flag %}
+            <p>Sold or claimed items no longer accept comments.</p>
         {% else %}
             <a class="btn contact-button btn-primary" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Comment</a>
         {% endif %}
