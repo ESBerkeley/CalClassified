@@ -94,7 +94,7 @@
               {% if not request.user.is_authenticated %}
               <div class="inner_content">
                 <form action="{% url facebook_connect %}?facebook_login=1" method="post">
-                  <input type="hidden" value="{{ request.path }}" name="next" />
+                  <input type="hidden" value="{{ request.path }}?next={{ request.GET.next }}" name="next" />
                   <div id="facebook_login_js">
                     <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{% get_static_prefix %}images/login_crop.png" style="height:29px; width:170px; margin-bottom:-16px; padding-right:5px;"/>
                   </div>
