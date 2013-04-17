@@ -12,7 +12,9 @@
       <meta name="keywords" content="BuyNearMe,buynear.me,Buy Near Me,buy,sell,berkeley,UC Berkeley,friends" />
       <meta property="og:title" content="BuyNearMe"/>
       <meta property="og:type" content="website"/>
-      <meta property="og:url" content="http://buynear.me/"/>
+      {% block url_metadata %}
+        <meta property="og:url" content="http://buynear.me/"/>
+      {% endblock %}
       <meta property="og:image" content="http://buynear.me/{% get_static_prefix %}124ta-orange.png"/>
       <meta property="og:site_name" content="BuyNearMe"/>
 
