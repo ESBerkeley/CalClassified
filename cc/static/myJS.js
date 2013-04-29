@@ -330,6 +330,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     var query = document.getElementById('searchbar').value;
     var min_price = document.getElementById('min').value;
     var max_price = document.getElementById('max').value;
+    var order = getOrder();
     
 
     flags = "_" + query + min_price + max_price + cs + ccs + filtering_by_friends;
@@ -341,13 +342,13 @@ function notification_sentence(obj, k) {    //list of notifications, position in
         $("#myBox").empty(); //accidentally the posts
         scraps=[];
         current_page=0;
-        loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,0);
+        loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,0, order);
     } else {
-        loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,pg);
+        loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,pg, order);
     }
   }
 
-  function loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,page){
+  function loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,page, order){
     //load pacman
     $("#pac-ajax").show();
 
@@ -707,6 +708,14 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   else{
     url += "&p=" + page;
   }
+
+  if(first) {
+    first = false;
+    url += "?order=" + order;
+  } else {
+    url += "&order=" + order;
+  }
+
   xmlhttp.open("GET",url,true);
   xmlhttp.send();
 }

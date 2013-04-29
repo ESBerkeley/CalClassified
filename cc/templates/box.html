@@ -39,19 +39,19 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
             <ul class="unstyled">
               <li class="side-item">
                 <i id="Everything-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="allCat(); toggler('Everything-icon'); searchToggle('Everything'); runloadBox();"></i>
-                <a id="Everything_category" class="category" onclick="allCat(); toggler('Everything-icon'); searchToggle('Everything'); runloadBox();"> Everything </a>
+                <a id="Everything_category" class="side-text" onclick="allCat(); toggler('Everything-icon'); searchToggle('Everything'); runloadBox();"> Everything </a>
               </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
                 <li class="side-item">
                   <i id="{{cat.name}}-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); searchToggle('{{cat.name}}'); runloadBox();"></i>
-                  <a id="{{cat.name}}_category" class="category" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); searchToggle('{{cat.name}}'); runloadBox();"> {{cat.name}} </a>
+                  <a id="{{cat.name}}_category" class="side-text" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); searchToggle('{{cat.name}}'); runloadBox();"> {{cat.name}} </a>
                 </li>
                 {% endif %}
               {% endfor %}
               <li class="side-item">
                 <i id="Other-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"></i>
-                <a id="Other_category" class="category" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"> Other </a>
+                <a id="Other_category" class="side-text" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"> Other </a>
               </li>
 
 {% comment %}
@@ -82,7 +82,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
               {% for entry in my_public_circles %}
                 <li class="side-item circle_side-item">
                   <i id="{{entry.id}}-icon-circle" class="icon-ok-sign side-icon" type="hidden" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"></i>
-                  <a id="{{entry.id}}_circle" class="circle" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"/> {{entry.name}} </a>
+                  <a id="{{entry.id}}_circle" class="side-text" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"/> {{entry.name}} </a>
                 </li>
               {% endfor %}
           
@@ -90,7 +90,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
               {% for entry in my_private_circles %}
                 <li class="side-item circle_side-item">
                   <i id="{{entry.id}}-icon-circle" class="icon-ok-sign side-icon" type="hidden" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"></i>
-                  <a id="{{entry.id}}_circle" class="circle" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"/> {{entry.name}} </a>
+                  <a id="{{entry.id}}_circle" class="side-text" onclick="switchCirc('{{entry.id}}'); toggler('{{entry.id}}-icon-circle'); runloadBox();"/> {{entry.name}} </a>
                 </li>
               {% endfor %}
               {% endif %}
@@ -111,7 +111,6 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       {% endif %} <!-- end if not circle -->
 {% endcomment %}
     
-      <!-- UN WORKING SORT CODEE  
       <div class="accordion-group">
         <div class="accordion-heading">
           <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse2">
@@ -123,20 +122,17 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
           <div class="accordion-inner">
             <ul class="unstyled">
               <li class="side-item">
-                <i id="" class="icon-ok-sign side-icon" onclick=""></i>
-                <a id="" class="" onclick=""/>Date: Newest First</a>
+                <i id="order-date-icon" class="icon-ok-sign side-icon" onclick="switchDate(); runloadBox();"></i>
+                <a id="order-date-text" class="side-text" onclick="switchDate(); runloadBox();"/>Date: Newest First</a>
               </li>
               <li class="side-item">
-                <i id="" class="icon-ok-sign side-icon" onclick=""></i>
-                <a id="" class="" onclick=""/>Price </a>
+                <i id="order-price-icon" class="icon-ok-sign side-icon" onclick="switchPrice(); runloadBox();"></i>
+                <a id="order-price-text" class="side-text" onclick="switchPrice(); runloadBox();"/>Price </a>
               </li>
             </ul>
           </div>
-        </div>
-        
-        
+        </div>  
       </div>
-      -->
 
       {% if user.get_profile.facebook_id %}
       <div class="accordion-group">
@@ -148,9 +144,9 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapse3" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li class="side-item circle_side-item">
+              <li class="side-item">
                 <i id="friend-icon" class="icon-ok-sign side-icon" type="hidden" onclick="toggle_friends_filter();"></i>
-                <a id="" class="circle" onclick="toggle_friends_filter();"/> Friends Only </a>
+                <a id="" class="side-text" onclick="toggle_friends_filter();"/> Friends Only </a>
               </li>
             </ul>
           </div>
@@ -180,12 +176,6 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
           </div>
         </div>
       </div>
-
-      <!--<div id="pac-ajax" style="">
-        <h4 style="float:left;">Loading</h4>
-        <img src="{{ STATIC_URL }}images/pacman-ajax.gif" style="float:left; margin: 6px 9px 0 15px;"/>
-        <h4 style="float:left;">...</h4>
-      </div>-->
     </div><!--span-->
 {% endblock %}
 
@@ -463,6 +453,43 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       return circ_object2;
     }
   }
+
+  //be careful with order values, they get passed to server
+  var order = 'dateNew';
+  $('#order-date-icon').show();
+
+  function switchDate() {
+    $('#order-date-icon').show();
+    $('#order-price-icon').hide();
+    $('#order-price-text').html('Price');
+    if(order == 'dateNew') {
+      order = 'dateOld';
+      $('#order-date-text').html('Date: Oldest First');
+    }
+    else {
+      order = 'dateNew';
+      $('#order-date-text').html('Date: Newest First');
+    }
+  }
+
+  function switchPrice() {
+    $('#order-date-icon').hide();
+    $('#order-price-icon').show();
+    $('#order-date-text').html('Date');
+    if(order == 'priceLow') {
+      order = 'priceHigh';
+      $('#order-price-text').html('Price: Highest First');
+    } 
+    else {
+      order = 'priceLow';
+      $('#order-price-text').html('Price: Lowest First');
+    }
+  }
+
+  function getOrder() {
+    return order;
+  }
+
 
   function toggle_friends_filter(){
     filtering_by_friends=!filtering_by_friends;

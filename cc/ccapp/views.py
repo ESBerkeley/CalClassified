@@ -1062,7 +1062,7 @@ def ajax_box(request):
             sold=False,
             pending_flag=False,
             deleted=False
-        ).order_by('-time_created').load_all()[(100*p):(100*(p+1))]
+        )
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
     else:
@@ -1074,8 +1074,18 @@ def ajax_box(request):
             sold=False,
             pending_flag=False,
             deleted=False
-        ).order_by('-time_created').load_all()[(100*p):(100*(p+1))]
-
+        )
+    
+    #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
+    order  = request.GET['order']
+    if order == 'dateNew':
+        found_entries = found_entries.order_by('-time_created').load_all()[(100*p):(100*(p+1))]
+    elif order == 'dateOld':
+        found_entries = found_entries.order_by('time_created').load_all()[(100*p):(100*(p+1))]
+    elif order == 'priceLow':
+        found_entries = found_entries.order_by('price').load_all()[(100*p):(100*(p+1))]
+    elif order == 'priceHigh':
+        found_entries = found_entries.order_by('-price').load_all()[(100*p):(100*(p+1))]
 
     #is user logged in? highlight his friends' posts
     #TODO: this could be very inefficient. consider performance optimization... perhaps store facebook user id of creator in post model...
