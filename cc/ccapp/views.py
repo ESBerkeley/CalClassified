@@ -854,7 +854,7 @@ def flag_item(request,pid):
 def ajax_delete_comment(request, comment_id):
     if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
         comment = Comment.objects.get(id=comment_id)
-        if request.user == comment.sender:
+        if request.user == comment.sender or request.user.is_staff:
             comment.delete()
             return HttpResponse()
     return HttpResponse()
