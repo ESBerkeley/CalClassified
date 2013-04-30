@@ -49,18 +49,35 @@
         {% if request.user.is_authenticated %}
         <a href="{% url notifications %}" rel="external">
             <div class="panel-item">
-            Notifications ({{ request.user.get_profile.friend_notifications }})
+                Notifications ({{ request.user.get_profile.friend_notifications }})
+                <span style="float:right; margin-right: 15px;"><img src="/static/arrow-right-white.png" style="height: 15px;"></span>
             </div>
         </a>
         <div class="border" style="border-top-color:#474747"></div>
-        <a href="{% url my_items %}" rel="external" style="width: 100%;"><div class="panel-item">What I'm Selling</div></a>
+        <a href="{% url my_items %}" rel="external">
+            <div class="panel-item">
+                What I'm Selling
+                <span style="float:right; margin-right: 15px;"><img src="/static/arrow-right-white.png" style="height: 15px;"></span>
+            </div>
+        </a>
         <div class="border" style="border-top-color:#474747"></div>
-        <a href="{% url buying %}" rel="external"><div class="panel-item">What I'm Buying</div></a>
+        <a href="{% url buying %}" rel="external">
+            <div class="panel-item">
+                What I'm Buying
+                <span style="float:right; margin-right: 15px;"><img src="/static/arrow-right-white.png" style="height: 15px;"></span>
+            </div>
+        </a>
         <div class="border" style="border-top-color:#474747"></div>
-        <a href="/logout" rel="external"><div class="panel-item">Logout</div></a>
+        <a href="/logout" rel="external">
+            <div class="panel-item">
+                Logout
+                <span style="float:right; margin-right: 15px;"><img src="/static/arrow-right-white.png" style="height: 15px;"></span>
+            </div>
+        </a>
         {% else %}
         <a href="{% url login %}" rel="external"><div class="panel-item">Login</div></a>
         {% endif %}
+        <div style="clear: both"></div>
       </div>
 
       {% block body_content %}{% endblock %}

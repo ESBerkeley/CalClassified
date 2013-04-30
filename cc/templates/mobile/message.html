@@ -1,10 +1,12 @@
 {% extends "mobile/base.html" %}
 
 {% block body_content %}
-<br>
-<center><h2>{{ title }}</h2></center>
-<br>
+
+<center><h2 id="colored-page-header">{{ title }}</h2></center>
+
+<div id="general-message-container">
 <center>{{ message }}</center>
+</div>
 
 {% endblock %}
 

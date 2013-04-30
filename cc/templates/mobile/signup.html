@@ -1,0 +1,85 @@
+{% extends "mobile/base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block body_content %}
+<center><h2 id="colored-page-header">Sign Up</h2></center>
+  {% if message %}
+  <p style="color:red; text-align: center;">{{ message }}</p>
+  {% endif %}
+<div id="signup-container">
+    <form action="{% url signup %}"  method="post" id="signup-form">{% csrf_token %}
+
+        {% for field in form %}
+
+            {{ field.errors }}
+            <label for="{{field.html_name}}">{{ field.label }}</label>
+            {{ field }}
+            <p id="invalid-id_{{ field.html_name }}"></p>
+
+        {% endfor %}
+
+
+        <p/><i>By proceeding, you have read and agreed to the <a href="http://buynear.me/terms/">terms and conditions</a>.</i><br>
+        <!--label for="terms" class="error" style="display:none; padding-top: 5px;">This field is required.</label--> <br>
+        <input type="submit" id="send-verification-btn" value="Send Verification Email" />
+
+    </form>
+</div>
+{% endblock %}
+
+{% block javascript %}
+    {% load static %}
+    <script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-fileupload.min.js"></script>
+
+
+    <script type="text/javascript">
+        var first_time_error = true
+        
+        $("#signup-form").validate({
+            rules: {
+                email: {
+                  required: true,
+                  email: true,
+                },
+                first_name: {
+                  required: true,
+                },
+                last_name: {
+                  required: true,
+                },
+                password: {
+                  required: true,
+                  minlength: 6,
+                  maxlength: 22,
+                },
+                password_again: {
+                  equalTo: "#id_password",
+                  required: true,
+                }
+            },
+            errorPlacement: function(error, element) {
+
+                // this is because error are too close to the input
+                error.appendTo('#invalid-' + element.attr('id'));
+
+            },
+            submitHandler: function() {
+                $('#send-verification-btn').button('disable');
+                $("#signup-form").submit(function(event){
+                    $('[type="submit"]').button('disable');
+                })
+                $.mobile.loading( 'show', {
+                    text: 'Sending Message ...',
+                    textVisible: false,
+                    theme: 'a',
+                    html: ""
+                });
+                $(form).ajaxSubmit();
+            },
+
+        });
+
+        
+    </script>
+{% endblock %}

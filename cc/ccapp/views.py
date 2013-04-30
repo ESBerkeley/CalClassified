@@ -1298,7 +1298,7 @@ def verify_user(request,auth_key):
         return render_to_response('message.html',data,context_instance=RequestContext(request))
     except: #something goes wrong, primarily this url doesnt exist
         data['title'] = "Oops! An error has occurred."
-        data['message'] = """Oops &ndash; it seems that your activation key is invalid.  Please check the url again."""
+        data['message'] = "Oops! It seems that your activation key is invalid.  Please check the url again."
         return render_to_response('message.html',data,context_instance=RequestContext(request))
 
 @logit

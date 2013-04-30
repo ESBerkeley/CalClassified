@@ -470,4 +470,101 @@ def ajax_delete_notifications(request):
         
 def banned(request):
     return HttpResponse("It seems you're banned. If you want to appeal email contact@buynear.me")
+
+def message(request):
+    data = {}
+    data['title'] = request.GET['title']
+    data['message'] = request.GET['message']
+        
+    return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+
+def verify_user(request,auth_key):
+    data = {}
+    try:
+        verif = VerificationEmailID.objects.get(auth_key=auth_key)
+        user = verif.user
+        user.is_active = True
+        user.save()
+        verif.delete()
+        data['title'] = "Account Activated"
+        data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='{% url login %}'>login</a> using your username and password."""
+        return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+    except: #something goes wrong, primarily this url doesnt exist
+        data['title'] = "Oops! An error has occurred."
+        data['message'] = "Oops! It seems that your activation key is invalid.  Please check the url again."
+        return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+    
+def signup(request):
+    """ ACCOUNT CREATION VIEW """
+    data = {}
+    if request.method == 'POST':
+        email = request.POST['email']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        #gender = request.POST['gender']
+        password = request.POST['password']
+        try:
+            # user = authenticate(username=email,password=password) # This code doesn't work as intended use
+            user = User.objects.get(email=email)
+            if user.is_active == False: #if user has not yet activated, resend data
+                try:
+                    user.get_profile().delete()
+                except:
+                    pass
+                user.delete()
+                raise User.DoesNotExist
+            data['title'] = "Registration Error"
+            data['message'] = "That email exists already."
+            form = FacebookProfileForm(request.POST)
+            data['form'] = form
+            return render_to_response('mobile/signup.html',data,context_instance = RequestContext(request))
+        except: #errors if email doesn't exist which is good
+            pass
+
+        new_user = User()
+        new_user.username = email
+        new_user.first_name = first_name
+        new_user.last_name = last_name
+        new_user.email = email
+        new_user.set_password(password)
+        new_user.is_active = False
+        new_user.save()
+        
+        #new_user = authenticate( username= email, password=password)
+        #login(request,new_user)
+        
+        auth_key = ""
+        # create a 20 length random key
+        for i in range(0,20):
+            auth_key += random.choice(RANDOM_CHARS)
+        
+        verif = VerificationEmailID(user=new_user,auth_key=auth_key)
+        verif.save()
+
+        send_templated_mail(
+            template_name='register',
+            from_email='Buy Near Me <noreply@buynear.me>',
+            recipient_list=[email],
+            context={
+                'auth_key':auth_key,
+                'first_name':new_user.first_name,
+                'full_name':new_user.get_full_name(),
+                },
+        )
+        
+        data['title'] = "Sign Up Verification"
+        data['message'] = """Verification email has been sent.<br>Follow the instructions on the email to activate your account."""
+        
+        return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+        
+        #return render_to_response('index.html',context_instance=RequestContext(request) )
+    else:
+        form = FacebookProfileForm()
+    
+    context = RequestContext(request)
+    context['form'] = form
+    response = render_to_response('mobile/signup.html', context_instance=context)
+    
+    return response
+    
         

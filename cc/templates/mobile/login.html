@@ -6,7 +6,11 @@
         <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 37px;"></center>
         <center><h2 style="font-size:15px; margin-top:5px;"> Buy and Sell Your Things</h2></center>
     </div>-->
-
+    
+    <div id="home-logo" data-inset="true">
+        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 40px;"></center>
+    </div>
+    
     {% if next %}
     <p style="color:red; font-size:13px; margin-top:0px; margin-bottom:5px; text-align: center;">Please log in to continue.</p>
     {% endif %}
@@ -45,7 +49,6 @@
 
             <div class="border"></div>
 
-
             <button id="fake-login" data-theme="b">Log in with Facebook</button>
 
             <div class="inner_content" style="display: none;">
@@ -56,6 +59,10 @@
                     </div>
                 </form>
             </div>
+            
+            <div class="border" style=" margin-bottom: 20px;"></div>
+            
+            <center><a href="{% url signup %}">Don't have an account? Sign Up</a></center>
 
         {% endif %}
     </div>

@@ -57,6 +57,7 @@ h4 {
     background-color: #FFFFFF;
     border-top: 1px solid #e5e5e5;
     width:100%;
+    clear: both;
 }
 
 .box {
@@ -92,6 +93,8 @@ h4 {
     font-size:14px;
     font-weight: 500;
     text-shadow: 1px 1px black;
+    float: left;
+    width: 100%;
 }
 
 #panel-id a {
@@ -187,11 +190,33 @@ li.messages .msg_time_created {
     margin-right: 1%;
 }
 
+#signup-container {
+    padding: 3%;
+    background-color: #f9f9f9;
+    border: 1px solid rgb(187, 187, 187);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+#general-message-container {
+    padding: 3%;
+    background-color: #f9f9f9;
+    border: 1px solid rgb(187, 187, 187);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 5%;
+}
+
 label.error {
-    float: left;
+    /*float: left;*/
     color: red;
     vertical-align: top;
-    font-weight:bold
+    font-weight:bold;
+    
 }
 
 #filter-container {

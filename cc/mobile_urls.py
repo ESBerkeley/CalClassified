@@ -23,6 +23,8 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^flag/(?P<pid>\d+)/$','flag_item', name='flag_item'),
 
     url(r'^accounts/login/$',auth_views.login,{'template_name': 'mobile/login.html'},name='auth_login'),
+    url(r'^signup/$', "signup", name="signup"),
+    url(r'^verify_user/(?P<auth_key>[\w\+%_& ]+)/$','verify_user',name="verify_user"),
     #url(r'^accounts/login/$','browse'),
 
     #FACEBOOK
@@ -42,6 +44,9 @@ urlpatterns = patterns('ccapp.mobile_views',
     
     #Banned People
     url(r'^banned/$','banned', name="banned"),
+    
+    #General Message Template, pass in a get request parameters of /message/?title=hello&message=my_name_is_seung
+    url(r'^message/$','message', name="message"),
     
     url(r'^admin/', include(admin.site.urls)),
 

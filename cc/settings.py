@@ -7,6 +7,8 @@ import django
 import djcelery
 djcelery.setup_loader()
 
+APPEND_SLASH = True
+
 #This line must be enabled for local development (unless you want to install and configure rabbitmq)
 BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 
