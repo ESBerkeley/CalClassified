@@ -14,7 +14,8 @@ from django.core.urlresolvers import reverse
 
 
 from django_facebook.models import *
-from django_facebook.api import get_facebook_graph, FacebookUserConverter
+from django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
+from django_facebook.decorators import facebook_required, facebook_required_lazy
 from open_facebook.exceptions import OpenFacebookException
 
 from django.views.decorators.csrf import csrf_exempt
@@ -69,11 +70,15 @@ def sell(request):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
     user = request.user
-    #user_profile = user.get_profile()
+    user_profile = user.get_profile()
 
     if request.method == "GET":
         data = {}
-        data['categories'] = Category.objects.all()
+        data['categories'] = Category.objects.order_by('name')
+        if user_profile.facebook_id:
+            data['is_facebook'] = True
+            groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
+            data['fb_groups'] = groups
         return render_to_response('mobile/sell.html',data, context_instance = RequestContext(request))
     else:
         form = ItemForSaleForm(request.POST, request.FILES)#, instance=model_instance)
@@ -101,15 +106,42 @@ def sell(request):
             model.save()
             model.get_thumbnail_url() #generate thumbnail
 
+            #Facebook post stuff
+            fb_success = False
+            group_ids = request.POST.getlist('fb_groups')
+            links = []
+            for group_id in group_ids:
+                if group_id: #first elem always empty
+                    success = fb_group_post(request, model, str(group_id)+'/feed')
+                    if success:
+                        try:
+                            links.append(tuple(success['id'].split('_')))
+                            fb_success = True
+                        except:
+                            pass
+
             post_created_signal.send(sender = ItemForSale, instance = model)
 
+            if fb_success:
+                request.session['links'] = links
+                return redirect(model.get_absolute_url()+'?post_ffs=1')
             return redirect(model.get_absolute_url())
+
         else:
             data={}
             data['categories'] = Category.objects.order_by('name')
             data['error'] = True
             data['form'] = form
             return render_to_response('mobile/sell.html',data,context_instance=RequestContext(request))
+
+@facebook_required_lazy(scope='publish_actions')
+def fb_group_post(request, item, fb_group):
+    graph = require_persistent_graph(request)
+    if graph.is_authenticated():
+        facebook = FacebookUserConverter(graph)
+        response = facebook.set_fb_group(item, fb_group)
+        return response
+    return None
 
 
 # AJAX VIEWS
@@ -275,7 +307,16 @@ def view_item(request,pid):
                 
         relevant_comments = Comment.objects.filter(item = item).order_by('time_created')
         data['comments'] = relevant_comments
-        
+
+        #FB stuff
+        try:
+            links = request.session['links']
+            data['links'] = links
+        except:
+            pass
+        if "postffs" in request.GET:
+            data['post_ffs'] = int(request.GET['postffs'])
+
         return render_to_response("mobile/view_item.html",data,context_instance = RequestContext(request))
     
 @login_required

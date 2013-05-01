@@ -70,6 +70,25 @@
         <span class="insert-space"></span>
     </div>
 
+    {% if is_facebook %}
+    <div class="sell-input-group">
+    <label for="fb_groups" class="select">Share with Facebook?</label>
+        <div data-role="fieldcontain">
+            <select name="fb_groups" id="fb_groups" multiple="multiple" data-native-menu="false">
+                <option>Facebook Groups</option>
+                {% for group in fb_groups %}
+                    {% if group.name == "Free & For Sale" %}
+                        <option value="{{ group.facebook_id }}" selected="selected">{{ group.name }}</option>
+                    {% else %}
+                        <option value="{{ group.facebook_id }}">{{ group.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            </div>
+        <span class="insert-space"></span>
+    </div>
+    {% endif %}
+
     <input type="hidden" name="circles" value="1" />
 
     <input id="sell-submit-btn" type="submit" value="Submit" data-theme="b" />
