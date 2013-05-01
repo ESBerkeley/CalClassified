@@ -253,7 +253,7 @@ def view_item(request,pid):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
     if request.method == "GET":
-        item = ItemForSale.objects.get(id = pid)
+        item = get_object_or_404(ItemForSale, id=pid)
         if item.deleted:
             data = {}
             data['message'] = "The item you are looking for has been deleted."
