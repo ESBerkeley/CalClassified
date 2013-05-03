@@ -81,7 +81,7 @@
 
         <div class = "span8">
 
-          <h1>Graph Something</h1><i> you know you want to</i><hr>
+          <h1><div id = "graphtitle">Graph Something</div></h1><i> you know you want to</i><hr>
 
           <div id = "chart_container">
             <div id="chart"></div>
@@ -93,13 +93,25 @@
           <div class = "row">
             <div class = "span6">
               <div class = "row">
-                <div class = "span3">
+                <div class = "span2">
                   <b>Monitor:</b>
                   <div id = "monitorselector_div"></div>
                 </div>
-                <div class = "span3">
+                <div class = "span2">
                   <b>Statistic:</b>
                   <div id = "fieldselector_div"></div>
+                </div>
+                <div class = "span2">
+                  <b>Delta T</b>
+                  <div id = "dt_div">
+                    <select id = "selected_dt">
+                      <option value="1">Half Hour</option>
+                      <option value="2">Hour </option>
+                      <option value="12">6 Hours</option>
+                      <option value="48">Day</option>
+                      <option value="168">Week</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 <br>
@@ -195,8 +207,12 @@ function toggle_date_filtering(){
 
 function render(){
 if(respdata.length){
-  var selected_monitor = $('#monitorselector').val();
+
+    var selected_monitor = $('#monitorselector').val();
   var selected_statistic =$('#fieldselector').val();
+  var selected_dt = parseInt($('#selected_dt').val());
+
+  document.getElementById('graphtitle').innerHTML = selected_statistic + " per " + $('#selected_dt option:selected').text();
 
   document.getElementById('chart').innerHTML = "";
   //document.getElementById('slidery').innerHTML =  "";
@@ -219,7 +235,18 @@ if(respdata.length){
     data[i] =  {x: ti/1000, y: parseFloat(target) };
   }
 
-  toto = data;
+  toto = [];
+
+  for(var i = 0; i < data.length / selected_dt; i++){
+    var tot = 0;
+    for(var j = 0; j < selected_dt; j++){
+      var dex = (selected_dt * i) + j;
+      if(dex < data.length){
+        tot = tot + data[dex].y;
+      }
+    }
+    toto.push({x: data[selected_dt * i].x, y: tot});
+  }
 
   var graph = new Rickshaw.Graph( {
     element: document.querySelector("#chart"),
@@ -228,7 +255,7 @@ if(respdata.length){
     renderer: 'scatterplot',
     series: [{
       color: 'steelblue',
-      data: data,
+      data: toto,
       name: selected_statistic
       }]
     });
