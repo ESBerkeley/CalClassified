@@ -658,10 +658,6 @@ p.box-text {
   margin-top: 20px;
 }
 
-tr.not-read {
-    background-color: #D9EDF7;
-}
-
 .page-stretch {
     position: relative;
     min-height: 100%;

@@ -7,85 +7,95 @@
 {% block profile_content %}
     <div>
 
-    {% if my_threads or completed_threads %}
-    <table class="table">
-    <caption><h4> Buying </h4></caption>
+    {% if my_threads %}
+    <table class="table table-striped">
+    <caption><h4> You're currently buying </h4></caption>
     <thead>
         <tr>
             <th>Item Title</th>
+            <th>Messages</th>
             <th>Seller</th>
             <th>Recent Message</th>
-            <th style="width:50px;"><center></center></th>
         </tr>
     </thead>
     <tbody>
     {% for thread in my_threads %}
-        {% if thread.is_read %}
-        <tr>
-        {% else %}
-        <tr class="not-read">
-        {% endif %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
 
           <td>
-        <a href="../messages/{{ thread.id }}"> {{ thread.post_title }} </a>
+        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
         {% if not thread.is_read %}
             (Unread)
         {% endif %}
         {% if thread.post_deleted %}
             (Post Deleted)
         {% endif %}
+          </td>
           <td>
-            buying from <strong>
+          <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope"></i></a>
+          </td>
+          <td>
             {% if thread.other_person.get_full_name %}
               {{ thread.other_person.get_full_name }}
             {% else %}
               {{ thread.other_person.username }}
             {% endif %}
-</strong>
           </td>
           <td>
             {{ thread.newest_message_time }}
           </td>
-          <td ></td>
-
+    
         </tr>
     {% endfor %}
-
-
-
-    {% for thread in completed_threads %}
-        <tr>
-          <td>
-        <a href="../messages/{{ thread.id }}"> {{ thread.post_title }} </a>
-        {% if not thread.is_read %}
-            (Unread)
-        {% endif %}
-        {% if thread.post_deleted %}
-            (Post Deleted)
-        {% endif %}
-          <td>
-            bought from <strong>
-            {% if thread.other_person.get_full_name %}
-              {{ thread.other_person.get_full_name }}
-            {% else %}
-              {{ thread.other_person.username }}
-            {% endif %}
-            </strong>
-          </td>
-          <td>
-            {{ thread.newest_message_time }}
-          </td>
-          <td ></td>
-
-        </tr>
-    {% endfor %}
-
-
-
     </tbody>
     </table>
+    {% endif %}
+    
+    
+    {% if completed_threads %}
+    <table class="table table-striped">
+    <caption><h4> You've bought </h4></caption>
+    <thead>
+        <tr>
+            <th>Item Title</th>
+            <th>Messages</th>
+            <th>Seller</th>
+            <th>Recent Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for thread in completed_threads %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
+          <td>
+        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        {% if not thread.is_read %}
+            (Unread)
+        {% endif %}
+        {% if thread.post_deleted %}
+            (Post Deleted)
+        {% endif %}
+          </td>
+          <td>
+            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope"></i></a>
+          </td>
+          <td>
+            {% if thread.other_person.get_full_name %}
+              {{ thread.other_person.get_full_name }}
+            {% else %}
+              {{ thread.other_person.username }}
+            {% endif %}
+          </td>
+          <td>
+            {{ thread.newest_message_time }}
+          </td>
 
-    {% else %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% endif %}
+
+    {% if not my_threads and not completed_threads %}
         <h2> You are not in the process of buying anything. </h2>
     {% endif %}
     </div>

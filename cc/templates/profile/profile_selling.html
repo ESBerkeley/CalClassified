@@ -7,49 +7,59 @@
 {% block profile_content %}
     <div>
 
-    {% if my_threads or ifs_waiting_list or ifs_sold %}
-    <table class="table">
-    <caption><h4> Things for Sale </h4></caption>
+    {% if my_threads %}
+    <table class="table table-striped" >
+    <caption><h4> Items Being Purchased </h4></caption>
     <thead>
         <tr>
             <th>Item Title</th>
+            <th>Messages</th>
             <th>Buyer</th>
             <th>Recent Message</th>
-            <th style="width:50px;"><center>Delete</center></th>
         </tr>
     </thead>
     <tbody>
     {% for thread in my_threads %}
-        {% if thread.is_read %}
-        <tr>
-        {% else %}
-        <tr class="not-read">
-        {% endif %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
 
           <td>
-        <a href="../messages/{{ thread.id }}"> {{ thread.post_title }} </a>
+        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
         {% if not thread.is_read %}
             (Unread)
         {% endif %}
           <td>
-            sale pending to <strong>{{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</strong>
+            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope"></i></a>
+          </td>
+          <td>
+            {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}
           </td>
 
           <td>
             {{ thread.newest_message_time }}
           </td>
-          <td></td>
+
         </tr>
     {% endfor %}
+    </tbody>
+    </table>
+    <br>
+    {% endif %}
+    
+    {% if ifs_waiting_list %}
+    <table class="table table-striped">
+    <caption><h4> Awaiting Purchase </h4></caption>
+    <thead>
+        <tr>
+            <th>Item Title</th>
+            <th><center>Delete Item</center></th>
+        </tr>
+    </thead>
+    <tbody>
     {% for item in ifs_waiting_list %} 
     <tr>
       <td>
         <a href = "/{{ item.pk }}"> {{ item.title }} </a>
       </td>
-      <td> 
-        (Awaiting Purchase)
-      </td>
-<td></td>
       <td>
         <center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ item.id }}"></a></center>
       
@@ -79,29 +89,40 @@
     {% endfor %}
     </tbody>
     </table>
+    <br>
+    {% endif %}
 
-        <br>
     {% if ifs_sold %}
-        <table class="table">
+        <table class="table table-striped">
             <caption><h4> Sold Items </h4></caption>
 
             <thead>
             <tr>
                 <th>Item Title</th>
+                <th>Messages</th>
                 <th>Sold To</th>
             </tr>
             </thead>
 
         <tbody>
-        {% for item in ifs_sold %}
-        <tr>
+        {% for thread in ifs_sold %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
           <td>
-              <a href="{{ item.get_absolute_url }}">
-             {{ item.title }}
+              <a href="/{{ thread.post_id }}">
+             {{ thread.post_title }}
               </a>
+              {% if not thread.is_read %}
+                (Unread)
+              {% endif %}
+              {% if thread.post_deleted %}
+                (Post Deleted)
+              {% endif %}
           </td>
           <td>
-            {{ item.pending_buyer.first_name }} {{ item.pending_buyer.last_name }}
+            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope"></i></a>
+          </td>
+          <td>
+            {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}
           </td>
         </tr>
         {% endfor %}
@@ -111,7 +132,7 @@
         </table>
     {% endif %}
 
-    {% else %}
+    {% if not my_threads and not ifs_waiting_list and not ifs_sold %}
         <h2> You are not currently selling anything.</h2>
         <h4>
           <a href="{% url createIFS %}">Create a post now!</a>

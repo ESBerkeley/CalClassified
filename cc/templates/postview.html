@@ -253,9 +253,9 @@
                 <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px;" href="#contact-modal">
                     <i class="icon-white icon-shopping-cart"></i> Buy
                 </button>
-                  <a href="#" class="btn" id="buy-popover" data-toggle="popover" title=""
-                     data-content="Click buy to start a private conversation with the seller." data-placement="bottom" data-trigger="hover" data-original-title="Contact Seller">
-                      <i class="icon-question-sign"></i>
+                  <a href="#" onclick="return false;" id="buy-popover" data-toggle="popover" title=""
+                     data-content="Click buy to start a private conversation with the seller. Click it to learn more! You'll be given another confirmation before a transaction is placed." data-placement="bottom" data-trigger="hover" data-original-title="Contact Seller">
+                      What's This <i class="icon-question-sign"></i>
                   </a>
                       <!--a href="#" id="buy-tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top">?</a-->
                   {% endif %}
@@ -309,7 +309,6 @@
             Share: <img src="/static/images/fb-icon.gif" /></a>
             </p-->
             <!-- AddThis Button BEGIN -->
-            <p>Post & Share:</p>
             <div class="addthis_toolbox addthis_default_style addthis_32x32_style" style="margin-bottom: -50px; width: 110%;">
                 <a class="addthis_button_facebook"></a>
                 <a class="addthis_button_email"></a>

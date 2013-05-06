@@ -59,9 +59,12 @@
         /* uncomment this if you want mobile redirect */
         var thisURL = document.URL
         var split_url =thisURL.split(".")
+        
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) && split_url.indexOf("d") < 0 && split_url.indexOf("http://d") < 0) {
         {% if this_is_a_post %} // this only gets passed onto postview.html
             window.location.href = "http://m.buynear.me/{{ post.id }}"
+        {% elif this_is_a_thread %}
+            window.location.href = "http://m.buynear.me/view_messages/{{ thread.id }}"
         {% else %}
             window.location.href = "http://m.buynear.me"
         {% endif %}
