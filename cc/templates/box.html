@@ -122,12 +122,20 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
           <div class="accordion-inner">
             <ul class="unstyled">
               <li class="side-item">
-                <i id="order-date-icon" class="icon-ok-sign side-icon" onclick="switchDate(); runloadBox();"></i>
-                <a id="order-date-text" class="side-text" onclick="switchDate(); runloadBox();"/>Date: Newest First</a>
+                <i id="dateNew" class="icon-ok-sign side-icon order-icon" onclick="selectOrder('dateNew'); runloadBox();"></i>
+                <a id="" class="side-text order-text" onclick="selectOrder('dateNew'); runloadBox();"/>Date: Newest First</a>
               </li>
               <li class="side-item">
-                <i id="order-price-icon" class="icon-ok-sign side-icon" onclick="switchPrice(); runloadBox();"></i>
-                <a id="order-price-text" class="side-text" onclick="switchPrice(); runloadBox();"/>Price </a>
+                <i id="dateOld" class="icon-ok-sign side-icon order-icon" onclick="selectOrder('dateOld'); runloadBox();"></i>
+                <a id="" class="side-text order-text" onclick="selectOrder('dateOld'); runloadBox();"/>Date: Oldest First</a>
+              </li>
+              <li class="side-item">
+                <i id="priceLow" class="icon-ok-sign side-icon order-icon" onclick="selectOrder('priceLow'); runloadBox();"></i>
+                <a id="" class="side-text order-text" onclick="selectOrder('priceLow'); runloadBox();"/>Price: Lowest First</a>
+              </li>
+              <li class="side-item">
+                <i id="priceHigh" class="icon-ok-sign side-icon order-icon" onclick="selectOrder('priceHigh'); runloadBox();"></i>
+                <a id="" class="side-text order-text" onclick="selectOrder('priceHigh'); runloadBox();"/>Price: Highest First</a>
               </li>
             </ul>
           </div>
@@ -456,8 +464,15 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 
   //be careful with order values, they get passed to server
   var order = 'dateNew';
-  $('#order-date-icon').show();
+  $('#dateNew').show();
 
+  function selectOrder(value) {
+    order = value;
+    $('.order-icon').hide();
+    $('#'+order).show();        //html ids for icons equivalent to the order values
+  }
+
+/* OLD SYSTEM
   function switchDate() {
     $('#order-date-icon').show();
     $('#order-price-icon').hide();
@@ -485,11 +500,11 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       $('#order-price-text').html('Price: Lowest First');
     }
   }
+*/
 
   function getOrder() {
     return order;
   }
-
 
   function toggle_friends_filter(){
     filtering_by_friends=!filtering_by_friends;
