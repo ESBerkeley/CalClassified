@@ -219,11 +219,9 @@
                {% else %}
                    <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Contact</a>
                {% endif %}
-               <!--Tooltips-->
-               <a href="#" class="btn btn-small" id="buy-popover" data-toggle="popover" title=""
-                     data-content="Email the seller to request a visit. Ask through the comments to get more information." data-placement="bottom" data-trigger="hover" data-original-title="Contact Seller">
-                      <i class="icon-question-sign"></i>
-               </a>
+                <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Email the seller to request a visit. Ask any questions through the comments." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
+                  <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
+                </a>
                <!--i class="icon-question-sign tooltips" style="margin-left:5px; margin-top:4px;" rel="tooltips" data-placement="top"
                   data-original-title="Email the seller to request a visit. Ask through the comments to get more information."></i-->
            {% else %}
