@@ -250,18 +250,22 @@
                         This item is being purchased and is no longer listed.
                       {% endif %}
                   {% elif post.owner != request.user %}
-                <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px;" href="#contact-modal">
-                    <i class="icon-white icon-shopping-cart"></i> Buy
+                <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px; width:120px;" href="#contact-modal">
+                    <i class="icon-white icon-shopping-cart"></i> Buy Now
                 </button>
-                  <a href="#" onclick="return false;" id="buy-popover" data-toggle="popover" title=""
+                  <!--<a href="#" onclick="return false;" id="buy-popover" data-toggle="popover" title=""
                      data-content="Click buy to start a private conversation with the seller. Click it to learn more! You'll be given another confirmation before a transaction is placed." data-placement="bottom" data-trigger="hover" data-original-title="Contact Seller">
                       What's This <i class="icon-question-sign"></i>
-                  </a>
+                  </a>-->
+                  
                       <!--a href="#" id="buy-tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top">?</a-->
                   {% endif %}
               {% else %}
                 <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
               {% endif %}
+                <a id="post-icon" href="#" data-toggle="tooltip" data-placement="right" style="margin-top:12px; margin-left:10px; position:absolute" data-original-title="Claim the item and send a message to the seller to work out the details.">
+                  <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
+                </a>  
            {% endif %}
         </div><!--/.well -->
       </div><!--/span-->
@@ -281,27 +285,27 @@
 
                 {% if request.user == post.owner %}
                     <p>
-                        <a href="{% url edit_item post.id %}" id="edit-post" style="cursor:pointer;"><i class="icon-pencil side-icon"></i>Edit Details</a>
+                        <a href="{% url edit_item post.id %}" id="edit-post" style="cursor:pointer;"><i class="icon-pencil side-icon" style="text-decoration:none; color:black;"></i>Edit Details</a>
                     </p>
                     <p>
                         <a style="cursor:pointer;" data-toggle="modal" href="#delete-modal-{{ post.id }}">
-                            <i class="icon-trash side-icon"></i>Delete Item</a>
+                            <i class="icon-trash side-icon" style="text-decoration:none; color:black;"></i>Delete Item</a>
                         <!--a id="delete-post" style="cursor:pointer;"><i class="icon-trash side-icon"></i>Delete Item</a-->
                     </p>
                 {% endif %}
                 <p>
                     <a href="" onclick="return false;" id="active-bookmark" class="bookmark-activate" style="display: none;">
-                        <i class="icon-tag side-icon bookmark-activate"></i>
+                        <i class="icon-tag side-icon bookmark-activate" style="text-decoration:none; color:black;"></i>
                         Bookmark Item
                     </a>
 
                     <a href="" onclick="return false;" id="not-active-bookmark" class="bookmark-activate" >
-                        <i class="icon-remove side-icon bookmark-activate"></i>
+                        <i class="icon-remove side-icon bookmark-activate" style="text-decoration:none; color:black;"></i>
                         Unbookmark Item
                     </a>
                 </p>
                 <p>
-                    <a id="flag-post" style="cursor:pointer;"><i class="icon-flag side-icon"></i>Flag as Inappropriate</a>
+                    <a id="flag-post" style="cursor:pointer;"><i class="icon-flag side-icon" style="text-decoration:none; color:black;"></i>Flag as Inappropriate</a>
                 </p>
             {% endif %}
             <!--p>
@@ -480,7 +484,7 @@
 $(document).ready( function() {
     var csrfmiddlewaretoken = "{{ csrf_token }}"
 
-    $("#buy-popover").popover();
+    $("#post-icon").tooltip();
     $(".delete-comment").tooltip();
     $(".delete-response").tooltip();
 
