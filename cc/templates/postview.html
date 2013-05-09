@@ -214,7 +214,7 @@
            {% if post.category.name == "Housing" %}
                {% if request.user.is_authenticated %}
                    <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="mailto:{{ post.owner.email }}">
-                       <i class="icon-white icon-envelope"></i> Email Seller
+                       <i class="icon-white icon-envelope" style="text-decoration:none; color:black;"></i> Email Seller
                    </a>
                {% else %}
                    <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Contact</a>
@@ -344,14 +344,14 @@
             <td>
             "{{comment.body}}"
             {% if comment.sender == request.user or request.user.is_staff %}
-                <a href="#" onclick="return false;" comment-id="{{ comment.id }}" class="delete-comment" data-toggle="tooltip" title="Delete Your Comment"><i class="icon-remove"></i></a>
+                <a href="#" onclick="return false;" comment-id="{{ comment.id }}" class="delete-comment" data-toggle="tooltip" title="Delete Your Comment"><i class="icon-remove" style="text-decoration:none; color:black;"></i></a>
             {% endif %}
             </td> 
             <td>
             {% if comment.seller_response != "" %}
               <p style="color:green">[Seller] "{{ comment.seller_response }}" 
               {% if post.owner == request.user %}
-                <a href="#" onclick="return false;" comment-id="{{ comment.id }}" class="delete-response" data-toggle="tooltip" title="Delete Your Response"><i class="icon-remove"></i></a>
+                <a href="#" onclick="return false;" comment-id="{{ comment.id }}" class="delete-response" data-toggle="tooltip" title="Delete Your Response"><i class="icon-remove" style="text-decoration:none; color:black;"></i></a>
               {% endif %}
               </p>
             {% else %}
