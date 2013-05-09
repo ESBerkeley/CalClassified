@@ -257,16 +257,20 @@
                      data-content="Click buy to start a private conversation with the seller. Click it to learn more! You'll be given another confirmation before a transaction is placed." data-placement="bottom" data-trigger="hover" data-original-title="Contact Seller">
                       What's This <i class="icon-question-sign"></i>
                   </a>-->
+                  <!--<a id="post-icon" href="#" data-toggle="tooltip" data-placement="right" style="margin-top:12px; margin-left:10px; position:absolute" data-original-title="Claim the item and send a message to the seller to work out the details.">
+                    <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
+                  </a>-->
+                  <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Claim the item and send a message to the seller to work out the details." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
+                    <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
+                  </a>
                   {% endif %}
               {% else %}
                 <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
-              {% endif %}
-                <!--<a id="post-icon" href="#" data-toggle="tooltip" data-placement="right" style="margin-top:12px; margin-left:10px; position:absolute" data-original-title="Claim the item and send a message to the seller to work out the details.">
-                  <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
-                </a>-->
-                <a href="#" onclick="return false;" id="post-icon" data-toggle="popover" title="" data-content="Claim the item and send a message to the seller to work out the details." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
+                <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Claim the item and send a message to the seller to work out the details." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
                   <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
                 </a>
+              {% endif %}
+
            {% endif %}
         </div><!--/.well -->
       </div><!--/span-->
@@ -486,7 +490,7 @@ $(document).ready( function() {
     var csrfmiddlewaretoken = "{{ csrf_token }}"
 
     //$("#post-icon").tooltip();
-    $("#post-icon").popover({template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'});     //craziness that creates a popover with no title
+    $(".post-icon").popover({template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'});     //craziness that creates a popover with no title
     $(".delete-comment").tooltip();
     $(".delete-response").tooltip();
 
