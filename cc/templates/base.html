@@ -8,18 +8,18 @@
     <title>{% block title %}BuyNearMe - Home{% endblock %}</title>
     {% block metadata %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="Buy and sell items to friends and classmates!" />
+      <meta name="description" content="Buy and sell items to friends and classmates on campus!" />
       <meta name="keywords" content="BuyNearMe,buynear.me,Buy Near Me,buy,sell,berkeley,UC Berkeley,friends" />
       <meta property="og:title" content="BuyNearMe"/>
       <meta property="og:type" content="website"/>
       {% block url_metadata %}
         <meta property="og:url" content="http://buynear.me/"/>
       {% endblock %}
-      <meta property="og:image" content="http://buynear.me/{% get_static_prefix %}124ta-orange.png"/>
+      <meta property="og:image" content="http://buynear.me{% get_static_prefix %}images/square_logo_berk.png"/>
       <meta property="og:site_name" content="BuyNearMe"/>
 
       <meta property="og:description"
-            content="Buy and sell items to friends and classmates!"/>
+            content="Buy and sell items to friends and classmates on campus!"/>
     {% endblock %}
     <link href="{% get_static_prefix %}bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="{% get_static_prefix %}fontawesome/css/font-awesome.min.css" rel="stylesheet">

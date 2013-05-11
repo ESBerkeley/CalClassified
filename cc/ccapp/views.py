@@ -752,7 +752,7 @@ def edit_item(request,pid):
     #fields to be edited
     # title, price, category, description, images
     item = ItemForSale.objects.get(id = int(pid))
-    if item.owner == request.user:
+    if item.owner == request.user or request.user.is_staff:
         data = {}
         if request.method == "GET":
             data['item'] = item
