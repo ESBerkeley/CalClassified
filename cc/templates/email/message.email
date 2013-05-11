@@ -9,7 +9,7 @@
   {{ message }}
   </blockquote>
   <p>
-    <a href="http://buynear.me{{ thread.get_absolute_url }}">Click here</a> to view the message thread
+    <a href="http://buynear.me{{ thread.get_absolute_url }}">Click here</a> to view the message thread.<br>
     <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view your item!
   <br>
   </p>
