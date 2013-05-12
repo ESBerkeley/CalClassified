@@ -238,7 +238,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   $(window).scroll(function(){
 
 
-    if(!in_restore && $(window).scrollTop() == $(document).height() - $(window).height()){
+    if(!in_restore && $(window).scrollTop() >= $(document).height() - 22 - $(window).height()){
       current_page++;
       runloadBox(current_page);
 
