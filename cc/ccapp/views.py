@@ -445,14 +445,15 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
                                 fb_success = True
                             except:
                                 fb_group_success = False
+
                 post_created_signal.send(sender = ItemForSale, instance = model)
-                if fb_success:
+                if not fb_group_success:
+                    return redirect(model.get_absolute_url()+"?new=1&postffs=0")
+                elif not fb_success:
+                    return redirect(model.get_absolute_url()+"?new=1")
+                else:
                     request.session['links'] = links
                     return redirect(model.get_absolute_url()+"?new=1&postffs=2")
-                elif not fb_group_success:
-                    return redirect(model.get_absolute_url()+"?new=1&postffs=0")
-                else:
-                    return redirect(model.get_absolute_url()+"?new=1")
 
             else:
                 return render_to_response('createlisting.html',{'form':form},context_instance=RequestContext(request))
