@@ -511,7 +511,7 @@ class FacebookUserConverter(object):
    #     response = self.open_facebook.set('407167362711476/feed', link='http://buynear.me'+item.get_absolute_url(), message='Selling '+ item.title+'!') #Testing 2050 group
         response = self.open_facebook.set('266259930135554/feed',
                                           link='http://buynear.me'+item.get_absolute_url(),
-                                          message='Selling '+ item.title + '- $'+ str(item.price)) #Real ffs group
+                                          message='Selling '+ item.title + ' - $'+ str(item.price)) #Real ffs group
         return response
 
     def set_fb_group(self, item, url):
@@ -523,7 +523,7 @@ class FacebookUserConverter(object):
         '''
         response = self.open_facebook.set(url,
                                           link='http://buynear.me'+item.get_absolute_url(),
-                                          message='Selling '+ item.title + '- $'+ str(item.price))
+                                          message='Selling '+ item.title + ' - $'+ str(item.price))
         return response
 
     '''def store_free_for_sale(self, user, items):
