@@ -488,7 +488,7 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
             ecks['form'] = form
             if user_profile.facebook_id:
                 ecks['is_facebook'] = True
-                user_profile.extend_access_token()
+                #user_profile.extend_access_token()
                 groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
                 ecks['fb_groups'] = groups
             ecks.update(csrf(request))
