@@ -54,6 +54,7 @@ REQUEST_ATTEMPTS = 3
 
 
 class FacebookConnection(object):
+
     '''
     Shared class for sending requests to facebook and parsing
     the api response
@@ -134,18 +135,28 @@ class FacebookConnection(object):
                             'Facebook is down %s' % response)
                 break
             except (urllib2.HTTPError, urllib2.URLError, ssl.SSLError), e:
-                # These are often temporary errors, so we will retry before failing
+                # These are often temporary errors, so we will retry before
+                # failing
                 error_format = 'Facebook encountered a timeout (%ss) or error %s'
                 logger.warn(error_format, extended_timeout, unicode(e))
                 attempts -= 1
                 if not attempts:
                     # if we have no more attempts actually raise the error
-                    raise facebook_exceptions.convert_unreachable_exception(e)
+                    error_instance = facebook_exceptions.convert_unreachable_exception(
+                        e)
+                    error_msg = 'Facebook request failed after several retries, raising error %s'
+                    logger.warn(error_msg, error_instance)
+                    raise error_instance
             finally:
                 if response_file:
                     response_file.close()
                 stop_statsd('facebook.%s' % statsd_path)
 
+        # Faceboook response is either
+        # Valid json
+        # A string which is a querydict (a=b&c=d...etc)
+        # A html page stating FB is having trouble (but that shouldnt reach
+        # this part of the code)
         try:
             parsed_response = json.loads(response)
             logger.info('facebook send response %s' % parsed_response)
@@ -176,6 +187,20 @@ class FacebookConnection(object):
         from open_facebook.utils import is_json
         server_error = False
         if hasattr(e, 'code') and e.code == 500:
+            server_error = True
+
+        # Facebook status codes are used for application logic
+        # http://fbdevwiki.com/wiki/Error_codes#User_Permission_Errors
+        # The only way I know to detect an actual server error is to check if
+        # it looks like their error page
+        # TODO: think of a better solution....
+        error_matchers = [
+            '<title>Facebook | Error</title>',
+            'Sorry, something went wrong.'
+        ]
+        is_error_page = all(
+            [matcher in response for matcher in error_matchers])
+        if is_error_page:
             server_error = True
 
         # if it looks like json, facebook is probably not down
@@ -280,6 +305,7 @@ class FacebookConnection(object):
 
 
 class FacebookAuthorization(FacebookConnection):
+
     '''
     Methods for getting us an access token
     There are several flows we must support
@@ -295,7 +321,7 @@ class FacebookAuthorization(FacebookConnection):
     '''
     @classmethod
     def convert_code(cls, code,
-                     redirect_uri='http://test.buynear.me:8000/facebook/connect/'):
+                     redirect_uri='http://local.mellowmorning.com:8000/facebook/connect/'):
         '''
         Turns a code into an access token
         '''
@@ -508,6 +534,7 @@ class FacebookAuthorization(FacebookConnection):
 
 
 class OpenFacebook(FacebookConnection):
+
     '''
     ========================================
     Getting your authentication started
@@ -676,6 +703,15 @@ class OpenFacebook(FacebookConnection):
                                  if v == '1' or v == 1])
         return permissions_dict
 
+    def has_permissions(self, required_permissions):
+        permissions_dict = self.permissions()
+        # see if we have all permissions
+        has_permissions = True
+        for permission in required_permissions:
+            if permission not in permissions_dict:
+                has_permissions = False
+        return has_permissions
+
     def my_image_url(self, size=None):
         '''
         Returns the image url from your profile
@@ -702,6 +738,7 @@ class OpenFacebook(FacebookConnection):
 
 
 class TestUser(object):
+
     '''
     Simple wrapper around test users
     '''

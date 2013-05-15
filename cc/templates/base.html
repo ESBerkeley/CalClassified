@@ -96,10 +96,11 @@
           </form>
 
           <ul class="nav pull-right">
-            <li>
+            {% comment %}
+              <li>
               {% if not request.user.is_authenticated %}
               <div class="inner_content">
-                <form action="{% url facebook_connect %}?facebook_login=1" method="post">
+                <form action="{% url facebook_connect %}?facebook_login=1" method="post">{% csrf_token %}
                   <input type="hidden" value="{{ request.path }}?next={{ request.GET.next }}" name="next" />
                   <div id="facebook_login_js">
                     <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{% get_static_prefix %}images/login_crop.png" style="height:29px; width:170px; margin-bottom:-16px; padding-right:5px;"/>
@@ -108,6 +109,8 @@
               </div>
               {% endif %}
             </li>
+            {% endcomment %}
+            <!--Facebook Login on base-->
 
             {% if request.user.is_authenticated %}
 
@@ -175,7 +178,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
             <a class="footer-text" href="/feedback">Feedback</a>
             <!--<span class="footer-copy">&copy; buynearme 2012</span>-->
           </div>
-          <div class="fb-like span2" data-href="https://www.facebook.com/BuyNearMe" data-send="true" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana">
+          <div class="fb-like span2" href="https://www.facebook.com/BuyNearMe" data-href="https://www.facebook.com/BuyNearMe" data-send="true" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana">
           </div>
         </p>
       </div>

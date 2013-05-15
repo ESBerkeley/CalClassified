@@ -38,12 +38,16 @@
     
     <div id="OR"> <h3> OR </h3> </div>
     
-    <form action="{% url facebook_connect %}?facebook_login=1" method="post">
+    <form action="{% url facebook_connect %}?facebook_login=1" method="post">{% csrf_token %}
       <input type="hidden" value="{{ request.path }}?next={{ request.GET.next }}" name="next" />
       <div id="facebook_login_js">
         <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{% get_static_prefix %}images/login.png" style="height:35px; width:280px; margin-bottom:-16px; padding-right:5px;"/>
       </div>
     </form>
+
+        <br>
+        <img src="{% get_static_prefix %}images/fb_permissions.png"/>
+    <p>Click okay to auto-post to Facebook Groups of your choice. We will never spam your friends walls.</p>
   </div>
     
 </div>

@@ -8,6 +8,15 @@ from django.utils.encoding import iri_to_uri
 from django.template.loader import render_to_string
 from django_facebook.registration_backends import FacebookRegistrationBackend
 
+# -- new DJANGO_FACEBOOK STUFF
+try:
+    # using compatible_datetime instead of datetime only
+    # not to override the original datetime package
+    from django.utils import timezone as compatible_datetime
+except ImportError:
+    from datetime import datetime as compatible_datetime
+from functools import wraps
+
 
 logger = logging.getLogger(__name__)
 
@@ -51,31 +60,19 @@ def test_permissions(request, scope_list, redirect_uri=None):
     return scope_allowed
 
 
-def get_oauth_url(request, scope, redirect_uri=None, extra_params=None):
+def get_oauth_url(scope, redirect_uri, extra_params=None):
     '''
-    Returns the oauth url for the given request and scope
-    Request maybe shouldnt be tied to this function, but for now it seems
-    rather ocnvenient
+    Returns the oAuth URL for the given scope and redirect_uri
     '''
-    from django_facebook import settings as facebook_settings
     scope = parse_scope(scope)
     query_dict = QueryDict('', True)
     query_dict['scope'] = ','.join(scope)
     query_dict['client_id'] = facebook_settings.FACEBOOK_APP_ID
-    redirect_uri = redirect_uri or request.build_absolute_uri()
-    current_uri = redirect_uri
-
-    # set attempt=1 to prevent endless redirect loops
-    if 'attempt=1' not in redirect_uri:
-        if '?' not in redirect_uri:
-            redirect_uri += '?attempt=1'
-        else:
-            redirect_uri += '&attempt=1'
 
     query_dict['redirect_uri'] = redirect_uri
     oauth_url = 'https://www.facebook.com/dialog/oauth?'
     oauth_url += query_dict.urlencode()
-    return oauth_url, current_uri, redirect_uri
+    return oauth_url
 
 
 class CanvasRedirect(HttpResponse):
@@ -90,14 +87,15 @@ class CanvasRedirect(HttpResponse):
         js_redirect = render_to_string('django_facebook/canvas_redirect.html', context)
         
         super(CanvasRedirect, self).__init__(js_redirect)
-        
-def response_redirect(redirect_url, canvas=False):
+
+
+def response_redirect(redirect_url, script_redirect=False):
     '''
     Abstract away canvas redirects
     '''
-    if canvas:
-        return CanvasRedirect(redirect_url)
-    
+    if script_redirect:
+        return ScriptRedirect(redirect_url)
+
     return HttpResponseRedirect(redirect_url)
 
 def next_redirect(request, default='/', additional_params=None,
@@ -126,7 +124,7 @@ def next_redirect(request, default='/', additional_params=None,
             if request.user.get_profile().first_time and "m." not in url:
                 redirect_url = '/account_setup/'
                 break
-            if redirect_url == '/accounts/logout/' or redirect_url == '/accounts/login/':
+            if redirect_url.startswith('/accounts/logout/') or redirect_url.startswith('/accounts/login/'):
                 redirect_url = default
                 break
             elif redirect_url:
@@ -158,6 +156,57 @@ def get_profile_class():
     app_label, model = profile_string.split('.')
 
     return models.get_model(app_label, model)
+
+# BEGIN ADDED STUFF
+def has_permissions(graph, scope_list):
+    from open_facebook import exceptions as open_facebook_exceptions
+    permissions_granted = False
+    try:
+        if graph:
+            permissions_granted = graph.has_permissions(scope_list)
+    except open_facebook_exceptions.OAuthException, e:
+        pass
+    return permissions_granted
+
+def simplify_class_decorator(class_decorator):
+    '''
+    Makes the decorator syntax uniform
+    Regardless if you call the decorator like
+        @decorator
+        or
+        @decorator()
+        or
+        @decorator(staff=True)
+
+    Complexity, Python's class based decorators are weird to say the least:
+    http://www.artima.com/weblogs/viewpost.jsp?thread=240845
+
+    This function makes sure that your decorator class always gets called with
+    __init__(fn, *option_args, *option_kwargs)
+    __call__()
+        return a function which accepts the *args and *kwargs intended
+        for fn
+    '''
+    # this makes sure the resulting decorator shows up as
+    # function FacebookRequired instead of outer
+    @wraps(class_decorator)
+    def outer(fn=None, *decorator_args, **decorator_kwargs):
+        # wraps isn't needed, the decorator should do the wrapping :)
+        # @wraps(fn, assigned=available_attrs(fn))
+        def actual_decorator(fn):
+            instance = class_decorator(fn, *decorator_args, **decorator_kwargs)
+            _wrapped_view = instance.__call__()
+            return _wrapped_view
+
+        if fn is not None:
+            wrapped_view = actual_decorator(fn)
+        else:
+            wrapped_view = actual_decorator
+
+        return wrapped_view
+    return outer
+
+# END ADDED STUFF
 
 
 @transaction.commit_on_success
