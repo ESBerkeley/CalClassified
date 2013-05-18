@@ -124,7 +124,7 @@ def next_redirect(request, default='/', additional_params=None,
             if request.user.get_profile().first_time and "m." not in url:
                 redirect_url = '/account_setup/'
                 break
-            if redirect_url.startswith('/accounts/logout/') or redirect_url.startswith('/accounts/login/'):
+            if redirect_url or redirect_url.startswith('/accounts/logout/') or redirect_url.startswith('/accounts/login/'):
                 redirect_url = default
                 break
             elif redirect_url:
