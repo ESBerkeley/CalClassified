@@ -86,6 +86,8 @@ class FacebookProfileModel(models.Model):
             return True
         except OAuthException:
             return False
+        except AttributeError:
+            return True  # Not Facebook Account
 
     def likes(self):
         likes = FacebookLike.objects.filter(user_id=self.user_id)
