@@ -52,7 +52,7 @@
             <button id="fake-login" data-theme="b">Log in with Facebook</button>
 
             <div class="inner_content" style="display: none;">
-                <form action="{% url facebook_connect %}?facebook_login=1" method="post">
+                <form action="{% url facebook_connect %}?facebook_login=1" method="post">{% csrf_token %}
                     <input type="hidden" value="{{ next }}" name="next" />
                     <div id="facebook_login_jss">
                         <input id="actual-fb-login" onclick="F.connect(this.parentNode.parentNode); return false;" type="image"/>
