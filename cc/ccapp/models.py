@@ -18,7 +18,7 @@ class VerificationEmailID(models.Model):
     email = models.EmailField(blank=True, null=True)
 
 class Post(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=75)
     body = models.TextField()
     time_created = models.DateTimeField(auto_now_add=True)
     key_data = models.CharField(max_length=30, unique=True, blank=True, null=True)

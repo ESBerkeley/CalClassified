@@ -282,8 +282,8 @@ FACEBOOK_REDIRECT_URI = 'http://test.buynear.me:8000/facebook/connect/?facebook_
 CELERY_ALWAYS_EAGER = True # USE FOR DEVELOPMENT, TURN OFF ON PRODUCTION
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = SITE_ROOT + '/templates/email/'
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django' # FOR PROD
-#TEMPLATED_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # FOR DEV'T, emails sent to console
+#TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django' # FOR PROD
+TEMPLATED_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # FOR DEV'T, emails sent to console
 
 # HANDLES SENDING EMAILS FROM DJANGO
 # supposedly you have to at least log into the HOST_USER at least once normally
