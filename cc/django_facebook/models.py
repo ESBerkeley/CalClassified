@@ -285,7 +285,7 @@ if settings.AUTH_PROFILE_MODULE == 'django_facebook.FacebookProfile':
     #Make sure we create a FacebookProfile when creating a User
     def create_facebook_profile(sender, instance, created, **kwargs):
         if created:
-            profile = FacebookProfile.objects.create(user=instance)
+            profile, profile_created = FacebookProfile.objects.get_or_create(user=instance)
             berkeley,created = Circle.objects.get_or_create(name="Berkeley",is_public=True)
             if created:
                 berkeley.url_key = berkeley.make_key()
