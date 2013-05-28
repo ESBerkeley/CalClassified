@@ -17,6 +17,10 @@
 
     <div id="login-box">
         {% if request.user.is_authenticated %}
+            <script type="text/javascript">
+                window.location.href = "http://m.buynear.me/browse"
+            </script>
+
             <div>
                 Hi, {{ request.user.first_name }}!<br>
                 <a href="/logout">logout</a>
@@ -42,7 +46,7 @@
             {% if next %}
                 <input type="hidden" name="next" value="{{ next }}" />
             {% else %}
-                <input type="hidden" name="next" value="/" />
+                <input type="hidden" name="next" value="/notifications/" />
             {% endif %}
 
         </form>

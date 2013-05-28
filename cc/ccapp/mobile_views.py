@@ -440,7 +440,8 @@ def delete_item(request,pid):
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
     else: #no permission
         data = {}
-        data['message'] = "You don't have permission to do that, tsk tsk! >:("
+        data['message'] = "You don't have permission to do that, tsk tsk! >:(. This instance has been recorded."
+        #lol, we don't actually record anything
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
         
 @login_required
@@ -471,7 +472,7 @@ def item_action(request):
                 
         else:
             data = {}
-            data['message'] = "You don't have permission to do that, tsk tsk! >:("
+            data['message'] = "You don't have permission to do that, tsk tsk! >:(. This instance has been recorded."
             return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
             
             
@@ -522,6 +523,8 @@ def message(request):
     return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
 
 def verify_user(request,auth_key):
+    #THIS NEVER RUNS CAUSE THE EMAIL SENT ROUTES TO THE DESKTOP VERSION,
+    # HOWEVER ITS HANDLED AS DESKTOP VERIFIES USER AND REROUTES TO A MOBILE SUCCESS PAGE
     data = {}
     try:
         verif = VerificationEmailID.objects.get(auth_key=auth_key)
@@ -598,7 +601,7 @@ def signup(request):
         )
         
         data['title'] = "Sign Up Verification"
-        data['message'] = """Verification email has been sent.<br>Follow the instructions on the email to activate your account."""
+        data['message'] = """Verification email has been sent. Follow the instructions on the email to activate your account."""
         
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
         
