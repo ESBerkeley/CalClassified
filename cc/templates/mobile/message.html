@@ -2,10 +2,25 @@
 
 {% block body_content %}
 
-<center><h2 id="colored-page-header">{{ title }}</h2></center>
+<center>
+    <h2 id="colored-page-header">
+        {% if new_user_name %}
+            Account Activated
+        {% else %}
+            {{ title }}
+        {% endif %}
+    </h2>
+</center>
 
 <div id="general-message-container">
-<center>{{ message }}</center>
+    <center>
+        {% if new_user_name %}
+            Thanks <b>{{ new_user_name }}</b>, activation complete!<br>
+            You may now <a href='/accounts/login'>login</a> using your username and password.
+        {% else %}
+            {{ message }}
+        {% endif %}
+    </center>
 </div>
 
 {% endblock %}

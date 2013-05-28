@@ -17,10 +17,10 @@ urlpatterns = patterns('',
     url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS2"), #delete in future, in case for hard links
     url(r'^about/$', AboutView.as_view()),
     url(r'^contact/$', ContactView.as_view()),
-    url(r'^privacy/', TemplateView.as_view(template_name = 'privacy_policy.html')),
-    url(r'^feedback/', FeedbackView.as_view(), name="feedback"),
+    url(r'^privacy/$', TemplateView.as_view(template_name = 'privacy_policy.html')),
+    url(r'^feedback/$', FeedbackView.as_view(), name="feedback"),
     url(r'^thanks/', ThanksView.as_view(), name='thanks'),
-    url(r'^terms/', TemplateView.as_view(template_name= 'terms.html')),
+    url(r'^terms/$', TemplateView.as_view(template_name= 'terms.html')),
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
 
     #ACCOUNT:

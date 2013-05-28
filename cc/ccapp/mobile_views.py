@@ -510,12 +510,14 @@ def ajax_delete_notifications(request):
         return HttpResponse()
         
 def banned(request):
-    return HttpResponse("It seems you're banned. If you want to appeal email contact@buynear.me")
+    return HttpResponse("It seems you're banned. If you want to appeal, email contact@buynear.me")
 
 def message(request):
     data = {}
     data['title'] = request.GET['title']
     data['message'] = request.GET['message']
+    if "new_user_name" in request.GET:
+        data['new_user_name'] = request.GET['new_user_name']
         
     return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
 
@@ -527,10 +529,12 @@ def verify_user(request,auth_key):
         user.is_active = True
         user.save()
         verif.delete()
+        data['verify_user'] = True
         data['title'] = "Account Activated"
         data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='{% url login %}'>login</a> using your username and password."""
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
     except: #something goes wrong, primarily this url doesnt exist
+        data['verify_user'] = True
         data['title'] = "Oops! An error has occurred."
         data['message'] = "Oops! It seems that your activation key is invalid.  Please check the url again."
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))

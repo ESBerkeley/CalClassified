@@ -66,6 +66,8 @@
             window.location.href = "http://m.buynear.me/{{ post.id }}"
         {% elif this_is_a_thread %}
             window.location.href = "http://m.buynear.me/view_messages/{{ thread.id }}"
+        {% elif new_user_name %}
+            window.location.href = "http://m.buynear.me/message/?title=1&message=1&new_user_name={{ new_user_name }}"
         {% else %}
             window.location.href = "http://m.buynear.me"
         {% endif %}
