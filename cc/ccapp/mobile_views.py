@@ -440,7 +440,8 @@ def delete_item(request,pid):
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
     else: #no permission
         data = {}
-        data['message'] = "You don't have permission to do that, tsk tsk! >:("
+        data['message'] = "You don't have permission to do that, tsk tsk! >:(. This instance has been recorded."
+        #lol, we don't actually record anything
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
         
 @login_required
@@ -471,7 +472,7 @@ def item_action(request):
                 
         else:
             data = {}
-            data['message'] = "You don't have permission to do that, tsk tsk! >:("
+            data['message'] = "You don't have permission to do that, tsk tsk! >:(. This instance has been recorded."
             return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
             
             
@@ -510,16 +511,20 @@ def ajax_delete_notifications(request):
         return HttpResponse()
         
 def banned(request):
-    return HttpResponse("It seems you're banned. If you want to appeal email contact@buynear.me")
+    return HttpResponse("It seems you're banned. If you want to appeal, email contact@buynear.me")
 
 def message(request):
     data = {}
     data['title'] = request.GET['title']
     data['message'] = request.GET['message']
+    if "new_user_name" in request.GET:
+        data['new_user_name'] = request.GET['new_user_name']
         
     return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
 
 def verify_user(request,auth_key):
+    #THIS NEVER RUNS CAUSE THE EMAIL SENT ROUTES TO THE DESKTOP VERSION,
+    # HOWEVER ITS HANDLED AS DESKTOP VERIFIES USER AND REROUTES TO A MOBILE SUCCESS PAGE
     data = {}
     try:
         verif = VerificationEmailID.objects.get(auth_key=auth_key)
@@ -527,10 +532,12 @@ def verify_user(request,auth_key):
         user.is_active = True
         user.save()
         verif.delete()
+        data['verify_user'] = True
         data['title'] = "Account Activated"
         data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='{% url login %}'>login</a> using your username and password."""
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
     except: #something goes wrong, primarily this url doesnt exist
+        data['verify_user'] = True
         data['title'] = "Oops! An error has occurred."
         data['message'] = "Oops! It seems that your activation key is invalid.  Please check the url again."
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
@@ -594,7 +601,7 @@ def signup(request):
         )
         
         data['title'] = "Sign Up Verification"
-        data['message'] = """Verification email has been sent.<br>Follow the instructions on the email to activate your account."""
+        data['message'] = """Verification email has been sent. Follow the instructions on the email to activate your account."""
         
         return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
         

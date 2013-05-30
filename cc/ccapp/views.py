@@ -1295,6 +1295,7 @@ def verify_user(request,auth_key):
         user.is_active = True
         user.save()
         verif.delete()
+        data['new_user_name'] = user.get_full_name()
         data['title'] = "Account Activated"
         data['message'] = """Thanks %s, activation complete!<br>""" % str(user.first_name) +  """You may now <a href='/accounts/login'>login</a> using your username and password."""
         return render_to_response('message.html',data,context_instance=RequestContext(request))
