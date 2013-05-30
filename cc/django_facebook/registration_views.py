@@ -86,14 +86,15 @@ def register(request):
         verif = VerificationEmailID(user=new_user,auth_key=auth_key)
         verif.save()
 
+        full_name = new_user.get_full_name()
         send_templated_mail(
             template_name='register',
             from_email='Buy Near Me <noreply@buynear.me>',
-            recipient_list=[email],
+            recipient_list=[add_name_to_email(full_name, email)],
             context={
                 'auth_key':auth_key,
                 'first_name':new_user.first_name,
-                'full_name':new_user.get_full_name(),
+                'full_name':full_name,
                 },
         )
         
@@ -129,3 +130,9 @@ def register(request):
 #
 #    return BODY
 
+def add_name_to_email(name, email):
+    """
+    Returns "INSERT NAME" <INSERT EMAIL>
+    formatting
+    """
+    return '"' + name + '"' + ' <' + email + '>'

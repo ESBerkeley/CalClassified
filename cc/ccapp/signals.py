@@ -62,17 +62,18 @@ def post_save_hndlr(sender, **kwargs):
                 new_note.save()
                 dude.friend_notifications += 1
                 dude.save()
-                if dude.message_email:
+                dude_full_name = dude.user.get_full_name()
+                '''if dude.friend_email:
                     send_email_task.delay(
                         template_name='item_notification',
                         from_email='BuyNearMe <noreply@buynear.me>',
-                        recipient_list=[dude.user.email],
+                        recipient_list=[add_name_to_email(dude_full_name, dude.user.email)],
                         context={
-                            'recipient_name':dude.get_full_name(),
+                            'recipient_name':dude_full_name,
                             'post':post.id,
                             'full_name':owner_profile.facebook_name(),
                         },
-                    )
+                    )'''
             except:
                 pass
 
@@ -82,6 +83,12 @@ def post_save_hndlr(sender, **kwargs):
 
 post_created_signal.connect(post_save_hndlr, sender=ItemForSale, dispatch_uid="post_post_creating_thingy_aweaerf")
 
+def add_name_to_email(name, email):
+    """
+    Returns "INSERT NAME" <INSERT EMAIL>
+    formatting
+    """
+    return '"' + name + '"' + ' <' + email + '>'
 
 def comment_save_hndlr(sender, **kwargs):
     ''' notify the seller that someone commented '''
@@ -92,23 +99,23 @@ def comment_save_hndlr(sender, **kwargs):
         seller = item.owner.get_profile()
         commenter = comment.sender.get_profile()
         if seller != commenter: #if you comment on your own item, dont notify
-            
             new_note = Notification(post_from=item, going_to=seller, type=1)
             new_note.second_party = commenter
             new_note.save()
             seller.friend_notifications += 1
             seller.save()
+            seller_full_name = seller.user.get_full_name()
             if seller.comments_email:
                 try:
                     send_email_task.delay(
                         template_name='user_comment',
                         from_email='BuyNearMe <noreply@buynear.me>',
-                        recipient_list=[seller.user.email],
+                        recipient_list=[add_name_to_email(seller_full_name, seller.user.email)],
                         context={
                             'message':comment.body,
                             'commenter':commenter.user.get_full_name(),
                             'post':item.id,
-                            'seller':seller.user.get_full_name(),
+                            'seller':seller_full_name,
                             },
                     )
                 except:
@@ -130,15 +137,16 @@ def seller_response_hndlr(sender, **kwargs):
         new_note.save()
         commenter.friend_notifications += 1
         commenter.save()
+        commenter_full_name = commenter.user.get_full_name()
         if commenter.replies_email:
             try:
                 send_email_task.delay(
                     template_name='seller_reply',
                     from_email='BuyNearMe <noreply@buynear.me>',
-                    recipient_list=[commenter.user.email],
+                    recipient_list=[add_name_to_email(commenter_full_name, commenter.user.email)],
                     context={
                         'message':comment.body,
-                        'commenter':commenter.user.get_full_name(),
+                        'commenter':commenter_full_name,
                         'post':item.id,
                         'seller':seller.user.get_full_name(),
                         },
@@ -166,16 +174,17 @@ def buy_button_hndlr(sender, **kwargs):
         new_note.thread_id = thread.id
         new_note.save()
 
+        seller_full_name = seller.user.get_full_name()
         try:
             send_email_task.delay(
                 template_name='buy_item',
                 from_email='BuyNearMe <noreply@buynear.me>',
-                recipient_list=[seller.user.email],
+                recipient_list=[add_name_to_email(seller_full_name, seller.user.email)],
                 context={
                     'message':message.body,
                     'buyer':buyer.user.get_full_name(),
                     'post':item.id,
-                    'seller':seller.user.get_full_name(),
+                    'seller':seller_full_name,
                     'thread':thread.id
                     },
             )
@@ -197,16 +206,16 @@ def sale_complete_hndlr(sender, **kwargs):
         new_note.save()
         buyer.friend_notifications += 1
         buyer.save()
-
+        buyer_full_name = buyer.user.get_full_name()
         if buyer.sold_email:
             try:
                 send_email_task.delay(
                     template_name='sold',
                     from_email='BuyNearMe <noreply@buynear.me>',
-                    recipient_list=[buyer.email],
+                    recipient_list=[add_name_to_email(buyer_full_name, buyer.user.email)],
                     context={
                         'post':item.id,
-                        'buyer':buyer.user.get_full_name(),
+                        'buyer':buyer_full_name,
                         'seller':seller.user.get_full_name()
                     },
                 )
@@ -225,16 +234,17 @@ def item_repost_hndlr(sender, **kwargs):
         new_note.save()
         buyer.friend_notifications += 1
         buyer.save()
+        buyer_full_name = buyer.user.get_full_name()
 
         if buyer.failed_to_sell_email:
             try:
                 send_email_task.delay(
                     template_name='failed_to_sell',
                     from_email='BuyNearMe <noreply@buynear.me>',
-                    recipient_list=[buyer.email],
+                    recipient_list=[add_name_to_email(buyer_full_name, buyer.user.email)],
                     context={
                         'post':item.id,
-                        'buyer':buyer.user.get_full_name(),
+                        'buyer':buyer_full_name,
                         'seller':seller.user.get_full_name()
                     },
                 )
@@ -257,18 +267,19 @@ def message_to_seller_hndlr(sender, **kwargs):
         new_note.save()
         seller.friend_notifications += 1
         seller.save()
+        seller_full_name = seller.user.get_full_name()
 
         if seller.message_email:
             try:
                 send_email_task.delay(
                     template_name='message',
                     from_email='BuyNearMe <noreply@buynear.me>',
-                    recipient_list=[seller.user.email],
+                    recipient_list=[add_name_to_email(seller_full_name,seller.user.email)],
                     context={
                         'message':message.body,
                         'post':item.id,
                         'sender':buyer.user.get_full_name(),
-                        'recipient':seller.user.get_full_name(),
+                        'recipient':seller_full_name,
                         'thread':thread.id
                         },
                 )
@@ -292,17 +303,18 @@ def message_to_buyer_hndlr(sender, **kwargs):
         new_note.save()
         buyer.friend_notifications += 1
         buyer.save()
+        buyer_full_name = buyer.user.get_full_name()
 
         if buyer.message_email:
             send_email_task.delay(
                 template_name='message',
                 from_email='BuyNearMe <noreply@buynear.me>',
-                recipient_list=[buyer.user.email],
+                recipient_list=[add_name_to_email(buyer_full_name, buyer.user.email)],
                 context={
                     'message':message.body,
                     'post':item.id,
                     'sender':seller.user.get_full_name(),
-                    'recipient':buyer.user.get_full_name(),
+                    'recipient':buyer_full_name,
                     'thread':thread.id
                     },
             )
