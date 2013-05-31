@@ -617,7 +617,7 @@ def showpost(request, pid, super_cat):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
     post = get_object_or_404(super_cat, pk=pid)
-    if post.deleted:
+    if post.deleted and not request.user.is_staff:
         data = {}
         data['title'] = 'Item Deleted'
         data['message'] = 'Sorry, this item has been deleted and is no longer viewable.'
