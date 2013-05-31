@@ -314,8 +314,8 @@ def view_item(request,pid):
             data['links'] = links
         except:
             pass
-        if "postffs" in request.GET:
-            data['post_ffs'] = int(request.GET['postffs'])
+        if "post_ffs" in request.GET:
+            data['post_ffs'] = int(request.GET['post_ffs'])
 
         return render_to_response("mobile/view_item.html",data,context_instance = RequestContext(request))
     
