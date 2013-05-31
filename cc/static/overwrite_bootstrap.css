@@ -146,6 +146,30 @@ h4 {
   margin-bottom:-15px;
 }
 
+/* Sidebar for About Pages*/
+.about-sidebar-nav {
+}
+
+.accordion-heading h3{
+  font-size:20px;
+  margin-top:-10px;
+  margin-bottom:-10px;
+  color:#F84600;
+  font-weight:400;
+}
+
+.about-inner a{
+  font-size:18px;
+}
+
+.about-item {
+  margin-left:25px;
+  margin-top:3px;
+  margin-bottom:3px;
+}
+/* End About Page Sidebar*/
+
+
 /* old sidebar; still necessary for postview...*/
 .nav-header h2{
   font-size:17px;
@@ -742,6 +766,15 @@ body {
 
 #signup-box {
     margin: auto;
+    border: 1px #E0E0E0 solid ;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: white;
+    margin-bottom: 40px;
+}
+
+#about-box {
     border: 1px #E0E0E0 solid ;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;

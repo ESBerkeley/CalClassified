@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+
+{% endblock %}
+{% block sidebar %}
+    <div class="sidebar-container">
+        <div class="row">
+            <div class="accordion about-sidebar-nav span3" id="accordion1">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                            <h3>BuyNearMe</h3>
+                        </a>
+                    </div>
+                    <div id="collapseOne" class="accordion-body collapse">
+                        <div class="accordion-inner about-inner">
+                            <ul class="unstyled">
+                                <li class="about-item">
+                                    <i id="about-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <a href="{% url about %}">About Us</a>
+                                </li>
+                                <li class="about-item">
+                                    <i id="privacy-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <a href="{% url privacy %}">Privacy Policy</a>
+                                </li>
+                                <li class="about-item">
+                                    <i id="terms-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <a href="{% url terms %}">Terms</a>
+                                </li>
+                                <li class="about-item">
+                                    <h4 style="margin-top:5px; margin-bottom:5px; font-weight:700;">Coming Soon:</h4>
+                                </li>
+                                <li class="about-item">
+                                    <i id="how-it-works-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <!--a href="{% url how_it_works %}">How It Works</a-->How it Works
+                                </li>
+                                <li class="about-item">
+                                    <i id="faq-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <!--a href="{% url faq %}">FAQ</a-->FAQ
+                                </li>
+                                <li class="about-item">
+                                    <i id="testimonials-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <!--a href="{% url testimonials %}">Testimonials</a-->Testimonials
+                                </li>
+                                <li class="about-item">
+                                    <i id="team-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <!--a href="{% url team %}">Team</a-->Team
+                                </li>
+                                <li class="about-item">
+                                    <i id="timeline-icon" class="icon-ok-sign side-icon cat-icon" type="hidden"></i>
+                                    <!--a href="{% url timeline %}">Timeline</a-->Timeline
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}
+
+{% block after_content %}
+    </div>
+    </div>
+{% endblock %}

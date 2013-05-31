@@ -1,18 +1,13 @@
-{% extends "base.html" %}
+{% extends "about_base.html" %}
 
-{% block title %}Buy Near Me - Terms and Conditions{% endblock %}
-{% block sidebar %} {% endblock %}
-{% block extra_css %}
-
-{% endblock %}
+{% block title %}BuyNearMe - Privacy Policy{% endblock %}
 {% block content %}
 
-    <div id="signup-container" class="container">
-        <div id="signup-box" class="span12">
+        <div id="about-box" class="span11">
 
 
             <div class="small-title">
-                <h2>Terms and Conditions</h2>
+                <h2>Privacy Policy</h2>
             </div>
 
 
@@ -46,6 +41,12 @@
                 </div>
             </div>
         </div>
-    </div>
 
+{% endblock %}
+
+{% block post_js %}
+    <script type="text/javascript">
+    $(".side-icon").hide();
+    $("#privacy-icon").show();
+    </script>
 {% endblock %}

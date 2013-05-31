@@ -86,6 +86,7 @@
         <div class="container">
           <a class="brand" id="logo" href="/"><img style="height:37px;" src="{% get_static_prefix %}124ta-beta.png"></a>
           <ul class="nav">
+            <!--li><a href="{% url about %}">About</a></li-->
             <li><a href="{% url browse %}">Browse</a></li>
             <li><a href="{% url createIFS %}">Sell</a></li>
             <li><a href="{% url feedback %}">Feedback</a></li>
@@ -165,6 +166,9 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     {% block content %}
     {% endblock %}
 
+    {% block after_content %}
+    {% endblock %}
+
     {% block button %}{% endblock %}
     </div>
 
@@ -173,11 +177,10 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       <div class="container">
         <p>
           <div class="span9">
-            <a href="/about" class="footer-text">About</a>
-            <a href="/contact" class="footer-text">Contact</a>
-            <a class="footer-text" href="/terms">Terms</a>
-            <a href="/privacy" class="footer-text">Privacy</a>
-            <a class="footer-text" href="/feedback">Feedback</a>
+            <a href="{% url about %}" class="footer-text">About</a>
+            <a href="{% url feedback %}" class="footer-text">Contact</a>
+            <a href="{% url terms %}" class="footer-text" >Terms</a>
+            <a href="{% url privacy %}" class="footer-text">Privacy</a>
             <!--<span class="footer-copy">&copy; buynearme 2012</span>-->
           </div>
           <div class="fb-like span2" href="https://www.facebook.com/BuyNearMe" data-href="https://www.facebook.com/BuyNearMe" data-send="true" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana">
