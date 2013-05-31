@@ -46,7 +46,7 @@ label.error {
       <div class="control-group">
         {{ field.errors }}
         <label class="control-label">Group</label>
-        <div class="controls ">
+        <div class="controls">
           {{ field }}
           <input value="{{ specificCircleName }}" readonly>
           <span class="help-block"> Group can't be changed when posting from within a private group</span>
@@ -54,26 +54,21 @@ label.error {
       </div>
       <!-- do nothing, circle is already filled out -->
       {% else %}
-
-        {% if field.html_name == "price" %}
-
-            <div class="control-group">
-                {{ field.errors }}
-                <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
-                <div class="controls " style="padding-left: 0px;">
-                    $ {{ field }}
-                    <span class="help-block">{{ field.help_text }}</span>
-                </div>
-            </div>
-        {% elif field.html_name == "post_to_ffs" %}
+        {% if field.html_name == "post_to_ffs" %}
             <!-- Do Nothing, Form below -->
         {% else %}
           <div class="control-group">
             {{ field.errors }}
             <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
-            <div class="controls ">
+            {% if field.html_name == "price" %}
+            <div class="controls" style="padding-left:0px">
+            {% else %}
+            <div class="controls">
+            {% endif %}
                 {% if field.html_name == "category" %}
                     {{ field|attr:'class="chzn-select" data-placeholder="Choose a Category..." required' }}
+                {% elif field.html_name == "price" %}
+                  $ {{ field }}
                 {% else %}
                     {{ field }}
                 {% endif %}
@@ -87,8 +82,8 @@ label.error {
     {% if is_facebook %}
         <div class="control-group">
             <label class="control-label">Facebook Groups</label>
-            <div class="controls">
-            <select name="fb_groups" data-placeholder="Share with your Facebook Groups..." style="width: 350px;" multiple class="chzn-select" tabindex="7">
+            <div class="controls" style="margin-top:10px;">
+            <select name="fb_groups" data-placeholder="Share with your Facebook Groups..." style="width: 224px;" multiple class="chzn-select" tabindex="7">
                 <option value="" selected="selected"></option>
                 {% for group in fb_groups %}
                     {% if group.name == "Free & For Sale" %}

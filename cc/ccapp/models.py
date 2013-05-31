@@ -216,7 +216,11 @@ class ItemForSaleForm(ModelForm):
         label="Groups",)
     """
     title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'placeholder':'e.g. Calvin and Hobbes'}))
-    body = forms.CharField(label="Description", widget=forms.Textarea(attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}))
+    body = forms.CharField(label="Description",
+                           help_text="Say whether it is for delivery or pickup if it is a large item.",
+                           widget=forms.Textarea(
+                               attrs={'placeholder':'e.g. The Tenth Anniversary Book, paperback version, 208 pages. In good condition, slightly worn cover.'}
+                           ))
     category = ModelChoiceField(Category.objects.order_by('name'), empty_label="")
     class Meta:
         model = ItemForSale
