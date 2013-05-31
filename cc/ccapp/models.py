@@ -1,5 +1,6 @@
-from django.db import models
 from django import forms
+from django.db import models
+from django.core.validators import MaxLengthValidator
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
@@ -19,7 +20,7 @@ class VerificationEmailID(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=75)
-    body = models.TextField()
+    body = models.TextField(validators=[MaxLengthValidator(2000)])
     time_created = models.DateTimeField(auto_now_add=True)
     key_data = models.CharField(max_length=30, unique=True, blank=True, null=True)
     owner = models.ForeignKey(User, null=True, default=None)

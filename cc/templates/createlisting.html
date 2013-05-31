@@ -113,7 +113,9 @@ label.error {
                   <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
               </div>
           <span id="upload-images"> </span>
-          <span class="help-block upload-more"><a style="cursor: pointer;">Click here to upload more images</a></span>
+          <span class="help-block upload-more" style="width:220px;">
+              <a style="cursor: pointer;">Click here to upload more images</a>
+          </span>
           <span class="help-block after-image">The first uploaded photo will be the thumbnail</span>
           </div>
       </div>
@@ -149,10 +151,11 @@ $(document).ready(function(){
       rules: {
         title: {
           required: true,
-          maxlength: 75
+          maxlength: 74
         },
         body: {
-          required: true
+          required: true,
+          maxlength: 2000
         },
         price: {
           required: true,
