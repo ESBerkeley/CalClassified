@@ -25,14 +25,14 @@ class Post(models.Model):
     key_data = models.CharField(max_length=30, unique=True, blank=True, null=True)
     owner = models.ForeignKey(User, null=True, default=None)
     approved = models.BooleanField(default=True)
-    owner_facebook_id = models.BigIntegerField(blank=True, null=True)    
+    owner_facebook_id = models.BigIntegerField(blank=True, null=True)
+    #expiry_date = models.DateTimeField(default=)
 
     class Meta:  #abstract base class. no actual db table
         abstract = True
 
     def __unicode__(self):
         return self.title
-
 
 class Category(models.Model):
     name = models.CharField(max_length=25)
@@ -96,7 +96,6 @@ class ItemForSale(Post):
     pending_buyer = models.ForeignKey(User, null=True, default=None,  related_name='buyer')
     pending_flag = models.BooleanField(default = False)
     sold = models.BooleanField(default = False)
-
     deleted = models.BooleanField(default = False)
 
 
@@ -208,9 +207,6 @@ class ItemForSale(Post):
         super(ItemForSale, self).delete()
 
 
-class ItemForSaleAdmin(admin.ModelAdmin):
-    readonly_fields = ['time_created']
-
 class ItemForSaleForm(ModelForm):
     """
     circles = forms.MultipleChoiceField(required=True,
@@ -296,7 +292,7 @@ class Message(models.Model):
     recipient = models.ForeignKey(User, related_name='recipient_msg_set')
     body = models.TextField()
     #post = models.ForeignKey(ItemForSale, null=True, blank=True, related_name='responses')
-    post_title = models.CharField(max_length=50,default="",blank=True)
+    post_title = models.CharField(max_length=75, default="", blank=True)
     time_created = models.DateTimeField(auto_now_add=True,null=True)
     def __unicode__(self):
         return self.post_title
