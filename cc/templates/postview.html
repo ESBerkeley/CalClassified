@@ -314,7 +314,12 @@
                 <p>
                     <a id="flag-post" style="cursor:pointer;"><i class="icon-flag side-icon" style="text-decoration:none; color:black;"></i>Flag as Inappropriate</a>
                 </p>
+            {% else %}
+                <p>
+                    <a id="flag-post" style="cursor:pointer;"><i class="icon-flag side-icon" style="text-decoration:none; color:black;"></i>Login - Flag as Spam</a>
+                </p>
             {% endif %}
+
             <!--p>
             <a href="http://www.facebook.com/sharer.php?u=buynear.me{{ post.get_absolute_url }}">
             Share: <img src="/static/images/fb-icon.gif" /></a>
