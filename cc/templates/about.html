@@ -3,22 +3,17 @@
 {% block title %}BuyNearMe - About Us{% endblock %}
 
 {% block content %}
-        <div id="about-box" class="span11">
+    <div id="about-box" class="span9">
 
-            <div class="small-title">
-                <h2>About Us</h2>
-            </div>
+      <div class="small-title"><h2>About Us</h2></div>
 
-
-            <div class="small-body" style="padding-bottom: 10px;">
-                <center><h3>Our Mission: To make buying and selling easy</h3></center>
-                <center><img src="{{ STATIC_URL }}bnm_team.jpg" width="80%" style="margin-bottom: 10px;"/></center>
-                <center>
-                    <p style="color:#4c4c4c; font-size: 14px; font-style: italic">
-                        From left to right: Seung, Rory, Jessie, Eric, Calvin
-                    </p>
-                </center>
-                <p>
+      <div class="small-body" style="padding-bottom: 10px;">
+        <center><h3>Our Mission: To make buying and selling easy</h3></center>
+        <center><img src="{{ STATIC_URL }}bnm_team.jpg" width="80%" style="margin-bottom: 10px;"/></center>
+        <center>
+          <p style="color:#4c4c4c; font-size: 14px; font-style: italic">From left to right: Seung, Rory, Jessie, Eric, Calvin</p>
+        </center>
+        <p>
                     BuyNearMe began on April 2012 with a group of friends from UC Berkeley with the simple idea that campus trading should be a lot easier,
                     although we learned that it would not be simple to translate this idea into a product.
                     Finally on January 2013, after months of energy drinks (majority consumed by Rory), Stack Overflow threads, and a bunch of random keyboard clicks later BuyNearMe was born!
@@ -42,16 +37,22 @@
                     As a new and evolving site, we are very open to hear what you think. Please direct any suggestions, questions, criticisms or death threats to feedback@buynear.me.
                     <br><br>
                     Best Regards,<br>
-                    Buy Near Me Team
-                
-                </p>
-            </div>
-        </div>
+                    Buy Near Me Team        
+        </p>
+      </div>
+
+    </div>
 {% endblock %}
 
 {% block post_js %}
-    <script type="text/javascript">
-    $(".side-icon").hide();
-    $("#about-icon").show();
-    </script>
+  <script type="text/javascript">
+    //$(".side-icon").hide();
+    //$("#about-icon").show();
+    $('#link1').css('color', 'black'); 
+    $('#link1').css('text-decoration', 'none');
+    $('#link1').css('cursor', 'default');
+    $('#link').click(function(e) {
+      e.preventDefault();
+    });
+  </script>
 {% endblock %}

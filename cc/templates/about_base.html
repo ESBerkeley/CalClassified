@@ -4,6 +4,18 @@
 
 {% endblock %}
 {% block sidebar %}
+<div class="sidebar-container">
+  <div class="row">
+    <div class="well sidebar-nav about-nav span3" style="background-color:white">
+      <ul class="nav nav-list">
+        <li class="about-heading"><h2>About</h2></li>
+        <li class="side-item"><h4><a id="link1" href="{% url about %}">What We Do</a></h4></li>
+        <li class="side-item"><h4><a id="link2" href="{% url privacy %}">Privacy Policy</a></h4></li>
+        <li class="side-item"><h4><a id="link3" href="{% url terms %}">Terms</a></h4></li>
+      </ul>
+    </div><!--/.well -->
+
+{% comment %}
     <div class="sidebar-container">
         <div class="row">
             <div class="accordion about-sidebar-nav span3" id="accordion1">
@@ -57,9 +69,11 @@
                     </div>
                 </div>
             </div>
+{% endcomment %}
+
 {% endblock %}
 
 {% block after_content %}
-    </div>
-    </div>
+  </div>
+</div>
 {% endblock %}
