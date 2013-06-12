@@ -1,9 +1,9 @@
-from swamp_logging import logit, custom_log_message
+from cc.swamp_logging import logit, custom_log_message
 
-from ccapp.models import *
-from ccapp.signals import *
-from utils import *
-from ccapp.forms import EmailForm, FeedbackForm
+from cc.ccapp.models import *
+from cc.ccapp.signals import *
+from cc.ccapp.utils import send_bnm_message, save_fb_items_to_model, fb_group_post, free_for_sale_post
+from cc.ccapp.forms import EmailForm, FeedbackForm
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -18,18 +18,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
-from django_facebook.models import *
-from django_facebook.decorators import facebook_required, facebook_required_lazy
-from django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
-from open_facebook.exceptions import OpenFacebookException
+from cc.django_facebook.models import *
+from cc.django_facebook.decorators import facebook_required, facebook_required_lazy
+from cc.django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
+from cc.open_facebook.exceptions import OpenFacebookException
 
 from haystack.query import SearchQuerySet
 from haystack.management.commands import update_index
 
-from multiuploader.models import MultiuploaderImage
+from cc.multiuploader.models import MultiuploaderImage
 
 from django.core.mail import send_mail
-from templated_email import send_templated_mail
+from cc.templated_email import send_templated_mail
 
 from urlparse import urlparse, parse_qs
 
@@ -213,6 +213,82 @@ def fb_items(request):
         data['new_items'] = new_items
         return render_to_response('fb_items.html', data, context_instance=RequestContext(request))
 
+
+@login_required
+def fb_to_excel(request):
+    data = {}
+    ffs_items = txtbook_items = clothes_items = []
+    choices = ''
+    limit = 1000
+    existing = ''
+    new_items = []
+    import time
+    until = datetime.datetime.utcnow()
+    until = time.mktime(until.timetuple())
+    since = 0
+    if request.user.is_staff:
+        if 'choices' in request.GET:
+            choices = request.GET['choices']
+        if 'limit' in request.GET:
+            limit = int(request.GET['limit'])
+        if 'existing' in request.GET:
+            existing = request.GET['existing']
+        if 'until' in request.GET:
+            until = request.GET['until']
+        if 'since' in request.GET:
+            since = request.GET['since']
+        if not existing:
+            try:
+                graph = get_facebook_graph(request)
+                facebook = FacebookUserConverter(graph)
+                if not choices or 'ffs' in choices:
+                    ffs_items = facebook.get_free_for_sale(limit=limit, until=until, since=since)
+                if not choices or 'txt' in choices:
+                    txtbook_items = facebook.get_textbook_exchange(limit=limit)
+                if not choices or 'cls' in choices:
+                    clothes_items = facebook.get_facebook_data('429395210488691/feed', limit=limit)
+            except:
+                data['title'] = 'Relogin to Facebook'
+                data['message'] = 'Your login has expired. Relogin ya doof.'
+                return render_to_response('message.html', data, context_instance=RequestContext(request))
+            items = ffs_items + txtbook_items + clothes_items
+            new_items = save_fb_items_to_model(facebook, items)
+
+        existing_items = FacebookPostForExcel.objects.all()
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="FB-items.csv"'
+
+        import cc.unicodecsv as csv
+        writer = csv.writer(response)
+        '''
+        message=message,
+        user_id=user_id,
+        facebook_id=item_id,
+        seller_name=seller_name,
+        post_url=post_url,
+        thumbnail_url=thumbnail_url,
+        picture_url=picture_url,
+        price=price,
+        created_time=created_time
+        '''
+        writer.writerow(['Created_Time', 'Message', 'Post Url', 'Seller Name', 'Picture Url', 'Price', 'Comments', 'Likes'])
+        db_items = new_items
+        if existing:
+            db_items = existing_items
+        for item in db_items:
+            updated_time = item.updated_time.isoformat()
+            writer.writerow([updated_time,
+                             item.message,
+                             item.post_url,
+                             item.seller_name,
+                             item.picture_url,
+                             str(item.price),
+                             item.num_comments,
+                             item.num_likes])
+        return response
+
+
 @login_required
 def fb_admin(request):
     data = {}
@@ -381,6 +457,7 @@ def confirmviewIFS(request,pid,secret):
     confirmview(request,pid,secret,ItemForSale)"""
 
 @logit
+@facebook_required(scope='publish_actions')
 def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
     if request.user.is_authenticated():
         
@@ -500,56 +577,6 @@ def createlistingviewIFS(request):
     
 #def createIFSwithinCircle(request, url_key):
 #    return createlistingview(request,ItemForSaleForm,ItemForSale,url_key=url_key)
-
-
-@facebook_required_lazy(scope='publish_actions')
-def free_for_sale_post(request, item):
-    graph = require_persistent_graph(request)
-    if graph.is_authenticated():
-        facebook = FacebookUserConverter(graph)
-        response = facebook.set_free_for_sale(item)
-        return response
-    return None
-
-
-@facebook_required_lazy(scope='publish_actions')
-def fb_group_post(request, item, fb_group):
-    '''
-
-    :param request:
-    :param item: ItemForSale Model
-    :param fb_group: URL of group, e.g. '1223124/feed/'
-    :return: response if successful
-
-#   try:
-    import urllib2
-    code = urllib2.urlopen('https://www.facebook.com/dialog/oauth?client_id='+
-                           settings.FACEBOOK_APP_ID + '&redirect_uri='+
-                           settings.FACEBOOK_REDIRECT_URI + '&scope=read_stream')
-    f = urllib2.urlopen('https://graph.facebook.com/oauth/access_token?client_id='+
-                        settings.FACEBOOK_APP_ID + '&client_secret=' + settings.FACEBOOK_APP_SECRET +
-                        '&grant_type=client_credentials')
-
-    data = f.read()
-    print(data) # access_token=171685159547122|he8_Dw5MqyosrndHcDal9t588UQ
-    access_token = data.split('|')[0].lstrip('access_token=')
-    test = urllib2.urlopen(settings.FACEBOOK_REDIRECT_URI)
-    from open_facebook.api import FacebookAuthorization
-    token_response = FacebookAuthorization.convert_code(
-        code, redirect_uri=redirect_uri)
-    expires = token_response.get('expires')
-    access_token = token_response['access_token']
-    from django_facebook.connect import connect_user
-    action, user = connect_user(request)'''
-
-    graph = require_persistent_graph(request)
-    if graph.is_authenticated():
-        facebook = FacebookUserConverter(graph)
-        response = facebook.set_fb_group(item, fb_group)
-        return response
-    return None
-#    except:
-#        return None
 
 
 @login_required
@@ -903,7 +930,7 @@ def sendmessage(request, receiver):
                 form = MessageForm(request.POST, sender=user, recipient=receiver)
                 if form.is_valid():
                     model = form.save(commit=False)
-                    send_mail(post.title+' Response', model.body, 'noreply@buynear.me', [receiver.email])
+                    send_mail(model.title+' Response', model.body, 'noreply@buynear.me', [receiver.email])
                     message = "Message sent to their email! They have received a notification as well."
                     return render_to_response('message.html',{'message':message},context_instance=RequestContext(request)) 
                 message = "An error occured, please try again."
@@ -912,9 +939,11 @@ def sendmessage(request, receiver):
             message = "An error occured, please try again."
             return render_to_response('message.html',{'message': message},context_instance=RequestContext(request))
 
+'''
 def contactsellerIFS(request, pid):
     return contactseller(request, pid, ItemForSale)
-                
+'''
+
 @login_required
 def user_posts(request):
     if request.user.is_authenticated():
@@ -931,6 +960,8 @@ def filteritem(request,item):
 def filterfurniture(request):
     return filteritem(request,'Furniture')
 
+# Not used???
+'''
 def search(request):
     """query_string = ''
     found_entries = None
@@ -944,7 +975,7 @@ def search(request):
         return HttpResponse(data,'application/javascript')"""
 
     return render_to_response('index.html',{ 'query_string': query_string, 'cc_ifs': found_entries }, context_instance=RequestContext(request))
-
+'''
 
 def boxview(request):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker

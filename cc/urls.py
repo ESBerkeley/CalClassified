@@ -40,6 +40,7 @@ urlpatterns = patterns('',
     url(r'^friends/debug/$', 'ccapp.views.friendslist', name='test_friends'),
     url(r'^fb_items/$', 'ccapp.views.fb_items', name='add_fb_items'),
     url(r'^fb_admin/$', 'ccapp.views.fb_admin', name='approve_fb_items'),
+    #url(r'^fb_to_excel/$', 'ccapp.views.fb_to_excel', name='fb_to_excel'),
 
     #??? not sure if functional still
     #url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),
@@ -52,7 +53,7 @@ urlpatterns = patterns('',
     url(r'^flag/(?P<pid>\d+)/$','ccapp.views.flag_item', name='flag_item'),
     url(r'^delete/all/','ccapp.views.deletepostIFS'),
     url(r'^admin_user/', include(admin.site.urls)),
-    url(r'^search/$','ccapp.views.search'),
+    #url(r'^search/$','ccapp.views.search'), NOT USED???
 
     url(r'^ajax_box/$','ccapp.views.ajax_box'),
     url(r'^get_friend_notifications/$','ccapp.views.ajax_friend_notifications'),
@@ -61,7 +62,7 @@ urlpatterns = patterns('',
     url(r'^about/$', AboutView.as_view()),
     url(r'^contact/$', ContactView.as_view()),
 
-    url(r'^message/(?P<pid>\d+)$', 'ccapp.views.contactsellerIFS'),
+    #url(r'^message/(?P<pid>\d+)$', 'ccapp.views.contactsellerIFS'),
     url(r'^modify_post/','ccapp.views.modify_post'),
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.SITE_ROOT + settings.STATIC_DOC_ROOT}),
 #    url(r'^buynow/$','ccapp.views.buynow'),

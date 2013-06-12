@@ -5,7 +5,7 @@ from django_facebook.models import FacebookProfile
 	
 class ItemForSaleAdmin(admin.ModelAdmin):
     list_display = ('title', 'time_created', 'owner', 'price', 'category')
-    list_filter = ['time_created', 'pending_flag', 'sold', 'deleted', 'approved', 'category__name',]
+    list_filter = ['time_created', 'pending_flag', 'sold', 'deleted', 'approved', 'category__name', 'price']
     readonly_fields = ['time_created', 'pending_buyer']
     search_fields = ['title', 'body', 'category__name', 'owner__first_name', 'owner__last_name']
     date_hierarchy = 'time_created'
@@ -19,6 +19,13 @@ class CommentAdmin(admin.ModelAdmin):
 class ThreadAdmin(admin.ModelAdmin):
     list_display = ('post_title', 'owner', 'other_person', 'timestamp', 'newest_message_time')
 
+class FacebookPostForExcelAdmin(admin.ModelAdmin):
+    list_display = ('message', 'updated_time', 'seller_name', 'price', 'num_likes', 'num_comments')
+    list_filter = ['updated_time', 'num_likes', 'num_comments']
+    readonly_fields = ['updated_time']
+    search_fields = ['message', 'seller_name']
+    date_hierarchy = 'updated_time'
+
 admin.site.register(Category)
 admin.site.register(Circle)
 admin.site.register(ItemForSale, ItemForSaleAdmin)
@@ -27,3 +34,4 @@ admin.site.register(Message)
 admin.site.register(Thread, ThreadAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(FacebookProfile)
+admin.site.register(FacebookPostForExcel, FacebookPostForExcelAdmin)

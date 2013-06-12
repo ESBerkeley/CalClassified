@@ -343,8 +343,6 @@ class CaseInsensitiveModelBackend(ModelBackend):
             return None
 
 
-
-
 import re
 
 from django.db.models import Q
@@ -383,6 +381,18 @@ def get_query(query_string, search_fields):
             query = query & or_query
     return query
 
+class FacebookPostForExcel(models.Model):
+    message = models.TextField(null=True, blank=True)
+    user_id = models.BigIntegerField(null=True, blank=True)
+    facebook_id = models.BigIntegerField()
+    seller_name = models.TextField(blank=True, null=True)
+    post_url = models.URLField(blank=True, null=True)
+    thumbnail_url = models.URLField(blank=True, null=True)
+    picture_url = models.URLField(blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    updated_time = models.DateTimeField(blank=True, null=True)
+    num_comments = models.PositiveSmallIntegerField(null=True, blank=True)
+    num_likes = models.PositiveSmallIntegerField(null=True, blank=True)
 
-import signals
-
+    class Meta:
+        unique_together = ['user_id', 'facebook_id']
