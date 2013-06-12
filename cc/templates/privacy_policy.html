@@ -3,7 +3,7 @@
 {% block title %}BuyNearMe - Privacy Policy{% endblock %}
 {% block content %}
 
-        <div id="about-box" class="span11">
+        <div id="about-box" class="span9">
 
 
             <div class="small-title">
@@ -45,8 +45,14 @@
 {% endblock %}
 
 {% block post_js %}
-    <script type="text/javascript">
-    $(".side-icon").hide();
-    $("#privacy-icon").show();
-    </script>
+  <script type="text/javascript">
+    //$(".side-icon").hide();
+    //$("#privacy-icon").show();
+    $('#link2').css('color', 'black'); 
+    $('#link2').css('text-decoration', 'none');
+    $('#link2').css('cursor', 'default');
+    $('#link2').click(function(e) {
+      e.preventDefault();
+    });
+  </script>
 {% endblock %}

@@ -116,9 +116,15 @@ h4 {
   margin-right: auto;
   margin-left: auto;
 }
-
+/*
 .sidebar-nav {
   margin-top:16px;
+  position: fixed;
+}
+*/
+
+.box-nav {
+  margin-top: 18px;
   position: fixed;
 }
 
@@ -146,16 +152,28 @@ h4 {
   margin-bottom:-15px;
 }
 
-/* Sidebar for About Pages*/
-.about-sidebar-nav {
-}
-
 .accordion-heading h3{
   font-size:20px;
   margin-top:-10px;
   margin-bottom:-10px;
   color:#F84600;
   font-weight:400;
+}
+
+/*About*/
+
+.about-heading h2 {
+  font-size:23px;
+  margin-top:-10px;
+  margin-bottom:-5px;
+  color:#F84600;
+  font-weight:400;
+}
+
+.about-nav .side-item h4 {
+  margin-top:3px;
+  margin-bottom:3px;
+  font-size:18px;
 }
 
 .about-inner a{
@@ -780,7 +798,7 @@ body {
     -moz-border-radius: 5px;
     border-radius: 5px;
     background-color: white;
-    margin-bottom: 40px;
+    
 }
 
 #login-box {
