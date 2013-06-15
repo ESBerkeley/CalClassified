@@ -1,16 +1,18 @@
 from ccapp.models import *
-from swamp_logging import logit, custom_log_message
+from cc.swamp_logging import logit, custom_log_message
 from urlparse import urlparse, parse_qs
 from django.db import connection
+from cc.ccapp.signals import *
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 
 import datetime
 
 #from templated_email import send_templated_mail
 
-from django_facebook.models import *
-from django_facebook.decorators import facebook_required, facebook_required_lazy
-from django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
-from open_facebook.exceptions import OpenFacebookException
+from cc.django_facebook.models import *
+from cc.django_facebook.decorators import facebook_required, facebook_required_lazy
+from cc.django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
+from cc.open_facebook.exceptions import OpenFacebookException
 
 def send_bnm_message(request):
     body = request.POST['message']

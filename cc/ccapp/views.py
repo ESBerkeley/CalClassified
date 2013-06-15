@@ -242,7 +242,7 @@ def fb_to_excel(request):
                 graph = get_facebook_graph(request)
                 facebook = FacebookUserConverter(graph)
                 if not choices or 'ffs' in choices:
-                    ffs_items = facebook.get_free_for_sale(limit=limit, until=until, since=since)
+                    ffs_items = facebook.get_free_for_sale(limit=limit)
                 if not choices or 'txt' in choices:
                     txtbook_items = facebook.get_textbook_exchange(limit=limit)
                 if not choices or 'cls' in choices:
@@ -277,7 +277,10 @@ def fb_to_excel(request):
         if existing:
             db_items = existing_items
         for item in db_items:
-            updated_time = item.updated_time.isoformat()
+            try:
+                updated_time = item.updated_time.isoformat()
+            except:
+                updated_time = "None"
             writer.writerow([updated_time,
                              item.message,
                              item.post_url,
