@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^browse/$','ccapp.views.boxview',name="browse"),
     url(r'^sell/$','ccapp.views.createlistingviewIFS',name="createIFS"),
     url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS2"), #delete in future, in case for hard links
+    url(r'^sell_item/$','ccapp.views.createlistingPOST',name="createIFSPOST"),
     url(r'^about/$', AboutView.as_view(), name="about"),
     url(r'^team/$', TemplateView.as_view(template_name='team.html'), name="team"),
     url(r'^testimonials/$', TemplateView.as_view(template_name='testimonials.html'), name="testimonials"),

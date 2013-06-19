@@ -37,7 +37,7 @@ label.error {
       You haven't named your <a href="{% url account_circles %}">location</a> yet so you can't sell anything!<br><br>
   </p>
   {% endif %}
-  <form action="."  method="POST" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+  <form action="{% url createIFSPOST %}"  method="POST" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
   <div id="fields form">
     {% load widget_tweaks %}
     {% for field in form %}

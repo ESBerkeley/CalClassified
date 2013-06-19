@@ -470,13 +470,55 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
         #damn you banners
         if user.get_profile().is_banned:
             return HttpResponse("cy@m8")
-        
+
+        else:
+            #MULTIUPLOADER COMMENTS
+            #model = super_cat_model()
+            #model.key_data = model.key_generate
+
+            #form variable gets rewritten in 'if' statement if its within circle
+            form = super_cat_form()#instance=model)
+            #form.fields['circles'].queryset = user_profile.my_circles.all()
+            #form.fields['circles'].label = "Groups"
+            #form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
+            #    <p style="color:red;">Only people in the groups you select can see your post.</p>"""
+            #Specify which groups you want to sell to.
+
+
+            #Saving model for MULTIUPLOADER
+            #request.session['instance'] = model
+            #ecks = {'post_key':model.key_data}
+            ecks = {}
+            if len(user_profile.my_circles.all()) == 0:
+                ecks['no_circles'] = True
+
+            #CODE IF IFS CREATED WITHIN SECRET CIRCLE
+            #if 'url_key' in kwargs:
+            #    url_key = kwargs['url_key']
+            #    circles = Circle.objects.filter(url_key=url_key)
+            #    circle = circles[0]
+            #    ecks['specificCircleName']=circle.name
+            #    form = ItemForSaleForm(initial={'circles':circles},instance=model)
+            ecks['form'] = form
+            if user_profile.facebook_id:
+                ecks['is_facebook'] = True
+                #user_profile.extend_access_token()
+                groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
+                ecks['fb_groups'] = groups
+            ecks.update(csrf(request))
+            return render_to_response('createlisting.html',ecks,context_instance=RequestContext(request))
+
+@login_required
+def createlistingPOST(request):
+    if request.user.is_authenticated():
+        user = request.user
+        user_profile = user.get_profile()
         if request.method == 'POST':
             #try:
              #   model_instance = request.session['instance']
             #except:
             #    model_instance = None
-            form = super_cat_form(request.POST, request.FILES)#, instance=model_instance)
+            form = ItemForSaleForm(request.POST, request.FILES)#, instance=model_instance)
             if form.is_valid():
                 model = form.save(commit=False)
                 #model.is_confirmed = True
@@ -537,43 +579,8 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
 
             else:
                 return render_to_response('createlisting.html',{'form':form},context_instance=RequestContext(request))
-        else:
-            #MULTIUPLOADER COMMENTS
-            #model = super_cat_model()
-            #model.key_data = model.key_generate
-
-            #form variable gets rewritten in 'if' statement if its within circle
-            form = super_cat_form()#instance=model)
-            #form.fields['circles'].queryset = user_profile.my_circles.all()
-            #form.fields['circles'].label = "Groups"
-            #form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
-            #    <p style="color:red;">Only people in the groups you select can see your post.</p>"""
-            #Specify which groups you want to sell to.
 
 
-            #Saving model for MULTIUPLOADER
-            #request.session['instance'] = model
-            #ecks = {'post_key':model.key_data}
-            ecks = {}
-            if len(user_profile.my_circles.all()) == 0:
-                ecks['no_circles'] = True
-
-            #CODE IF IFS CREATED WITHIN SECRET CIRCLE
-            #if 'url_key' in kwargs:
-            #    url_key = kwargs['url_key']
-            #    circles = Circle.objects.filter(url_key=url_key)
-            #    circle = circles[0]
-            #    ecks['specificCircleName']=circle.name
-            #    form = ItemForSaleForm(initial={'circles':circles},instance=model)
-            ecks['form'] = form
-            if user_profile.facebook_id:
-                ecks['is_facebook'] = True
-                #user_profile.extend_access_token()
-                groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
-                ecks['fb_groups'] = groups
-            ecks.update(csrf(request))
-            return render_to_response('createlisting.html',ecks,context_instance=RequestContext(request))
-        
 @login_required
 def createlistingviewIFS(request):
     return createlistingview(request, ItemForSaleForm, ItemForSale)
