@@ -589,8 +589,9 @@ p.box-text {
 #why-us {
   padding-top: 20px;
   padding-bottom: 20px;
-    width: 100%;
-    background-color: white;
+  width: 100%;
+  min-width:1200px;
+  background-color: white;
 }
 
 #why-text {
@@ -631,6 +632,7 @@ p.box-text {
 .footer {
     position: absolute;
     width: 100%;
+    min-width:
     border-top: solid 1px rgb(224, 224, 224);
     /* background-color: #9d9d9d; */
   text-align:center;
@@ -639,7 +641,7 @@ p.box-text {
     background-color: /*#262626*/ white;
     bottom: 0;
     height: 40px;
-    min-width: 980px;
+    min-width: 1200px;
 }
 
 .footer-text {
