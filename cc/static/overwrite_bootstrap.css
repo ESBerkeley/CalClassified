@@ -449,25 +449,6 @@ p.box-text {
 }
 
 /*index*/
-/*#index-banner {
-  background-image:url('/static/hk2.jpg');
-  background-size:cover;
-  background-repeat:no-repeat;
-  border-top:solid 1px #669;
-  border-bottom:solid 1px #669;
-  margin-bottom:20px;
-  margin-top: -20px;
-  background-position:0px 0px;
-  width:100%;
-  height:95%;
-  position:absolute;
-}*/
-/*
-#index-container {
-  width:940px;
-  height: 495px;
-  margin: 0 auto;
-}*/
 
 #index-internal{
   margin-top:6%;
@@ -498,37 +479,6 @@ p.box-text {
 
   margin: 0 auto;
   text-align:center;
-}
-
-.test-image {
-  width:300px;
-  height:206px;
-}
-
-.index-row {
-  padding-bottom: 10px;
-  max-width: 1130px;
-    color: white;
-}
-
-.index-row h2{
-    font-weight: 400;
-    letter-spacing: -1px;
-}
-
-.index-border {
-  background-color: white;
-  /*
-  border-style:solid;
-  border-width:3px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  */
-  -moz-box-shadow: 0 0 3px 3px rgba(0,0,0,0.3);
-    -webkit-box-shadow: 0 0 3px 3px rgba(0,0,0,0.3);
-    box-shadow: 0 0 2px 2px rgba(38,38,38,0.1);
-  
-  height: 350px;
 }
 
 #top-banner-container {
@@ -629,6 +579,21 @@ p.box-text {
     text-shadow: 2px 2px rgba(0,0,0,1);
 }
 
+.index-row {
+  padding-bottom: 10px;
+  max-width: 1130px;
+    color: white;
+}
+
+.index-row h2 {
+    font-weight: 400;
+    letter-spacing: -1px;
+    height:55px
+}
+
+.index-row p {
+    height:95px;
+}
 
 #why-us {
   padding-top: 20px;
