@@ -310,12 +310,13 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     runloadBox(pg);
   }
 
+  //only toggles categories
   function toggler(control) {   //hides everything, shows specific icon
-    $(".cat-icon").hide();
-    var id = document.getElementById(control);
-    $(id).show();
+    $("li.side-item.category").removeClass("active");
+    $("#"+control).addClass("active");
   }
- 
+
+  //Toggles searchbar text
   function searchToggle(name) {
     var id = document.getElementById('searchbar');
     id.placeholder = 'Search in ' + name;
@@ -428,15 +429,13 @@ function notification_sentence(obj, k) {    //list of notifications, position in
            var stylin = "";
            if(obj.extras.friend){stylin+="class=\"friend_boxxx\"";}
            else{stylin += 'class="boxxx '+obj.pk+' "';}
-           stylin += "style=\"left: " + (x*width-10) + "px; top: " + y*height + "px; height: " + ((height*hh)-pfactor-5 ) + "px; width: "+ ((width*ww)-pfactor-10) + "px\"";
+           stylin += "style=\"left: " + (x*width-10) + "px; top: " + (y*(height+10)) + "px; height: " + ((height*hh)-pfactor ) + "px; width: "+ ((width*ww)-pfactor-10) + "px\"";
 
            var moar = "<a OnClick=\"save_state('/" + obj.pk + "')\" class='empty-link' value='"+obj.pk+"' href='/"+obj.pk+"'><div "+stylin+">";
            moar += "<div class=\"box-div\">";
            moar += "<div class='price-of-box'>$"+ obj.fields.price +"</div>";
            if(obj.extras.friend == 1){
             moar += "<div class='box-friend-name'>"+obj.extras.friendname+"</div>"
-            moar += "<div class='box-fb-icon'><img src='/static/images/fb-icon.gif'/></div>" 
-
             }
            var imageHeight=(height*hh)-pfactor-27; //got rid of -36. !!PUT BACK THE 36
            var imageWidth=(width*ww)-pfactor-10; // change with width

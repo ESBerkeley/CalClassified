@@ -31,13 +31,16 @@ h4 {
 }
 
 .navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
-  color: #494949;
+  color: #e37800;
 }
 
 .navbar .nav > li > a {
-  color: #6f6f6f;
-    font-family: 'Duru Sans', sans-serif;
+    color: #414141;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
     padding: 10px;
+    font-size: 13px;
+    text-shadow: none;
 }
 
 #friend_notifications_dropdown {
@@ -58,8 +61,8 @@ h4 {
 
 .navbar .container{
   min-width:940px;  /*default .navbar .container has width:auto, which makes it stretch out*/
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 .navbar-inner {
@@ -68,14 +71,14 @@ h4 {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  background: #fbfbfb;
+  background: white;
   border-bottom-color: rgb(224, 224, 224);
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-style: solid;
-  -moz-box-shadow:    none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 #searchbarform {
@@ -128,24 +131,68 @@ h4 {
   position: fixed;
 }
 
-.side-item {
-  margin-left:25px;
-}
-
 .accordion-group {
     background-color: white;
+    border: 1px solid #cdcdcd;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
 }
 
-.accordion-heading h2{
-  font-size:17px;
-  margin-top:-10px;
-  margin-bottom:-10px;
-  color:#F84600;
-  font-weight:400;
+.accordion-heading {
+    background-color: rgb(238, 238, 238);
+}
+
+.accordion-heading a.accordion-toggle.filter{
+  font-size:12px;
+  color: rgb(77, 77, 77);
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-weight:500;
+  padding: 5px 15px;
+}
+
+.accordion-heading a:hover {
+    text-decoration: none !important;
+}
+
+.accordion-toggle-icon {
+    float:right;
+    margin-top: 3px;
+}
+
+
+.box-nav .accordion-inner{
+    padding: 9px 0;
 }
 
 .accordion-inner .unstyled {
   margin-bottom:0px;
+}
+
+.accordion-inner li.side-item {
+  padding-left: 20px;
+  color: #414141;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+}
+
+.accordion-inner li.side-item:hover {
+    background-color: rgb(243, 243, 243);
+    cursor: pointer;
+    text-decoration: none;
+    color: rgb(0, 136, 204);
+}
+
+.accordion-inner li.side-item.active {
+    background-color: rgb(231, 231, 231);
+}
+
+.accordion-inner li.side-item.price-filter {
+    font-weight: normal;
+    background-color: inherit;
+    cursor: default;
+    height: 35px;
+    color: black;
 }
 
 #collapseThree .accordion-inner .unstyled {
@@ -250,11 +297,11 @@ h4 {
 }
 
 #min {
-  max-width:33px;
+  width:50px;
 }
 
 #max {
-  max-width:33px;
+  width:50px;
 }
 
 img.medium {
@@ -296,17 +343,13 @@ img.medium {
 
 }
 
-div.boxxx{
+div.boxxx, div.friend_boxxx{
     position: absolute; 
     cursor:pointer;  
     background-color: white;
-    /*border-radius: 3px;*/
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     border: 1px solid #D3D3D3;
     padding: 3px;
     padding-top: 7px;
-
-
 }
 
 div.boxxx:hover, div.friend_boxxx:hover{
@@ -323,24 +366,6 @@ div.boxxx:hover, div.friend_boxxx:hover{
     /*font-weight: 600;*/
 }
 
-div.friend_boxxx{
-    position: absolute; 
-    cursor:pointer;  
-    background-color: white;
-    /*border-radius: 3px;*/
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    border: 1px solid #D3D3D3;
-    padding: 3px;
-    padding-top: 7px;
-}
-
-div.friend_boxxx:hover{
-    -moz-box-shadow: 0 0 3px 3px rgba(95,126,193,0.3);
-    -webkit-box-shadow: 0 0 3px 3px rgba(95,126,193,0.3);
-    box-shadow: 0 0 3px 3px rgba(95,126,193,0.3);
-    /*border-color: #5f7ec1;*/
-}
-
 .box-friend-name {
   position: absolute;
   bottom: 25px;
@@ -352,14 +377,13 @@ div.friend_boxxx:hover{
   color:white;
 
   font-size: 13px;
-  border-radius: 3px;
+  /*border-radius: 3px;*/
   font-family: 'Source Sans Pro', sans-serif;
 }
 
 div.stopfloat{
   clear:both;
-  margin-bottom:2px;
-  
+  padding-top: 17px;
 }
 
 .box-div {
@@ -394,44 +418,39 @@ div.friend_boxxx .box-text {
 }
 
 p.box-text {
-
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 500;
   display:table-cell;
   /*vertical-align:middle;
   text-align:center;*/
-  font-size: 16px;
+  font-size: 14px;
   line-height: 140%;
   padding: 0;
-  color: #0065da;
+  /*color: #0065da;*/
 }
 
 .price-of-box {
   position: absolute;
   right: 10px;
   padding: 2px;
-  background-color: #278bff;
-  padding-left: 4px;
-  padding-right: 4px;
-  color:white;
-
+  background-color: #f1f1f1;
+  padding-left: 6px;
+  padding-right: 6px;
+  color: #3c3c3c;
   font-size: 18px;
-  border-radius: 3px;
+  border-radius: 1px;
   font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 500;
 }
 
 .box-item-title {
-  font-family: 'Open Sans', sans-serif;
+  color: black;
   display:inline-block; 
   max-width:280px;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
   vertical-align: top;
-}
-
-.box-fb-icon{
-  position: absolute;
-  left:0px;
-  top: 0px;
 }
 
 #pac-ajax {
@@ -677,20 +696,12 @@ html,body {
 body {
     background-image: url('/static/fabric_plaid.png');
     /*background-image: url('/static/grey.png');*/
-      /*background-color: #add9e6;*/
-      min-width:980px;
+    /*background-color: #add9e6;*/
+    min-width:980px;
 }
 
 .small-title {
     border-bottom: 1px solid #E0E0E0;
-
-    -webkit-border-top-left-radius: 4px;
-    -moz-border-top-left-radius: 4px;
-    border-top-left-radius: 4px;
-    -webkit-border-top-right-radius: 4px;
-    -moz-border-top-right-radius: 4px;
-    border-top-right-radius: 4px;
-
     padding: 20px 40px 20px 40px;
 }
 
@@ -711,20 +722,12 @@ body {
 .small-title h2, .small-title-message {
     margin: 0;
     margin-bottom: 0;
-    
 }
 
 .small-body {
     background-color: white;
     padding: 10px 40px 10px 40px;
     margin: 0;
-    
-    -webkit-border-bottom-left-radius: 4px;
-    -moz-border-bottom-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    -webkit-border-bottom-right-radius: 4px;
-    -moz-border-bottom-right-radius: 4px;
-    border-bottom-right-radius: 4px;
 }
 
 .small-body-message {
@@ -743,9 +746,6 @@ body {
 #signup-box {
     margin: auto;
     border: 1px #E0E0E0 solid ;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
     background-color: white;
     margin-bottom: 40px;
 }
