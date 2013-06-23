@@ -884,8 +884,8 @@ def flag_item(request,pid):
     
     #check if more than 3 flags exist, if so send mail to admin
     flagged = ItemFlag.objects.filter(item = item)
-    if len(flagged) >= 3: #send mail if non admins flag
-        send_mail('Item Flagged 3 Times', 'Item with id '+str(item.id)+'is flagged go take it down. http://buynear.me/'+str(item.id), 'noreply@buynear.me',
+    if len(flagged) >= 1: #send mail if non admins flag
+        send_mail('Item Flagged 2 Times', 'Item with id '+str(item.id)+'is flagged go take it down. http://buynear.me/'+str(item.id), 'noreply@buynear.me',
         ['contact@buynear.me'], fail_silently=True)
     
     data['title'] = "Item Flagged"
