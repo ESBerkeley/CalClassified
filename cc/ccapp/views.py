@@ -1104,7 +1104,8 @@ def ajax_box(request):
             approved=True,
             sold=False,
             pending_flag=False,
-            deleted=False
+            deleted=False,
+            expiry_date__gte=datetime.datetime.now()
         )
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
@@ -1116,7 +1117,8 @@ def ajax_box(request):
             approved=True,
             sold=False,
             pending_flag=False,
-            deleted=False
+            deleted=False,
+            expiry_date__gte=datetime.datetime.now()
         )
     
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first

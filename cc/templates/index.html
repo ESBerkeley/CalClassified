@@ -14,6 +14,11 @@ body{
 {% endif %}
 {% endblock %}
 
+{% block head %}
+    {% load static %}
+     <link href="{% get_static_prefix %}css/index.css" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div id="top-banner-container">
   <div id="top-banner">
@@ -73,19 +78,25 @@ onkeypress="window.open(this.href); return false;">#181 Courtney Chow</a><br>
           <p>Use our mobile site to upload images straight from your camera.</p>
       </div>-->
       <div class="span4">
-          <h2>Trust</h2>
-          <p style="font-size:14px;">Know that other traders are fellow Berkeley students. Buying is a breeze. Instead of hitching a car ride across town to get your stuff, schedule a meet up on campus.</p>
           <div style="text-align:center;"><i class="icon-group" style="font-size:75px;"></i></div>
+          <h2>Community</h2>
+          <p>
+              Trade with your fellow students and never get stabbed again. Conveniently schedule a meet up on campus.
+          </p>
       </div>
       <div class="span4">
-          <h2>Facebook Integration</h2>
-          <p style="font-size:14px;">Login with your Facebook account and see what your friends are selling, receive notifications whenever your friends post something new, and share your items easily.</p>
-          <div style="text-align:center;"><i class="icon-facebook-sign" style="font-size:75px;"></i></div>
+          <div style="text-align:center;"><i class="icon-money" style="font-size:75px;"></i></div>
+          <h2>Easy Money</h2>
+          <p>
+              Fatten your wallet and sell all your stuff lying around quickly and easily.
+          </p>
       </div>
       <div class="span4">
-          <h2>Mobile</h2>
-          <p style="font-size:14px;">Transfering photos from your camera a hassle? Use the Buynearme mobile site to upload product images directly from your smartphone. </p>
-          <div style="text-align:center;"><i class="icon-mobile-phone" style="font-size:75px;"></i></div>
+          <div style="margin-top:-7px; text-align:center;"><i class="icon-mobile-phone" style="font-size:92px;"></i></div>
+          <h2 style="margin-top:0px;">Convenience</h2>
+          <p>
+              Use our mobile website to browse and upload your pictures directly from your smartphone.
+          </p>
       </div>
     </div>
 </div>
