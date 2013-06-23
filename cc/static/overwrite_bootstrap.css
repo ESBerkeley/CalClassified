@@ -14,9 +14,46 @@ h4 {
     font-weight: 400;
 }
 
+.btn {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+}
+
 .btn-custom-blue { background-color: hsl(203, 64%, 28%) !important; background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2a86c0", endColorstr="#195275"); background-image: -khtml-gradient(linear, left top, left bottom, from(#2a86c0), to(#195275)); background-image: -moz-linear-gradient(top, #2a86c0, #195275); background-image: -ms-linear-gradient(top, #2a86c0, #195275); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2a86c0), color-stop(100%, #195275)); background-image: -webkit-linear-gradient(top, #2a86c0, #195275); background-image: -o-linear-gradient(top, #2a86c0, #195275); background-image: linear-gradient(#2a86c0, #195275); border-color: #195275 #195275 hsl(203, 64%, 23.5%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.29); -webkit-font-smoothing: antialiased; }
 
-.btn-custom-orange { background-color: hsl(31, 65%, 39%) !important; background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d8934a", endColorstr="#a46522"); background-image: -khtml-gradient(linear, left top, left bottom, from(#d8934a), to(#a46522)); background-image: -moz-linear-gradient(top, #d8934a, #a46522); background-image: -ms-linear-gradient(top, #d8934a, #a46522); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d8934a), color-stop(100%, #a46522)); background-image: -webkit-linear-gradient(top, #d8934a, #a46522); background-image: -o-linear-gradient(top, #d8934a, #a46522); background-image: linear-gradient(#d8934a, #a46522); border-color: #a46522 #a46522 hsl(31, 65%, 34.5%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.29); -webkit-font-smoothing: antialiased; }
+.btn-custom-orange {
+  background-color: hsl(46, 100%, 42%) !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f4bb00", endColorstr="#d6a400");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#f4bb00), to(#d6a400));
+  background-image: -moz-linear-gradient(top, #f4bb00, #d6a400);
+  background-image: -ms-linear-gradient(top, #f4bb00, #d6a400);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f4bb00), color-stop(100%, #d6a400));
+  background-image: -webkit-linear-gradient(top, #f4bb00, #d6a400);
+  background-image: -o-linear-gradient(top, #f4bb00, #d6a400);
+  background-image: linear-gradient(#f4bb00, #d6a400);
+  border-color: #d6a400 #d6a400 hsl(46, 100%, 40.5%);
+  color: #fff !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.09);
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn.btn-primary {
+  background-color: hsl(201, 100%, 41%) !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00a2f9", endColorstr="#0087d1");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#00a2f9), to(#0087d1));
+  background-image: -moz-linear-gradient(top, #00a2f9, #0087d1);
+  background-image: -ms-linear-gradient(top, #00a2f9, #0087d1);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #00a2f9), color-stop(100%, #0087d1));
+  background-image: -webkit-linear-gradient(top, #00a2f9, #0087d1);
+  background-image: -o-linear-gradient(top, #00a2f9, #0087d1);
+  background-image: linear-gradient(#00a2f9, #0087d1);
+  border-color: #0087d1 #0087d1 hsl(201, 100%, 39%);
+  color: #fff !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.13);
+  -webkit-font-smoothing: antialiased;
+}
 
 .form-horizontal .control-label {
   width: 100px;
@@ -433,7 +470,7 @@ div.box-text {
 
 .price-of-box {
   position: absolute;
-  right: 8px;
+  right: 6px;
   padding: 2px;
   background-color: #fc8e00;
   padding-left: 6px;
@@ -443,7 +480,6 @@ div.box-text {
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   border: 2px solid white;
-  border-right: none;
   border-top: none;
 }
 
@@ -687,7 +723,7 @@ div.box-text {
 
 #body {
     min-height: 100%;
-    padding-bottom: 110px; /* includes padding from the footer and footer's height */
+    padding-bottom: 90px; /* includes padding from the footer and footer's height */
 }
 
 html,body {
@@ -704,8 +740,8 @@ body {
 }
 
 .small-title {
-    border-bottom: 1px solid #E0E0E0;
-  padding: 20px 40px 20px 40px;
+  border-bottom: 1px solid #E0E0E0;
+  padding: 10px 40px 10px 40px;
   margin-bottom: 20px;
 }
 
@@ -724,9 +760,9 @@ body {
 }
 
 .small-title h2, .small-title-message {
-    margin: 0;
-    margin-bottom: 0;
-    font-weight: 500;
+  margin: 0;
+  margin-bottom: 0;
+  font-weight: 500;
 }
 
 .small-body {
@@ -752,7 +788,6 @@ body {
     margin: auto;
     border: 1px #E0E0E0 solid ;
     background-color: white;
-    margin-bottom: 40px;
 }
 
 #about-box {
