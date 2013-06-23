@@ -1,14 +1,14 @@
 
-from cc.django_facebook.signals import user_registered
+from django_facebook.signals import user_registered
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import Signal
 
-from cc.ccapp.models import ItemForSale, Notification, Comment, Thread
-from cc.django_facebook.models import FacebookUser, FacebookProfile
+from ccapp.models import ItemForSale, Notification, Comment, Thread
+from django_facebook.models import FacebookUser, FacebookProfile
 
-from cc.ccapp.tasks import *
+from ccapp.tasks import *
 
 from datetime import datetime
 
