@@ -10,7 +10,8 @@ from django.forms.models import modelformset_factory
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 import random
-from sorl.thumbnail import get_thumbnail
+from cc.sorl.thumbnail import get_thumbnail
+from datetime import datetime, timedelta
 #import sorl.thumbnail
 
 class VerificationEmailID(models.Model):
@@ -26,7 +27,7 @@ class Post(models.Model):
     owner = models.ForeignKey(User, null=True, default=None)
     approved = models.BooleanField(default=True)
     owner_facebook_id = models.BigIntegerField(blank=True, null=True)
-    #expiry_date = models.DateTimeField(default=)
+    expiry_date = models.DateTimeField(default=datetime.now()+timedelta(days=60))
 
     class Meta:  #abstract base class. no actual db table
         abstract = True
@@ -87,6 +88,7 @@ class CircleForm(ModelForm):
         model = Circle
         exclude = ('url_key','is_city','creator', 'fb_id')
 
+
 class ItemForSale(Post):
     price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     category = models.ForeignKey(Category)
@@ -122,16 +124,15 @@ class ItemForSale(Post):
     
     def get_thumbnail_url(self):
         try:
-            if self.is_facebook_post and self.facebookpost.thumbnail_url:
-                return self.facebookpost.thumbnail_url
+            #if self.is_facebook_post and self.facebookpost.thumbnail_url:
+                #return self.facebookpost.thumbnail_url
             if self.cached_thumb == '':
-                from sorl.thumbnail import get_thumbnail
+                from cc.sorl.thumbnail import get_thumbnail
                 image = self.image_set.order_by('id')[0]
                 im = get_thumbnail(image, "250x250", quality=50)
-                thumb_url = im.url
-                self.cached_thumb = thumb_url
+                self.cached_thumb = im.url
                 self.save()
-                return thumb_url
+                return self.cached_thumb
             else:
                 return self.cached_thumb
         except:
@@ -141,17 +142,14 @@ class ItemForSale(Post):
             
     def reset_thumbnail_url(self):
         try:
-            if self.is_facebook_post and self.facebookpost.thumbnail_url:
-                return self.facebookpost.thumbnail_url
-            
-            from sorl.thumbnail import get_thumbnail
+            #if self.is_facebook_post and self.facebookpost.thumbnail_url:
+                #return self.facebookpost.thumbnail_url
+            from cc.sorl.thumbnail import get_thumbnail
             image = self.image_set.order_by('id')[0]
             im = get_thumbnail(image, "250x250", quality=50)
-            thumb_url = im.url
-            self.cached_thumb = thumb_url
+            self.cached_thumb = im.url
             self.save()
-            return thumb_url
-            
+            return self.cached_thumb
         except:
             self.cached_thumb = self.get_category_image_url()
             self.save()
@@ -159,8 +157,7 @@ class ItemForSale(Post):
         
     def get_thumbnail_set_urls(self):
         urls = []
-#        print('.')
-        from sorl.thumbnail import get_thumbnail
+        from cc.sorl.thumbnail import get_thumbnail
         for image in self.image_set.order_by('id'):
 #image quality
             im = get_thumbnail(image, "250x250", quality=50)
@@ -189,13 +186,13 @@ class ItemForSale(Post):
     def get_absolute_url(self):
         return '/%i' % self.id
 
-    @property
+    '''@property
     def is_facebook_post(self):
         try:
             self.facebookpost
             return True
         except:
-            return False
+            return False'''
 
     def delete(self): #If we're going to delete a post, let's delete its comments/images as well.
         comments = Comment.objects.filter(item = self)
@@ -225,6 +222,7 @@ class ItemForSaleForm(ModelForm):
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
+"""
 class FacebookPost(ItemForSale):
     user_id = models.BigIntegerField(null=True)
     facebook_id = models.BigIntegerField()
@@ -246,6 +244,7 @@ class FacebookPost(ItemForSale):
         unique_together = ['user_id', 'facebook_id']
 
 FacebookFormSet = modelformset_factory(FacebookPost, max_num=0, fields=('title','price','category', 'approved'))
+"""
 
 class Notification(models.Model):
     """
