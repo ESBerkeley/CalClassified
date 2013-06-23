@@ -36,7 +36,7 @@ class Post(models.Model):
         return self.title
 
     @property
-    def is_decayed(self):
+    def is_expired(self):
         if datetime.now() > self.expiry_date:
             return True
         return False
