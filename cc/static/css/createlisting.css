@@ -1,0 +1,47 @@
+label.error {
+  float: none;
+  color: red;
+  padding-left: .5em;
+  vertical-align: top;
+}
+
+form#sellForm input[type=text]{
+  min-width: 40%;
+}
+
+form#sellForm textarea {
+  min-width: 40%;
+}
+
+.control-group {
+
+}
+
+.control-label {
+  padding: 5px 10px 5px 0px;
+  /*background-color: #fc9d00;*/
+  color: #161616;
+  display: inline-block;
+  margin-right: 30px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  width: 120px !important;
+  margin-left: 3px;
+}
+
+.help-block.upload-more {
+  margin-bottom: 0;
+}
+
+.small-title {
+  /*background-color: #323232;*/
+  /*color: white;*/
+}
+
+#item-expire-msg {
+  color: #979797;
+  font-style: italic;
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
