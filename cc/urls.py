@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     url(r'^thanks/', ThanksView.as_view(), name='thanks'),
     url(r'^terms/$', TemplateView.as_view(template_name='terms.html'), name="terms"),
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
+    url(r'^repost/$', 'ccapp.views.repost_item', name='repost_item'),
 
     #ACCOUNT:
     url(r'^facebook/', include('django_facebook.urls')),

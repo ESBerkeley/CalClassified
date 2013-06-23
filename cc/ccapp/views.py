@@ -731,6 +731,8 @@ def showpost(request, pid, super_cat):
 
         if "new" in request.GET and int(request.GET['new']) == 1:
             ecks['new'] = 1
+        if "repost" in request.GET:
+            ecks['repost'] = True
         if "postffs" in request.GET:
             ecks['post_ffs'] = int(request.GET['postffs'])
         if post.pending_flag:
@@ -1614,3 +1616,14 @@ def account_setup(request):
         user_profile.first_time = False
         user_profile.save()
         return render_to_response('registration/account_setup.html', data, context_instance=RequestContext(request))
+
+
+@login_required
+def repost_item(request):
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            item = ItemForSale.objects.get(id=request.POST['post_id'])
+            item.expiry_date = datetime.datetime.now()+timedelta(days=60)
+            item.time_created = datetime.datetime.now()
+            item.save()
+            return redirect(item.get_absolute_url()+"?repost=1")
