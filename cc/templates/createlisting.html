@@ -7,15 +7,7 @@
 {% endblock %}
 
 {% block head %}
-<style type='text/css'>
-label.error {
- float: none;
- color: red;
- padding-left: .5em;
- vertical-align: top;
- }
-
- </style>
+<link href="{{ STATIC_URL }}css/createlisting.css" rel="stylesheet" type="text/css">
 {% load static %}
 <link rel="stylesheet" href="{% get_static_prefix %}css/chosen.css" />
 <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap-fileupload.min.css" />
@@ -28,16 +20,15 @@ label.error {
   <div id="signup-box" class="span12">
 
   <div class="small-title">
-    <h2> Sell Item</h2>
+    <h2>Sell Item</h2>
   </div>
-    
   <div class="small-body">
   {% if no_circles %}
   <p style="color:red">
       You haven't named your <a href="{% url account_circles %}">location</a> yet so you can't sell anything!<br><br>
   </p>
   {% endif %}
-  <form action="{% url createIFSPOST %}"  method="POST" class="form-horizontal" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+  <form action="{% url createIFSPOST %}"  method="POST" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
   <div id="fields form">
     {% load widget_tweaks %}
     {% for field in form %}
@@ -59,9 +50,9 @@ label.error {
         {% else %}
           <div class="control-group">
             {{ field.errors }}
-            <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+            <label class="control-label" id="{{field.html_name}}-id">{{ field.label }}</label>
             {% if field.html_name == "price" %}
-            <div class="controls" style="padding-left:0px">
+            <div class="controls price-control">
             {% else %}
             <div class="controls">
             {% endif %}
@@ -82,7 +73,7 @@ label.error {
     {% if is_facebook %}
         <div class="control-group">
             <label class="control-label">Facebook Groups</label>
-            <div class="controls" style="margin-top:10px;">
+            <div class="controls">
             <select name="fb_groups" data-placeholder="Share with your Facebook Groups..." style="width: 224px;" multiple class="chzn-select" tabindex="7">
                 <option value="" selected="selected"></option>
                 {% for group in fb_groups %}
@@ -121,8 +112,7 @@ label.error {
       </div>
 
   </div>
-  <br />
-  
+  <div id="item-expire-msg">This item will expire in 60 days.</div>
   <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Submitting..." value="Submit">
   <img id="ajax-loader" style="display: none;" src="/static/ajax-loader.gif" />
   <br><br>

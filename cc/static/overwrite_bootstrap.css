@@ -39,7 +39,7 @@ h4 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
     padding: 10px;
-    font-size: 13px;
+    font-size: 15px;
     text-shadow: none;
 }
 
@@ -61,8 +61,8 @@ h4 {
 
 .navbar .container{
   min-width:940px;  /*default .navbar .container has width:auto, which makes it stretch out*/
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .navbar-inner {
@@ -203,7 +203,7 @@ h4 {
   font-size:20px;
   margin-top:-10px;
   margin-bottom:-10px;
-  color:#F84600;
+  color: #F84600;
   font-weight:400;
 }
 
@@ -439,7 +439,7 @@ div.box-text {
   padding-left: 6px;
   padding-right: 6px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   border: 2px solid white;
@@ -705,7 +705,8 @@ body {
 
 .small-title {
     border-bottom: 1px solid #E0E0E0;
-    padding: 20px 40px 20px 40px;
+  padding: 20px 40px 20px 40px;
+  margin-bottom: 20px;
 }
 
 .small-title-message {
@@ -725,12 +726,13 @@ body {
 .small-title h2, .small-title-message {
     margin: 0;
     margin-bottom: 0;
+    font-weight: 500;
 }
 
 .small-body {
-    background-color: white;
-    padding: 10px 40px 10px 40px;
-    margin: 0;
+  background-color: white;
+  padding: 0px 40px 10px 40px;
+  margin: 0;
 }
 
 .small-body-message {
@@ -887,10 +889,6 @@ body {
   margin-left:-27px;
   margin-top:2px;
   cursor: pointer;
-}
-
-.small-title-white {
-  margin-bottom: 20px;
 }
 
 label.error {

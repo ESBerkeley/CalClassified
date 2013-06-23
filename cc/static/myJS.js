@@ -429,7 +429,7 @@ function notification_sentence(obj, k) {    //list of notifications, position in
            var stylin = "";
            if(obj.extras.friend){stylin+="class=\"friend_boxxx\"";}
            else{stylin += 'class="boxxx '+obj.pk+' "';}
-           stylin += "style=\"left: " + (x*width-10) + "px; top: " + (y*(height+10)) + "px; height: " + ((height*hh)-pfactor-3 ) + "px; width: "+ ((width*ww)-pfactor-10) + "px\"";
+           stylin += "style=\"left: " + (x*width-10) + "px; top: " + (y*(height)) + "px; height: " + ((height*hh)-pfactor-3 ) + "px; width: "+ ((width*ww)-pfactor-10) + "px\"";
 
            var moar = "<a OnClick=\"save_state('/" + obj.pk + "')\" class='empty-link' value='"+obj.pk+"' href='/"+obj.pk+"'><div "+stylin+">";
            moar += "<div class=\"box-div\">";
