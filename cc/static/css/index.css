@@ -1,0 +1,10 @@
+#low-banner h2,
+#low-banner p,
+#low-banner .icon-group,
+#low-banner .icon-pic {
+    text-align:center;
+}
+
+#low-banner p {
+    font-size:14px;
+}
