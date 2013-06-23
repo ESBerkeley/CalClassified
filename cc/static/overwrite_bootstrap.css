@@ -407,6 +407,8 @@ div.stopfloat{
   -moz-opacity:0.85;
   /*border-top: 1px solid black;*/
   padding: 2px;
+  height: 23px;
+  vertical-align: middle;
 }
 
 div.friend_boxxx .box-text-div {
@@ -417,7 +419,7 @@ div.friend_boxxx .box-text {
   /*color: white;*/
 }
 
-p.box-text {
+div.box-text {
   font-family: 'Open Sans', sans-serif;
   font-weight: 500;
   display:table-cell;
