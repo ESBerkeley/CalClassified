@@ -59,6 +59,9 @@
     <tr>
       <td>
         <a href = "/{{ item.pk }}"> {{ item.title }} </a>
+        {% if item.is_expired %}
+            <span style="color:red">(Expired)</span>
+        {% endif %}
       </td>
       <td>
         <center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ item.id }}"></a></center>
