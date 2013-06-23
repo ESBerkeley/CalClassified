@@ -218,7 +218,7 @@ class ItemForSaleForm(ModelForm):
     category = ModelChoiceField(Category.objects.order_by('name'), empty_label="")
     class Meta:
         model = ItemForSale
-        exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'deleted', 'approved','circles')
+        exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'deleted', 'approved','circles', 'expiry_date')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
