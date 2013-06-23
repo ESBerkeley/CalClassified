@@ -433,14 +433,15 @@ p.box-text {
   position: absolute;
   right: 10px;
   padding: 2px;
-  background-color: #f1f1f1;
+  background-color: #fdfdfd;
   padding-left: 6px;
   padding-right: 6px;
   color: #3c3c3c;
+  border: 1px solid #dadada;
   font-size: 18px;
   border-radius: 1px;
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
 }
 
 .box-item-title {
