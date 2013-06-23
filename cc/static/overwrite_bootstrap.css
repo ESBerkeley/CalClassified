@@ -433,11 +433,10 @@ p.box-text {
   position: absolute;
   right: 10px;
   padding: 2px;
-  background-color: #fdfdfd;
+  background-color: #696969;
   padding-left: 6px;
   padding-right: 6px;
-  color: #3c3c3c;
-  border: 1px solid #dadada;
+  color: white;
   font-size: 18px;
   border-radius: 1px;
   font-family: 'Open Sans', sans-serif;
