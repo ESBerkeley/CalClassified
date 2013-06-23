@@ -35,6 +35,12 @@ class Post(models.Model):
     def __unicode__(self):
         return self.title
 
+    @property
+    def is_decayed(self):
+        if datetime.now() > self.expiry_date:
+            return True
+        return False
+
 class Category(models.Model):
     name = models.CharField(max_length=25)
     def __unicode__(self):
@@ -99,7 +105,7 @@ class ItemForSale(Post):
     pending_flag = models.BooleanField(default = False)
     sold = models.BooleanField(default = False)
     deleted = models.BooleanField(default = False)
-
+    sold_date = models.DateTimeField(null=True, blank=True)
 
     def get_formatted_price(self):
         return "%01.2f" % self.price
@@ -218,7 +224,8 @@ class ItemForSaleForm(ModelForm):
     category = ModelChoiceField(Category.objects.order_by('name'), empty_label="")
     class Meta:
         model = ItemForSale
-        exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer', 'pending_flag', 'sold', 'deleted', 'approved','circles', 'expiry_date')
+        exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer',
+                   'pending_flag', 'sold', 'sold_date', 'deleted', 'approved','circles', 'expiry_date')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 

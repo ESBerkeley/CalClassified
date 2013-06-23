@@ -28,19 +28,9 @@
 
 {% block sidebar %}{% endblock %}
 
-    {% block content %} 
-    
-    {% comment %} <!--redudant due to modal -->
-    {% if new == 1 and request.user == post.owner %}
-    <div id="new-post-alert" class="alert alert-block alert-info fade in container">
-    <a class="close" data-dismiss="alert" href="#">&times;</a>
-    <b> Item successfully posted! </b>
-        <p> 
-            You will be notified by email when you are contacted. We recommend you share this on Facebook!
-            <a href="#" onclick="return false;"><img class="fb-publish" src="/static/images/fb-icon.gif" /></a>
-        </p>
-    </div>
-    
+    {% block content %}
+
+    {% comment %}
     <div id="new-post-success" class="alert alert-block alert-info fade in container" style="display:none;">
     <a class="close" data-dismiss="alert" href="#">&times;</a>
     <b> Facebook Share </b>
@@ -51,7 +41,7 @@
     {% endif %}
     {% endcomment %}
 
-    {% if post_ffs == 0 or post_ffs == 2 and request.user == post.owner %}
+    {% if request.user == post.owner and post_ffs == 0 or post_ffs == 2 %}
         <div id="new-post-alert" class="alert alert-block alert-info fade in container">
             <a class="close" data-dismiss="alert" href="#">&times;</a>
             {% if post_ffs == 2 %}
@@ -80,11 +70,28 @@
                 <a class="addthis_button_twitter"></a>
                 <!--a class="addthis_counter addthis_bubble_style"></a-->
             </div>
-            <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-            <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-512aa338203f9795"></script>
             <!-- AddThis Button END -->
-
-
+        </div>
+    {% elif request.user == post.owner and new == 1 or repost %}
+        <div id="new-post-alert" class="alert alert-block alert-info fade in container">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        {% if new == 1 %}
+            <b>Item successfully posted!</b>
+        {% elif repost %}
+            <b>Item successfully reposted!</b>
+        {% endif %}
+            <p>
+                You will be notified by email when you are contacted.<br>
+                Share it using the buttons below!
+                <!-- AddThis Button BEGIN -->
+                <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+                    <a class="addthis_button_facebook"></a>
+                    <a class="addthis_button_email"></a>
+                    <a class="addthis_button_twitter"></a>
+                    <!--a class="addthis_counter addthis_bubble_style"></a-->
+                </div>
+                <!-- AddThis Button END -->
+            </p>
         </div>
     {% endif %}
 
@@ -205,6 +212,13 @@
                   <li> {{ post.time_created.date }}</li>
                   <li class="nav-header"><h2>Category:</h2></li>
                   <li> {{ post.category.name }}</li>
+                  {% if request.user == post.owner %}
+                      <li class="nav-header"><h2>Date Expires:</h2></li>
+                      <li> {{ post.expiry_date.date }}</li>
+                  {% elif post.pending_flag %}
+                      <li class="nav-header"><h2>Date Sold:</h2></li>
+                      <li> {{ post.sold_date.date }}</li>
+                  {% endif %}
               </ul>
           </div><!--/.well -->
 
@@ -231,17 +245,13 @@
            {% else %}
               {% if request.user.is_authenticated %}
                   {% if post.sold %}
+                    {% if thread %}
+                        <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
+                    {% endif %}
+                    <br><br>
                     {% if post.pending_buyer == request.user %}
-                        {% if thread %}
-                            <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
-                        {% endif %}
-                        <br><br>
                         You bought this item! Hooray!
                     {% else %}
-                        {% if thread %}
-                            <a href="{{ thread.get_absolute_url }}" class="btn btn-primary">View Messages</a>
-                        {% endif %}
-                        <br><br>
                         This item has been sold and is no longer listed.
                     {% endif %}
                   {% elif post.pending_flag %}
@@ -252,7 +262,8 @@
                         This item is being purchased and is no longer listed.
                       {% endif %}
                   {% elif post.owner != request.user %}
-                <button id="contact-now" data-toggle="modal" data-target="#buynow-modal" class="btn contact-button btn btn-primary" style="margin-left:-1px; width:120px;" href="#contact-modal">
+                <button id="contact-now" data-toggle="modal" data-target="#buynow-modal"
+                        class="btn contact-button btn btn-primary" style="margin-left:-1px; width:120px;" href="#contact-modal">
                     <i class="icon-white icon-shopping-cart" style="padding-right:3px;"></i> Buy Now
                 </button>
                   <!--<a href="#" onclick="return false;" id="buy-popover" data-toggle="popover" title=""
@@ -262,13 +273,22 @@
                   <!--<a id="post-icon" href="#" data-toggle="tooltip" data-placement="right" style="margin-top:12px; margin-left:10px; position:absolute" data-original-title="Claim the item and send a message to the seller to work out the details.">
                     <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
                   </a>-->
-                  <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Claim the item and send a message to the seller to work out the details." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
+                  <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title=""
+                     data-content="Claim the item and send a message to the seller to work out the details."
+                     data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
                     <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
                   </a>
+                  {% elif post.is_decayed %}
+                    <form action="{% url repost_item %}"  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Reposting..." value="Repost Item">
+                    </form>
                   {% endif %}
               {% else %}
                 <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Buy</a>
-                <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Claim the item and send a message to the seller to work out the details." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
+                <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title=""
+                   data-content="Claim the item and send a message to the seller to work out the details."
+                   data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
                   <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
                 </a>
               {% endif %}
@@ -331,8 +351,6 @@
                 <a class="addthis_button_twitter"></a>
                 <!--a class="addthis_counter addthis_bubble_style"></a-->
             </div>
-            <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-            <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-512aa338203f9795"></script>
             <!-- AddThis Button END -->
         </div>
         </div> <!-- end span12 -->

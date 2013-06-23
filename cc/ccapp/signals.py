@@ -1,14 +1,16 @@
 
-from django_facebook.signals import user_registered
+from cc.django_facebook.signals import user_registered
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.dispatch.dispatcher import Signal
 
-from ccapp.models import ItemForSale, Notification, Comment, Thread
-from django_facebook.models import FacebookUser, FacebookProfile
+from cc.ccapp.models import ItemForSale, Notification, Comment, Thread
+from cc.django_facebook.models import FacebookUser, FacebookProfile
 
-from ccapp.tasks import *
+from cc.ccapp.tasks import *
+
+from datetime import datetime
 
 def fb_user_registration_hndlr(sender, **kwargs): #im not sure how to spell handeler right so no vowels
 
@@ -167,6 +169,8 @@ def buy_button_hndlr(sender, **kwargs):
         buyer = item.pending_buyer.get_profile()
         new_note = Notification(post_from = item, going_to = seller, type = 3)
         new_note.second_party = buyer
+        item.sold_date = datetime.now()
+        item.save()
         
         seller.friend_notifications += 1
         seller.save()
