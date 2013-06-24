@@ -9,7 +9,7 @@ import logging
 from open_facebook import exceptions as open_facebook_exceptions
 from open_facebook.utils import send_warning
 from django_facebook import signals
-from models import *
+from django_facebook.models import *
 
 logger = logging.getLogger(__name__)
 
