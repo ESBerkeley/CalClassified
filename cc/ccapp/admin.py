@@ -19,6 +19,12 @@ class CommentAdmin(admin.ModelAdmin):
 class ThreadAdmin(admin.ModelAdmin):
     list_display = ('post_title', 'owner', 'other_person', 'timestamp', 'newest_message_time')
 
+class FacebookProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'facebook_name', 'image',)
+    list_filter = ('gender', 'user__date_joined', 'user__last_login')
+    search_fields = ('facebook_name', 'user__username')
+    #date_hierarchy = 'user__last_login'
+
 class FacebookPostForExcelAdmin(admin.ModelAdmin):
     list_display = ('message', 'updated_time', 'seller_name', 'price', 'num_likes', 'num_comments')
     list_filter = ['updated_time', 'num_likes', 'num_comments']
@@ -33,5 +39,5 @@ admin.site.register(Notification)
 admin.site.register(Message)
 admin.site.register(Thread, ThreadAdmin)
 admin.site.register(Comment, CommentAdmin)
-admin.site.register(FacebookProfile)
+admin.site.register(FacebookProfile, FacebookProfileAdmin)
 admin.site.register(FacebookPostForExcel, FacebookPostForExcelAdmin)
