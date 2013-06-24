@@ -1,0 +1,294 @@
+.item-container {
+  margin: 25px auto 0 auto;
+  display: table;
+  /*background-color: white;*/
+  /*padding: 15px 20px 0 0;*/
+}
+
+.item-container .span8 {
+  margin-left: 0;
+}
+
+.item-main {
+  margin-bottom: 20px;
+}
+
+.item-main {
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #d1d1d1;
+}
+
+.item-container .span4 {
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #d1d1d1;
+}
+
+#item-title {
+  /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-size: 25px;
+  margin-bottom: 0px;
+  line-height: normal;
+}
+
+
+
+#postCarousel {
+  height:327px;
+  width:590px;
+  background-color: #1c1c1c;
+  margin-top: 8px;
+}
+
+#postCarousel.category-image {
+  border: 1px solid #d0d0d0;
+  background-color: white;
+}
+
+.carousel-inner { /* Keep lineheight same as height as above */
+  text-align: center;
+  line-height:325px;
+}
+
+#postCarousel .item > img {
+  max-height:325px;
+  max-width:600px;
+  display: inline-block;
+  vertical-align:middle;
+  margin-top:-2px;
+}
+
+#description {
+  font-family: 'Open Sans';
+}
+
+/*right-bar-content.html*/
+#item-price {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+  width: 190px;
+  margin-top: 8px;
+}
+
+#addthis-container {
+  float: right;
+  display: inline-block;
+  width: 108px;
+  margin-top: -28px;
+}
+
+#main-action-wrapper {
+  margin-top: 18px;
+}
+
+.green-wrap {
+  background-color: rgb(241, 252, 236);
+  padding: 10px;
+  padding-bottom: 5px;
+  border: 1px solid #d8f6ca;
+}
+
+#buy-now-wrapper {
+  padding: 10px;
+  background-color: white;
+}
+
+.basic-wrap {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #e6e6e6;
+}
+
+.blue-wrap {
+  background-color: #d1edf9;
+  padding: 10px;
+  border: 1px solid #c0e1f9;
+}
+
+.main-btn-wrapper {
+  padding: 10px;
+  background-color: white;
+}
+
+#what-happens {
+  display: inline-block;
+  margin-top: 2px;
+  text-align: center;
+  width: 100%;
+  font-size: 12px;
+}
+
+#item-info {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #dddddd;
+  background-color: #fafafa;
+}
+
+.info-title {
+  font-size: 12px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  color: rgb(85, 85, 85);
+  height: 17px;
+}
+
+.info-detail {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+#description {
+  white-space: pre-wrap;
+}
+
+#item-actions {
+  margin-top: 15px;
+}
+
+.small-action{
+  color: rgb(0, 136, 204);
+  text-decoration: none;
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.small-action:hover {
+  background-color: rgb(243, 243, 243);
+  cursor: pointer;
+}
+
+.small-action i{
+  width: 20px;
+  display: inline-block;
+  color: black;
+}
+
+.small-action a {
+  text-decoration: none;
+}
+/*end rightbarcontent*/
+
+/*comments.html*/
+.comments-section {
+  background-color: white;
+  border: 1px solid #d1d1d1;
+}
+
+.comments-wrapper {
+  padding: 15px 15px 5px 15px;
+}
+
+#comments-header {
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  color: rgb(85, 85, 85);
+  height: 17px;
+  margin-bottom: 7px;
+}
+
+.comment-row {
+  border-top: 1px solid #e5e5e5;
+  padding: 5px 0;
+  position: relative;
+}
+
+.delete-comment, .delete-response {
+  position: absolute;
+  top: 3px;
+  right: 10px;
+}
+
+.commenter-name {
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+
+.commenter-name.seller {
+  color: #47a85d;
+}
+
+.comment-body {
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+}
+
+.response-row {
+  margin-top: 5px;
+  background-color: rgb(245, 245, 241);
+  padding: 3px 10px 3px 20px;
+  position: relative;
+}
+
+.seller-response-name {
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  color: #47a85d;
+}
+
+.seller-response-body {
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+}
+
+.no-comments {
+  color: #808080;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.comment-action {
+  background-color: rgb(246, 246, 246);
+  padding: 15px;
+  padding-bottom: 10px;
+}
+
+#comment-form {
+  margin: 0;
+}
+
+#comment-form textarea {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: #1f1f1f;
+}
+
+/*placeholder text change */
+#comment-form textarea::-webkit-input-placeholder
+{
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+}
+#comment-form textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+}
+#comment-form textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+}
+#comment-form textarea:-ms-input-placeholder { /* Internet Explorer 10+ */
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+}
+
+#comment-sold {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+}
+/*end comments.html*/

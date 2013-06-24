@@ -23,7 +23,7 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
     circles = indexes.MultiValueField()
     approved = indexes.BooleanField(model_attr='approved')
     #is_facebook_post = indexes.BooleanField(model_attr='is_facebook_post')
-    expiry_date = indexes.DateTimeField(model_attr='expiry_date')
+    expire_date = indexes.DateTimeField(model_attr='expire_date')
 
     def prepare_approved(self, obj):
         if obj.approved==False:

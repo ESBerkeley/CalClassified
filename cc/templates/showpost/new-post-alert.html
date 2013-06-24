@@ -1,0 +1,54 @@
+{#    Logic for new post banner at top#}
+    {% if request.user == post.owner and post_ffs == 0 or post_ffs == 2 %}
+        <div id="new-post-alert" class="alert alert-block alert-info fade in container">
+            <a class="close" data-dismiss="alert" href="#">&times;</a>
+            {% if post_ffs == 2 %}
+            <b> Item successfully posted to your Facebook groups! </b>
+            <p>
+                {% if links %}
+                    {% for link in links %}
+                        <a href="http://www.facebook.com/{{ link.0 }}/posts/{{ link.1 }}">Post #{{ forloop.counter }}</a>.
+                    {% endfor %}
+                    <br>
+                {% endif %}
+                You will be notified by email when you are contacted. <br>
+                Share elsewhere with the buttons below!
+            </p>
+            {% else %}
+            <b> Item successfully posted! </b>
+            <p>
+                You will be notified by email when you are contacted. Unfortunately, we weren't able to post to Facebook.
+                <br>Share it using the buttons below!
+            </p>
+            {% endif %}
+            <!-- AddThis Button BEGIN -->
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+                <a class="addthis_button_facebook"></a>
+                <a class="addthis_button_email"></a>
+                <a class="addthis_button_twitter"></a>
+                <!--a class="addthis_counter addthis_bubble_style"></a-->
+            </div>
+            <!-- AddThis Button END -->
+        </div>
+    {% elif request.user == post.owner and new == 1 or repost %}
+        <div id="new-post-alert" class="alert alert-block alert-info fade in container">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        {% if new == 1 %}
+            <b>Item successfully posted!</b>
+        {% elif repost %}
+            <b>Item successfully reposted!</b>
+        {% endif %}
+            <p>
+                You will be notified by email when you are contacted.<br>
+                Share it using the buttons below!
+                <!-- AddThis Button BEGIN -->
+                <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+                    <a class="addthis_button_facebook"></a>
+                    <a class="addthis_button_email"></a>
+                    <a class="addthis_button_twitter"></a>
+                    <!--a class="addthis_counter addthis_bubble_style"></a-->
+                </div>
+                <!-- AddThis Button END -->
+            </p>
+        </div>
+    {% endif %}

@@ -1,0 +1,54 @@
+<div class="item-main">
+    <div id="item-title">
+        {{ post.title }}
+      {% if post.sold %}
+          <br><span style="color:red;">(This item has been sold)</span>
+      {% elif post.pending_flag %}
+          <br>
+          {% if thread and request.user != post.owner %}
+              <span style="color: red">(You are purchasing this item)</span>
+          {% else %}
+              <span style="color:red;">(This item is being purchased)</span>
+          {% endif %}
+      {% elif post.deleted %}
+          <br>
+          <span style="color:red;">(This item has been deleted)</span>
+      {% endif %}
+    </div>
+
+    <div id="postCarousel" class="carousel slide {% if post.is_category_image %}category-image{% endif %}">
+      <!-- Carousel items -->
+      <div class="carousel-inner">
+        {% if post.is_facebook_post %}
+            <div class="active item">
+                <img src="{{ post.facebookpost.get_picture }}" alt="Item Image"/>
+            </div>
+        {% else %}
+        {% for image_url in image_set %}
+          {% if image_url == post.get_first_image_url %}
+            <div class="active item">
+              <img src="{{ image_url }}" alt="Item Image"/>
+              <!--<div class="carousel-caption">
+                <p>{{ post.category.name }} : {{ post.time_created }}</p>
+              </div>-->
+            </div>
+          {% else %}
+            <div class="item">
+              <img src="{{ image_url }}" alt="Item Image"/>
+              <!--<div class="carousel-caption">
+                <p>{{ post.category.name }} : {{ post.time_created }}</p>
+              </div>-->
+            </div>
+          {% endif %}
+        {% endfor %}
+        {% endif %}
+      </div>
+      <!-- Carousel nav -->
+      {% if image_set_length > 1 %}
+        <a class="carousel-control left" href="#postCarousel" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#postCarousel" data-slide="next">&rsaquo;</a>
+      {% endif %}
+    </div> <!--end #postCarousel-->
+
+    <div id="description">{{ post.body }}</div>
+</div><!-- end .item-main -->

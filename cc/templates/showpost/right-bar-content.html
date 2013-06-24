@@ -1,0 +1,151 @@
+<div id="price-and-share">
+    <div id="item-price">${{ post.price }}</div>
+    <!-- AddThis Button BEGIN -->
+    <div id="addthis-container" class="addthis_toolbox addthis_default_style addthis_32x32_style">
+        <a class="addthis_button_facebook"></a>
+        <a class="addthis_button_twitter"></a>
+        <a class="addthis_button_email"></a>
+        <!--a class="addthis_counter addthis_bubble_style"></a-->
+    </div>
+    <!-- AddThis Button END -->
+</div>
+
+<div id="main-action-wrapper">
+    {% if post.category.name == "Housing" %}
+       {% if request.user.is_authenticated %}
+           <h5>Email Seller:<br>
+               <a href="mailto:{{ post.owner.email }}?subject={{ post.title }}">{{ post.owner.email }}</a>
+           </h5>
+           <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Email the seller to request a visit. Ask any questions through the comments." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
+             <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
+           </a>
+       {% else %}
+           <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Contact</a>
+       {% endif %}
+   {% else %}
+       {% if request.user.is_authenticated %}
+           {% if post.sold %}
+               {% if thread %}
+                   <div class="blue-wrap">
+                       <div class="main-btn-wrapper">
+                           <a href="{{ thread.get_absolute_url }}" class="btn btn-primary btn-block">View Messages</a>
+                       </div>
+                   </div>
+               {% endif %}
+               {% if post.pending_buyer == request.user %}
+                   <div>You bought this item! Hooray!</div>
+               {% else %}
+                   <div>This item has been sold and is no longer listed.</div>
+               {% endif %}
+           {% elif post.pending_flag %}
+               {% if thread %}
+                   <div class="blue-wrap">
+                       <div class="main-btn-wrapper">
+                           <a href="{{ thread.get_absolute_url }}" class="btn btn-primary btn-block">View Messages</a>
+                       </div>
+                   </div>
+               {% else %}
+                   <div>This item is being purchased and is no longer listed.</div>
+               {% endif %}
+           {% elif post.owner != request.user %}
+               <!-- BUY NOW BUTTON -->
+               <div class="green-wrap">
+                   <div id="buy-now-wrapper">
+                       <button id="contact-now" data-toggle="modal" data-target="#buynow-modal"
+                        class="btn contact-button btn btn-success btn-block" href="#contact-modal">
+                         Buy Now
+                       </button>
+                   </div>
+                   <a id="what-happens" href="#" onclick="return false" data-toggle="popover" title=""
+                             data-content="Claim the item and send a message to the seller to work out the details."
+                             data-placement="bottom" data-trigger="hover">
+                       What's going to happen?
+                   </a>
+               </div>
+           {% elif post.is_expired %}
+                <form action="{% url repost_item %}"  method="post">{% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <div class="blue-wrap">
+                    <div class="main-btn-wrapper">
+                        <input id="submit" type="submit" class="btn btn-primary btn-block" data-loading-text="Reposting..." value="Repost Item" style="width: 100%;">
+                    </div>
+                </div>
+                </form>
+           {% endif %}
+
+           {% if post.owner == request.user and not post.pending_flag and not post.sold %}
+               <div class="basic-wrap">
+                   <div class="main-btn-wrapper">
+                       <a href="{% url edit_item post.id %}" class="btn btn-block">
+                         Edit Item
+                       </a>
+                   </div>
+               </div>
+           {% endif %}
+
+       {% else %}<!-- user is logged out -->
+           {% if not post.pending_flag and not post.sold %}
+           <div class="blue-wrap">
+               <div class="main-btn-wrapper">
+                   <a href="/accounts/login/?next={{ post.get_absolute_url }}" class="btn contact-button btn-primary btn-block">
+                       Login to Buy
+                   </a>
+               </div>
+           </div>
+           {% endif %}
+       {% endif %}
+   {% endif %}
+</div>
+
+<div id="item-info">
+    <div class="info-title">SELLER</div>
+    <div class="info-detail">
+        {% if post.owner.get_full_name %}
+          {{ post.owner.get_full_name }}
+        {% else %}
+          {{ post.owner.username }}
+        {% endif %}
+    </div>
+
+    <div class="info-title">DATE ADDED</div>
+    <div class="info-detail">{{ post.time_created.date }}</div>
+
+    <div class="info-title">CATEGORY</div>
+    <div class="info-detail">{{ post.category.name }}</div>
+
+    {% if request.user == post.owner %}
+        <div class="info-title">DATE EXPIRES</div>
+        <div class="info-detail">{{ post.expire_date.date }}</div>
+    {% endif %}
+    {% if post.sold %}
+        <div class="info-title">DATE SOLD</div>
+        <div class="info-detail">{{ post.sold_date.date }}</div>
+    {% endif %}
+</div><!-- end #item-info -->
+
+{% if request.user.is_authenticated %}
+<div id="item-actions">
+    {% if request.user == post.owner %}
+        <div class="small-action">
+            <a data-toggle="modal" href="#delete-modal-{{ post.id }}">
+                <i class="icon-trash"></i>
+                Delete Item
+            </a>
+        </div>
+    {% endif %}
+        <div id="active-bookmark" class="bookmark-activate small-action" style="display: none">
+            <i class="icon-heart bookmark-activate"></i>
+            Bookmark Item
+        </div>
+
+        <div id="not-active-bookmark" class="bookmark-activate small-action">
+            <i class="icon-remove bookmark-activate"></i>
+            Unbookmark Item
+        </div>
+
+        <div id="flag-post" class="small-action">
+            <i class="icon-flag"></i>
+            Flag as Inappropriate
+        </div>
+</div><!-- end #item-actions -->
+{% endif %}

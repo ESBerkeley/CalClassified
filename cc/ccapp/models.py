@@ -27,7 +27,7 @@ class Post(models.Model):
     owner = models.ForeignKey(User, null=True, default=None)
     approved = models.BooleanField(default=True)
     owner_facebook_id = models.BigIntegerField(blank=True, null=True)
-    expiry_date = models.DateTimeField(default=datetime.now()+timedelta(days=60))
+    expire_date = models.DateTimeField(default=datetime.now()+timedelta(days=60))
 
     class Meta:  #abstract base class. no actual db table
         abstract = True
@@ -37,7 +37,7 @@ class Post(models.Model):
 
     @property
     def is_expired(self):
-        if datetime.now() > self.expiry_date:
+        if datetime.now() > self.expire_date:
             return True
         return False
 
@@ -225,7 +225,7 @@ class ItemForSaleForm(ModelForm):
     class Meta:
         model = ItemForSale
         exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer',
-                   'pending_flag', 'sold', 'sold_date', 'deleted', 'approved','circles', 'expiry_date')
+                   'pending_flag', 'sold', 'sold_date', 'deleted', 'approved','circles', 'expire_date')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 

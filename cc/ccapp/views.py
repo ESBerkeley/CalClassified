@@ -748,7 +748,7 @@ def showpost(request, pid, super_cat):
 
             
         ecks.update(csrf(request))
-        return render_to_response('postview.html',ecks,context_instance=RequestContext(request))
+        return render_to_response('showpost.html',ecks,context_instance=RequestContext(request))
  
 
 def showpostIFS(request,pid):
@@ -1107,7 +1107,7 @@ def ajax_box(request):
             sold=False,
             pending_flag=False,
             deleted=False,
-            expiry_date__gte=datetime.datetime.now()
+            expire_date__gte=datetime.datetime.now()
         )
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
@@ -1120,7 +1120,7 @@ def ajax_box(request):
             sold=False,
             pending_flag=False,
             deleted=False,
-            expiry_date__gte=datetime.datetime.now()
+            expire_date__gte=datetime.datetime.now()
         )
     
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
@@ -1623,7 +1623,7 @@ def repost_item(request):
     if request.user.is_authenticated():
         if request.method == 'POST':
             item = ItemForSale.objects.get(id=request.POST['post_id'])
-            item.expiry_date = datetime.datetime.now()+timedelta(days=60)
+            item.expire_date = datetime.datetime.now()+timedelta(days=60)
             item.time_created = datetime.datetime.now()
             item.save()
             return redirect(item.get_absolute_url()+"?repost=1")

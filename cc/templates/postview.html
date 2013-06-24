@@ -197,7 +197,7 @@
             </div>
   
         </div>
-        
+
     </div><!-- end row -->
       <div class="span3 post-sidebar">
           <div>
@@ -216,7 +216,7 @@
                   <li> {{ post.category.name }}</li>
                   {% if request.user == post.owner %}
                       <li class="nav-header"><h2>Date Expires:</h2></li>
-                      <li> {{ post.expiry_date.date }}</li>
+                      <li> {{ post.expire_date.date }}</li>
                   {% elif post.pending_flag %}
                       <li class="nav-header"><h2>Date Sold:</h2></li>
                       <li> {{ post.sold_date.date }}</li>
