@@ -280,7 +280,7 @@
                      data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
                     <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
                   </a>
-                  {% elif post.is_decayed %}
+                  {% elif post.is_expired %}
                     <form action="{% url repost_item %}"  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
                     <input type="hidden" name="post_id" value="{{ post.id }}">
                     <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Reposting..." value="Repost Item">
