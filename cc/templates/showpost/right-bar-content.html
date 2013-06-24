@@ -13,14 +13,23 @@
 <div id="main-action-wrapper">
     {% if post.category.name == "Housing" %}
        {% if request.user.is_authenticated %}
-           <h5>Email Seller:<br>
-               <a href="mailto:{{ post.owner.email }}?subject={{ post.title }}">{{ post.owner.email }}</a>
-           </h5>
-           <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Email the seller to request a visit. Ask any questions through the comments." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">
-             <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>
-           </a>
+           <div class="blue-wrap">
+               <div class="main-btn-wrapper">
+                   <div id="email-seller">Email Seller</div>
+                   <a href="mailto:{{ post.owner.email }}?subject={{ post.title }}">{{ post.owner.email }}</a>
+               </div>
+           </div>
+{#           <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title="" data-content="Email the seller to request a visit. Ask any questions through the comments." data-placement="right" data-trigger="hover" style="margin-top:12px; margin-left:10px; position:absolute">#}
+{#             <i class="icon-question-sign icon-large" style="text-decoration:none; color:black;"></i>#}
+{#           </a>#}
        {% else %}
-           <a class="btn contact-button btn-primary" style="margin-left:-1px;" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Contact</a>
+           <div class="blue-wrap">
+               <div class="main-btn-wrapper">
+                   <a href="/accounts/login/?next={{ post.get_absolute_url }}" class="btn contact-button btn-primary btn-block">
+                       Login to Contact
+                   </a>
+               </div>
+           </div>
        {% endif %}
    {% else %}
        {% if request.user.is_authenticated %}

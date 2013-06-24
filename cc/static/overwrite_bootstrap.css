@@ -691,7 +691,7 @@ html,body {
 }
 
 body {
-    background-image: url('/static/fabric_plaid.png');
+    background-image: url('/static/images/greyish.jpg');
     /*background-image: url('/static/grey.png');*/
     /*background-color: #add9e6;*/
     min-width:980px;

@@ -122,6 +122,12 @@
   font-size: 12px;
 }
 
+#email-seller {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+}
+
 #item-info {
   margin-top: 10px;
   padding: 10px;
