@@ -1086,13 +1086,10 @@ def ajax_box(request):
     found_entries = SearchQuerySet()
 
     friends = []
-    friend_ids = []
 
-    if request.user.is_authenticated():
+    if fbf and request.user.is_authenticated():
         friends = FacebookUser.objects.filter(user_id = request.user.id)
         friend_ids = [x.facebook_id for x in friends]
-
-    if fbf:
         found_entries = found_entries.filter(owner_facebook_id__in = friend_ids)
 
 
@@ -1143,7 +1140,7 @@ def ajax_box(request):
         user = request.user
     #    friends = FacebookUser.objects.filter(user_id = user.id)
 
-        if friends:
+        if fbf and friends:
             for search_result in found_entries:
                 item = search_result.object
                 item.score = search_result.score
