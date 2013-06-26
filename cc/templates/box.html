@@ -41,19 +41,19 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapseOne" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="everything-li" class="side-item category" onclick="allCat(); toggler('everything-li'); searchToggle('Everything'); runloadBox();">
+              <li id="everything-category" class="side-item category" onclick="allCat(); toggler('everything-category'); searchToggle('Everything'); runloadBox();">
                 <!--i id="Everything-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="allCat(); toggler('Everything-icon'); searchToggle('Everything'); runloadBox();"></i-->
                 <div id="Everything_category" class="side-text">Everything</div>
               </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
-                <li id="{{ cat.name }}-li" class="side-item category" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-li'); searchToggle('{{cat.name}}'); runloadBox();">
+                <li id="{{ cat.id }}-category" class="side-item category" onclick="switchCat('{{cat.name}}'); toggler('{{cat.id}}-category'); searchToggle('{{cat.name}}'); runloadBox();">
                   <!--i id="{{cat.name}}-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); searchToggle('{{cat.name}}'); runloadBox();"></i-->
                   <div id="{{cat.name}}_category" class="side-text">{{cat.name}}</div>
                 </li>
                 {% endif %}
               {% endfor %}
-              <li id="other-li" class="side-item category" onclick="switchCat('Other'); toggler('other-li'); searchToggle('Other'); runloadBox();">
+              <li id="other-category" class="side-item category" onclick="switchCat('Other'); toggler('other-category'); searchToggle('Other'); runloadBox();">
                 <!--i id="Other-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"></i-->
                 <div id="Other_category" class="side-text">Other</div>
               </li>
