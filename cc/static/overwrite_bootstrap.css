@@ -106,7 +106,7 @@ h4 {
 
 .navbar-inner {
     /* top right bottom left */
-  min-width: 1157px;
+  min-width: 1158.5px;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -498,10 +498,6 @@ div.box-text {
   text-align:center;
 }
 
-#top-banner-container {
-    background-image: url(/static/otis_redding.png);/*not being utilized due to photo resizing*/
-}
-
 #top-banner {
     background-image: url('/static/gateflipped.jpg');
     height: 0;
@@ -525,9 +521,7 @@ div.box-text {
 
 #banner-text {
     margin-top:-25px;
-    margin-left:-90px;
-    max-width:1440px;
-    min-width:1200px;
+    margin-left:18%;
 }
 
 #banner-text h1 {
