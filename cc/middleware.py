@@ -21,12 +21,18 @@ class SubdomainsMiddleware:
         else:
             request.urlconf = 'cc.urls'
 
-class ActiveUserMiddleware:
+class BannedMiddleware:
     def process_request(self, request):
         if not request.user.is_authenticated():
             return
         user_profile = request.user.get_profile()
         if user_profile.is_banned:
             logout(request)
+
+class ActiveUserMiddleware:
+    def process_request(self, request):
+        if not request.user.is_authenticated():
+            return
+        user_profile = request.user.get_profile()
         if user_profile.facebook_id and not user_profile.is_connected(request):
             logout(request)
