@@ -47,14 +47,14 @@ def send_bnm_message(request):
 
     #Create 2 Threads for both ends
     try: #see if thread exists, if not create it
-        thread1 = Thread.objects.get(owner=sender, other_person=recipient, post_title=post.title, post_id=post.id)
+        thread1 = Thread.objects.get(owner=sender, other_person=recipient, item=post, post_title=post.title, post_id=post.id)
     except:
-        thread1 = Thread.objects.create(owner=sender, other_person=recipient, post_title=post.title, post_id=post.id)
+        thread1 = Thread.objects.create(owner=sender, other_person=recipient, item=post, post_title=post.title, post_id=post.id)
         
     try: #see if thread exists, if not create it
-        thread2 = Thread.objects.get(owner=recipient, other_person=sender, post_title=post.title, post_id=post.id)
+        thread2 = Thread.objects.get(owner=recipient, other_person=sender, item=post, post_title=post.title, post_id=post.id)
     except:
-        thread2 = Thread.objects.create(owner=recipient, other_person=sender, post_title=post.title, post_id=post.id)
+        thread2 = Thread.objects.create(owner=recipient, other_person=sender, item=post, post_title=post.title, post_id=post.id)
 
     if first_message:
         buy_button_signal.send(sender=ItemForSale, instance=post, message=message)

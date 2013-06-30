@@ -136,6 +136,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'middleware.SubdomainsMiddleware', # this is for subdomain
+    'middleware.BannedMiddleware',
     #'middleware.ActiveUserMiddleware', # this is to logout FB users that no longer have permissions
 )
 

@@ -398,8 +398,6 @@ class FriendsView(TemplateView):
 #    template_name = 'index.html'
 
 def index_home(request):
-    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
-        return HttpResponse("cy@m8")
     return render_to_response('index.html',context_instance=RequestContext(request))
 
 
@@ -467,46 +465,41 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
         user = request.user
         user_profile = user.get_profile()
 
-        #damn you banners
-        if user.get_profile().is_banned:
-            return HttpResponse("cy@m8")
+        #MULTIUPLOADER COMMENTS
+        #model = super_cat_model()
+        #model.key_data = model.key_generate
 
-        else:
-            #MULTIUPLOADER COMMENTS
-            #model = super_cat_model()
-            #model.key_data = model.key_generate
-
-            #form variable gets rewritten in 'if' statement if its within circle
-            form = super_cat_form()#instance=model)
-            #form.fields['circles'].queryset = user_profile.my_circles.all()
-            #form.fields['circles'].label = "Groups"
-            #form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
-            #    <p style="color:red;">Only people in the groups you select can see your post.</p>"""
-            #Specify which groups you want to sell to.
+        #form variable gets rewritten in 'if' statement if its within circle
+        form = super_cat_form()#instance=model)
+        #form.fields['circles'].queryset = user_profile.my_circles.all()
+        #form.fields['circles'].label = "Groups"
+        #form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
+        #    <p style="color:red;">Only people in the groups you select can see your post.</p>"""
+        #Specify which groups you want to sell to.
 
 
-            #Saving model for MULTIUPLOADER
-            #request.session['instance'] = model
-            #ecks = {'post_key':model.key_data}
-            ecks = {}
-            if len(user_profile.my_circles.all()) == 0:
-                ecks['no_circles'] = True
+        #Saving model for MULTIUPLOADER
+        #request.session['instance'] = model
+        #ecks = {'post_key':model.key_data}
+        ecks = {}
+        if len(user_profile.my_circles.all()) == 0:
+            ecks['no_circles'] = True
 
-            #CODE IF IFS CREATED WITHIN SECRET CIRCLE
-            #if 'url_key' in kwargs:
-            #    url_key = kwargs['url_key']
-            #    circles = Circle.objects.filter(url_key=url_key)
-            #    circle = circles[0]
-            #    ecks['specificCircleName']=circle.name
-            #    form = ItemForSaleForm(initial={'circles':circles},instance=model)
-            ecks['form'] = form
-            if user_profile.facebook_id:
-                ecks['is_facebook'] = True
-                #user_profile.extend_access_token()
-                groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
-                ecks['fb_groups'] = groups
-            ecks.update(csrf(request))
-            return render_to_response('createlisting.html',ecks,context_instance=RequestContext(request))
+        #CODE IF IFS CREATED WITHIN SECRET CIRCLE
+        #if 'url_key' in kwargs:
+        #    url_key = kwargs['url_key']
+        #    circles = Circle.objects.filter(url_key=url_key)
+        #    circle = circles[0]
+        #    ecks['specificCircleName']=circle.name
+        #    form = ItemForSaleForm(initial={'circles':circles},instance=model)
+        ecks['form'] = form
+        if user_profile.facebook_id:
+            ecks['is_facebook'] = True
+            #user_profile.extend_access_token()
+            groups = FacebookGroup.objects.filter(user_id = user.id).order_by('bookmark_order')
+            ecks['fb_groups'] = groups
+        ecks.update(csrf(request))
+        return render_to_response('createlisting.html',ecks,context_instance=RequestContext(request))
 
 @login_required
 def createlistingPOST(request):
@@ -651,8 +644,6 @@ def deleteallposts(request):
 
 @logit
 def showpost(request, pid, super_cat):
-    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
-        return HttpResponse("cy@m8")
     post = get_object_or_404(super_cat, pk=pid)
     if post.deleted and not request.user.is_staff:
         data = {}
@@ -854,8 +845,6 @@ def edit_item(request,pid):
 @login_required
 @logit
 def flag_item(request,pid):
-    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
-        return HttpResponse("cy@m8")
     item = ItemForSale.objects.get(id=pid)
     flag, created = ItemFlag.objects.get_or_create(flagger = request.user, item=item)
     data = {}
@@ -913,7 +902,6 @@ def ajax_delete_response(request, comment_id):
 @logit
 def ajax_contact_seller(request):
     if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
-
         send_bnm_message(request)#in utils.py
 
         # send_mail(post.title+" Response - "+recipient_name, post.body, 'noreply@buynear.me', [recipient.email])
@@ -990,8 +978,6 @@ def search(request):
 '''
 
 def boxview(request):
-    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
-        return HttpResponse("cy@m8")
     query_string = ''
     #found_entries = ItemForSale.objects.all()
     found_entries = 1 #This is a dummy value which isnt used at all
@@ -1381,8 +1367,6 @@ def ajax_delete_thread(request):
         
 @login_required
 def profile_status(request):
-    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
-        return HttpResponse("cy@m8")
     user = request.user
     posts = ItemForSale.objects.filter(owner=user).order_by('-time_created')
     user_profile = user.get_profile()
@@ -1439,34 +1423,29 @@ def profile_selling(request):
     data = {}
     user = request.user
 
-    selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
-
-    #sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)] #unused?? -seung
-
     ifs_waiting_list = ItemForSale.objects.filter(owner=request.user, pending_flag=False, deleted=False).order_by('-time_created')
-    ifs_sold  = ItemForSale.objects.filter(owner=request.user, sold=True).order_by('-time_created')
 
-    unsold_ids = [x.id for x in ifs_waiting_list]
-    sold_ids = [x.id for x in ifs_sold]
-
-    my_threads = Thread.objects.filter(owner=user).filter(post_id__in=selling_ids).exclude(post_id__in=unsold_ids).order_by('is_read','-newest_message_time')  
-    sold_threads = Thread.objects.filter(owner=user, post_id__in=sold_ids).order_by('is_read','-newest_message_time') 
-    
-    for thread in my_threads:
-        try:
-            ItemForSale.objects.get(id=thread.post_id)
+    pending_items = ItemForSale.objects.filter(owner = user, pending_flag = True, sold=False)
+    pending_threads_ids = []
+    for item in pending_items:
+        try: #for some odd reason if .get fails, fail silently
+            pending_thread = Thread.objects.get(owner=user, other_person=item.pending_buyer, item=item)
+            pending_threads_ids.append(pending_thread.id)
         except:
-            thread.post_deleted = True
-            thread.save()
-            
-    for thread in sold_threads:
-        try:
-            ItemForSale.objects.get(id=thread.post_id)
-        except:
-            thread.post_deleted = True
-            thread.save()
+            pass
+    pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
 
-    data['my_threads'] = my_threads                #pending (need to exclude unsold threads)
+    sold_items = ItemForSale.objects.filter(owner=user, sold=True)
+    sold_threads_ids = []
+    for item in sold_items:
+        try:
+            sold_thread = Thread.objects.get(owner=user, other_person=item.pending_buyer, item=item)
+            sold_threads_ids.append(sold_thread.id)
+        except:
+            pass
+    sold_threads = Thread.objects.filter(id__in = sold_threads_ids).order_by('is_read','-newest_message_time')
+
+    data['my_threads'] = pending_threads                #pending (need to exclude unsold threads)
     data['ifs_waiting_list'] = ifs_waiting_list    #unsold
     data['ifs_sold'] = sold_threads                   #sold
     
@@ -1519,8 +1498,6 @@ def profile_buying(request):
 #@login_required(redirect_field_name='/view_thread')
 @login_required
 def profile_view_thread(request,thread_id):
-    if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
-        return HttpResponse("cy@m8")
     thread = Thread.objects.get(id = thread_id)
     if thread.owner != request.user:
         return redirect('/')

@@ -134,7 +134,7 @@
 
 {% if request.user.is_authenticated %}
 <div id="item-actions">
-    {% if request.user == post.owner %}
+    {% if request.user == post.owner and not post.pending_flag and not post.sold%}
         <div class="small-action">
             <a data-toggle="modal" href="#delete-modal-{{ post.id }}">
                 <i class="icon-trash"></i>
