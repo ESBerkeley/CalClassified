@@ -5,7 +5,7 @@ from ccapp.models import *
 def bind_item_to_thread():
   threads = Thread.objects.all()
   for thread in threads:
-    if thread.post_deleted is False:
+    if ItemForSale.objects.filter(id=thread.post_id) != []:
       ifs = ItemForSale.objects.get(id=thread.post_id)
       thread.item = ifs
       thread.save()
