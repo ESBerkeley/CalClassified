@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class=“no-js”>
 {% block analyticshead %}
 {% endblock %}
   <head>
@@ -24,7 +24,7 @@
     <link href="{% get_static_prefix %}bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="{% get_static_prefix %}font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="{% get_static_prefix %}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
-    <link href="{% get_static_prefix %}overwrite_bootstrap.css?v=14" rel="stylesheet">
+    <link href="{% get_static_prefix %}overwrite_bootstrap.css?v=15" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,200,400,500,600' rel='stylesheet' type='text/css'>
     <!--link href='http://fonts.googleapis.com/css?family=Duru+Sans' rel='stylesheet' type='text/css'-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700' rel='stylesheet' type='text/css'>
@@ -75,6 +75,8 @@
         }
         
     </script>
+
+    <script src="{% get_static_prefix %}js/modernizer-latest.js"></script>
 
   <!--script src="{% get_static_prefix %}respond/respond.min.js"></script-->
   </head>

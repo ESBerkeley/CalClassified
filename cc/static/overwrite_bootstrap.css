@@ -910,6 +910,9 @@ label.error {
     -moz-opacity:1;
 }
 */
+a.empty-link {
+  display: block;
+}
 
 #circleHeader {
     background-color: white;
