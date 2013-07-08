@@ -33,6 +33,12 @@ from cc.templated_email import send_templated_mail
 
 from urlparse import urlparse, parse_qs
 
+#for image rotate
+from StringIO import StringIO
+from PIL import Image
+from PIL import ImageDraw
+from django.core.files.uploadedfile import InMemoryUploadedFile
+#
 
 import random
 import datetime
@@ -501,6 +507,13 @@ def createlistingview(request, super_cat_form, super_cat_model,**kwargs):
         ecks.update(csrf(request))
         return render_to_response('createlisting.html',ecks,context_instance=RequestContext(request))
 
+def image_rotate(image, degrees):  #Rotate a PIL Image, then convert it into a Django file
+    im = image.rotate(degrees)
+    buffer = StringIO()
+    im.save(buffer, "PNG")
+    image_file = InMemoryUploadedFile(buffer, None, 'test.png', 'image/png', buffer.len, None)
+    return image_file
+
 @login_required
 def createlistingPOST(request):
     if request.user.is_authenticated():
@@ -524,9 +537,11 @@ def createlistingPOST(request):
                 model.save()
 
                 files_list = request.FILES.getlist("images")
-                for file in files_list:
+                for index, file in enumerate(files_list):
                     obj = MultiuploaderImage()
-                    obj.image = file
+                    image = Image.open(file)
+                    rotate_name = "rotate-value" + str(index)
+                    obj.image = image_rotate(image, float(request.POST[rotate_name]))
                     obj.filename=str(file)
                     obj.key_data = obj.key_generate
                     obj.post = model
