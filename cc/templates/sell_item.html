@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}BuyNearMe - Sell Item{% endblock %}
+
+{% block url_metadata %}
+    <meta property="og:url" content="http://buynear.me/sell/"/>
+{% endblock %}
+
+{% block head %}
+<link href="{{ STATIC_URL }}css/sell_item.css" rel="stylesheet" type="text/css">
+{% load static %}
+<link rel="stylesheet" href="{% get_static_prefix %}css/chosen.css" />
+<link rel="stylesheet" href="{% get_static_prefix %}css/animate-custom.css" />
+<link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap-fileupload.min.css" />
+{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+    
+<div id="signup-container" class="container">
+  <div id="signup-box" class="span12">
+
+  <div class="small-title">
+    <h2>Sell Item</h2>
+  </div>
+  <div class="small-body">
+  <form action="{% url sell_item_POST %}" method="POST" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+  <div id="fields form">
+    {% load widget_tweaks %}
+    {% for field in form %}
+          <div class="control-group">
+            {{ field.errors }}
+            <label class="control-label" id="{{field.html_name}}-id">{{ field.label }}</label>
+            {% if field.html_name == "price" %}
+            <div class="controls price-control">
+            {% else %}
+            <div class="controls">
+            {% endif %}
+                {% if field.html_name == "category" %}
+                    {{ field|attr:'class="chzn-select" data-placeholder="Choose a Category..." required' }}
+                {% elif field.html_name == "price" %}
+                  $ {{ field }}
+                {% else %}
+                    {{ field }}
+                {% endif %}
+              <span class="help-block">{{ field.help_text|safe }}</span>
+            </div>
+          </div>
+    {% endfor %}
+
+    {% if is_facebook %}
+        <div class="control-group" id="facebook-share-group">
+            <label class="control-label">Facebook Groups</label>
+            <div class="controls">
+            <select name="fb_groups" data-placeholder="Share with your Facebook Groups..."
+                    style="width: 224px;" multiple class="chzn-select" tabindex="7">
+                <option value="" selected="selected"></option>
+                {% for group in fb_groups %}
+                    {% if group.name == "Free & For Sale" %}
+                        <option value="{{ group.facebook_id }}" selected="selected">{{ group.name }}</option>
+                    {% else %}
+                        <option value="{{ group.facebook_id }}">{{ group.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            </div>
+        </div>
+    {% endif %}
+
+      <div class="control-group" id="image-upload-group">
+          <label class="control-label" id="images">Upload Images</label>
+          <div class="controls">
+              <div class="fileupload fileupload-new" data-provides="fileupload">
+                  <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                      <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                  </div>
+                  <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                  <span class="btn btn-file">
+                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-exists">Change</span>
+                      <input type="file" name="images" />
+                  </span>
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+              </div>
+          <span id="upload-images"> </span>
+          <span class="help-block upload-more" style="width:220px;">
+              <a style="cursor: pointer;">Click here to upload more images</a>
+          </span>
+          <span class="help-block after-image">The first uploaded photo will be the thumbnail</span>
+          </div>
+      </div>
+
+  </div>
+  <div id="item-expire-msg">This item will expire in 60 days.</div>
+  <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Submitting..." value="Submit">
+  <!--button id="next-form" class="btn btn-primary" type="button">Next >></button-->
+
+  <img id="ajax-loader" style="display: none;" src="/static/ajax-loader.gif" />
+  <br><br>
+  </form>
+  
+  </div>
+  
+  </div>
+</div>
+{% endblock %}
+
+{% block post_js %}
+
+<script type="text/javascript" src="{% get_static_prefix %}jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-fileupload.min.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}js/chosen.jquery.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}js/sell_item.js"></script>
+<script type="text/javascript">
+    $(".chzn-select").chosen();
+    var uploadImageCounter = 1;
+</script>
+
+{% endblock %}
+
