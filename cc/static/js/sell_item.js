@@ -68,13 +68,16 @@ $(".upload-more").click(function(){
           '<div class="fileupload-new thumbnail" style="width: 50px; height: 50px; margin-right: 5px;">'+
           '<img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />'+
           '</div>'+
-          '<div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>'+
+          '<div id="image'+uploadImageCounter+'" class="fileupload-preview fileupload-exists thumbnail" style="width:50px; height:50px;"></div>'+
           '<span class="btn btn-file">'+
           '<span class="fileupload-new">Select image</span>'+
           '<span class="fileupload-exists">Change</span>'+
           '<input type="file" name="images" />'+
           '</span>'+
           '<a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>'+
+          '<a onclick="rotateImage(&quot#rotate-value'+uploadImageCounter+'&quot, &quot#image'+uploadImageCounter+'&quot, 90)" class="btn fileupload-exists"><i class="icon-repeat"></i></a>'+
+          '<a onclick="rotateImage(&quot#rotate-value'+uploadImageCounter+'&quot, &quot#image'+uploadImageCounter+'&quot, -90)" class="btn fileupload-exists"><i class="icon-undo"></i></a>'+
+          '<input id="rotate-value'+uploadImageCounter+'" name="rotate-value'+uploadImageCounter+'" type="hidden" value="0">'+
           '</div>'
     $("#upload-images").append(new_upload_html)
   uploadImageCounter += 1;
@@ -84,6 +87,17 @@ $(".upload-more").click(function(){
       $(".after-image").append(max_images)
   }
 });
+
+function rotateImage(nameValue, nameImage, degree) {
+    var previousDegree = parseInt($(nameValue).val());
+    var newDegree = previousDegree + degree;
+    $(nameValue).val(newDegree);
+    $(nameImage).css({
+      "transform":"rotate("+newDegree+"deg)",
+      "-ms-transform":"rotate("+newDegree+"deg)",
+      "-webkit-transform":"rotate("+newDegree+"deg)"
+    });
+}
 
 /*$("#next-form").click(function() {
     if($("#sellForm").valid()) {
