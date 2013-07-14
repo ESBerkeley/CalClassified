@@ -95,7 +95,7 @@ class CircleForm(ModelForm):
         exclude = ('url_key','is_city','creator', 'fb_id')
 
 
-class ItemForSale(Post):
+class ItemForSale(Post): #lol extends post be sure to check its field's as well
     price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     category = models.ForeignKey(Category)
     circles = models.ManyToManyField(Circle)
@@ -402,3 +402,9 @@ class FacebookPostForExcel(models.Model):
 
     class Meta:
         unique_together = ['user_id', 'facebook_id']
+
+class UserLike(models.Model):
+    actor = models.ForeignKey(User, related_name="actor_like_set")
+    receiver = models.ForeignKey(User, related_name="receiver_like_set")
+    def __unicode__(self):
+        return self.actor.get_full_name() + " likes " + self.receiver.get_full_name()

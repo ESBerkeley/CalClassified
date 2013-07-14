@@ -1591,6 +1591,16 @@ def account_setup(request):
         user_profile.save()
         return render_to_response('registration/account_setup.html', data, context_instance=RequestContext(request))
 
+def user(request, user_id):
+    data = {}
+    user = User.objects.get(id=user_id)
+    data['user'] = user
+    data['user_profile'] = user.get_profile()
+    data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True)
+    data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True)
+    data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False) #currently listed
+    data['user_likes'] = UserLike.objects.filter(receiver=user)
+    return render_to_response('user.html', data, context_instance=RequestContext(request))
 
 @login_required
 def repost_item(request):
