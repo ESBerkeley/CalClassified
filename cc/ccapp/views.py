@@ -836,12 +836,13 @@ def edit_item(request,pid):
                     image = old_images[0]
                     image.delete()
             
-            
             files_list = request.FILES.getlist("images")
-            for file in files_list:
-                if num_kept <3:
+            for index, file in enumerate(files_list):
+                if num_kept < 3:
                     obj = MultiuploaderImage()
-                    obj.image = file
+                    image = Image.open(file)
+                    rotate_name = "rotate-value" + str(index)
+                    obj.image = image_rotate(image, float(request.POST[rotate_name]))
                     obj.filename=str(file)
                     obj.key_data = obj.key_generate
                     obj.post = item
