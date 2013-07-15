@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}BuyNearMe - Pay By Credit Card{% endblock %}
+
+{% block url_metadata %}
+    <meta property="og:url" content="http://buynear.me/pay_for_item/"/>
+{% endblock %}
+
+{% block head %}
+<link href="{{ STATIC_URL }}css/pay_for_item.css" rel="stylesheet" type="text/css">
+{% load static %}
+<link rel="stylesheet" href="{% get_static_prefix %}css/chosen.css" />
+<!--link rel="stylesheet" href="{% get_static_prefix %}css/animate-custom.css" /-->
+{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+    
+<div id="signup-container" class="container">
+  <div id="signup-box" class="span12">
+
+  <div class="small-title">
+    <h2>Sell Item</h2>
+  </div>
+  <div class="small-body">
+  <form action="{% url sell_item_POST %}" method="POST" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+  <div id="fields form">
+    {% load widget_tweaks %}
+    {% for field in form %}
+          <div class="control-group">
+            {{ field.errors }}
+            <label class="control-label" id="{{field.html_name}}-id">{{ field.label }}</label>
+            <div class="controls">
+                {{ field }}
+              <span class="help-block">{{ field.help_text|safe }}</span>
+            </div>
+          </div>
+    {% endfor %}
+
+  </div>
+  <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Submitting..." value="Submit">
+  <!--button id="next-form" class="btn btn-primary" type="button">Next >></button-->
+
+  <img id="ajax-loader" style="display: none;" src="/static/ajax-loader.gif" />
+  <br><br>
+  </form>
+  
+  </div>
+  
+  </div>
+</div>
+{% endblock %}
+
+{% block post_js %}
+
+<script type="text/javascript" src="{% get_static_prefix %}jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}js/chosen.jquery.js"></script>
+<script type="text/javascript" src="{% get_static_prefix %}js/pay_for_item.js"></script>
+<!--script type="text/javascript">
+    $(".chzn-select").chosen();
+    var uploadImageCounter = 1;
+</script-->
+
+{% endblock %}
+
