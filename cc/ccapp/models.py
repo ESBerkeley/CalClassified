@@ -252,7 +252,39 @@ class FacebookPost(ItemForSale):
 
 FacebookFormSet = modelformset_factory(FacebookPost, max_num=0, fields=('title','price','category', 'approved'))
 """
+"""
+class ClothingItem(ItemForSale):
+    MALE = 'M'
+    FEMALE = 'F'
+    GENDER_CHOICES = (
+        (MALE, 'M'),
+        (FEMALE, 'F'),
+    )
+    XSMALL = 'XS'
+    SMALL = 'S'
+    MEDIUM = 'M'
+    LARGE = 'L'
+    XL = 'XL'
+    SIZE_CHOICES = (
+        (XSMALL, 'XS'),
+        (SMALL, 'S'),
+        (MEDIUM, 'M'),
+        (LARGE, 'L'),
+        (XL, 'XL')
+    )
+    gender = models.CharField(max_length=1,
+                              choices=GENDER_CHOICES,
+                              default=MALE)
+    size = models.CharField(max_length=2,
+                            choices=SIZE_CHOICES,
+                            default=SMALL)
 
+class ClothingItemForm(ModelForm):
+    class Meta:
+        model = ClothingItem
+        exclude = ('approved', 'body', 'cached_thumb', 'category', 'circles', 'deleted', 'expire_date','images', 'key_data',
+                   'owner','owner_facebook_id', 'pending_buyer', 'pending_flag', 'price', 'sold', 'sold_date', 'title', 'time_created')
+"""
 class Notification(models.Model):
     """
     TYPES:

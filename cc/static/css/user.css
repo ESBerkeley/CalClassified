@@ -1,0 +1,80 @@
+#profile-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    display: table;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.profile-card {
+    background: white;
+    padding: 20px;
+    border: 1px solid #d1d1d1;
+}
+
+.image-column {
+    float: left;
+}
+
+.user-info {
+    margin-left: 20px;
+    float: left;
+}
+
+#user-name {
+    font-size: 32px;
+    color: #28b4ef;
+}
+
+.likes-container {
+    margin-top: 10px;
+    font-size: 24px;
+}
+
+.relevant-wrapper {
+    float:left;
+}
+
+.relevant-item-data {
+    margin-top: 90px;
+    font-size: 18px;
+    color: rgb(95, 95, 95);
+}
+
+.relevant-item-number{
+    font-weight: bold;
+    font-size: 20px;
+    color: #28b4ef;
+}
+
+#items-listed {
+    padding-right: 10px;
+    border-right: 1px solid #c3c3c3;
+}
+
+#items-sold {
+    padding: 0 10px;
+    border-right: 1px solid #c3c3c3;
+}
+
+#items-bought {
+    padding-left: 10px;
+}
+
+#listings-header {
+    letter-spacing: 4px;
+    font-size: 22px;
+    font-weight: bold;
+    background-image: url('/static/images/greyish.jpg'); /** based on body background image **/
+    background-color: black;
+    display: inline-table;
+    margin-top: -31px;
+    padding: 0 4px 0 9px;
+}
+
+#listings-header-line {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin-top: 35px;
+}
