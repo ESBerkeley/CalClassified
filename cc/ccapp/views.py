@@ -507,11 +507,11 @@ def sell_item(request, super_cat_form, super_cat_model,**kwargs):
         ecks.update(csrf(request))
         return render_to_response('sell_item.html',ecks,context_instance=RequestContext(request))
 
-def image_rotate(image, degrees):  #Rotate a PIL Image, then convert it into a Django file
+def image_rotate(image, degrees, filename):  #Rotate a PIL Image, then convert it into a Django file
     im = image.rotate(degrees)
     buffer = StringIO()
     im.save(buffer, "PNG")
-    image_file = InMemoryUploadedFile(buffer, None, 'test.png', 'image/png', buffer.len, None)
+    image_file = InMemoryUploadedFile(buffer, None, filename, 'image/png', buffer.len, None)
     return image_file
 
 @login_required
@@ -541,7 +541,7 @@ def sell_item_POST(request):
                     obj = MultiuploaderImage()
                     image = Image.open(file)
                     rotate_name = "rotate-value" + str(index)
-                    obj.image = image_rotate(image, float(request.POST[rotate_name]))
+                    obj.image = image_rotate(image, float(request.POST[rotate_name]), str(file))
                     obj.filename=str(file)
                     obj.key_data = obj.key_generate
                     obj.post = model
@@ -1611,11 +1611,39 @@ def user(request, user_id):
     user = User.objects.get(id=user_id)
     data['user'] = user
     data['user_profile'] = user.get_profile()
-    data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True)
-    data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True)
-    data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False) #currently listed
+    data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True, deleted=False).order_by('-time_created')
+    data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True, deleted=False).order_by('-time_created')
+    data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
     data['user_likes'] = UserLike.objects.filter(receiver=user)
+    data['viewer_likes_user'] = False #HANDLE CASE OF LOGGED OFF USER
+    if UserLike.objects.filter(receiver=user, actor=request.user):
+        data['viewer_likes_user'] = True
     return render_to_response('user.html', data, context_instance=RequestContext(request))
+
+@login_required
+def upload_temp_photo(request):
+    if request.method == "POST" and request.is_ajax():
+        profile = request.user.get_profile()
+        file = request.FILES['temp-photo']
+        img = Image.open(file)
+
+        #resize img if too big
+        max_height = float(800)
+        max_width = float(1200)
+        img_width = float(img.size[0])
+        img_height = float(img.size[1])
+        if img_height > max_height or img_width > max_width:
+            ratio = min(max_width/img_width, max_height/img_height)
+            new_height = int(ratio*img_height)
+            new_width = int(ratio*img_width)
+            img = img.resize((new_width,new_height))
+
+        img = image_rotate(img, 0, str(file))
+        if profile.temp_image:
+            profile.temp_image.delete()
+        profile.temp_image = img
+        profile.save()
+        return HttpResponse(profile.temp_image.url)
 
 @login_required
 def repost_item(request):
