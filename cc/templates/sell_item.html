@@ -10,7 +10,7 @@
 <link href="{{ STATIC_URL }}css/sell_item.css" rel="stylesheet" type="text/css">
 {% load static %}
 <link rel="stylesheet" href="{% get_static_prefix %}css/chosen.css" />
-<link rel="stylesheet" href="{% get_static_prefix %}css/animate-custom.css" />
+<!--link rel="stylesheet" href="{% get_static_prefix %}css/animate-custom.css" /-->
 <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap-fileupload.min.css" />
 {% endblock %}
 {% block sidebar %}{% endblock %}
@@ -80,10 +80,9 @@
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="images" />
                   </span>
-                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                  <a class="btn fileupload-exists" onclick="rotateImage('#rotate-value0', '#image0', 90)"><i class="icon-repeat"></i></a>
-                  <a class="btn fileupload-exists" onclick="rotateImage('#rotate-value0', '#image0', -90)"><i class="icon-undo"></i></a>
+                  <a class="btn fileupload-exists" onclick="rotateImage('#rotate-value0', '#image0', 90)">Rotate <i class="icon-repeat"></i></a>
                   <input id="rotate-value0" name="rotate-value0" type="hidden" value="0">
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
               </div>
           <span id="upload-images"> </span>
           <span class="help-block upload-more" style="width:220px;">
