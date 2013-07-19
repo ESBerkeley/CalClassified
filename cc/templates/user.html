@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Near Me - {{ user.get_full_name }}{% endblock %}
+
+{% block head %}
+    <link href="{{ STATIC_URL }}css/user.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div id="profile-wrapper">
+    <div class="profile-card container">
+        <div class="image-column">
+            {% if request.user == user %}
+            <a href="#change-photo-modal" data-toggle="modal">
+            {% endif %}
+                <div class="image-wrapper">
+                    <img src="{{ user_profile.get_image_url }}" height="180" width="180"/>
+                    {% if request.user == user %}
+                    <div class="change-photo-label">
+                        Change Photo
+                    </div>
+                    {% endif %}
+                </div>
+            {% if request.user == user %}
+            </a>
+            {% endif %}
+        </div>
+        <div class="user-info">
+            <div id="user-name">{{ user.get_full_name }}</div>
+{#            <div class="likes-container">#}
+{#                {{ user_likes|length }} Likes#}
+{#            </div>#}
+{#            <div class="like-button">#}
+{#                <button class="btn unlike-button">#}
+{#                    Unlike <i class="icon-thumbs-down-alt"></i>#}
+{#                </button>#}
+{#                <button class="btn btn-primary like-button">#}
+{#                    Like <i class="icon-thumbs-up-alt"></i>#}
+{#                </button>#}
+{#            </div>#}
+            <div class="relevant-item-data">
+                <div id="items-listed" class="relevant-wrapper">
+                    <span class="relevant-item-number">{{ items_listed|length }}</span>
+                    <br>
+                    Items Listed
+                </div>
+                <div id="items-sold" class="relevant-wrapper">
+                    <span class="relevant-item-number">{{ items_sold|length }}</span>
+                    <br>
+                    Items Sold
+                </div>
+                <div id="items-bought" class="relevant-wrapper">
+                    <span class="relevant-item-number">{{ items_bought|length }}</span>
+                    <br>
+                    Items Bought
+                </div>
+            </div>
+        </div>
+    </div><!--end profile-card container -->
+    <hr id="listings-header-line" />
+    <center>
+        <div id="listings-header">
+            LISTINGS
+        </div>
+    </center>
+    <div class="items-container container">
+        {% for item in items_listed %}
+            <a href="{{ item.get_absolute_url }}">
+                <div class="item">
+                    <center><img class="item-image" src="{{ item.get_thumbnail_url }}" /></center>
+                    <div class="item-text">
+                        {{ item.title }}
+                    </div>
+                    <div class="item-price">
+                        {{ item.price }}
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+        {% if not items_listed %}
+            <center><div class="no-items-listed">No items listed</div></center>
+        {% endif %}
+    </div>
+</div>
+
+{% include "shared/change-photo-modal.html" %}
+
+{% endblock %}
+
+{% block post_js %}
+    <script type="text/javascript">
+        {% if viewer_likes_user %}
+            var viewer_likes_user = true;
+        {% else %}
+            var viewer_likes_user = false;
+        {% endif %}
+    </script>
+    <script src="{{ STATIC_URL }}js/user.js"></script>
+
+    <!-- profile modal js stuff -->
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/chosen.jquery.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/shared/change-photo-modal.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jcrop/js/jquery.Jcrop.min.js"></script>
+    <!-- please notify any changes here in chage-photo-modal.html -->
+{% endblock %}

@@ -120,8 +120,7 @@
 
             {% if request.user.is_authenticated %}
 
-            {% block navbar %}
-            {% endblock %}
+            <li><a href="{% url user request.user.id %}"> Hi, {{ request.user.first_name }}! </a></li>
 
             <li><div class="dropdown tooltips" rel="tooltip" data-placement="bottom" title="Notifications"><div id="friend_notifications_dropdown"></div></div></li>
 
@@ -246,6 +245,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     {% block post_js %}
 
     {% endblock %}
+  {% block post_js_1 %}{% endblock %}<!-- for include templates -->
 
   </div>
   </body>

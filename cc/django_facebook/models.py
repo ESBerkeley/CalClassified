@@ -243,6 +243,10 @@ class FacebookProfile(FacebookProfileModel):
     failed_to_sell_email = models.BooleanField('Seller has notified us that the item could not be sold to you and has re-listed the item', default=True)
     first_time = models.BooleanField(default=True)
     is_banned = models.BooleanField(default=False)
+
+    #temp_image is the profile photo uploaded before the crop stage
+    temp_image = models.ImageField(blank=True, null=True,
+        upload_to=PROFILE_IMAGE_PATH, max_length=255)
     
     @property
     def sell_notifications(self):
@@ -255,6 +259,12 @@ class FacebookProfile(FacebookProfileModel):
         buy_ids = [x.id for x in ItemForSale.objects.filter(pending_buyer=self.user).filter(sold=False)]
         buy_threads_unread = Thread.objects.filter(owner=self.user).filter(post_id__in=buy_ids).filter(is_read=False)
         return len(buy_threads_unread)
+
+    def get_image_url(self):
+        if self.image:
+            return self.image.url
+        else:
+            return '/static/images/no-profile-photo.jpg'
 
     
 class FacebookProfileForm(forms.Form):

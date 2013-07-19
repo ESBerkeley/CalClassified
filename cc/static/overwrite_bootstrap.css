@@ -15,7 +15,7 @@ h4 {
 }
 
 .btn {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: bold;
   text-shadow: 0;
   -webkit-font-smoothing: antialiased;
@@ -397,10 +397,6 @@ div.stopfloat{
   width:100.5%;
   /*height:36px; /*fixed at 40*/
   /*background-color: #141414;*/
-  opacity:0.85;
-  filter:alpha(opacity=85);
-  -moz-opacity:0.85;
-  /*border-top: 1px solid black;*/
   padding: 2px;
   height: 23px;
   vertical-align: middle;
@@ -627,7 +623,7 @@ div.box-text {
 
 /*footer*/
 .footer {
-    position: relative;
+    position: absolute;
     width: 100%;
     border-top: solid 1px rgb(224, 224, 224);
     /* background-color: #9d9d9d; */
@@ -988,8 +984,14 @@ a.empty-link {
      border-color:black;margin-top:36px
  }
 
+.no-underline {
+    cursor: pointer !important;
+    text-decoration: none !important;
+}
+
 .heroes input{
     width:342px;
     font-size:16px;
     font-weight:normal
 }.lt-ie9
+

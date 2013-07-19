@@ -44,7 +44,7 @@
             {% if message.sender == request.user %}
               <b> Me </b>
             {% else %}
-              <b> {{ message.sender.first_name }} {{ message.sender.last_name }}</b>
+              <b><a href="{% url user message.sender.id %}">{{ message.sender.first_name }} {{ message.sender.last_name }}</a></b>
             {% endif %}
             <br> 
             {{ message.time_created }}

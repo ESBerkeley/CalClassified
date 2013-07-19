@@ -82,14 +82,19 @@ urlpatterns = patterns('',
     url(r'^canvas/', 'ccapp.views.canvas'),
     url(r'^user_posts/', 'ccapp.views.user_posts'),
     url(r'^bookmark/', 'ccapp.views.bookmark_post'),
+
+    #AJAX
     url(r'^ajax_contact_seller/$','ccapp.views.ajax_contact_seller'),
     url(r'^ajax_delete_thread/$','ccapp.views.ajax_delete_thread'),
     url(r'^ajax_delete_post/$','ccapp.views.ajax_delete_post'),
     url(r'^ajax/delete_comment/(?P<comment_id>\d+)/$','ccapp.views.ajax_delete_comment', name='ajax_delete_comment'),
     url(r'^ajax/delete_response/(?P<comment_id>\d+)/$','ccapp.views.ajax_delete_response', name='ajax_delete_response'),
+    url(r'^ajax/upload_temp_photo/$', 'ccapp.views.upload_temp_photo', name='ajax_upload_temp_photo'),
+    url(r'^ajax/upload_profile_photo/$', 'ccapp.views.upload_profile_photo', name='ajax_upload_profile_photo'),
+    url(r'^ajax/delete_profile_photo/$', 'ccapp.views.delete_profile_photo', name='ajax_delete_profile_photo'),
+
     url(r'^logout/$', 'django.contrib.auth.views.logout',
                           {'next_page': '/'}),
-
     url(r'', include('multiuploader.urls')),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

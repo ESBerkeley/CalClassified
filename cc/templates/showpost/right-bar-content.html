@@ -106,15 +106,27 @@
    {% endif %}
 </div>
 
-<div id="item-info">
-    <div class="info-title">SELLER</div>
-    <div class="info-detail">
-        {% if post.owner.get_full_name %}
-          {{ post.owner.get_full_name }}
-        {% else %}
-          {{ post.owner.username }}
-        {% endif %}
+<div class="seller-info">
+
+    <div class="seller-image">
+        <a href="{% url user post.owner.id %}" class="no-underline">
+            <img src='{{ post.owner.get_profile.get_image_url }}' width="50" height="50"/>
+        </a>
     </div>
+    <div class="seller-name">
+        <span class="posted-title">SELLER:</span>
+        <br>
+        <a href="{% url user post.owner.id %}" class="no-underline">
+            {% if post.owner.get_full_name %}
+                {{ post.owner.get_full_name }}
+            {% else %}
+                {{ post.owner.username }}
+            {% endif %}
+        </a>
+    </div>
+</div>
+
+<div id="item-info">
 
     <div class="info-title">DATE ADDED</div>
     <div class="info-detail">{{ post.time_created.date }}</div>

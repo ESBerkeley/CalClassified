@@ -4,59 +4,69 @@
         {% if comments %}
         {% for comment in comments %}
             <div class="comment-row">
-                <div class="commenter-name {% if comment.sender == post.owner %}seller{% endif %}">
-                    {{comment.sender.first_name }}
-                    {% if comment.sender == post.owner %}(Seller){% endif %}
-                </div>
-                <!-- delete comment btn -->
-                {% if comment.sender == request.user or request.user.is_staff %}
-                    <a href="#" onclick="return false;" comment-id="{{ comment.id }}" class="delete-comment" data-toggle="tooltip" title="Delete Your Comment">
-                        <i class="icon-trash" style="text-decoration:none; color:black;"></i>
+                <div class="commenter-photo">
+                    <a href="{% url user comment.sender.id %}">
+                        <img class="comment-photo" src="{{ comment.sender.get_profile.get_image_url }}" />
                     </a>
-                {% endif %}
-                <div class="comment-body">
-                    {{comment.body}}
                 </div>
-
-                {% if comment.seller_response != "" %}
-                  <div class="response-row">
-                      <div class="seller-response-name">
-                        {{ post.owner.get_full_name }} (Seller)
-                      </div>
-                      <div class="seller-response-body">
-                      {{ comment.seller_response }}
-                      {% if post.owner == request.user %}
-                        <a href="#" onclick="return false;" comment-id="{{ comment.id }}" class="delete-response" data-toggle="tooltip" title="Delete Your Response"><i class="icon-trash" style="text-decoration:none; color:black;"></i></a>
-                      {% endif %}
-                      </div>
-                  </div>
-                {% else %}
-                  {% if post.owner == request.user and comment.sender != request.user %}
-                    <!-- Button to trigger modal -->
-                    <a href="#modal-response-{{ comment.id }}" data-toggle="modal">Reply</a>
-
-                    <!-- Modal -->
-                    <div id="modal-response-{{ comment.id }}" class="modal hide fade" >
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="modal-response-label">Seller Response</h3>
-                      </div>
-
-                      <form action = "{{ request.path }}?sr={{ comment.id }}" method = "post" style="margin: 0"> {% csrf_token %}
-                      <div class="modal-body">
-                          <p>
-                            <textarea id="id_seller_response" type="text" name="seller_response" maxlength="200" class="input-xlarge field span7" rows="5"></textarea>
-                          </p>
-                      </div>
-                      <div class="modal-footer">
-                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                        <button class="btn btn-primary">Respond</button>
-
-                      </div>
-                      </form>
+                <div class="comment-content">
+                    <div class="commenter-name {% if comment.sender == post.owner %}seller{% endif %}">
+                        <a href="{% url user comment.sender.id %}">{{comment.sender.first_name }}</a>
+                        {% if comment.sender == post.owner %}(Seller){% endif %}
                     </div>
-                  {% endif %}
-                {% endif %}
+
+                    <div class="comment-top-right">
+                        {% if not comment.seller_response and post.owner == request.user and comment.sender != request.user %}
+                            <!-- Button to trigger modal -->
+                            <a href="#modal-response-{{ comment.id }}" class="reply no-underline" data-toggle="modal"><i class="icon-pencil"></i> Reply</a>
+
+                            <!-- Modal -->
+                            <div id="modal-response-{{ comment.id }}" class="modal hide fade" >
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="modal-response-label">Seller Response</h3>
+                              </div>
+
+                              <form action = "{{ request.path }}?sr={{ comment.id }}" method = "post" style="margin: 0"> {% csrf_token %}
+                              <div class="modal-body">
+                                  <p>
+                                    <textarea id="id_seller_response" type="text" name="seller_response" maxlength="200" class="input-xlarge field span7" rows="5"></textarea>
+                                  </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                <button class="btn btn-primary">Respond</button>
+
+                              </div>
+                              </form>
+                            </div>
+                        {% endif %}
+                        {% if comment.sender == request.user or request.user.is_staff %}
+                            <a comment-id="{{ comment.id }}" class="delete-comment no-underline">
+                                <i class="icon-trash"></i> Delete
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="comment-body">{{comment.body}}</div>
+
+
+                    {% if comment.seller_response != "" %}
+                      <div class="response-row">
+                          <div class="seller-response-name">
+                            {{ post.owner.get_full_name }} (Seller)
+                          </div>
+                          <div class="seller-response-body">
+                          {{ comment.seller_response }}
+                          </div>
+                          {% if post.owner == request.user %}
+                            <a comment-id="{{ comment.id }}" class="delete-response no-underline">Delete</a>
+                          {% endif %}
+                      </div>
+                    {% else %}
+
+                    {% endif %}
+                </div><!-- end comment-content -->
             </div><!--end comment-row-->
         {% endfor %}
         {% else %}

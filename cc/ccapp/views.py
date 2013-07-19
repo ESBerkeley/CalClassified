@@ -1647,6 +1647,33 @@ def upload_temp_photo(request):
         return HttpResponse(profile.temp_image.url)
 
 @login_required
+def upload_profile_photo(request):
+    if request.method == "POST" and request.is_ajax():
+        profile = request.user.get_profile()
+        img = Image.open(profile.temp_image)
+        x1 = int(request.POST['x1'])
+        y1 = int(request.POST['y1'])
+        width = int(request.POST['width'])
+        cropped = img.crop((x1, y1, x1 + width, y1+width))
+        img = image_rotate(cropped, 0, request.user.username + ".jpg")
+        if profile.temp_image:
+            profile.temp_image.delete()
+        if profile.image:
+            profile.image.delete()
+        profile.image = img
+        profile.save()
+        return HttpResponse("Ok")
+
+@login_required
+def delete_profile_photo(request):
+    if request.method == "POST" and request.is_ajax():
+        profile = request.user.get_profile()
+        if profile.image:
+            profile.image.delete()
+        profile.save()
+        return HttpResponse("OK")
+
+@login_required
 def repost_item(request):
     if request.user.is_authenticated():
         if request.method == 'POST':
