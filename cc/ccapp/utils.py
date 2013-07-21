@@ -14,6 +14,13 @@ from cc.django_facebook.decorators import facebook_required, facebook_required_l
 from cc.django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
 from cc.open_facebook.exceptions import OpenFacebookException
 
+#for image rotate
+from StringIO import StringIO
+from PIL import Image
+from PIL import ImageDraw
+from django.core.files.uploadedfile import InMemoryUploadedFile
+#
+
 def send_bnm_message(request):
     body = request.POST['message']
     recipient_pk = request.POST['recipient_pk']
@@ -222,3 +229,10 @@ def fb_group_post(request, item, fb_group):
     return None
 #    except:
 #        return None
+
+def image_rotate(image, degrees, filename):  #Rotate a PIL Image, then convert it into a Django file
+    im = image.rotate(degrees)
+    buffer = StringIO()
+    im.save(buffer, "PNG")
+    image_file = InMemoryUploadedFile(buffer, None, filename, 'image/png', buffer.len, None)
+    return image_file
