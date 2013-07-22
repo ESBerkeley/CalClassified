@@ -26,3 +26,7 @@
 #body {
     padding-bottom: 0; /* includes padding from the footer and footer's height */
 }
+
+.footer {
+    position:relative;
+}
