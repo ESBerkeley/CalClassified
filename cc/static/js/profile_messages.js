@@ -42,4 +42,21 @@ $(".close-refresh").click (function() {
     });
   });
 
+  $(".verify-repost").click(function(){
+    $(this).button('loading');
+    var post_id = $(this).val();
+    data= {};
+    data['csrfmiddlewaretoken'] = csrf_token;
+    data['post_id'] = post_id;
+    $.ajax({
+      type: "POST",
+      url: "/ajax_repost/",
+      data: data,
+      success: function(data){
+        $("#repost-modal-"+post_id).modal('hide');
+        $("#repost-success-modal").modal('show');
+      }
+    });
+  });
+
 //};

@@ -30,13 +30,15 @@
             </div>
             <!-- AddThis Button END -->
         </div>
-    {% elif request.user == post.owner and new == 1 or repost %}
+    {% elif request.user == post.owner and new == 1 or repost or bump %}
         <div id="new-post-alert" class="alert alert-block alert-info fade in container">
         <a class="close" data-dismiss="alert" href="#">&times;</a>
         {% if new == 1 %}
             <b>Item successfully posted!</b>
         {% elif repost %}
             <b>Item successfully reposted!</b>
+        {% elif bump %}
+            <b>Item successfully bumped!</b>
         {% endif %}
             <p>
                 You will be notified by email when you are contacted.<br>
