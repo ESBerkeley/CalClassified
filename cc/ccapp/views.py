@@ -2,7 +2,7 @@ from cc.swamp_logging import logit, custom_log_message
 
 from cc.ccapp.models import *
 from cc.ccapp.signals import *
-from cc.ccapp.utils import send_bnm_message, save_fb_items_to_model, fb_group_post, free_for_sale_post, image_rotate
+from cc.ccapp.utils import send_bnm_message, save_fb_items_to_model, fb_group_post, free_for_sale_post, image_rotate, get_exif
 from cc.ccapp.forms import EmailForm, FeedbackForm
 
 from django.conf import settings
@@ -535,7 +535,7 @@ def sell_item_POST(request):
                     image = Image.open(file)
                     rotate_name = "rotate-value" + str(index)
                     obj.image = image_rotate(image, float(request.POST[rotate_name]), str(file))
-                    obj.filename=str(file)
+                    obj.filename = str(file)
                     obj.key_data = obj.key_generate
                     obj.post = model
                     obj.save()

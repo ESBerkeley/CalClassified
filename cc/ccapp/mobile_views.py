@@ -27,6 +27,13 @@ from haystack.models import SearchResult
 from math import ceil
 from multiuploader.models import MultiuploaderImage
 
+#for image rotate
+from StringIO import StringIO
+from PIL import Image
+from PIL import ImageDraw
+from django.core.files.uploadedfile import InMemoryUploadedFile
+#
+
 from django.core.mail import send_mail
 from templated_email import send_templated_mail
 import random
@@ -92,6 +99,8 @@ def sell(request):
 
             files_list = request.FILES.getlist("images")
             for file in files_list:
+                image = Image.open(file)
+                print get_exif(image)
                 obj = MultiuploaderImage()
                 obj.image = file
                 obj.filename=str(file)
