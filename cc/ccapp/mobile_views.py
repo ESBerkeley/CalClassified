@@ -107,7 +107,7 @@ def sell(request):
                 obj = MultiuploaderImage()
                 obj.image = file
                 if orientation == 6:
-                    obj.image = image_rotate(image, 90, str(file))
+                    obj.image = image_rotate(image, -90, str(file))
                 obj.filename=str(file)
                 obj.key_data = obj.key_generate
                 obj.post = model
