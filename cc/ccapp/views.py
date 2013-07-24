@@ -1130,7 +1130,7 @@ def profile_selling(request):
                                                   pending_flag=False,
                                                   deleted=False).order_by('-time_created')
     ifs_waiting_list = (item for item in base_unsold_itemset if not item.is_expired)
-    expired_items = (item for item in base_unsold_itemset if item.is_expired)
+    expired_items = [item for item in base_unsold_itemset if item.is_expired]
 
     pending_items = ItemForSale.objects.filter(owner=user, pending_flag=True, sold=False)
     pending_threads_ids = []
