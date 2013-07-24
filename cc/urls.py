@@ -29,22 +29,25 @@ urlpatterns = patterns('',
     url(r'^terms/$', TemplateView.as_view(template_name='terms.html'), name="terms"),
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
     url(r'^repost/$', 'ccapp.views.repost_item', name='repost_item'),
+    url(r'^ajax_repost/$', 'ccapp.views.ajax_repost_item', name='ajax_repost_item'),
+    #url(r'^pay_for_item/$', 'ccapp.views.pay_for_item', name='pay_for_item'),
+
 
     #ACCOUNT:
     url(r'^facebook/', include('django_facebook.urls')),
     #EVERY URL THAT STARTS WITH "/accounts/" IS IN django_facebook.auth_urls
     url(r'^accounts/', include('django_facebook.auth_urls')),
-    url(r'^fb_import/$', 'ccapp.views.fb_import', name='fb_import'),
+    url(r'^fb_import/$', 'ccapp_facebook.views.fb_import', name='fb_import'),
     url(r'^account_setup/$', 'ccapp.views.account_setup', name='account_setup'),
     url(r'^verify_user/(?P<auth_key>[\w\+%_& ]+)/$','ccapp.views.verify_user'),
     url(r'^change_email/(?P<auth_key>[\w\+%_& ]+)/$','ccapp.views.change_email'),
     url(r'^user/(?P<user_id>\d+)/$', 'ccapp.views.user', name='user'),
 
     #ADMIN/DEBUG
-    url(r'^friends/debug/$', 'ccapp.views.friendslist', name='test_friends'),
-    url(r'^fb_items/$', 'ccapp.views.fb_items', name='add_fb_items'),
-    url(r'^fb_admin/$', 'ccapp.views.fb_admin', name='approve_fb_items'),
-    #url(r'^fb_to_excel/$', 'ccapp.views.fb_to_excel', name='fb_to_excel'),
+    url(r'^friends/debug/$', 'ccapp_facebook.views.friendslist', name='test_friends'),
+    #url(r'^fb_items/$', 'ccapp.views.fb_items', name='add_fb_items'),
+    #url(r'^fb_admin/$', 'ccapp.views.fb_admin', name='approve_fb_items'),
+    #url(r'^fb_to_excel/$', 'ccapp_faceboook.views.fb_to_excel', name='fb_to_excel'),
 
     #??? not sure if functional still
     #url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),

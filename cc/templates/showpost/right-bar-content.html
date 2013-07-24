@@ -80,6 +80,22 @@
                     </div>
                 </div>
                 </form>
+
+           {% elif post.is_bumpable %}
+                <form action="{% url repost_item %}"  method="post">{% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <div class="blue-wrap">
+                    <div class="main-btn-wrapper">
+                        <input id="submit" type="submit" class="btn btn-primary btn-block" data-loading-text="Bumping..." value="Bump Item" style="width: 100%;">
+                    </div>
+                    <a id="what-happens" href="#" onclick="return false" data-toggle="popover" title=""
+                             data-content="The item will be bumped back to the top of search results!
+                             The expiration date will be reset to 60 days from now."
+                             data-placement="bottom" data-trigger="hover">
+                       What's going to happen?
+                   </a>
+                </div>
+                </form>
            {% endif %}
 
            {% if post.owner == request.user and not post.pending_flag and not post.sold %}
@@ -135,13 +151,23 @@
     <div class="info-detail">{{ post.category.name }}</div>
 
     {% if request.user == post.owner %}
-        <div class="info-title">DATE EXPIRES</div>
-        <div class="info-detail">{{ post.expire_date.date }}</div>
+        <div class="info-column">
+            <div class="info-title">DATE EXPIRES</div>
+            <div class="info-detail">{{ post.expire_date.date }}</div>
+        </div><!-- end #info-column -->
+        <div class="help-column">
+            <a href="#" class="post-icon" onclick="return false;" data-toggle="popover" title=""
+               data-content="This item will not show up in search results once it has expired.<br><br>
+               A button to bump the item back to the top will appear a week before it expires!"
+               data-placement="right" data-trigger="hover" style="margin-left:10px;" data-original-title="">
+           <i class="icon-question-sign" style="color:black; font-size:18px"></i></a>
+        </div>
     {% endif %}
     {% if post.sold %}
         <div class="info-title">DATE SOLD</div>
         <div class="info-detail">{{ post.sold_date.date }}</div>
     {% endif %}
+
 </div><!-- end #item-info -->
 
 {% if request.user.is_authenticated %}
@@ -170,3 +196,11 @@
         </div>
 </div><!-- end #item-actions -->
 {% endif %}
+
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap-tooltip.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap-popover.js"></script>
+<script type="text/javascript">
+$(document).ready( function() {
+    //craziness that creates a popover with no title
+});
+</script>

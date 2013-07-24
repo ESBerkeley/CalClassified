@@ -170,6 +170,15 @@
   margin-bottom: 4px;
 }
 
+.info-column,
+.help-column {
+    display:inline-block;
+}
+
+.help-column {
+    position:absolute; margin-top:10px;
+}
+
 #description {
   white-space: pre-wrap;
 }

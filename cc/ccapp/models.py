@@ -41,6 +41,12 @@ class Post(models.Model):
             return True
         return False
 
+    @property
+    def is_bumpable(self):
+        if datetime.now()+timedelta(days=7) > self.expire_date:
+            return True
+        return False
+
 class Category(models.Model):
     name = models.CharField(max_length=25)
     def __unicode__(self):

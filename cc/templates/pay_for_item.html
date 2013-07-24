@@ -23,7 +23,7 @@
     <h2>Sell Item</h2>
   </div>
   <div class="small-body">
-  <form action="{% url sell_item_POST %}" method="POST" id="sellForm" enctype="multipart/form-data">{% csrf_token %}
+  <form action="{% url pay_for_item %}" method="POST" id="creditCardForm">{% csrf_token %}
   <div id="fields form">
     {% load widget_tweaks %}
     {% for field in form %}

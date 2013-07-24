@@ -4,6 +4,10 @@
 
 {% block title %}Account - Selling {% endblock %}
 
+{% block head %}
+     <link href="{{ STATIC_URL }}css/profile.css" rel="stylesheet">
+{% endblock %}
+
 {% block profile_content %}
     <div>
 
@@ -51,6 +55,7 @@
     <thead>
         <tr>
             <th>Item Title</th>
+            <th>Date Expires</th>
             <th><center>Delete Item</center></th>
         </tr>
     </thead>
@@ -62,6 +67,9 @@
         {% if item.is_expired %}
             <span style="color:red">(Expired)</span>
         {% endif %}
+      </td>
+      <td>
+          {{ item.expire_date.date }}
       </td>
       <td>
         <center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ item.id }}"></a></center>
@@ -93,6 +101,55 @@
     </tbody>
     </table>
     <br>
+    {% endif %}
+
+    {% if ifs_expired %}
+        <table class="table table-striped">
+            <caption><h4> Expired Items </h4></caption>
+
+            <thead>
+            <tr>
+                <th class="table-start">Item Title</th>
+                <th class="table-mid">Date Expired</th>
+                <th><center>Repost</center></th>
+            </tr>
+            </thead>
+
+        <tbody>
+        {% for item in ifs_expired %}
+            <tr>
+                <td>
+                    <a href = "/{{ item.pk }}"> {{ item.title }} </a>
+                </td>
+                <td>
+                    {{ item.expire_date.date }}
+                </td>
+                <td>
+                    <center><a class="icon-refresh" data-toggle="modal" href="#repost-modal-{{ item.id }}"></a></center>
+                    <!-- "are you sure you want to delete" modal window -->
+                    <div class="modal fade hide" id="repost-modal-{{ item.id }}">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                            <h3>Repost Item</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Are you sure you want to repost your item '{{ item.title }}'?
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary verify-repost" value="{{ item.id }}" type="button" data-loading-text="Reposting...">Repost</button>
+                            <button class="btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+
+
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
     {% endif %}
 
     {% if ifs_sold %}
@@ -133,6 +190,12 @@
 
         </tbody>
         </table>
+    {% else %}
+        <center><h4> Sold Items </h4></center>
+        <center><p>
+            You haven't finished selling any items yet. <br>
+            Mark your items as sold if they're done!
+        </p></center>
     {% endif %}
 
     {% if not my_threads and not ifs_waiting_list and not ifs_sold %}
@@ -143,7 +206,7 @@
     {% endif %}
     </div>
 
-    <!-- success modal content -->
+    <!-- delete post success modal -->
     <div class="modal fade hide" id="delete-success-modal">
         <div class="modal-header">
             <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
@@ -151,6 +214,20 @@
         </div>
         <div class="modal-body">
             <p>Success, post deleted!</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn close-refresh" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+    <!-- repost success modal -->
+    <div class="modal fade hide" id="repost-success-modal">
+        <div class="modal-header">
+            <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Repost Item</h3>
+        </div>
+        <div class="modal-body">
+            <p>Success, item reposted!</p>
         </div>
         <div class="modal-footer">
             <button class="btn close-refresh" data-dismiss="modal">Close</button>
