@@ -10,7 +10,7 @@ djcelery.setup_loader()
 APPEND_SLASH = True
 
 #This line must be enabled for local development (unless you want to install and configure rabbitmq)
-BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 
 #The following line is for production, for use with a properly configured rabbitmq.
 BROKER_URL = 'amqp://CCBROKER:CCBROKERPW@localhost:5672//'
@@ -21,15 +21,15 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_DOC_ROOT = '/media'
 # Django settings for cc project.
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = False
+TEMPLATE_DEBUG = False
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -52,7 +52,6 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-"""
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -138,6 +137,7 @@ MIDDLEWARE_CLASSES = (
     'middleware.SubdomainsMiddleware', # this is for subdomain
     'middleware.BannedMiddleware',
     #'middleware.ActiveUserMiddleware', # this is to logout FB users that no longer have permissions
+    # Supposedly unrequired! :)
 )
 
 
@@ -174,7 +174,7 @@ INSTALLED_APPS = (
     'templated_email',
     'django_resized',
     'widget_tweaks',
-    'djkombu',                           #This needs to be changed for server production
+#    'djkombu',                           #This needs to be changed for server production
     'djcelery',
 #    'requests',
 #    'facepy',
@@ -242,7 +242,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'simple', 
-            'filename': '../logs/bnm_log.log'
+            'filename': '/var/www/calclassified/logs/bnm_log.log'
         },
     },
     'loggers': {
@@ -273,15 +273,15 @@ DJANGORESIZED_DEFAULT_SIZE = [800, 600]
 
 FACEBOOK_APP_ID = '171685159547122'
 FACEBOOK_APP_SECRET = '1b87bf57984631d3830f64edd60ebfcf'
-FACEBOOK_LOGIN_DEFAULT_REDIRECT = '/accounts/profile/'
+FACEBOOK_LOGIN_DEFAULT_REDIRECT = '/browse/'
 FACEBOOK_STORE_FRIENDS = True
 FACEBOOK_STORE_GROUPS = True
 FACEBOOK_CELERY_STORE = True
 
-FACEBOOK_REDIRECT_URI = 'http://test.buynear.me:8000/facebook/connect/?facebook_login=1'
+#FACEBOOK_REDIRECT_URI = 'http://test.buynear.me:8000/facebook/connect/?facebook_login=1'
 #FACEBOOK_CELERY_TOKEN_EXTEND = True # Turn on later when we know it will work.
 
-CELERY_ALWAYS_EAGER = True # USE FOR DEVELOPMENT, TURN OFF ON PRODUCTION
+#CELERY_ALWAYS_EAGER = True # USE FOR DEVELOPMENT, TURN OFF ON PRODUCTION
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = SITE_ROOT + '/templates/email/'
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django' # FOR PROD
