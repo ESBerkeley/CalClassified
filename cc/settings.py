@@ -10,10 +10,10 @@ djcelery.setup_loader()
 APPEND_SLASH = True
 
 #This line must be enabled for local development (unless you want to install and configure rabbitmq)
-#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 
 #The following line is for production, for use with a properly configured rabbitmq.
-BROKER_URL = 'amqp://CCBROKER:CCBROKERPW@localhost:5672//'
+#BROKER_URL = 'amqp://CCBROKER:CCBROKERPW@localhost:5672//'
 
 
 
@@ -21,15 +21,15 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_DOC_ROOT = '/media'
 # Django settings for cc project.
 
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -52,7 +52,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
+"""
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -174,7 +174,7 @@ INSTALLED_APPS = (
     'templated_email',
     'django_resized',
     'widget_tweaks',
-#    'djkombu',                           #This needs to be changed for server production
+    'djkombu',                           #This needs to be changed for server production
     'djcelery',
 #    'requests',
 #    'facepy',
@@ -281,7 +281,7 @@ FACEBOOK_CELERY_STORE = True
 #FACEBOOK_REDIRECT_URI = 'http://test.buynear.me:8000/facebook/connect/?facebook_login=1'
 #FACEBOOK_CELERY_TOKEN_EXTEND = True # Turn on later when we know it will work.
 
-#CELERY_ALWAYS_EAGER = True # USE FOR DEVELOPMENT, TURN OFF ON PRODUCTION
+CELERY_ALWAYS_EAGER = True # USE FOR DEVELOPMENT, TURN OFF ON PRODUCTION
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = SITE_ROOT + '/templates/email/'
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django' # FOR PROD
