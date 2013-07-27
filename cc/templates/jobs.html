@@ -1,0 +1,63 @@
+{% extends "about_base.html" %}
+
+{% block title %}BuyNearMe - Jobs{% endblock %}
+
+{% block content %}
+    <div id="about-box" class="span9">
+
+      <div class="small-title"><h2>Jobs</h2></div>
+
+      <div class="small-body" style="padding-bottom: 10px;">
+        <center><h3 style="margin-top: 0">Interested in working with us?</h3></center>
+        <center><img src="{{ STATIC_URL }}images/Berkeley.jpg" width="80%" style="margin-bottom: 10px;"/></center>
+            <p>
+            We’re building something that could quite literally build a new economy and transform lives by connecting
+            people. If we do our job well, we’ll create something that matters as much to them as it does to us,
+            and all of our lives will be better for it. We have a rare opportunity. Let’s make the most of it together.
+            <br></p>
+            <p style="font-weight:bold">Email us at <a href="mailto:contact@buynear.me">contact@buynear.me</a> to apply or to get more information!</p>
+            <h3>Positions</h3>
+            <h4>Mobile Web Developer</h4>
+            <p><ul>
+                <li>Design and update our mobile web application for a product used by thousands of your classmates</li>
+                <li>Lead the efforts to develop the iOS/Android application once we grow our userbase</li>
+            </ul></p>
+            <h4>Public Relations</h4>
+            <p><ul>
+                <li>Lead our efforts in expanding to a new campus, building a new userbase of thousands of people</li>
+                <li>Establishing partnerships with student organizations and professors in order to expand our brand</li>
+                <li>Record and design promotional videos to show off what we do and how we can help students get
+                    money for the stuff in their closet</li>
+            </ul></p>
+            <h4>Social Media Specialist</h4>
+            <p><ul>
+                <li>Direct and handle our online marketing on Social Media</li>
+                <li>Build our brand image, respond and collect user feedback</li>
+                <li>Manage our Tumblr, Facebook Page, Blog, and Twitter accounts</li>
+                <li>Design flyers, banners, and graphics to use on our site</li>
+            </ul></p>
+            <h4>Marketing Lead</h4>
+            <p><ul>
+                <li>Lead our marketing efforts across campus and soon across the nation!</li>
+            </ul>
+            <br>
+            Best Regards,<br>
+            Buy Near Me Team
+            </p>
+      </div>
+
+    </div>
+{% endblock %}
+
+{% block post_js %}
+  <script type="text/javascript">
+    //$(".side-icon").hide();
+    //$("#about-icon").show();
+    $('#jobs-link').css('color', 'black');
+    $('#jobs-link').css('text-decoration', 'none');
+    $('#jobs-link').css('cursor', 'default');
+    $('#jobs-link').click(function(e) {
+      e.preventDefault();
+    });
+  </script>
+{% endblock %}

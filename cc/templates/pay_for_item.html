@@ -14,16 +14,23 @@
 {% endblock %}
 {% block sidebar %}{% endblock %}
 
+{% block pre_js %}
+<script type="text/javascript">
+  var csrf_token = "{{ csrf_token }}";
+  var csrfmiddlewaretoken = "{{ csrf_token }}";
+</script>
+{% endblock %}
+
 {% block content %}
     
 <div id="signup-container" class="container">
   <div id="signup-box" class="span12">
 
   <div class="small-title">
-    <h2>Sell Item</h2>
+    <h2>Pay For Item</h2>
   </div>
   <div class="small-body">
-  <form action="{% url pay_for_item %}" method="POST" id="creditCardForm">{% csrf_token %}
+  <form action="{% url pay_for_item %}" method="POST" id="credit-card-form">{% csrf_token %}
   <div id="fields form">
     {% load widget_tweaks %}
     {% for field in form %}
@@ -31,13 +38,14 @@
             {{ field.errors }}
             <label class="control-label" id="{{field.html_name}}-id">{{ field.label }}</label>
             <div class="controls">
-                {{ field }}
+                 {{ field }}
               <span class="help-block">{{ field.help_text|safe }}</span>
             </div>
           </div>
     {% endfor %}
 
   </div>
+  <div class="credit-card-verification"></div>
   <input id="submit" type="submit" class="btn btn-primary" type="button" data-loading-text="Submitting..." value="Submit">
   <!--button id="next-form" class="btn btn-primary" type="button">Next >></button-->
 
@@ -56,10 +64,10 @@
 <script type="text/javascript" src="{% get_static_prefix %}jquery-validation-1.9.0/jquery.validate.min.js"></script>
 <script type="text/javascript" src="{% get_static_prefix %}js/chosen.jquery.js"></script>
 <script type="text/javascript" src="{% get_static_prefix %}js/pay_for_item.js"></script>
-<!--script type="text/javascript">
-    $(".chzn-select").chosen();
-    var uploadImageCounter = 1;
-</script-->
+<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+<script type="text/javascript">
+    balanced.init('/v1/marketplaces/MP4lrWLS8dK2O9X2tCh9qsbw');
+</script>
 
 {% endblock %}
 

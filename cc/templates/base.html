@@ -178,11 +178,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     <div class="footer">
       <div class="container">
         <p>
-          <div class="span8">
+          <div class="span9">
             <a href="{% url about %}" class="footer-text">About</a>
+            <a href="{% url team %}" class="footer-text">Team</a>
+            <a href="{% url jobs %}" class="footer-text">Jobs</a>
             <a href="{% url feedback %}" class="footer-text">Contact</a>
             <a href="{% url terms %}" class="footer-text" >Terms</a>
-            <a href="{% url privacy %}" class="footer-text">Privacy</a>
+            <a href="{% url privacy %}" class="footer-copy">Privacy</a>
             <!--<span class="footer-copy">&copy; buynearme 2012</span>-->
           </div>
           <div class="fb-like span2" href="https://www.facebook.com/BuyNearMe" data-href="https://www.facebook.com/BuyNearMe" data-send="true" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana">

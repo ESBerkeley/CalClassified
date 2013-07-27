@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name="faq"),
     url(r'^timeline/$', TemplateView.as_view(template_name='timeline.html'), name="timeline"),
     url(r'^how_it_works/$', TemplateView.as_view(template_name='how_it_works.html'), name="how_it_works"),
+    url(r'^jobs/$', TemplateView.as_view(template_name='jobs.html'), name="jobs"),
     url(r'^contact/$', ContactView.as_view()),
     url(r'^privacy/$', TemplateView.as_view(template_name='privacy_policy.html'), name="privacy"),
     url(r'^feedback/$', FeedbackView.as_view(), name="feedback"),
@@ -30,7 +31,7 @@ urlpatterns = patterns('',
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
     url(r'^repost/$', 'ccapp.views.repost_item', name='repost_item'),
     url(r'^ajax_repost/$', 'ccapp.views.ajax_repost_item', name='ajax_repost_item'),
-    #url(r'^pay_for_item/$', 'ccapp.views.pay_for_item', name='pay_for_item'),
+    url(r'^pay_for_item/$', 'ccapp.views.pay_for_item', name='pay_for_item'),
 
 
     #ACCOUNT:
