@@ -3,6 +3,10 @@
 {% block head %}
 <link href="{{ STATIC_URL }}css/about.css" rel="stylesheet" type="text/css">
 {% endblock %}
+{% block url_metadata %}
+    <meta property="og:url" content="http://buynear.me{% url about %}"/>
+{% endblock %}
+
 
 {% block extra_css %}
 

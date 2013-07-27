@@ -7,6 +7,16 @@
     margin-left:8px;
 }
 
-.description {
+.how-it-works p {
+    margin-top:5px;
+    margin-bottom:30px;
+    font-size:18px;
+}
 
+p {
+    font-weight:300;
+}
+
+.about-jobs li {
+    font-weight:300;
 }
