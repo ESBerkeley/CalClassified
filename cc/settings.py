@@ -242,7 +242,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'simple', 
-            'filename': '/var/www/calclassified/logs/bnm_log.log'
+            'filename': SITE_ROOT + '/../logs/bnm_log.log'
         },
     },
     'loggers': {
