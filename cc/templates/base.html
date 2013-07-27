@@ -120,7 +120,7 @@
 
             {% if request.user.is_authenticated %}
 
-            <li><a href="{% url user request.user.id %}"> Hi, {{ request.user.first_name }}! </a></li>
+            <li><a href="{% url user request.user.id %}"> <img id="navbar-img" src="{{ request.user.get_profile.get_image_url }}"/> {{ request.user.get_full_name }}</a></li>
 
             <li><div class="dropdown tooltips" rel="tooltip" data-placement="bottom" title="Notifications"><div id="friend_notifications_dropdown"></div></div></li>
 

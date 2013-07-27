@@ -21,6 +21,11 @@
     position: relative;
 }
 
+.image-wrapper img {
+    max-height: 180px;
+    max-width: 180px;
+}
+
 .change-photo-label {
     position: absolute;
     bottom: 0;
