@@ -84,13 +84,15 @@ label.error {
                     <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
                         <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
                     </div>
-                    <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                    <div id="new-image0" class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
                   <span class="btn btn-file">
                       <span class="fileupload-new">Select image</span>
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="images" />
                   </span>
-                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                  <a class="btn fileupload-exists" onclick="rotateImage('#rotate-value0', '#new-image0', 90)">Rotate <i class="icon-repeat"></i></a>
+                  <input id="rotate-value0" name="rotate-value0" type="hidden" value="0">
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                 </div>
             </div>
             <div id="upload2" style="display: none;">
@@ -98,13 +100,15 @@ label.error {
                     <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
                         <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
                     </div>
-                    <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                    <div id="new-image1" class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
                   <span class="btn btn-file">
                       <span class="fileupload-new">Select image</span>
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="images" />
                   </span>
-                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                  <a class="btn fileupload-exists" onclick="rotateImage('#rotate-value1', '#new-image1', 90)">Rotate <i class="icon-repeat"></i></a>
+                  <input id="rotate-value1" name="rotate-value1" type="hidden" value="0">
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                 </div>
             </div>
             <div id="upload3" style="display: none;">
@@ -112,13 +116,15 @@ label.error {
                     <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
                         <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
                     </div>
-                    <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                    <div id="new-image2" class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
                   <span class="btn btn-file">
                       <span class="fileupload-new">Select image</span>
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="images" />
                   </span>
-                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                  <a class="btn fileupload-exists" onclick="rotateImage('#rotate-value2', '#new-image2', 90)">Rotate <i class="icon-repeat"></i></a>
+                  <input id="rotate-value2" name="rotate-value2" type="hidden" value="0">
+                  <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                 </div>
             </div>
             
@@ -285,6 +291,16 @@ $(document).ready(function(){
     }
   } //endfn
 
+  function rotateImage(nameValue, nameImage, degree) {
+    var previousDegree = parseInt($(nameValue).val());
+    var newDegree = previousDegree + degree;
+    $(nameValue).val(newDegree);
+    $(nameImage).css({
+      "transform":"rotate("+newDegree+"deg)",
+      "-ms-transform":"rotate("+newDegree+"deg)",
+      "-webkit-transform":"rotate("+newDegree+"deg)"
+    });
+  }
 
 </script>
 {% endblock %}

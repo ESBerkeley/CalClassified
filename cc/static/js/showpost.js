@@ -1,5 +1,8 @@
 $(document).ready( function() {
-
+    $(".post-icon").popover({
+        template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
+        html: true
+    });
 
     $(".bookmark-activate").click( function() {
         $("#active-bookmark").toggle()

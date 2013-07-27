@@ -1,0 +1,89 @@
+<link href="{{ STATIC_URL }}css/shared/change-photo-modal.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/chosen.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/animate-custom.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap-fileupload.min.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}jcrop/css/jquery.Jcrop.min.css" />
+
+<!-- first step/modal -->
+<div id="change-photo-modal" class="modal hide fade" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>Change Photo</h3>
+  </div>
+  <div class="modal-body">
+      <div class="row">
+          <div class="span2 current-photo">
+              <img src="{{ user_profile.get_image_url }}" height="90" width="90"/>
+              <div>Current Photo</div>
+              <div id="delete-photo">Delete Photo</div>
+          </div>
+          <div class="span4">
+              <form id="temp-photo-form" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <label for="new-photo" id="upload-photo">Upload Photo</label>
+                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                      <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
+                          <img src="http://www.placehold.it/50x50/EFEFEF/AAAAAA" />
+                      </div>
+                      <div id="image0" class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                      <span class="btn btn-file">
+                          <span class="fileupload-new">Select image</span>
+                          <span class="fileupload-exists">Change</span>
+                          <input type="file" name="temp-photo" />
+                      </span>
+                      <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                  </div>
+              </form>
+          </div>
+      </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button id="first-upload" class="btn btn-primary" data-loading-text="Loading...">Next</button>
+  </div>
+</div>
+
+
+<!-- second modal -->
+<div id="crop-photo-modal" class="modal hide fade" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>Crop Photo</h3>
+  </div>
+  <div class="modal-body">
+      <div class="row">
+          <div class="crop-wrapper">
+              <center class="crop-inject">
+                    <!-- <img src='"+imgUrl+"'/> to be ajax inject -->
+              </center>
+          </div>
+{#          <div class="preview-wrapper" ></div> <!-- unused -->#}
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button id="upload" class="btn btn-primary" data-loading-text="Uploading...">Upload</button>
+  </div>
+</div>
+
+<form id="coords-form">
+    {% csrf_token %}
+  <input type="hidden" name="x1" value="" />
+  <input type="hidden" name="y1" value="" />
+  <input type="hidden" name="x2" value="" />
+  <input type="hidden" name="y2" value="" />
+  <input type="hidden" name="width" value="" />
+</form>
+
+<script type="text/javascript">
+    var csrfToken = "{{  csrf_token }}";
+</script>
+
+
+<!-- NOTE: REQUIRES THESE IMPORTS IN THE TEMPLATE THAT INCLUDES THEM
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/chosen.jquery.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/shared/change-photo-modal.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jcrop/js/jquery.Jcrop.min.js"></script>
+-->

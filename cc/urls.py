@@ -13,15 +13,16 @@ urlpatterns = patterns('',
     #url(r'^$', MainView.as_view(), name='mainview'),
     url(r'^$','ccapp.views.index_home',name="mainview"),
     url(r'^browse/$','ccapp.views.boxview',name="browse"),
-    url(r'^sell/$','ccapp.views.createlistingviewIFS',name="createIFS"),
-    url(r'^post/$','ccapp.views.createlistingviewIFS',name="createIFS2"), #delete in future, in case for hard links
-    url(r'^sell_item/$','ccapp.views.createlistingPOST',name="createIFSPOST"),
+    url(r'^sell/$', 'ccapp.views.sell_item_IFS', name="createIFS"),
+    url(r'^post/$', 'ccapp.views.sell_item_IFS', name="sell_item"), #delete in future, in case for hard links
+    url(r'^sell_item/$', 'ccapp.views.sell_item_POST', name="sell_item_POST"),
     url(r'^about/$', AboutView.as_view(), name="about"),
     url(r'^team/$', TemplateView.as_view(template_name='team.html'), name="team"),
     url(r'^testimonials/$', TemplateView.as_view(template_name='testimonials.html'), name="testimonials"),
     url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name="faq"),
     url(r'^timeline/$', TemplateView.as_view(template_name='timeline.html'), name="timeline"),
     url(r'^how_it_works/$', TemplateView.as_view(template_name='how_it_works.html'), name="how_it_works"),
+    url(r'^jobs/$', TemplateView.as_view(template_name='jobs.html'), name="jobs"),
     url(r'^contact/$', ContactView.as_view()),
     url(r'^privacy/$', TemplateView.as_view(template_name='privacy_policy.html'), name="privacy"),
     url(r'^feedback/$', FeedbackView.as_view(), name="feedback"),
@@ -29,20 +30,25 @@ urlpatterns = patterns('',
     url(r'^terms/$', TemplateView.as_view(template_name='terms.html'), name="terms"),
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
     url(r'^repost/$', 'ccapp.views.repost_item', name='repost_item'),
+    url(r'^ajax_repost/$', 'ccapp.views.ajax_repost_item', name='ajax_repost_item'),
+    url(r'^pay_for_item/$', 'ccapp.views.pay_for_item', name='pay_for_item'),
+
 
     #ACCOUNT:
     url(r'^facebook/', include('django_facebook.urls')),
+    #EVERY URL THAT STARTS WITH "/accounts/" IS IN django_facebook.auth_urls
     url(r'^accounts/', include('django_facebook.auth_urls')),
-    url(r'^fb_import/$', 'ccapp.views.fb_import', name='fb_import'),
+    url(r'^fb_import/$', 'ccapp_facebook.views.fb_import', name='fb_import'),
     url(r'^account_setup/$', 'ccapp.views.account_setup', name='account_setup'),
     url(r'^verify_user/(?P<auth_key>[\w\+%_& ]+)/$','ccapp.views.verify_user'),
     url(r'^change_email/(?P<auth_key>[\w\+%_& ]+)/$','ccapp.views.change_email'),
+    url(r'^user/(?P<user_id>\d+)/$', 'ccapp.views.user', name='user'),
 
     #ADMIN/DEBUG
-    url(r'^friends/debug/$', 'ccapp.views.friendslist', name='test_friends'),
-    url(r'^fb_items/$', 'ccapp.views.fb_items', name='add_fb_items'),
-    url(r'^fb_admin/$', 'ccapp.views.fb_admin', name='approve_fb_items'),
-    #url(r'^fb_to_excel/$', 'ccapp.views.fb_to_excel', name='fb_to_excel'),
+    url(r'^friends/debug/$', 'ccapp_facebook.views.friendslist', name='test_friends'),
+    #url(r'^fb_items/$', 'ccapp.views.fb_items', name='add_fb_items'),
+    #url(r'^fb_admin/$', 'ccapp.views.fb_admin', name='approve_fb_items'),
+    #url(r'^fb_to_excel/$', 'ccapp_faceboook.views.fb_to_excel', name='fb_to_excel'),
 
     #??? not sure if functional still
     #url(r'^confirmIFS/(?P<pid>\d+)/(?P<secret>\d+)$','ccapp.views.confirmviewIFS'),
@@ -80,14 +86,19 @@ urlpatterns = patterns('',
     url(r'^canvas/', 'ccapp.views.canvas'),
     url(r'^user_posts/', 'ccapp.views.user_posts'),
     url(r'^bookmark/', 'ccapp.views.bookmark_post'),
+
+    #AJAX
     url(r'^ajax_contact_seller/$','ccapp.views.ajax_contact_seller'),
     url(r'^ajax_delete_thread/$','ccapp.views.ajax_delete_thread'),
     url(r'^ajax_delete_post/$','ccapp.views.ajax_delete_post'),
     url(r'^ajax/delete_comment/(?P<comment_id>\d+)/$','ccapp.views.ajax_delete_comment', name='ajax_delete_comment'),
     url(r'^ajax/delete_response/(?P<comment_id>\d+)/$','ccapp.views.ajax_delete_response', name='ajax_delete_response'),
+    url(r'^ajax/upload_temp_photo/$', 'ccapp.views.upload_temp_photo', name='ajax_upload_temp_photo'),
+    url(r'^ajax/upload_profile_photo/$', 'ccapp.views.upload_profile_photo', name='ajax_upload_profile_photo'),
+    url(r'^ajax/delete_profile_photo/$', 'ccapp.views.delete_profile_photo', name='ajax_delete_profile_photo'),
+
     url(r'^logout/$', 'django.contrib.auth.views.logout',
                           {'next_page': '/'}),
-
     url(r'', include('multiuploader.urls')),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

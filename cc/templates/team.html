@@ -8,42 +8,82 @@
             <div class="small-title">
                 <h2>Team</h2>
             </div>
-
-
             <div class="small-body" style="padding-bottom: 10px;">
-                <center><h3>Our Mission: To make buying and selling easy</h3></center>
-                <center><img src="{{ STATIC_URL }}bnm_team.jpg" width="80%" style="margin-bottom: 10px;"/></center>
-                <center>
-                    <p style="color:#4c4c4c; font-size: 14px; font-style: italic">
-                        From left to right: Seung, Rory, Jessie, Eric, Calvin
-                    </p>
-                </center>
-                <p>
-                    BuyNearMe began on April 2012 with a group of friends from UC Berkeley with the simple idea that campus trading should be a lot easier,
+                <p style="color:#4c4c4c; font-size: 14px; font-style: italic">
+                    BuyNearMe began on April 2012 with a group of friends from UC Berkeley with the simple idea that campus
+                    trading should be a lot easier,
                     although we learned that it would not be simple to translate this idea into a product.
-                    Finally on January 2013, after months of energy drinks (majority consumed by Rory), Stack Overflow threads, and a bunch of random keyboard clicks later BuyNearMe was born!
-                    <br><br>
-                    BuyNearMe is a student-run social marketplace focused on providing an intuitive way for you to sell to your friends
-                    and people who share your interests. Use it to sell that furniture that's gathering dust in the corner,
-                    or to pick up cheap textbooks without going to the store.
-                    <br><br>
-                    We're making it easy to get rid of your stuff in a safe and friendly way to reach the people closest to you, literally and figuratively.
-                    <br><br>
-                    <!--
-                    To sell, simply log in via Facebook (or create a non-Facebook account) and upload a picture and description of that old desk lamp.
-                    Set a price, and share the post with people you know.
-                    Then, interested buyers will shoot you a message to your registered e-mail inbox as well as your website account to arrange a meet to take it off your hands.
-                    <br><br>
-                    Conversely, if you're looking to buy something, just create an account,
-                    and filter and search for what you want. When you find something, just click the "buy/contact" button to arrange the pickup.
-
-                    <br><br>
-                    -->
-                    As a new and evolving site, we are very open to hear what you think. Please direct any suggestions, questions, criticisms or death threats to feedback@buynear.me.
-                    <br><br>
-                Best Regards,<br>
-                    Buy Near Me Team
-                
+                    Finally on January 2013, after months of energy drinks (majority consumed by Rory),
+                    Stack Overflow threads, and a bunch of random keyboard clicks later BuyNearMe was born!
+                </p>
+                <p>
+                    <div class="row">
+                        <div class="span2">
+                            <img class="profile-image" src="{{ STATIC_URL }}images/team/eric.png" />
+                        </div>
+                        <div class="span6">
+                            Eric Xiao is a senior in Electrical Engineering and Computer Science at Cal.
+                            He has experience ranging from freelance web development, research,
+                            and mobile apps to three software internships
+                            across the Bay Area. Eric is the current lead of the team,
+                            managing project goals, developing features, and making sure the project is progressing in
+                            the right direction while also being heavily involved in the development and the overall business vision.
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="span2">
+                            <img class="profile-image" src="{{ STATIC_URL }}images/team/seung.png" />
+                        </div>
+                        <div class="span6">
+                            Seung Joo Lee is a senior in Electrical Engineering and Computer Science at Cal.
+                            He has developed multiple websites and has been employed professionally many times in his short CS career,
+                            ranging from internships to individual contract work.
+                            Seung is a full stack developer for BuyNearMe, from front-end design to back-end scripting as well as
+                            developing the mobile version of BuyNearMe.
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="span2">
+                            <img class="profile-image" src="{{ STATIC_URL }}images/team/jessie.png" />
+                        </div>
+                        <div class="span6">
+                            Jessie Tang is a third year at UC Berkeley, studying Business Administration with
+                            a background in entrepreneurship. Jessie is in charge of everything on the business and marketing side,
+                            particularly working with overall business vision and searching for new opportunities externally.
+                            She brings her sharp mind, dedication, and hustle to the business.
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="span2">
+                            <img class="profile-image" src="{{ STATIC_URL }}images/team/calvin.png" />
+                        </div>
+                        <div class="span6">
+                            Calvin Woo is a senior studying Electrical Engineering and Computer Science at UC Berkeley.
+                            Calvin works as a front-end designer for BuyNearMe, constructing the user experience to be as smooth as possible.
+                            He is also developing the mobile version of BuyNearMe.
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="span2">
+                            <img class="profile-image" src="{{ STATIC_URL }}images/team/rory.png" />
+                        </div>
+                        <div class="span6">
+                            Rory Timar is a senior Mechanical Engineering and Math double major who enjoys coding, building robots,
+                            and solving problems. He is fluent in building web apps,
+                            and configures and maintains the infrastructure of BuyNearMe server-side as the sysadmin.
+                            He enjoys dabbling in robotics and computer vision from time to time.
+                            <br>
+                        </div>
+                    </div>
+                    <br>
                 </p>
             </div>
         </div>
@@ -51,7 +91,11 @@
 
 {% block post_js %}
   <script type="text/javascript">
-    $(".side-icon").hide();
-    $("#team-icon").show();
+    $('#team-link').css('color', 'black');
+    $('#team-link').css('text-decoration', 'none');
+    $('#team-link').css('cursor', 'default');
+    $('#team-link').click(function(e) {
+      e.preventDefault();
+    });
   </script>
 {% endblock %}

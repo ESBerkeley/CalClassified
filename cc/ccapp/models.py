@@ -41,6 +41,12 @@ class Post(models.Model):
             return True
         return False
 
+    @property
+    def is_bumpable(self):
+        if datetime.now()+timedelta(days=7) > self.expire_date:
+            return True
+        return False
+
 class Category(models.Model):
     name = models.CharField(max_length=25)
     def __unicode__(self):
@@ -95,7 +101,7 @@ class CircleForm(ModelForm):
         exclude = ('url_key','is_city','creator', 'fb_id')
 
 
-class ItemForSale(Post):
+class ItemForSale(Post): #lol extends post be sure to check its field's as well
     price = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     category = models.ForeignKey(Category)
     circles = models.ManyToManyField(Circle)
@@ -252,7 +258,39 @@ class FacebookPost(ItemForSale):
 
 FacebookFormSet = modelformset_factory(FacebookPost, max_num=0, fields=('title','price','category', 'approved'))
 """
+"""
+class ClothingItem(ItemForSale):
+    MALE = 'M'
+    FEMALE = 'F'
+    GENDER_CHOICES = (
+        (MALE, 'M'),
+        (FEMALE, 'F'),
+    )
+    XSMALL = 'XS'
+    SMALL = 'S'
+    MEDIUM = 'M'
+    LARGE = 'L'
+    XL = 'XL'
+    SIZE_CHOICES = (
+        (XSMALL, 'XS'),
+        (SMALL, 'S'),
+        (MEDIUM, 'M'),
+        (LARGE, 'L'),
+        (XL, 'XL')
+    )
+    gender = models.CharField(max_length=1,
+                              choices=GENDER_CHOICES,
+                              default=MALE)
+    size = models.CharField(max_length=2,
+                            choices=SIZE_CHOICES,
+                            default=SMALL)
 
+class ClothingItemForm(ModelForm):
+    class Meta:
+        model = ClothingItem
+        exclude = ('approved', 'body', 'cached_thumb', 'category', 'circles', 'deleted', 'expire_date','images', 'key_data',
+                   'owner','owner_facebook_id', 'pending_buyer', 'pending_flag', 'price', 'sold', 'sold_date', 'title', 'time_created')
+"""
 class Notification(models.Model):
     """
     TYPES:
@@ -402,3 +440,9 @@ class FacebookPostForExcel(models.Model):
 
     class Meta:
         unique_together = ['user_id', 'facebook_id']
+
+class UserLike(models.Model):
+    actor = models.ForeignKey(User, related_name="actor_like_set")
+    receiver = models.ForeignKey(User, related_name="receiver_like_set")
+    def __unicode__(self):
+        return self.actor.get_full_name() + " likes " + self.receiver.get_full_name()

@@ -75,7 +75,7 @@
     <label for="fb_groups" class="select">Share with Facebook?</label>
         <div data-role="fieldcontain">
             <select name="fb_groups" id="fb_groups" multiple="multiple" data-native-menu="false">
-                <option>Facebook Groups</option>
+                <option>Select Facebook Groups</option>
                 {% for group in fb_groups %}
                     {% if group.name == "Free & For Sale" %}
                         <option value="{{ group.facebook_id }}" selected="selected">{{ group.name }}</option>

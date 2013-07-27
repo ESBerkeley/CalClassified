@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+<link href="{{ STATIC_URL }}css/about.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block extra_css %}
 
 {% endblock %}
@@ -9,13 +13,15 @@
     <div class="well sidebar-nav about-nav span3" style="background-color:white">
       <ul class="nav nav-list">
         <li class="about-heading"><h2>About</h2></li>
-        <li class="side-item"><h4><a id="link1" href="{% url about %}">What We Do</a></h4></li>
-        <li class="side-item"><h4><a id="link2" href="{% url privacy %}">Privacy Policy</a></h4></li>
-        <li class="side-item"><h4><a id="link3" href="{% url terms %}">Terms</a></h4></li>
+        <li class="side-item"><h4><a id="about-link" href="{% url about %}">What We Do</a></h4></li>
+        <li class="side-item"><h4><a id="team-link" href="{% url team %}">Team</a></h4></li>
+        <li class="side-item"><h4><a id="jobs-link" href="{% url jobs %}">Jobs</a></h4></li>
+        <li class="side-item"><h4><a id="privacy-link" href="{% url privacy %}">Privacy Policy</a></h4></li>
+        <li class="side-item"><h4><a id="terms-link" href="{% url terms %}">Terms</a></h4></li>
         <!--li class="side-item"><h4><a id="link4" href="{% url how_it_works %}">How It Works</a></h4></li>
         <li class="side-item"><h4><a id="link5" href="{% url faq %}">FAQ</a></h4></li>
         <li class="side-item"><h4><a id="link6" href="{% url testimonials %}">Testimonials</a></h4></li>
-        <li class="side-item"><h4><a id="link7" href="{% url team %}">Team</a></h4></li>
+
         <li class="side-item"><h4><a id="link7" href="{% url timeline %}">Timeline</a></h4></li-->
       </ul>
     </div><!--/.well -->

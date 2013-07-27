@@ -1,0 +1,169 @@
+#profile-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    display: table;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.profile-card {
+    background: white;
+    padding: 20px;
+    border: 1px solid #d1d1d1;
+}
+
+.image-column {
+    float: left;
+}
+
+.image-wrapper {
+    height: 180px;
+    width: 180px;
+    position: relative;
+}
+
+.change-photo-label {
+    position: absolute;
+    bottom: 0;
+    background-color: black;
+    opacity: 0.8;
+    color: white;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+.user-info {
+    margin-left: 20px;
+    float: left;
+}
+
+#user-name {
+    font-size: 32px;
+    color: #28b4ef;
+}
+
+.likes-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.relevant-wrapper {
+    float:left;
+}
+
+.relevant-item-data {
+    margin-top: 120px;
+    font-size: 18px;
+    color: rgb(95, 95, 95);
+}
+
+.relevant-item-number{
+    font-weight: bold;
+    font-size: 20px;
+    color: #28b4ef;
+}
+
+#items-listed {
+    padding-right: 10px;
+    border-right: 1px solid #c3c3c3;
+}
+
+#items-sold {
+    padding: 0 10px;
+    border-right: 1px solid #c3c3c3;
+}
+
+#items-bought {
+    padding-left: 10px;
+}
+
+#listings-header {
+    letter-spacing: 4px;
+    font-size: 22px;
+    font-weight: bold;
+    background-image: url('/static/images/greyish.jpg'); /** based on body background image **/
+    background-color: black;
+    display: inline-table;
+    margin-top: -31px;
+    padding: 0 4px 0 9px;
+}
+
+#listings-header-line {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin-top: 35px;
+}
+
+.items-container {
+    /*overflow: hidden;*/
+    /*width: 982px;*/
+    width: 988px;
+}
+
+.item {
+    background-color: white;
+    border: 1px solid #D3D3D3;
+    margin: 0 10px 10px 10px;
+    height: 218px;
+    padding: 7px 3px 3px 3px;
+    width: 300px;
+    float: left;
+    position: relative;
+}
+
+.item-image {
+    height: 194px;
+}
+
+.item-text {
+    padding-top: 4px;
+    height: 23px;
+    vertical-align: middle;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    text-align:center;
+    font-size: 16px;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: black;
+}
+
+.item-price {
+    position: absolute;
+    top: 7px;
+    right: 6px;
+    padding: 2px;
+    background-color: #fc8e00;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: white;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    border: 2px solid white;
+    border-top: none;
+}
+
+.item:hover {
+        -moz-box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);
+    -webkit-box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);
+    /*box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);*/
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+    border-color: #bbbbbb;
+    transition:0.2s;
+    -moz-transition:0.2s; /* Firefox 4 */
+    -webkit-transition: 0.2s; /* Safari and Chrome */
+    -o-transition: 0.2s; /* Opera */
+}
+
+.like-button, .unlike-button {
+    display: none;
+}
+
+.no-items-listed {
+    font-size: 24px;
+}

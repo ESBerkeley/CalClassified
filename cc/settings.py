@@ -165,6 +165,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_facebook',
     'ccapp',
+    'ccapp_facebook',
     'multiuploader',
     'sorl.thumbnail',
     'django.contrib.admin',

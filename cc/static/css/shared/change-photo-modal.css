@@ -1,0 +1,54 @@
+.modal {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.current-photo {
+    border-right: 1px solid #b3b3b3;
+    font-weight: 600;
+}
+
+#upload-photo {
+    font-size: 16px;
+}
+
+.crop-wrapper {
+    height: 400px;
+    width: 600px;
+    margin-left: 13px;
+    text-align: center;
+    float: left;
+}
+
+.crop-inject {
+    height: 400px;
+    width: 600px;
+    position: relative;
+}
+
+/*unused*/
+.preview-wrapper {
+    margin-left: 15px;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+
+}
+
+#crop-photo-modal.modal {
+    width: 620px !important;
+    margin-left: -310px !important;
+    /*margin-left: 0;*/
+    /*margin-right: auto;*/
+}
+
+#crop-photo-modal.modal .modal-body {
+    max-height: 450px;
+}
+
+#delete-photo {
+    color: #0088cc;
+}
+#delete-photo:hover {
+    color: #005580;
+    cursor: pointer;
+}
