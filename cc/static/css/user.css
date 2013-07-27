@@ -19,11 +19,11 @@
     height: 180px;
     width: 180px;
     position: relative;
+    overflow: hidden;
 }
 
 .image-wrapper img {
-    max-height: 180px;
-    max-width: 180px;
+    width: 180px;
 }
 
 .change-photo-label {

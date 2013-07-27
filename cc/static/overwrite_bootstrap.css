@@ -982,7 +982,7 @@ a.empty-link {
     padding:9px 12px;
     margin-right:2px;
     display:inline-block
-}.lt-ie9
+}
 
 .hero-search-container {
      background:url(/static/images/shading_opacity.png);
@@ -998,5 +998,5 @@ a.empty-link {
     width:342px;
     font-size:16px;
     font-weight:normal
-}.lt-ie9
+}
 
