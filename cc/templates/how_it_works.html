@@ -1,50 +1,64 @@
 {% extends "about_base.html" %}
 
-{% block title %}BuyNearMe - Team{% endblock %}
+{% block title %}BuyNearMe - How It Works{% endblock %}
 
 {% block content %}
         <div id="about-box" class="span11">
 
             <div class="small-title">
-                <h2>Team</h2>
+                <h2>How It Works</h2>
             </div>
 
 
-            <div class="small-body" style="padding-bottom: 10px;">
-                <center><h3>Our Mission: To make buying and selling easy</h3></center>
-                <center><img src="{{ STATIC_URL }}bnm_team.jpg" width="80%" style="margin-bottom: 10px;"/></center>
-                <center>
-                    <p style="color:#4c4c4c; font-size: 14px; font-style: italic">
-                        From left to right: Seung, Rory, Jessie, Eric, Calvin
-                    </p>
-                </center>
+            <div class="small-body how-it-works" style="padding-bottom: 10px;">
+                <h3>Buying:</h3>
+                <img src="{{ STATIC_URL }}images/how_it_works/browse.jpg" />
                 <p>
-                    BuyNearMe began on April 2012 with a group of friends from UC Berkeley with the simple idea that campus trading should be a lot easier,
-                    although we learned that it would not be simple to translate this idea into a product.
-                    Finally on January 2013, after months of energy drinks (majority consumed by Rory), Stack Overflow threads, and a bunch of random keyboard clicks later BuyNearMe was born!
-                    <br><br>
-                    BuyNearMe is a student-run social marketplace focused on providing an intuitive way for you to sell to your friends
-                    and people who share your interests. Use it to sell that furniture that's gathering dust in the corner,
-                    or to pick up cheap textbooks without going to the store.
-                    <br><br>
-                    We're making it easy to get rid of your stuff in a safe and friendly way to reach the people closest to you, literally and figuratively.
-                    <br><br>
-                    <!--
-                    To sell, simply log in via Facebook (or create a non-Facebook account) and upload a picture and description of that old desk lamp.
-                    Set a price, and share the post with people you know.
-                    Then, interested buyers will shoot you a message to your registered e-mail inbox as well as your website account to arrange a meet to take it off your hands.
-                    <br><br>
-                    Conversely, if you're looking to buy something, just create an account,
-                    and filter and search for what you want. When you find something, just click the "buy/contact" button to arrange the pickup.
+                See an item that tickles your fancy? Click on it, and it will take you to the item’s description page.
+                </p>
+                <img src="{{ STATIC_URL }}images/how_it_works/view_item.jpg" />
+                <p>
+                If you would like to know more about the item, feel free to leave a question for the seller in the comments section below.
+                If you would like to buy the item, hit the “Buy Now” button, which will pull up a message box.
+                </p>
+                <img src="{{ STATIC_URL }}images/how_it_works/message_seller.jpg" />
+                <p>
+                Once you hit the “Buy” button, you will have claimed the item, and can now message the seller to arrange a time to meet
+                and make the transaction.
+                <br><br>
+                Voila!
+                </p>
 
-                    <br><br>
-                    -->
-                    As a new and evolving site, we are very open to hear what you think. Please direct any suggestions, questions, criticisms or death threats to feedback@buynear.me.
-                    <br><br>
-                Best Regards,<br>
-                    Buy Near Me Team
-                
+                <h3>Selling:</h3>
+                <p>
+                If you would like to post an item to BuyNearMe, hit the “Sell” button at the navigation bar on the top of the screen.
+                This will bring you to a form which you can use to flesh out the details of your listing.
+                </p>
+                <img src="{{ STATIC_URL }}images/how_it_works/sell_item.jpg" />
+                <p>
+                Fill out a title, description, price, category, and other details. Once you are happy with the details of the listing,
+                hit the “Submit” button at the bottom of the form to complete the post.
+                </p>
+                <img src="{{ STATIC_URL }}images/how_it_works/sell_item2.jpg" />
+                <p>
+                Now your item is posted to BuyNearMe, and all you have to do is sit back and wait!
+                We will notify you through the site and through e-mail when someone has claimed the item.
+                <br><br>
+                Wasn’t that easy?
                 </p>
             </div>
         </div>
+{% endblock %}
+
+{% block post_js %}
+  <script type="text/javascript">
+    //$(".side-icon").hide();
+    //$("#about-icon").show();
+    $('#how-it-works-link').css('color', 'black');
+    $('#how-it-works-link').css('text-decoration', 'none');
+    $('#how-it-works-link').css('cursor', 'default');
+    $('#how-it-works-link').click(function(e) {
+      e.preventDefault();
+    });
+  </script>
 {% endblock %}
