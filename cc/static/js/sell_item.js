@@ -74,9 +74,8 @@ $(".upload-more").click(function(){
           ' <span class="fileupload-exists">Change</span> '+
           ' <input type="file" name="images" /> '+
           '</span>'+
+          ' <a onclick="rotateImage(&quot#rotate-value'+uploadImageCounter+'&quot, &quot#image'+uploadImageCounter+'&quot, 90)" class="btn fileupload-exists">Rotate <i class="icon-repeat"></i></a>'+
           ' <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a> '+
-          ' <a onclick="rotateImage(&quot#rotate-value'+uploadImageCounter+'&quot, &quot#image'+uploadImageCounter+'&quot, 90)" class="btn fileupload-exists"><i class="icon-repeat"></i></a>'+
-          ' <a onclick="rotateImage(&quot#rotate-value'+uploadImageCounter+'&quot, &quot#image'+uploadImageCounter+'&quot, -90)" class="btn fileupload-exists"><i class="icon-undo"></i></a>'+
           '<input id="rotate-value'+uploadImageCounter+'" name="rotate-value'+uploadImageCounter+'" type="hidden" value="0">'+
           '</div>'
     $("#upload-images").append(new_upload_html)

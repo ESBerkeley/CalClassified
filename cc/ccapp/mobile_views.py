@@ -98,16 +98,24 @@ def sell(request):
             model.save()
 
             files_list = request.FILES.getlist("images")
-            for file in files_list:
+            for index, file in enumerate(files_list):
                 image = Image.open(file)
                 orientation = -1
+                rotate_name = "rotate-value" + str(index)
+                rotate_value = float(request.POST[rotate_name])
                 exif_data = get_exif(image)
-                if 'Orientation' in exif_data:
-                    orientation = exif_data['Orientation']
                 obj = MultiuploaderImage()
                 obj.image = file
+                
+                if 'Orientation' in exif_data:
+                    orientation = exif_data['Orientation']
+                
                 if orientation == 6:
-                    obj.image = image_rotate(image, -90, str(file))
+                    obj.image = image_rotate(image, -90 - rotate_value, str(file))
+                else:
+                    obj.image = image_rotate(image, 0-rotate_value, str(file))
+                print orientation
+                print rotate_value
                 obj.filename=str(file)
                 obj.key_data = obj.key_generate
                 obj.post = model
