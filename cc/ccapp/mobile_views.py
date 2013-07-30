@@ -115,8 +115,6 @@ def sell(request):
                     obj.image = image_rotate(image, -90 + rotate_value, str(file))
                 else:
                     obj.image = image_rotate(image, rotate_value, str(file))
-                print orientation
-                print rotate_value
                 obj.filename=str(file)
                 obj.key_data = obj.key_generate
                 obj.post = model
