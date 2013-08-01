@@ -351,6 +351,18 @@ label.error {
     margin-right: 5px;
 }
 
+.rotate-image {
+    border: 1px solid   #607c8c;
+    border-radius: 8px;
+    padding: 5px;
+    background-color:   #68938d;
+    color: white !important;
+    text-shadow: none;
+    margin-right: 5px;
+    text-decoration: none;
+    font-weight: normal !important;
+}
+
 .remove-image {
     border: 1px solid #ff1a6b;
     border-radius: 8px;

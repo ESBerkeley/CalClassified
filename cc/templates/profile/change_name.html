@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Change Name{% endblock %}
+
+{% block head %}
+    <style type='text/css'>
+        label.error {
+            float: none;
+            color: red;
+            padding-left: .5em;
+            vertical-align: top;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div id="signup-container" class="container">
+        <div id="signup-box" class="span12">
+
+
+            <div class="small-title">
+                <h2> Change Name</h2>
+            </div>
+
+
+            <div class="small-body">
+                <form method='post' class="form form-horizontal" action='{% url auth_change_name %}' id="form">{% csrf_token %}
+                    <div class="control-group">
+                        <label class="control-label">First Name</label>
+                        <div class="controls">
+                            <input name="first_name" type="text" value="{{ request.user.first_name }}" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Last Name</label>
+                        <div class="controls">
+                            <input name="last_name" type="text" value="{{ request.user.last_name }}" />
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Submit"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block post_js %}
+    <script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function(){
+            $("#form").validate({
+                rules: {
+                    first_name: {
+                        required: true,
+                        maxlength: 30
+                    },
+                    last_name: {
+                        required: true,
+                        maxlength: 30
+                    }
+                }
+            });
+
+
+        });
+    </script>
+{% endblock %}

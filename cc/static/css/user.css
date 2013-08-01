@@ -19,6 +19,11 @@
     height: 180px;
     width: 180px;
     position: relative;
+    overflow: hidden;
+}
+
+.image-wrapper img {
+    width: 180px;
 }
 
 .change-photo-label {

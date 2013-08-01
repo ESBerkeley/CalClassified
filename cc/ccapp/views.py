@@ -1060,6 +1060,22 @@ def change_email(request,auth_key):
         return render_to_response('message.html', data,context_instance=RequestContext(request))
 
 @login_required
+def change_name(request):
+    if request.method == "GET":
+        return render_to_response('profile/change_name.html', context_instance=RequestContext(request))
+    else:
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        request.user.first_name = first_name
+        request.user.last_name = last_name
+        request.user.save()
+        data = {}
+        data['title'] = "Change Name"
+        data['message'] = "Your name has been changed successfully, "+request.user.get_full_name()+"!"
+        return render_to_response("message.html", data, context_instance=RequestContext(request))
+
+
+@login_required
 @logit
 def ajax_delete_thread(request):
     if request.method=="POST":

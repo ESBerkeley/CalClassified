@@ -137,6 +137,11 @@
     float: left;
 }
 
+.seller-image img {
+    height: 50px;
+    width: 50px;
+}
+
 .seller-name {
     float: left;
     margin-left: 10px;

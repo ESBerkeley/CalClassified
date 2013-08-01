@@ -24,7 +24,7 @@
     <link href="{% get_static_prefix %}bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="{% get_static_prefix %}font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="{% get_static_prefix %}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
-    <link href="{% get_static_prefix %}overwrite_bootstrap.css?v=15" rel="stylesheet">
+    <link href="{% get_static_prefix %}overwrite_bootstrap.css?v=16" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,200,400,500,600' rel='stylesheet' type='text/css'>
     <!--link href='http://fonts.googleapis.com/css?family=Duru+Sans' rel='stylesheet' type='text/css'-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700' rel='stylesheet' type='text/css'>
@@ -89,7 +89,6 @@
         <div class="container">
           <a class="brand" id="logo" href="/"><img style="height:37px;" src="{% get_static_prefix %}124ta-beta.png"></a>
           <ul class="nav">
-            <li><a href="{% url about %}">About</a></li>
             <li><a href="{% url browse %}">Browse</a></li>
             <li><a href="{% url createIFS %}">Sell</a></li>
             <li><a href="{% url feedback %}">Feedback</a></li>
@@ -120,7 +119,7 @@
 
             {% if request.user.is_authenticated %}
 
-            <li><a href="{% url user request.user.id %}"> Hi, {{ request.user.first_name }}! </a></li>
+            <li><a href="{% url user request.user.id %}"> <img id="navbar-img" src="{{ request.user.get_profile.get_image_url }}"/> {{ request.user.get_full_name }}</a></li>
 
             <li><div class="dropdown tooltips" rel="tooltip" data-placement="bottom" title="Notifications"><div id="friend_notifications_dropdown"></div></div></li>
 
