@@ -293,36 +293,36 @@ function notification_sentence(obj, k) {    //list of notifications, position in
 }
 
 
-  function search(){
+function search(){
     var q = document.getElementById('searchbar').value;
     url = "/browse/?q="+q
     window.location = url;
-  }
+}
 
-  function searchbarCancel(pg) {   //cancel for the search bar
+function searchbarCancel(pg) {   //cancel for the search bar
     document.getElementById('searchbar').value = '';
     runloadBox(pg);
-  }
+}
 
-  function priceboxCancel(pg) {   //cancel for the price box
+function priceboxCancel(pg) {   //cancel for the price box
     document.getElementById('max').value = '';
     document.getElementById('min').value = '';
     runloadBox(pg);
-  }
+}
 
-  //only toggles categories
-  function toggler(control) {   //hides everything, shows specific icon
+//only toggles categories
+function toggler(control) {   //hides everything, shows specific icon
     $("li.side-item.category").removeClass("active");
     $("#"+control).addClass("active");
-  }
+}
 
-  //Toggles searchbar text
-  function searchToggle(name) {
+//Toggles searchbar text
+function searchToggle(name) {
     var id = document.getElementById('searchbar');
     id.placeholder = 'Search in ' + name;
-  }
+}
 
-  function runloadBox(pg) {
+function runloadBox(pg) {
     if(typeof(pg) == "undefined"){pg=0;}
     var cat_status = getCats();
     var cir_status = getCircs(); 
@@ -332,10 +332,8 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     var min_price = document.getElementById('min').value;
     var max_price = document.getElementById('max').value;
     var order = getOrder();
-    
 
     flags = "_" + query + min_price + max_price + cs + ccs + filtering_by_friends;
-
 
     if(oflags != flags) {
         $(window).scrollTop(0);
@@ -347,9 +345,9 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     } else {
         loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,pg, order);
     }
-  }
+}
 
-  function loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,page, order){
+function loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,page, order){
     //load pacman
     $("#pac-ajax").show();
 
@@ -368,271 +366,6 @@ function notification_sentence(obj, k) {    //list of notifications, position in
       $("#price-go").show();
       $("#price-cancel").hide();
     }
-
-    var xmlhttp;
-    if (window.XMLHttpRequest){
-      xmlhttp=new XMLHttpRequest();
-    }
-    else{
-      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange=function(){
-      if(xmlhttp.readyState==4 && xmlhttp.status==200){
-        var string1 = xmlhttp.responseText;
-
-        //alert(string1);
-        if(!(string1 == old_obj) || 100){	//broken code here!!!!!!!!!!!!!!
-
-        old_obj = string1;
-
-        var obj = eval ("(" + string1 + ")");
-
-   //     var sizes = [[2,2],[1,1]];  //gogo tetris mode
-        var sizes = [[1,1],[1,1]];
-        var w = 916;
-        var h = 2800;
-
-    //    var numx = 6;
-    //    var numy = 12;
-        var numx = 3;
-        var numy = 12;
-        var width = (w-(w%numx))/numx;
-        var height = (h-(h%numy))/numy;
-        ogrid = [];
-        var sc = 0;
-
-        var lenk = scraps.length;
-        if(page){
-          if(lenk > 0){
-              for(var i = 0; i < lenk; i++){
-                  scraps[i].extras.boxsize=0;
-                  scraps[i].priority=1;
-                  obj.unshift(scraps[lenk-1-i]);
-                 // obj.unshift(scraps[i]);
-              }
-              scraps=[];
-          }
-        }
-        else scraps=[];
-
-        var idid = "myBox" + page;
-        var boxxy = document.getElementById(idid); 
-
-        if(boxxy == null) {$("#myBox").append("<div id = \"myBox" + page + "\"style=\"position:relative; top: " + page * h + "px;\"></div>");}
-        document.getElementById(idid).innerHTML="";
-
-        function render(x,y,obj,grid){
-           ind3x = 0;
-           var ww = sizes[obj.extras.boxsize][0];
-           var hh = sizes[obj.extras.boxsize][1];
-           var pfactor = 12;
-           var stylin = "";
-           if(obj.extras.friend){stylin+="class=\"friend_boxxx\"";}
-           else{stylin += 'class="boxxx '+obj.pk+' "';}
-           stylin += "style=\"left: " + (x*width-10) + "px; top: " + (y*(height)) + "px; height: " + ((height*hh)-pfactor-3 ) + "px; width: "+ ((width*ww)-pfactor-10) + "px\"";
-
-           var moar = "<a OnClick=\"save_state('/" + obj.pk + "')\" class='empty-link' value='"+obj.pk+"' href='/"+obj.pk+"'><div "+stylin+">";
-           moar += "<div class=\"box-div\">";
-           moar += "<div class='price-of-box'>$"+ obj.fields.price +"</div>";
-           if(obj.extras.friend == 1){
-            moar += "<div class='box-friend-name'>"+obj.extras.friendname+"</div>"
-            }
-           var imageHeight=(height*hh)-pfactor-27; //got rid of -36. !!PUT BACK THE 36
-           var imageWidth=(width*ww)-pfactor-10; // change with width
-
-           if(!(obj.extras.get_thumbnail_url == null)){
-               var thumbnail = obj.extras.get_thumbnail_url;
-               thumbnail = thumbnail.replace(/'/g,"");
-               //moar += "<img class=\"box-image\" style=\"width:"+imageWidth+"px; height:" +imageHeight+ "px;\" alt=\"\" src=\"" + thumbnail + "\" />";
-               moar += "<img class=\"box-image\" style=\"max-width:"+imageWidth+"px; height:" +imageHeight+ "px;\" alt=\"\" src=\"" + thumbnail + "\" />";
-               //moar += "<img class=\"box-image\" style=\"\" alt=\"\" src=\"" + thumbnail + "\" />";
-           }/* explanation incoming */
-
-           moar += " <div class=\"box-text-div\"><div class=\"box-text\">";
-           if(obj.extras.pending_flag){moar += "[Sale Pending] ";}
-           moar += "<span class='box-item-title'>"+obj.fields.title+"</span>";
-           //if(obj.extras.friend == 1){moar += "<br>" + obj.extras.friendname;}
-           // moar += " - $" + obj.fields.price + " </p></div>"; //OLD PRICE
-           moar += "</div> </div></a>";
-           return moar;
-        }
-
-
-        for(var i = 0; i < numx; i++){
-            var tmp = [];
-            for(var j = 0; j < numy; j++){
-                tmp.push(0);
-            }
-            ogrid.push(tmp);
-        }
-
-        for(var i = 0; i < obj.length; i++){
-            obj[i].priority = 0;
-        }
-
-        var failing,fail_threshold,force_x,force_y, demoting;
-
-        function check(x,y,obj,grid){
-            var ffail = 0;
-            var osize = obj.extras.boxsize;
-            var ww = sizes[osize][0];
-            var hh = sizes[osize][1];
-            if(x+ww > numx || y+hh > numy) return 666;
-            for(var xxx = 0; xxx < ww; xxx++){
-                for(var yyy = 0; yyy < hh; yyy++){
-                    if(grid[x+xxx][y+yyy])return 666;
-                }
-            }
-            return ffail;
-        }
-
-        function set(x,y,obj,grid){
-            var ww = sizes[obj.extras.boxsize][0];
-            var hh = sizes[obj.extras.boxsize][1];
-            $("#myBox"+page).append(render(x,y,obj,grid));
-            for(var xx = 0; xx < ww; xx++){
-                for(var yy = 0; yy < hh; yy++){
-                    grid[x+xx][y+yy] = obj.pk;
-                }
-            }
-        }
-
-        function randfit(obj,grid){
-            while(failing < fail_threshold){
-                var xtar = Math.floor((rand0m()*(numx - sizes[obj.extras.boxsize][0])));
-                var ytar = Math.floor((rand0m()*(numy - sizes[obj.extras.boxsize][1])));
-                if(check(xtar,ytar,obj,grid) > 0){
-                    failing = failing + 1;
-                }
-                else{
-                    set(xtar,ytar,obj,grid);
-                    return 1;
-                }
-            }
-            return 0;
-        }
-
-        function forcefit(obj,grid){
-            var x,y;
-            for(y = 0; y < numy; y++){
-                for(x = 0; x < numx; x++){
-                    if(!(check(x,y,obj,grid))){  //true on success
-                        set(x,y,obj,grid);
-                        force_x = x;
-                        force_y = y;
-                        return 1;
-                    }
-                }
-            }
-            return 0;
-        }        
-
-        var fitx = (numx - (numx % sizes[0][0])) / sizes[0][0];
-        var fity = (numy - (numy % sizes[0][1])) / sizes[0][1];
-        
-        var fitx_small = (numx - (numx % sizes[1][0])) / sizes[1][0];
-        var fity_small = (numy - (numy % sizes[1][1])) / sizes[1][1];
-        
-        var onum = 0; 
-
-        if((current_page<1) && obj.length == 0){
-            $("#myBox").html("<h2>Sorry, there were no items that matched your search.</h2>");
-        }
-
-        
-/*
-
-        if(obj.length < fitx_small*fity_small && 0){ //very few results. let's promote everything to max size (when doing a restrictive search)
-        
-            for(var y = 0; y < fity; y++){
-                for(var x = 0; x < fitx; x++){ 
-                    if(onum >= obj.length){x = fitx; y =fity;} //bail if no more objects to place down..
-                    else{obj[onum].extras.boxsize = 0; set(x*sizes[0][0],y*sizes[0][1],obj[onum],ogrid);}
-                    onum++; 
-                }
-            }
-        }
-
-        else{                                        // there are more than a few results, so use multi-size standard boxfitting technique (most of the time)
-            for(var i = 0; i < sizes.length; i++){ 
-                failing = 0;
-                fail_threshold = -100;
-                force_x = 0;
-                force_y = 0;
-                demoting = 0;
-    
-                for(var j = 0; j < obj.length*2; j++){ 
-                    var jj = j % obj.length; 
-                    if(obj[jj].extras.boxsize == i && (obj[jj].priority == (j<obj.length))){  //is the object of the size we are considering?
-                        if(demoting){
-                            obj[jj].extras.boxsize += 1;
-                            obj[jj].extras.priority = 1;
-                        }
-                        else{
-                            if(failing < fail_threshold){
-                                randfit(obj[jj],ogrid);
-                            }
-                            else{
-                                if(!forcefit(obj[jj],ogrid)){
-                                    demoting = 1;
-                                    obj[jj].extras.boxsize += 1;
-                                    obj[jj].priority = 1;
-                                }
-                            } 
-                        } 
-                    }  //descend the bracket mountain
-                }
-            }  
-        }  
-*/
-        
-        var cur_x = 0;
-        var cur_y = 0;
-        for(var j = 0; j < obj.length; j++){
-            
-            set(cur_x,cur_y,obj[j],ogrid);
-
-            cur_x++;
-            if(cur_x == numx){
-                cur_x = 0;
-                cur_y = cur_y + 1;
-                if(cur_y == numy){
-                    for(var k = j+1; k < obj.length; k++){
-                        obj[k].extras.boxsize = sizes.length;
-                        obj[k].priority = 1;
-                    }
-                    j = obj.length;
-                }
-            }
-        }
-
-
-        for(var j = 0; j < obj.length; j++){
-            if(obj[j].extras.boxsize == sizes.length){ 
-                scraps.push(obj[j]);
-            }
-        }
-
-       
-        //Calvin's random unimportant sidebar crap
-        var filters = "";          
-        if(query) {
-          filters = "<li>" + "Search: " + query + "</li>";
-        }
-        if(min_price || max_price) {
-          filters = filters + "<li>" + "Price: $" + min_price + " to $" + max_price + "<li>";
-        }
-        
-        if((typeof filters === 'undefined') || (filters === "")) {
-          filters = "<li> None </li>";
-        }
-        //document.getElementById("active-filter").innerHTML = filters;
-        
-        //go away pacman
-        $("#pac-ajax").hide();
-      }
-    }
-  }
     
 
   var url="/ajax_box/";
@@ -715,15 +448,54 @@ function notification_sentence(obj, k) {    //list of notifications, position in
     url += "&order=" + order;
   }
 
-  xmlhttp.open("GET",url,true);
-  xmlhttp.send();
+    $.ajax({
+        type: "GET",
+        url: url,
+        dataType: "json",
+        success: function(data){
+            console.log(data)
+            if(data.length !== 0) {
+                var $container = $('#box');
+                // initialize
+                $container.masonry({
+                    columnWidth: 200,
+                    itemSelector: '.item'
+                });
+
+                var html = "";
+                for(i = 0; i < data.length; i++) {
+                    html += "<div class='item'>"+data[i].fields.title+data[i].fields.category+"</div>";
+                    
+                    //console.log(data[i])
+                }
+                //$("#box").html(html);
+                var $html = $(html);
+                $container.append($html).masonry('appended', $html);
+                
+                //Calvin's random unimportant sidebar crap
+                var filters = "";          
+                if(query) {
+                filters = "<li>" + "Search: " + query + "</li>";
+                }
+                if(min_price || max_price) {
+                filters = filters + "<li>" + "Price: $" + min_price + " to $" + max_price + "<li>";
+                }
+                
+                if((typeof filters === 'undefined') || (filters === "")) {
+                filters = "<li> None </li>";
+                }
+            }
+            
+            //go away pacman
+            $("#pac-ajax").hide();
+        }
+    });
 }
 
 $("#modal-send").on("click", function(){
     $(this).button('loading');
     var message = $("#modal-message").val();
     data= {};
-    //data['sender_pk'] = sender_pk; user data can be accessed in the request
     data['recipient_pk'] = recipient_pk;
     data['message'] = message;
     data['csrfmiddlewaretoken'] = csrf_token;

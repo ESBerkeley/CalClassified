@@ -134,18 +134,10 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 
 
 
-    <div id="boxDiv" class="span9 offset3">
-      {% if cc_circs|length == -1 %}
-        <!--<h2><a href="{% url account_circles %}">Join</a> groups to see what people are selling!</h2>-->
-      {% else %}
-      <div class="stopfloat">
-        <div id="myBox" style="position:relative; left:10px;">
-          <div id="myBox0" style="position:relative; top:0px;">
-          </div>
-        </div>
-      </div>
-      {% endif %}
+    <div id="box" class="span9 offset3">
+      <!-- Box -->
     </div>
+    
   </div>
 </div><!-- end sidebar -->
 
@@ -174,9 +166,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       $(".popovers").popover({trigger:'hover'});
 
       $(window).scroll(function(){
-        //if(!in_restore && $(window).scrollTop() == $(document).height() - $(window).height()){
-        if(!in_restore && ($(window).scrollTop() == $(document).height() - 0 - $(window).height()
-                || $(window).scrollTop() == $(document).height() - 1 - $(window).height())){
+        if(!in_restore && ($(window).scrollTop() == $(document).height() - 0 - $(window).height() || $(window).scrollTop() == $(document).height() - 1 - $(window).height())){
           current_page++;
           runloadBox(current_page);
         }
@@ -328,12 +318,6 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     return "whoops";
   }
 
-/* OLD
-  function switchCat(category) {  //run on click, switches boolean
-    cat_object[category] = !cat_object[category];
-  }
-*/
-
   function switchCat(category) {  //sets all categories to false first, then sets specific one to true.
     for(cat in cat_object) {
       cat_object[cat] = false;
@@ -422,11 +406,3 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 {% endblock %}
 
 {% block footer %}{% endblock %}
-
-
-
-
-
-
-
-
