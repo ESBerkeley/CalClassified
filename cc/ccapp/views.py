@@ -1323,10 +1323,6 @@ def user(request, user_id):
     data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
-    data['user_likes'] = UserLike.objects.filter(receiver=user)
-    data['viewer_likes_user'] = False #HANDLE CASE OF LOGGED OFF USER
-    if UserLike.objects.filter(receiver=user, actor=request.user):
-        data['viewer_likes_user'] = True
     return render_to_response('user.html', data, context_instance=RequestContext(request))
 
 @login_required

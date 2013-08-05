@@ -440,9 +440,3 @@ class FacebookPostForExcel(models.Model):
 
     class Meta:
         unique_together = ['user_id', 'facebook_id']
-
-class UserLike(models.Model):
-    actor = models.ForeignKey(User, related_name="actor_like_set")
-    receiver = models.ForeignKey(User, related_name="receiver_like_set")
-    def __unicode__(self):
-        return self.actor.get_full_name() + " likes " + self.receiver.get_full_name()
