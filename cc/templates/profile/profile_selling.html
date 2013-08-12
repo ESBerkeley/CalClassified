@@ -56,6 +56,12 @@
         <tr>
             <th class="table-start">Item Title</th>
             <th class="table-mid">Date Expires</th>
+            <th class="table-mid"><center>Bump Item
+                <a href="#" class="post-icon no-underline" onclick="return false;" data-toggle="popover" title=""
+               data-content="<span style='font-weight:300;'>This item will not show up in search results once it has expired.<br><br>
+               Click the refresh button to the left to reset the expiration date to 60 days from now!</span>"
+               data-placement="right" data-trigger="hover" data-original-title="">
+           <i class="icon-question-sign" style="color:black; font-size:18px;"></i></a></center></th>
             <th><center>Delete Item</center></th>
         </tr>
     </thead>
@@ -72,9 +78,16 @@
           {{ item.expire_date.date }}
       </td>
       <td>
-        <center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ item.id }}"></a></center>
-      
+        <form action="{% url repost_item %}"  method="post" id="refresh_form">{% csrf_token %}
+            <input type="hidden" name="post_id" value="{{ item.id }}">
+            <a href="#" type="submit" class="no-underline" onclick="$(this).parents('form').submit(); return false;">
+                <center><i class="icon-refresh" style="font-size:18px;"></i></center>
+            </a>
+        </form>
+      </td>
 
+      <td>
+        <center><a class="icon-trash" style="font-size:18px;" data-toggle="modal" href="#delete-modal-{{ item.id }}"></a></center>
 
       <!-- "are you sure you want to delete" modal window -->
       <div class="modal fade hide" id="delete-modal-{{ item.id }}">
@@ -237,11 +250,14 @@
 
 {% block post_js %}
     {% load static %}
-
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap-popover.js"></script>
     <script type="text/javascript">
         $(document).ready( function() {
             $("#messages-tab").addClass("active");
-
+            $(".post-icon").popover({
+                template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
+                html: true
+            });
         })
         var csrf_token = "{{ csrf_token }}";
     </script>

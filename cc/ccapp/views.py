@@ -458,6 +458,7 @@ def modify_post(request):
             if action == "done":
                 #the sale is complete (yay). delete post and redirect to profile page
                 post.sold = True
+                post.sold_date = datetime.datetime.now()
                 post.save()
                 custom_log_message('user ' + str(request.user.id) + ' sold item :) ' + str(post_pk))
                 sale_complete_signal.send(sender = ItemForSale, instance = post)
@@ -1381,7 +1382,7 @@ def delete_profile_photo(request):
 def repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
-        if request.user == item.owner and item.is_bumpable:
+        if request.user == item.owner:
             expired = item.is_expired
             item.expire_date = datetime.datetime.now()+timedelta(days=60)
             item.time_created = datetime.datetime.now()
@@ -1396,7 +1397,7 @@ def repost_item(request):
 def ajax_repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
-        if request.user == item.owner and item.is_bumpable:
+        if request.user == item.owner:
             item.expire_date = datetime.datetime.now()+timedelta(days=60)
             item.time_created = datetime.datetime.now()
             item.save()
