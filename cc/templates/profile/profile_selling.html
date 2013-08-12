@@ -78,12 +78,24 @@
           {{ item.expire_date.date }}
       </td>
       <td>
-        <form action="{% url repost_item %}"  method="post" id="refresh_form">{% csrf_token %}
-            <input type="hidden" name="post_id" value="{{ item.id }}">
-            <a href="#" type="submit" class="no-underline" onclick="$(this).parents('form').submit(); return false;">
-                <center><i class="icon-refresh" style="font-size:18px;"></i></center>
-            </a>
-        </form>
+        <center>
+            <a class="icon-refresh no-underline" data-toggle="modal" style="font-size:18px;" href="#bump-modal-{{ item.id }}"></a></center>
+            <!-- "are you sure you want to delete" modal window -->
+            <div class="modal fade hide" id="bump-modal-{{ item.id }}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                    <h3>Bump Item</h3>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Are you sure you want to bump your item '{{ item.title }}'?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary verify-bump" value="{{ item.id }}" type="button" data-loading-text="Bumping...">Bump</button>
+                    <button class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
       </td>
 
       <td>
@@ -241,6 +253,20 @@
         </div>
         <div class="modal-body">
             <p>Success, item reposted!</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn close-refresh" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+    <!-- repost success modal -->
+    <div class="modal fade hide" id="bump-success-modal">
+        <div class="modal-header">
+            <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Bump Item</h3>
+        </div>
+        <div class="modal-body">
+            <p>Success, item bumped to latest date!</p>
         </div>
         <div class="modal-footer">
             <button class="btn close-refresh" data-dismiss="modal">Close</button>

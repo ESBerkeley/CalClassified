@@ -59,4 +59,21 @@ $(".close-refresh").click (function() {
     });
   });
 
+$(".verify-bump").click(function(){
+    $(this).button('loading');
+    var post_id = $(this).val();
+    data= {};
+    data['csrfmiddlewaretoken'] = csrf_token;
+    data['post_id'] = post_id;
+    $.ajax({
+      type: "POST",
+      url: "/ajax_repost/",
+      data: data,
+      success: function(data){
+        $("#bump-modal-"+post_id).modal('hide');
+        $("#bump-success-modal").modal('show');
+      }
+    });
+  });
+
 //};
