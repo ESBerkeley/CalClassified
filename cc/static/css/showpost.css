@@ -176,12 +176,20 @@
 }
 
 .info-column,
-.help-column {
+.help-column,
+.refresh-column {
     display:inline-block;
 }
 
-.help-column {
-    position:absolute; margin-top:10px;
+.help-column,
+.refresh-column {
+    vertical-align:top;
+    margin-top:5px;
+    margin-left:10px;
+}
+
+#refresh_form {
+    margin:0;
 }
 
 #description {

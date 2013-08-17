@@ -20,7 +20,7 @@ class MonthYearWidget(Widget):
     
     
     """
-    none_value = (0, '---')
+    none_value = ('', '')
     month_field = '%s_month'
     year_field = '%s_year'
 

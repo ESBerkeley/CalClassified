@@ -41,12 +41,6 @@ class Post(models.Model):
             return True
         return False
 
-    @property
-    def is_bumpable(self):
-        if datetime.now()+timedelta(days=7) > self.expire_date:
-            return True
-        return False
-
 class Category(models.Model):
     name = models.CharField(max_length=25)
     def __unicode__(self):
@@ -107,8 +101,9 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
     circles = models.ManyToManyField(Circle)
     cached_thumb = models.CharField(max_length=200, default = '')
 
-    pending_buyer = models.ForeignKey(User, null=True, default=None,  related_name='buyer')
+    pending_buyer = models.ForeignKey(User, null=True, default=None, related_name='buyer')
     pending_flag = models.BooleanField(default = False)
+    pending_date = models.DateTimeField(null=True, blank=True)
     sold = models.BooleanField(default = False)
     deleted = models.BooleanField(default = False)
     sold_date = models.DateTimeField(null=True, blank=True)
@@ -440,9 +435,3 @@ class FacebookPostForExcel(models.Model):
 
     class Meta:
         unique_together = ['user_id', 'facebook_id']
-
-class UserLike(models.Model):
-    actor = models.ForeignKey(User, related_name="actor_like_set")
-    receiver = models.ForeignKey(User, related_name="receiver_like_set")
-    def __unicode__(self):
-        return self.actor.get_full_name() + " likes " + self.receiver.get_full_name()

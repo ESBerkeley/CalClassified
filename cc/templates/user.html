@@ -27,17 +27,6 @@
         </div>
         <div class="user-info">
             <div id="user-name">{{ user.get_full_name }}</div>
-{#            <div class="likes-container">#}
-{#                {{ user_likes|length }} Likes#}
-{#            </div>#}
-{#            <div class="like-button">#}
-{#                <button class="btn unlike-button">#}
-{#                    Unlike <i class="icon-thumbs-down-alt"></i>#}
-{#                </button>#}
-{#                <button class="btn btn-primary like-button">#}
-{#                    Like <i class="icon-thumbs-up-alt"></i>#}
-{#                </button>#}
-{#            </div>#}
             <div class="relevant-item-data">
                 <div id="items-listed" class="relevant-wrapper">
                     <span class="relevant-item-number">{{ items_listed|length }}</span>
@@ -88,13 +77,6 @@
 {% endblock %}
 
 {% block post_js %}
-    <script type="text/javascript">
-        {% if viewer_likes_user %}
-            var viewer_likes_user = true;
-        {% else %}
-            var viewer_likes_user = false;
-        {% endif %}
-    </script>
     <script src="{{ STATIC_URL }}js/user.js"></script>
 
     <!-- profile modal js stuff -->

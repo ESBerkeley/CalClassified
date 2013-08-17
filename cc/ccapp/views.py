@@ -458,6 +458,7 @@ def modify_post(request):
             if action == "done":
                 #the sale is complete (yay). delete post and redirect to profile page
                 post.sold = True
+                post.sold_date = datetime.datetime.now()
                 post.save()
                 custom_log_message('user ' + str(request.user.id) + ' sold item :) ' + str(post_pk))
                 sale_complete_signal.send(sender = ItemForSale, instance = post)
@@ -1324,10 +1325,6 @@ def user(request, user_id):
     data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
-    data['user_likes'] = UserLike.objects.filter(receiver=user)
-    data['viewer_likes_user'] = False #HANDLE CASE OF LOGGED OFF USER
-    if UserLike.objects.filter(receiver=user, actor=request.user):
-        data['viewer_likes_user'] = True
     return render_to_response('user.html', data, context_instance=RequestContext(request))
 
 @login_required
@@ -1386,7 +1383,7 @@ def delete_profile_photo(request):
 def repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
-        if request.user == item.owner and item.is_bumpable:
+        if request.user == item.owner:
             expired = item.is_expired
             item.expire_date = datetime.datetime.now()+timedelta(days=60)
             item.time_created = datetime.datetime.now()
@@ -1401,7 +1398,7 @@ def repost_item(request):
 def ajax_repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
-        if request.user == item.owner and item.is_bumpable:
+        if request.user == item.owner:
             item.expire_date = datetime.datetime.now()+timedelta(days=60)
             item.time_created = datetime.datetime.now()
             item.save()
