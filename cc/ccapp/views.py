@@ -808,17 +808,18 @@ def ajax_box(request):
             deleted=False,
             expire_date__gte=datetime.datetime.now()
         )
-    
+    load_from = 21 * p
+    load_to = 21 * (p+1)
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
     order  = request.GET['order']
     if order == 'dateNew':
-        found_entries = found_entries.order_by('-time_created').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('-time_created').load_all()[load_from:load_to]
     elif order == 'dateOld':
-        found_entries = found_entries.order_by('time_created').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('time_created').load_all()[load_from:load_to]
     elif order == 'priceLow':
-        found_entries = found_entries.order_by('price').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('price').load_all()[load_from:load_to]
     elif order == 'priceHigh':
-        found_entries = found_entries.order_by('-price').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('-price').load_all()[load_from:load_to]
 
     #is user logged in? highlight his friends' posts
     #TODO: this could be very inefficient. consider performance optimization... perhaps store facebook user id of creator in post model...

@@ -1,4 +1,4 @@
-function restore(){
+/*function restore(){
     window.setTimeout(function(){
    
         var mybox = document.getElementById("myBox");
@@ -69,7 +69,7 @@ function save_state(inputurl){
         "oflags" : oflags
     });
    
-}
+}*/
 
 function clear_notif(){
   var xhr_notif;
@@ -292,222 +292,281 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   return notif;
 }
 
+/*****************************
+ * Boxview
+ * 
+ * 
+ *****************************/
+
+
+// initialize masonry
+var $container = $('#box');
+var containerHtml = "";
+var $containerHtml = $("");
+$container.masonry({
+  gutter: 5,
+  itemSelector: '.box-item',
+  transitionDuration: '0.6s'      //default 0.4
+});
+var savedHtml = "";
+
+var query = "";
+var minPrice = null;
+var maxPrice = null;
+var category = "Everything";
+var categoryObject;
+var page = 0;
+var order = 'dateNew';
 
 function search(){
-    var q = document.getElementById('searchbar').value;
-    url = "/browse/?q="+q
-    window.location = url;
+  var q = document.getElementById('searchbar').value;
+  url = "/browse/?q="+q
+  window.location = url;
 }
 
-function searchbarCancel(pg) {   //cancel for the search bar
-    document.getElementById('searchbar').value = '';
-    runloadBox(pg);
+function searchbarCancel() {   //cancel for the search bar
+  document.getElementById('searchbar').value = '';
+  runloadBox(true, false);
 }
 
-function priceboxCancel(pg) {   //cancel for the price box
-    document.getElementById('max').value = '';
-    document.getElementById('min').value = '';
-    runloadBox(pg);
+function priceboxCancel() {   //cancel for the price box
+  document.getElementById('max').value = null;
+  document.getElementById('min').value = null;
 }
 
-//only toggles categories
-function toggler(control) {   //hides everything, shows specific icon
-    $("li.side-item.category").removeClass("active");
-    $("#"+control).addClass("active");
+function setPricebox(min, max) {
+  document.getElementById('min').value = min;
+  document.getElementById('max').value = max;
 }
 
-//Toggles searchbar text
-function searchToggle(name) {
-    var id = document.getElementById('searchbar');
-    id.placeholder = 'Search in ' + name;
-}
-
-function runloadBox(pg) {
-    if(typeof(pg) == "undefined"){pg=0;}
-    var cat_status = getCats();
-    var cir_status = getCircs(); 
-    var cs = gcats();
-    var ccs = gcircs();
-    var query = document.getElementById('searchbar').value;
-    var min_price = document.getElementById('min').value;
-    var max_price = document.getElementById('max').value;
-    var order = getOrder();
-
-    flags = "_" + query + min_price + max_price + cs + ccs + filtering_by_friends;
-
-    if(oflags != flags) {
-        $(window).scrollTop(0);
-        oflags = flags; 
-        $("#myBox").empty(); //accidentally the posts
-        scraps=[];
-        current_page=0;
-        loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,0, order);
-    } else {
-        loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,pg, order);
-    }
-}
-
-function loadBox(query,min_price,max_price,cat_status,cir_status,filtering_by_friends,page, order){
-    //load pacman
-    $("#pac-ajax").show();
-
-    //going first makes sure icons are hidden so the page doesnt look weird during the load
-    if(query) {      //hides and shows cancel button in search bar
-      $("#search-cancel-nav").show();
-      $("#search-go-nav").hide();
-    } else {
-      $("#search-cancel-nav").hide();
-      $("#search-go-nav").show();
-    }
-    if(max_price || min_price) {      //hides and shows price icons
-      $("#price-go").hide();
-      $("#price-cancel").show();
-    } else {
-      $("#price-go").show();
-      $("#price-cancel").hide();
-    }
-    
-
-  var url="/ajax_box/";
-  var first = true;
-
-  if(!(typeof query === 'undefined')){
-    if (first) {
-    url = url + "?q=" + query;
-    first = false;
-    } else {
-    url = url + "&q=" + query;
-    }
+function createCategoryObject(category) {
+  if(category === "Everything") {
+    return {"Apparel": true, "Appliances": true, "Automotive": true, "Books": true, "Electronics": true, "Furniture": true, "Movies and Games": true, "Music": true, "Tickets": true, "Other": true}
+  } else if(category === "Apparel") {
+    return {"Apparel": true}
+  } else if(category === "Appliances") {
+    return {"Appliances": true}
+  } else if(category === "Automotive") {
+    return {"Automotive": true}
+  } else if(category === "Books") {
+    return {"Books": true}
+  } else if(category === "Electronics") {
+    return {"Electronics": true}
+  } else if(category === "Furniture") {
+    return {"Furniture": true}
+  } else if(category === "Movies and Games") {
+    return {"Movies and Games": true}
+  } else if(category === "Music") {
+    return {"Music": true}
+  } else if(category === "Tickets") {
+    return {"Tickets": true}
+  } else {
+    return {"Other": true}
   }
+}
 
-  if(!(typeof max_price === 'undefined')){
-    if (first) {
-    url = url + "?max_price=" + max_price;
-    first = false;
-    } else {
-    url = url + "&max_price=" + max_price;
-    }
+$(window).scroll(function(){
+  if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+    page++;
+    runloadBox(false, false);
   }
+});
 
-  if(!(typeof min_price === 'undefined')){
-    if (first) {
-    url = url + "?min_price=" + min_price;
-    first = false;
-    } else {
-    url = url + "&min_price=" + min_price;
-    }
+function getScroll() {
+  return JSON.parse(localStorage["scroll"]);
+}
+
+function getPage() {
+  return page;
+}
+  
+function setPage(pageValue) {
+  page = pageValue;
+}
+  
+//sort order assigner. UI change AND server notifier
+function setOrder(newOrder) {
+  order = newOrder //assigned to make server filter properly
+  $('.side-item.sort').removeClass("active");
+  $('#'+newOrder+"-li").addClass("active");        //html ids for icons equivalent to the order values
+}
+
+function getCategory() {
+  return category;
+}
+
+function setCategory(cat) {
+  category = cat;
+  categoryObject = createCategoryObject(cat);
+  //Search Bar Text
+  document.getElementById('searchbar').placeholder = "Search in " + cat;
+  //Sidebar stylings
+  $("li.side-item.category").removeClass("active");
+  $("#"+cat+"-category").addClass("active");
+}
+
+function setNewState() {
+  localStorage["query"] = JSON.stringify(query);
+  localStorage["minPrice"] = JSON.stringify(minPrice);
+  localStorage["maxPrice"] = JSON.stringify(maxPrice);
+  localStorage["category"] = JSON.stringify(category);
+  localStorage["page"] = JSON.stringify(page);
+  localStorage["order"] = JSON.stringify(order);
+  localStorage["savedHtml"] = JSON.stringify(savedHtml);
+}
+
+function setIsLoaded(bool) {
+  localStorage["isLoaded"] = JSON.stringify(bool);
+}
+
+function getIsLoaded() {
+  return localStorage["isLoaded"] === "true";
+}
+
+function revertState() {
+  query = JSON.parse(localStorage["query"]);
+  minPrice = JSON.parse(localStorage["minPrice"]);
+  maxPrice = JSON.parse(localStorage["maxPrice"]);
+  category = JSON.parse(localStorage["category"]);
+  page = JSON.parse(localStorage["page"]);
+  order = JSON.parse(localStorage["order"]);
+  savedHtml = JSON.parse(localStorage["savedHtml"]);
+}
+
+function runloadBox(isRemoveHtml, isActive) {
+  console.log(getScroll())
+  if(isRemoveHtml) {
+    page = 0;
+  }
+  if (isActive && getIsLoaded()) {
+    revertState();
+    setCategory(category);
+    setOrder(order);
+    setPricebox(minPrice, maxPrice);
+  } else {
+    query = document.getElementById('searchbar').value;
+    minPrice = document.getElementById('min').value;
+    maxPrice = document.getElementById('max').value;
+  }
+  console.log('query:'+query+' minprice:'+minPrice+' maxprice:'+maxPrice+' category:'+category+' page:'+page+' order:'+order);
+  var cir_status = getCircs();
+  
+  //load pacman
+  $("#pac-ajax").show();
+
+  //going first makes sure icons are hidden so the page doesnt look weird during the load
+  if(query) {      //hides and shows cancel button in search bar
+    $("#search-cancel-nav").show();
+    $("#search-go-nav").hide();
+  } else {
+    $("#search-cancel-nav").hide();
+    $("#search-go-nav").show();
   }
   
-  for (key in cat_status) {
-    if (cat_status[key]==true) {
+  if(maxPrice || minPrice) {      //hides and shows price icons
+    $("#price-go").hide();
+    $("#price-cancel").show();
+  } else {
+    $("#price-go").show();
+    $("#price-cancel").hide();
+  }
+
+  var url="/ajax_box/?";
+  var params = {
+    q: query,
+    max_price: maxPrice,
+    min_price: minPrice,
+    p: page,
+    order: order
+  };
+  url = url + $.param(params);
+
+  for (key in categoryObject) {
+    if (categoryObject[key]==true) {
       cat_pk = cat2num(key)
-      if (first) {
-        url = url + "?category="+cat_pk;
-        first = false;
-      } else {
-        url = url + "&category="+cat_pk;
-     }
+      url = url + "&category="+cat_pk;
     }
   }
   
   for (key in cir_status) {
     if (cir_status[key]==true) {
-      //cir_pk = cir2num(key)
       cir_pk = key
-      if (first) {
-        url = url + "?" + "circle=" + cir_pk;
-        first = false;
-      } else {
-        url = url + "&" + "circle=" + cir_pk;
-     }
+      url = url + "&" + "circle=" + cir_pk;
     }
   }
   
   if(filtering_by_friends){
-    if(first){
-        first=false;
-        url=url+"?"+"fbf=1";
-    }else{
-        url=url+"&fbf=1";
-    }
+    url = url+"&fbf=1";
   }
-
-  if(first){
-    first=false;
-    url += "?p=" + page;
-  }
-
-  else{
-    url += "&p=" + page;
-  }
-
-  if(first) {
-    first = false;
-    url += "?order=" + order;
+  
+  $containerHtml = $(savedHtml);
+  if(isActive && getIsLoaded()) {
+    $container.append($containerHtml).masonry('appended', $containerHtml);
+    $container.masonry();
+    $(window).scrollTop(getScroll())
+    $("#pac-ajax").hide();
   } else {
-    url += "&order=" + order;
-  }
-
     $.ajax({
-        type: "GET",
-        url: url,
-        dataType: "json",
-        success: function(data){
-            console.log(data)
-            if(data.length !== 0) {
-                var $container = $('#box');
-                // initialize
-                $container.masonry({
-                    columnWidth: 200,
-                    itemSelector: '.item'
-                });
-
-                var html = "";
-                for(i = 0; i < data.length; i++) {
-                    html += "<div class='item'>"+data[i].fields.title+data[i].fields.category+"</div>";
-                    
-                    //console.log(data[i])
-                }
-                //$("#box").html(html);
-                var $html = $(html);
-                $container.append($html).masonry('appended', $html);
-                
-                //Calvin's random unimportant sidebar crap
-                var filters = "";          
-                if(query) {
-                filters = "<li>" + "Search: " + query + "</li>";
-                }
-                if(min_price || max_price) {
-                filters = filters + "<li>" + "Price: $" + min_price + " to $" + max_price + "<li>";
-                }
-                
-                if((typeof filters === 'undefined') || (filters === "")) {
-                filters = "<li> None </li>";
-                }
-            }
-            
-            //go away pacman
-            $("#pac-ajax").hide();
+      type: "GET",
+      url: url,
+      dataType: "json",
+      success: function(data){
+        if(isRemoveHtml) {
+          var elements = $container.masonry('getItemElements')
+          if(elements.length > 0)
+            $container.masonry('remove', elements);
+          savedHtml = "";
+          $(window).scrollTop(0)
         }
+        if(data.length !== 0) {
+          containerHtml = "";
+          for(i = 0; i < data.length; i++) {
+            var title = data[i].fields.title;
+            var thumbnailUrl = data[i].extras.get_thumbnail_url;
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center center no-repeat;'> </div></div></a>"
+            //containerHtml += "<img class='box-image' src='"+thumbnailUrl+"'></a></div>";
+          }
+          savedHtml += containerHtml;
+          $containerHtml = $(containerHtml);
+          $container.append($containerHtml).masonry('appended', $containerHtml);
+          $container.masonry();
+          
+          //Calvin's random unimportant sidebar crap
+          var filters = "";          
+          if(query) {
+            filters = "<li>" + "Search: " + query + "</li>";
+          }
+          if(minPrice || maxPrice) {
+            filters = filters + "<li>" + "Price: $" + minPrice + " to $" + maxPrice + "<li>";
+          }
+          if((typeof filters === 'undefined') || (filters === "")) {
+            filters = "<li> None </li>";
+          }
+        }
+        $("#pac-ajax").hide();
+        setNewState();
+      }
     });
+  }
+  setIsLoaded(true);
 }
 
 $("#modal-send").on("click", function(){
-    $(this).button('loading');
-    var message = $("#modal-message").val();
-    data= {};
-    data['recipient_pk'] = recipient_pk;
-    data['message'] = message;
-    data['csrfmiddlewaretoken'] = csrf_token;
-    data['post_pk'] = post_pk;
-    $.ajax({
-        type: "POST",
-        url: "/ajax_contact_seller/",
-        data: data,
-        success: function(data){
-            $(".msg-modal").modal('hide');
-            $("#success-modal").modal('show');
-        }
-    });
+  $(this).button('loading');
+  var message = $("#modal-message").val();
+  data= {};
+  data['recipient_pk'] = recipient_pk;
+  data['message'] = message;
+  data['csrfmiddlewaretoken'] = csrf_token;
+  data['post_pk'] = post_pk;
+  $.ajax({
+    type: "POST",
+    url: "/ajax_contact_seller/",
+    data: data,
+    success: function(data){
+      $(".msg-modal").modal('hide');
+      $("#success-modal").modal('show');
+    }
+  });
 });
 

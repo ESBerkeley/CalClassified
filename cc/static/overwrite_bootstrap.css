@@ -323,14 +323,14 @@ img.medium {
 
 
 .indexDiv {
-    position:relative;
-    float:left; /* optional */
+  position:relative;
+  float:left; /* optional */
 }
 .indexDiv .indexText {
-    position:absolute;
-    top:115px; /* in conjunction with left property, decides the text position */
-    left:80px;
-    /*width:500px; /* optional, though better have one */
+  position:absolute;
+  top:115px; /* in conjunction with left property, decides the text position */
+  left:80px;
+  /*width:500px; /* optional, though better have one */
 }
 
 /*for content with a sidebar that doesnt match vertically*/
@@ -341,6 +341,32 @@ img.medium {
 /*box*/
 #boxDiv {
 
+}
+
+.box-item {
+  width:282px;
+  height: 195px;
+  margin-bottom:5px;
+  background-color:#000000;
+  /*animation:fadein 2s;
+  -webkit-animation:myfirst 5s; /* Safari and Chrome */
+}
+
+.box-image {
+  width:282px;
+  height: 195px;
+}
+
+@keyframes fadein
+{
+from {opacity:0;}
+to {opacity:1;}
+}
+
+@-webkit-keyframes fadein /* Safari and Chrome */
+{
+from {opacity:0;}
+to {opacity:1;}
 }
 
 #pac-ajax {

@@ -27,7 +27,6 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
           </a>
         </center>
       </div-->
-
 <div class="sidebar-container">
   <div class="row">
     <div class="accordion box-nav span3" id="accordion1">
@@ -41,20 +40,17 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapseOne" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="everything-category" class="side-item category" onclick="allCat(); toggler('everything-category'); searchToggle('Everything'); runloadBox();">
-                <!--i id="Everything-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="allCat(); toggler('Everything-icon'); searchToggle('Everything'); runloadBox();"></i-->
+              <li id="Everything-category" class="side-item category" onclick="setCategory('Everything'); runloadBox(true, false);">
                 <div id="Everything_category" class="side-text">Everything</div>
               </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
-                <li id="{{ cat.id }}-category" class="side-item category" onclick="switchCat('{{cat.name}}'); toggler('{{cat.id}}-category'); searchToggle('{{cat.name}}'); runloadBox();">
-                  <!--i id="{{cat.name}}-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="switchCat('{{cat.name}}'); toggler('{{cat.name}}-icon'); searchToggle('{{cat.name}}'); runloadBox();"></i-->
+                <li id="{{ cat.name }}-category" class="side-item category" onclick="setCategory('{{cat.name}}'); runloadBox(true, false);">
                   <div id="{{cat.name}}_category" class="side-text">{{cat.name}}</div>
                 </li>
                 {% endif %}
               {% endfor %}
-              <li id="other-category" class="side-item category" onclick="switchCat('Other'); toggler('other-category'); searchToggle('Other'); runloadBox();">
-                <!--i id="Other-icon" class="icon-ok-sign side-icon cat-icon" type="hidden" onclick="switchCat('Other'); toggler('Other-icon'); searchToggle('Other'); runloadBox();"></i-->
+              <li id="Other-category" class="side-item category" onclick="setCategory('Other'); runloadBox(true, false);">
                 <div id="Other_category" class="side-text">Other</div>
               </li>
             </ul>
@@ -72,13 +68,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapse2" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="dateNew-li" class="side-item sort" onclick="selectOrder('dateNew'); runloadBox();">
+              <li id="dateNew-li" class="side-item sort" onclick="setOrder('dateNew'); runloadBox(true, false);">
                 <div class="side-text order-text">Date: Newest First</div>
               </li>
-              <li id="priceLow-li" class="side-item sort" onclick="selectOrder('priceLow'); runloadBox();">
+              <li id="priceLow-li" class="side-item sort" onclick="setOrder('priceLow'); runloadBox(true, false);">
                 <div class="side-text order-text">Price: Lowest First</div>
               </li>
-              <li id="priceHigh-li" class="side-item sort" onclick="selectOrder('priceHigh'); runloadBox();">
+              <li id="priceHigh-li" class="side-item sort" onclick="setOrder('priceHigh'); runloadBox(true, false);">
                 <div class="side-text order-text">Price: Highest First</div>
               </li>
             </ul>
@@ -115,13 +111,12 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
           <div class="accordion-inner">
             <ul class="unstyled">
               <li class="side-item price-filter">
-                <form class="form-inline price-box" action="javascript:runloadBox();">
+                <div class="form-inline price-box">
                   <input id="min" type="text" class="input-mini" placeholder="Low"> ~
                   <input id="max" type="text" class="input-mini" placeholder="High" style="margin-right:8px;">
-                  <i id="price-go" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox();"></i>
-                  <i id="price-cancel" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel();"></i>
-                  <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/> <!--invisible button makes enter work -->
-                </form>
+                  <i id="price-go" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox(true, false);"></i>
+                  <i id="price-cancel" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel(); runloadBox(true, false);"></i>
+                </div>
               </li>
             </ul>
           </div>
@@ -131,10 +126,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 {% endblock %}
 
 {% block content %}
-
-
-
-    <div id="box" class="span9 offset3">
+    <div id="box" class="span12 offset3">
       <!-- Box -->
     </div>
     
@@ -160,29 +152,41 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 {% block post_js %}
 
 <script type="text/javascript">
-  $(document).ready(function(){
-      $("#everything-category").addClass("active"); //shows the Everything filter icon
-      //show the newest first filter is somewhere down in china
-      $(".popovers").popover({trigger:'hover'});
-
-      $(window).scroll(function(){
-        if(!in_restore && ($(window).scrollTop() == $(document).height() - 0 - $(window).height() || $(window).scrollTop() == $(document).height() - 1 - $(window).height())){
-          current_page++;
-          runloadBox(current_page);
-        }
-      });
-      $(".navbar").addClass("navbar-fixed-top");
-      $("body").css("padding-top","+=70px");
-      $(".navbar .container").css("min-width","97%");
- 
-    document.getElementById("searchbarform").setAttribute("action","javascript: runloadBox();");
-
-    {% if q %}
-      //if query exists, keep at the top
-      document.getElementById('searchbar').value = "{{ q }}";
-    {% endif %}
+  $(document).ready(function() {
+    setCategory("Everything");
+    $('#dateNew-li').addClass("active");
     
-     
+    $("#min").keypress(function(e) {
+      if(e.which == 13) {
+        runloadBox(true, false);
+      }
+    });
+    
+    $("#max").keypress(function(e) {
+      if(e.which == 13) {
+        runloadBox(true, false);
+      }
+    });
+    
+    $(window).on('unload', function(){
+      localStorage["scroll"] = JSON.stringify($(window).scrollTop());
+    });
+    
+    runloadBox(false, true);
+    
+    $(".navbar").addClass("navbar-fixed-top");
+    $("body").css("padding-top","+=70px");
+    $(".navbar .container").css("min-width","97%");
+
+  $("#searchbarform").attr("action","javascript: runloadBox(true);");
+  $("#search-go-nav").attr("onclick", "runloadBox(true)");
+
+  {% if q %}
+    //if query exists, keep at the top
+    document.getElementById('searchbar').value = "{{ q }}";
+  {% endif %}
+    
+  /*
     if($.cookie('onpost') === 't'){
        in_restore = 1;
        $.cookie('onpost',null);
@@ -192,7 +196,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         clear_restore();
         runloadBox();
     }
-
+  */
   });
 
 
@@ -200,7 +204,6 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   var ogrid,old_obj,scraps,oflags;
   scraps=[];
   oflags="";
-  var current_page = 0;
   var cat_object = {};
   var circ_object = {};
   var categories = [];
@@ -213,8 +216,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   for(var i = 0; i < numx; i++){
     heights[i] = 0;
   }
-
-
+  
   {% for entry in cc_cats %}  //all categories and circles are initially false
     categories.push("{{entry.name}}")
   {% endfor %}
@@ -231,7 +233,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     circ_object[circ] = false;
   }  
 
-  function scats(input){
+  /*function scats(input){
     var ii = 0;
     var cat;
     for(i in categories){
@@ -289,7 +291,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       }
     }
     return k;
-  }
+  }*/
   
   function num2cat(num) {  //takes in number, spits out category string.
     {% for cat in cc_cats %}
@@ -309,7 +311,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     return "whoops";
   }
   
-    function cir2num(cir_name) { //takes in a category name, and returns category pk
+  /*function cir2num(cir_name) { //takes in a category name, and returns category pk
     {% for cir in cc_circs %}
       if(cir_name == "{{cir.name}}") {
         return {{cir.id}};
@@ -345,9 +347,6 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     } else {
       for (index in categories) {
         cat = categories[index];
-        /*if (index != 5) { //TAKE OUT FACEBOOK POSTS FROM NORMAL BOX UNLESS CLICKED ON!
-           cat_object2[cat] = true;
-        }*/
       }
       return cat_object2;
     }
@@ -356,8 +355,9 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 
   function switchCirc(circle) {  //run on click, switches boolean
     circ_object[circle] = !circ_object[circle];
-  }
+  }*/
 
+  //Gives me error if i take it out?
   function getCircs(){
     var hasTrue = false;
     var circ_object2 = {};
@@ -379,19 +379,15 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   }
 
   //be careful with order values, they get passed to server
-  var order = 'dateNew';
-  $('#dateNew-li').addClass("active");
+  //var order = 'dateNew';
+  
 
   //sort order assigner. UI change AND server notifier
-  function selectOrder(newOrder) {
+  /*function selectOrder(newOrder) {
     order = newOrder //assigned to make server filter properly
     $('.side-item.sort').removeClass("active");
     $('#'+newOrder+"-li").addClass("active");        //html ids for icons equivalent to the order values
-  }
-
-  function getOrder() {
-    return order;
-  }
+  }*/
 
   function toggle_friends_filter(){
     filtering_by_friends = !filtering_by_friends;
