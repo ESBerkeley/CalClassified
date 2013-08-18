@@ -92,7 +92,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapse3" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="friends-li" class="side-item" onclick="toggle_friends_filter();">
+              <li id="friends-li" class="side-item" onclick="toggleFriendsFilter();">
                 <div class="side-text"/> Friends Only </div>
               </li>
             </ul>
@@ -161,6 +161,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     
     /*****************************/
     
+    $(window).scroll(function(){
+      if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+        page++;
+        runloadBox(false, false);
+      }
+    });
+    
     $("#min").keypress(function(e) {
       if(e.which == 13) {
         runloadBox(true, false);
@@ -213,7 +220,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   var circ_object = {};
   var categories = [];
   var circles = [];
-  var filtering_by_friends = false;
+  //var filtering_by_friends = false;
 
 
   /*var numx = 4;
@@ -394,7 +401,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     $('#'+newOrder+"-li").addClass("active");        //html ids for icons equivalent to the order values
   }*/
 
-  function toggle_friends_filter(){
+  /*function toggle_friends_filter(){
     filtering_by_friends = !filtering_by_friends;
     if (filtering_by_friends) {
         $("#friends-li").addClass("active");
@@ -402,7 +409,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         $("#friends-li").removeClass("active");
     }
     runloadBox(current_page);
-  }
+  }*/
 </script>
 {% endblock %}
 
