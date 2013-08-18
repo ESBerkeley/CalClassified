@@ -152,9 +152,14 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 {% block post_js %}
 
 <script type="text/javascript">
-  $(document).ready(function() {
+  $(document).ready(function() {  
+    /*****************************/
+    
     setCategory("Everything");
     $('#dateNew-li').addClass("active");
+    runloadBox(false, true);
+    
+    /*****************************/
     
     $("#min").keypress(function(e) {
       if(e.which == 13) {
@@ -172,19 +177,19 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       localStorage["scroll"] = JSON.stringify($(window).scrollTop());
     });
     
-    runloadBox(false, true);
+    
     
     $(".navbar").addClass("navbar-fixed-top");
     $("body").css("padding-top","+=70px");
     $(".navbar .container").css("min-width","97%");
 
-  $("#searchbarform").attr("action","javascript: runloadBox(true);");
-  $("#search-go-nav").attr("onclick", "runloadBox(true)");
+    $("#searchbarform").attr("action","javascript: runloadBox(true, false);");
+    $("#search-go-nav").attr("onclick", "runloadBox(true, false)");
 
-  {% if q %}
-    //if query exists, keep at the top
-    document.getElementById('searchbar').value = "{{ q }}";
-  {% endif %}
+    {% if q %}
+      //if query exists, keep at the top
+      document.getElementById('searchbar').value = "{{ q }}";
+    {% endif %}
     
   /*
     if($.cookie('onpost') === 't'){
@@ -198,12 +203,12 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     }
   */
   });
-
-
+  
+  /*
   var in_restore = 0;
   var ogrid,old_obj,scraps,oflags;
   scraps=[];
-  oflags="";
+  oflags="";*/
   var cat_object = {};
   var circ_object = {};
   var categories = [];
@@ -211,11 +216,11 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   var filtering_by_friends = false;
 
 
-  var numx = 4;
+  /*var numx = 4;
   var heights = new Array();
   for(var i = 0; i < numx; i++){
     heights[i] = 0;
-  }
+  }*/
   
   {% for entry in cc_cats %}  //all categories and circles are initially false
     categories.push("{{entry.name}}")

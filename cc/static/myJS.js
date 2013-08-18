@@ -292,23 +292,57 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   return notif;
 }
 
+$("#modal-send").on("click", function(){
+  $(this).button('loading');
+  var message = $("#modal-message").val();
+  data= {};
+  data['recipient_pk'] = recipient_pk;
+  data['message'] = message;
+  data['csrfmiddlewaretoken'] = csrf_token;
+  data['post_pk'] = post_pk;
+  $.ajax({
+    type: "POST",
+    url: "/ajax_contact_seller/",
+    data: data,
+    success: function(data){
+      $(".msg-modal").modal('hide');
+      $("#success-modal").modal('show');
+    }
+  });
+});
+
 /*****************************
  * Boxview
  * 
+ * isRemoveHtml: Boolean that determines if I want to clear out the boxes, e.g., clicking on a new category, I want to keep it true so the boxes get cleared out. On a scroll down load, I want to preserve my current html.
+ * isActive: Boolean, whether we check for a previous session, e.g., on an initial page load, I want to check if there was a previous session.
+ * 
+ * States are stored using "localstorage" which is persistent until a cache clear.
+ * 
+ * 1. Check isRemoveHtml and reset page value if true, otherwise page will get incremented and is stored.
+ * 2. Check isActive and if a session is stored. Then, set all variables based on what is in storage if true.
+ * 3. Query and price filter icon stuff.
+ * 4. Set URLS. A categoryObject is created, which is the list of booleans the backend wants to get.
+ * 5. Setting up the box: Check if active and if a session is stored. If so, populate the the box using HTML in storage and scroll to the proper position.
+ * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. Fill in some filter text. !!! Load the current variables into storage.
+ * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true.
+ * 
+ * Functions that are running alongside:
+ * 1. A scroll function that monitors the position and increments the page and fires a loadbox if we scroll down.
+ * 2. A function fires on page exit which saves the current scroll position in storage. (Located in box.html)
  * 
  *****************************/
-
 
 // initialize masonry
 var $container = $('#box');
 var containerHtml = "";
 var $containerHtml = $("");
+var savedHtml = "";
 $container.masonry({
   gutter: 5,
   itemSelector: '.box-item',
   transitionDuration: '0.6s'      //default 0.4
 });
-var savedHtml = "";
 
 var query = "";
 var minPrice = null;
@@ -317,6 +351,133 @@ var category = "Everything";
 var categoryObject;
 var page = 0;
 var order = 'dateNew';
+
+function runloadBox(isRemoveHtml, isActive) {
+  if(isRemoveHtml) {
+    page = 0;
+  }
+  
+  if (isActive && getIsLoaded()) {
+    revertState();
+    setCategory(category);
+    setOrder(order);
+    setPricebox(minPrice, maxPrice);
+  } else {
+    query = document.getElementById('searchbar').value;
+    minPrice = document.getElementById('min').value;
+    maxPrice = document.getElementById('max').value;
+  }
+  //console.log('query:'+query+' minprice:'+minPrice+' maxprice:'+maxPrice+' category:'+category+' page:'+page+' order:'+order);
+  var cir_status = getCircs();
+  
+  //load pacman
+  $("#pac-ajax").show();
+
+  if(query) {      //hides and shows cancel button in search bar
+    $("#search-cancel-nav").show();
+    $("#search-go-nav").hide();
+  } else {
+    $("#search-cancel-nav").hide();
+    $("#search-go-nav").show();
+  }
+  
+  if(maxPrice || minPrice) {      //hides and shows price icons
+    $("#price-go").hide();
+    $("#price-cancel").show();
+  } else {
+    $("#price-go").show();
+    $("#price-cancel").hide();
+  }
+
+  var url="/ajax_box/?";
+  var params = {
+    q: query,
+    max_price: maxPrice,
+    min_price: minPrice,
+    p: page,
+    order: order
+  };
+  url = url + $.param(params);
+
+  for (key in categoryObject) {
+    if (categoryObject[key]==true) {
+      cat_pk = cat2num(key)
+      url = url + "&category="+cat_pk;
+    }
+  }
+  
+  for (key in cir_status) {
+    if (cir_status[key]==true) {
+      cir_pk = key
+      url = url + "&" + "circle=" + cir_pk;
+    }
+  }
+  
+  if(filtering_by_friends){
+    url = url+"&fbf=1";
+  }
+  
+  $containerHtml = $(savedHtml);        //Sets new HTML to any saved HTML
+  if(isActive && getIsLoaded()) {
+    $container.append($containerHtml).masonry('appended', $containerHtml);
+    $container.masonry();
+    $(window).scrollTop(getScroll())
+    $("#pac-ajax").hide();
+  } else {
+    $.ajax({
+      type: "GET",
+      url: url,
+      dataType: "json",
+      success: function(data){
+        if(isRemoveHtml) {
+          var elements = $container.masonry('getItemElements')
+          if(elements.length > 0)
+            $container.masonry('remove', elements);
+          savedHtml = "";
+          $(window).scrollTop(0)
+        }
+        if(data.length !== 0) {
+          containerHtml = "";
+          for(i = 0; i < data.length; i++) {
+            var title = data[i].fields.title;
+            var thumbnailUrl = data[i].extras.get_thumbnail_url;
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center center no-repeat;'> </div></div></a>"
+          }
+          savedHtml += containerHtml;
+          $containerHtml = $(containerHtml);
+          $container.append($containerHtml).masonry('appended', $containerHtml);
+          $container.masonry();
+          
+          //Calvin's random unimportant sidebar crap
+          var filters = "";          
+          if(query) {
+            filters = "<li>" + "Search: " + query + "</li>";
+          }
+          if(minPrice || maxPrice) {
+            filters = filters + "<li>" + "Price: $" + minPrice + " to $" + maxPrice + "<li>";
+          }
+          if((typeof filters === 'undefined') || (filters === "")) {
+            filters = "<li> None </li>";
+          }
+        }
+        $("#pac-ajax").hide();
+        setNewState();
+      }
+    });
+  }
+  setIsLoaded(true);
+}
+
+$(window).scroll(function(){
+  if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+    page++;
+    runloadBox(false, false);
+  }
+});
+
+function getScroll() {
+  return JSON.parse(localStorage["scroll"]);
+}
 
 function search(){
   var q = document.getElementById('searchbar').value;
@@ -363,17 +524,6 @@ function createCategoryObject(category) {
   } else {
     return {"Other": true}
   }
-}
-
-$(window).scroll(function(){
-  if($(window).scrollTop() + $(window).height() >= $(document).height()) {
-    page++;
-    runloadBox(false, false);
-  }
-});
-
-function getScroll() {
-  return JSON.parse(localStorage["scroll"]);
 }
 
 function getPage() {
@@ -433,140 +583,7 @@ function revertState() {
   savedHtml = JSON.parse(localStorage["savedHtml"]);
 }
 
-function runloadBox(isRemoveHtml, isActive) {
-  console.log(getScroll())
-  if(isRemoveHtml) {
-    page = 0;
-  }
-  if (isActive && getIsLoaded()) {
-    revertState();
-    setCategory(category);
-    setOrder(order);
-    setPricebox(minPrice, maxPrice);
-  } else {
-    query = document.getElementById('searchbar').value;
-    minPrice = document.getElementById('min').value;
-    maxPrice = document.getElementById('max').value;
-  }
-  console.log('query:'+query+' minprice:'+minPrice+' maxprice:'+maxPrice+' category:'+category+' page:'+page+' order:'+order);
-  var cir_status = getCircs();
-  
-  //load pacman
-  $("#pac-ajax").show();
-
-  //going first makes sure icons are hidden so the page doesnt look weird during the load
-  if(query) {      //hides and shows cancel button in search bar
-    $("#search-cancel-nav").show();
-    $("#search-go-nav").hide();
-  } else {
-    $("#search-cancel-nav").hide();
-    $("#search-go-nav").show();
-  }
-  
-  if(maxPrice || minPrice) {      //hides and shows price icons
-    $("#price-go").hide();
-    $("#price-cancel").show();
-  } else {
-    $("#price-go").show();
-    $("#price-cancel").hide();
-  }
-
-  var url="/ajax_box/?";
-  var params = {
-    q: query,
-    max_price: maxPrice,
-    min_price: minPrice,
-    p: page,
-    order: order
-  };
-  url = url + $.param(params);
-
-  for (key in categoryObject) {
-    if (categoryObject[key]==true) {
-      cat_pk = cat2num(key)
-      url = url + "&category="+cat_pk;
-    }
-  }
-  
-  for (key in cir_status) {
-    if (cir_status[key]==true) {
-      cir_pk = key
-      url = url + "&" + "circle=" + cir_pk;
-    }
-  }
-  
-  if(filtering_by_friends){
-    url = url+"&fbf=1";
-  }
-  
-  $containerHtml = $(savedHtml);
-  if(isActive && getIsLoaded()) {
-    $container.append($containerHtml).masonry('appended', $containerHtml);
-    $container.masonry();
-    $(window).scrollTop(getScroll())
-    $("#pac-ajax").hide();
-  } else {
-    $.ajax({
-      type: "GET",
-      url: url,
-      dataType: "json",
-      success: function(data){
-        if(isRemoveHtml) {
-          var elements = $container.masonry('getItemElements')
-          if(elements.length > 0)
-            $container.masonry('remove', elements);
-          savedHtml = "";
-          $(window).scrollTop(0)
-        }
-        if(data.length !== 0) {
-          containerHtml = "";
-          for(i = 0; i < data.length; i++) {
-            var title = data[i].fields.title;
-            var thumbnailUrl = data[i].extras.get_thumbnail_url;
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center center no-repeat;'> </div></div></a>"
-            //containerHtml += "<img class='box-image' src='"+thumbnailUrl+"'></a></div>";
-          }
-          savedHtml += containerHtml;
-          $containerHtml = $(containerHtml);
-          $container.append($containerHtml).masonry('appended', $containerHtml);
-          $container.masonry();
-          
-          //Calvin's random unimportant sidebar crap
-          var filters = "";          
-          if(query) {
-            filters = "<li>" + "Search: " + query + "</li>";
-          }
-          if(minPrice || maxPrice) {
-            filters = filters + "<li>" + "Price: $" + minPrice + " to $" + maxPrice + "<li>";
-          }
-          if((typeof filters === 'undefined') || (filters === "")) {
-            filters = "<li> None </li>";
-          }
-        }
-        $("#pac-ajax").hide();
-        setNewState();
-      }
-    });
-  }
-  setIsLoaded(true);
-}
-
-$("#modal-send").on("click", function(){
-  $(this).button('loading');
-  var message = $("#modal-message").val();
-  data= {};
-  data['recipient_pk'] = recipient_pk;
-  data['message'] = message;
-  data['csrfmiddlewaretoken'] = csrf_token;
-  data['post_pk'] = post_pk;
-  $.ajax({
-    type: "POST",
-    url: "/ajax_contact_seller/",
-    data: data,
-    success: function(data){
-      $(".msg-modal").modal('hide');
-      $("#success-modal").modal('show');
-    }
-  });
-});
+/*****************************
+ * End of Boxview
+ * **************************/
 
