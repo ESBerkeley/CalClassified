@@ -1215,10 +1215,6 @@ def profile_buying(request):
     user_profile.save()
     return render_to_response('profile/profile_buying.html',data,context_instance=RequestContext(request))
 
-
-
-
-    
 #@login_required(redirect_field_name='/view_thread')
 @login_required
 def profile_view_thread(request,thread_id):
@@ -1247,8 +1243,6 @@ def profile_view_thread(request,thread_id):
 
     return render_to_response('profile/profile_view_thread.html',data,context_instance=RequestContext(request))
 
-
-
 @login_required
 def profile_circles(request):
     data = {}
@@ -1265,9 +1259,17 @@ def profile_circles(request):
         data['is_facebook'] = True
     if 'msg' in request.GET:
         data['msg'] = request.GET['msg']
-    return render_to_response('profile/profile_circles.html',
-                             data,
-                             context_instance=RequestContext(request))
+    return render_to_response('profile/profile_circles.html', data, context_instance=RequestContext(request))
+
+@login_required
+def profile_reviews(request):
+    data = {}
+    written_reviews = ItemReview.objects.filter(buyer=request.user)
+    reviewed_item_ids = [review.item.id for review in written_reviews]
+    not_reviewed_items = ItemForSale.objects.filter(sold=True, pending_buyer=request.user).exclude(id__in = reviewed_item_ids)
+    data['written_reviews'] = written_reviews
+    data['not_reviewed_items'] = not_reviewed_items
+    return render_to_response('profile/profile_reviews.html', data, context_instance=RequestContext(request))
 
 @login_required
 @logit
@@ -1403,3 +1405,16 @@ def ajax_repost_item(request):
             return HttpResponse("OK")
         else:
             return HttpResponse("Repost Item Failed")
+
+@login_required
+def review_item(request, item_id):
+    item = ItemForSale.objects.get(id=item_id)
+    if not item.sold or item.pending_buyer != request.user:
+        title = "Error"
+        msg = "I can't let you do that, Dave. No but seriously, something went wrong. Contact support for further assistance."
+        return render_to_response('message.html',{'title':title,'message':msg},context_instance=RequestContext(request))
+
+    data = {}
+    if request.method == "GET":
+        data['item'] = item
+        return render_to_response('review_item.html', data, context_instance=RequestContext(request))

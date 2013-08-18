@@ -5,3 +5,9 @@
 .table-start {
     width:42.6%;
 }
+
+.help-msg {
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 5px;
+}
