@@ -442,7 +442,7 @@ def showpost(request, pid, super_cat):
             threads = Thread.objects.filter(owner=request.user, post_id=post.id)
             for thread in threads:
                 if not thread.declined:
-                    ecks['thread'] = thread[0]
+                    ecks['thread'] = thread
         ecks['this_is_a_post'] = True
 
             
