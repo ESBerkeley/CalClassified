@@ -351,6 +351,7 @@ var category = "Everything";
 var categoryObject;
 var page = 0;
 var order = 'dateNew';
+var isFilterFriends = false;
 
 function runloadBox(isRemoveHtml, isActive) {
   if(isRemoveHtml) {
@@ -367,7 +368,7 @@ function runloadBox(isRemoveHtml, isActive) {
     minPrice = document.getElementById('min').value;
     maxPrice = document.getElementById('max').value;
   }
-  //console.log('query:'+query+' minprice:'+minPrice+' maxprice:'+maxPrice+' category:'+category+' page:'+page+' order:'+order);
+  console.log('query:'+query+' minprice:'+minPrice+' maxprice:'+maxPrice+' category:'+category+' page:'+page+' order:'+order);
   var cir_status = getCircs();
   
   //load pacman
@@ -413,7 +414,7 @@ function runloadBox(isRemoveHtml, isActive) {
     }
   }
   
-  if(filtering_by_friends){
+  if(isFilterFriends){
     url = url+"&fbf=1";
   }
   
@@ -467,13 +468,6 @@ function runloadBox(isRemoveHtml, isActive) {
   }
   setIsLoaded(true);
 }
-
-$(window).scroll(function(){
-  if($(window).scrollTop() + $(window).height() >= $(document).height()) {
-    page++;
-    runloadBox(false, false);
-  }
-});
 
 function getScroll() {
   return JSON.parse(localStorage["scroll"]);
@@ -575,6 +569,7 @@ function getIsLoaded() {
 
 function revertState() {
   query = JSON.parse(localStorage["query"]);
+  console.log(query)
   minPrice = JSON.parse(localStorage["minPrice"]);
   maxPrice = JSON.parse(localStorage["maxPrice"]);
   category = JSON.parse(localStorage["category"]);
@@ -582,6 +577,16 @@ function revertState() {
   order = JSON.parse(localStorage["order"]);
   savedHtml = JSON.parse(localStorage["savedHtml"]);
 }
+
+function toggleFriendsFilter(){
+    isFilterFriends = !isFilterFriends;
+    if (isFilterFriends) {
+        $("#friends-li").addClass("active");
+    } else {
+        $("#friends-li").removeClass("active");
+    }
+    runloadBox(true, false);
+  }
 
 /*****************************
  * End of Boxview
