@@ -333,7 +333,7 @@ def confirm_purchase_hndlr(sender, **kwargs):
         seller = item.owner.get_profile()
         buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
-        new_note = Notification(post_from=item, going_to=buyer, type=7)
+        new_note = Notification(post_from=item, going_to=buyer, type=8)
         new_note.second_party = seller
         thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)
         new_note.thread_id = thread.id
@@ -364,7 +364,7 @@ def decline_purchase_hndlr(sender, **kwargs):
         seller = item.owner.get_profile()
         buyer = kwargs['buyer'].get_profile()
         message = kwargs['message']
-        new_note = Notification(post_from=item, going_to=buyer, type=7)
+        new_note = Notification(post_from=item, going_to=buyer, type=9)
         new_note.second_party = seller
         thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)
         new_note.thread_id = thread.id
