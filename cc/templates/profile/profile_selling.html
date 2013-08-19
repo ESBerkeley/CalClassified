@@ -11,6 +11,44 @@
 {% block profile_content %}
     <div>
 
+    {% if pending_threads %}
+    <table class="table table-striped" >
+    <caption><h4> Items Needing Confirmation </h4></caption>
+    <thead>
+        <tr>
+            <th class="table-start">Item Title</th>
+            <th class="table-mid">Message</th>
+            <th class="table-mid2">Buyer</th>
+            <th>Recent Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for thread in pending_threads %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
+
+          <td>
+        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        {% if not thread.is_read %}
+            (Unread)
+        {% endif %}
+          <td>
+            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope-alt"></i></a>
+          </td>
+          <td>
+            {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}
+          </td>
+
+          <td>
+            {{ thread.newest_message_time }}
+          </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    <br>
+    {% endif %}
+
     {% if my_threads %}
     <table class="table table-striped" >
     <caption><h4> Items Being Purchased </h4></caption>
@@ -287,5 +325,5 @@
         })
         var csrf_token = "{{ csrf_token }}";
     </script>
-    <script src="{% get_static_prefix %}js/profile_messages.js?v=1"></script>
+    <script src="{% get_static_prefix %}js/profile_messages.js?v=2"></script>
 {% endblock %}
