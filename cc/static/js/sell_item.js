@@ -22,9 +22,10 @@ $(document).ready(function(){
           required: true
         }
       },
-      submitHandler: function() {
+      submitHandler: function(form) {
         $("#ajax-loader").show();
         $("#submit").button('loading');
+        form.submit();
       }
     });
 
