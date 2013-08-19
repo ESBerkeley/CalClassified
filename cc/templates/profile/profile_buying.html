@@ -4,8 +4,56 @@
 
 {% block title %}Account - Buying {% endblock %}
 
+{% block head %}
+     <link href="{{ STATIC_URL }}css/profile.css" rel="stylesheet">
+{% endblock %}
+
 {% block profile_content %}
     <div>
+
+    {% if pending_threads %}
+    <table class="table table-striped">
+    <caption><h4> Waiting Confirmation </h4></caption>
+    <thead>
+        <tr>
+            <th class="table-start">Item Title</th>
+            <th class="table-mid">Messages</th>
+            <th class="table-mid2">Seller</th>
+            <th>Recent Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for thread in pending_threads %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
+
+          <td>
+        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        {% if not thread.is_read %}
+            (Unread)
+        {% endif %}
+        {% if thread.post_deleted %}
+            (Post Deleted)
+        {% endif %}
+          </td>
+          <td>
+          <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope-alt"></i></a>
+          </td>
+          <td>
+            {% if thread.other_person.get_full_name %}
+              {{ thread.other_person.get_full_name }}
+            {% else %}
+              {{ thread.other_person.username }}
+            {% endif %}
+          </td>
+          <td>
+            {{ thread.newest_message_time }}
+          </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% endif %}
 
     {% if my_threads %}
     <table class="table table-striped">
@@ -95,7 +143,7 @@
     </table>
     {% endif %}
 
-    {% if not my_threads and not completed_threads %}
+    {% if not my_threads and not completed_threads and not pending_threads %}
         <h2> You are not in the process of buying anything. </h2>
     {% endif %}
     </div>

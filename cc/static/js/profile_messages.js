@@ -76,4 +76,44 @@ $(".verify-bump").click(function(){
     });
   });
 
+$("#confirm-modal-send").on("click", function(){
+    $(this).button('loading');
+    var message = $("#modal-message").val();
+    data= {};
+    //data['sender_pk'] = sender_pk; user data can be accessed in the request
+    data['recipient_pk'] = recipient_pk;
+    data['message'] = message;
+    data['csrfmiddlewaretoken'] = csrf_token;
+    data['post_pk'] = post_pk;
+    $.ajax({
+        type: "POST",
+        url: "/ajax_confirm_purchase/",
+        data: data,
+        success: function(data){
+            $(".msg-modal").modal('hide');
+            $("#confirm-success-modal").modal('show');
+        }
+    });
+});
+
+$("#decline-modal-send").on("click", function(){
+    $(this).button('loading');
+    var message = $("#modal-message").val();
+    data= {};
+    //data['sender_pk'] = sender_pk; user data can be accessed in the request
+    data['recipient_pk'] = recipient_pk;
+    data['message'] = message;
+    data['csrfmiddlewaretoken'] = csrf_token;
+    data['post_pk'] = post_pk;
+    $.ajax({
+        type: "POST",
+        url: "/ajax_decline_purchase/",
+        data: data,
+        success: function(data){
+            $(".msg-modal").modal('hide');
+            $("#decline-success-modal").modal('show');
+        }
+    });
+});
+
 //};

@@ -25,7 +25,6 @@ $(document).ready(function(){
       submitHandler: function() {
         $("#ajax-loader").show();
         $("#submit").button('loading');
-        $(form).ajaxSubmit();
       }
     });
 

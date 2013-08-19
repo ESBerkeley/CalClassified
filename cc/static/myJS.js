@@ -257,27 +257,27 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   notif[1] = "";
   notif[2] = obj[k].fields.time_created.substring(0, 10);
 
-  if(obj[k].fields.type == 0){
+  if(obj[k].fields.type == 0){ // friend posted _____
     notif[0] += obj[k].extras.username + " posted " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from;
   }
-  else if(obj[k].fields.type == 1){
+  else if(obj[k].fields.type == 1){ // user commented on ______
     notif[0] += "<strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from + "#comments_section";
   }
-  else if(obj[k].fields.type == 2){
+  else if(obj[k].fields.type == 2){ // Seller replied to comment _____
     notif[0] += "<strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from + "#comments_section";
   }
-  else if(obj[k].fields.type == 3){
+  else if(obj[k].fields.type == 3){ // Buyer has purchased item
     notif[0] += "<strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title;
     notif[1] += "/accounts/profile/selling/";
   }
-  else if(obj[k].fields.type == 4){
+  else if(obj[k].fields.type == 4){ //Marked sale complete
     notif[0] += "<strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete.";
     notif[1] += "/" +obj[k].fields.post_from;
   }
-  else if(obj[k].fields.type == 5){
+  else if(obj[k].fields.type == 5){ // Cancelled sale of _____
     notif[0] += "<strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from;
   }
