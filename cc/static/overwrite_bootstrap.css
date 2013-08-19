@@ -344,8 +344,8 @@ img.medium {
 }
 
 .box-item {
-  width:282px;
-  height: 195px;
+  width:280px;
+  height: 210px;
   margin-bottom:5px;
   background-color:#000000;
   /*animation:fadein 2s;
@@ -353,8 +353,8 @@ img.medium {
 }
 
 .box-image {
-  width:282px;
-  height: 195px;
+  width:280px;
+  height: 210px;
 }
 /*
 @keyframes fadein

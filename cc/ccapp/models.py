@@ -136,7 +136,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
             if self.cached_thumb == '':
                 from cc.sorl.thumbnail import get_thumbnail
                 image = self.image_set.order_by('id')[0]
-                im = get_thumbnail(image, "250x250", quality=50)
+                im = get_thumbnail(image, "280x210", quality=80)
                 self.cached_thumb = im.url
                 self.save()
                 return self.cached_thumb
@@ -153,7 +153,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
                 #return self.facebookpost.thumbnail_url
             from cc.sorl.thumbnail import get_thumbnail
             image = self.image_set.order_by('id')[0]
-            im = get_thumbnail(image, "250x250", quality=50)
+            im = get_thumbnail(image, "280x210", quality=80)
             self.cached_thumb = im.url
             self.save()
             return self.cached_thumb
@@ -167,7 +167,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
         from cc.sorl.thumbnail import get_thumbnail
         for image in self.image_set.order_by('id'):
 #image quality
-            im = get_thumbnail(image, "250x250", quality=50)
+            im = get_thumbnail(image, "280x210", quality=80)
             thumb_url = im.url
             urls.append(thumb_url)
         return urls

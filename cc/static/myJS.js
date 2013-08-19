@@ -407,12 +407,12 @@ function runloadBox(isRemoveHtml, isActive) {
     }
   }
   
-  for (key in cir_status) {
+  /*for (key in cir_status) {
     if (cir_status[key]==true) {
       cir_pk = key
       url = url + "&" + "circle=" + cir_pk;
     }
-  }
+  }*/
   
   if(isFilterFriends){
     url = url+"&fbf=1";
@@ -496,7 +496,7 @@ function setPricebox(min, max) {
 
 function createCategoryObject(category) {
   if(category === "Everything") {
-    return {"Apparel": true, "Appliances": true, "Automotive": true, "Books": true, "Electronics": true, "Furniture": true, "Movies and Games": true, "Music": true, "Tickets": true, "Other": true}
+    return {}
   } else if(category === "Apparel") {
     return {"Apparel": true}
   } else if(category === "Appliances") {
