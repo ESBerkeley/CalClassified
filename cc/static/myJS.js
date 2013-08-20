@@ -319,6 +319,12 @@ $("#modal-send").on("click", function(){
   });
 });
 
+console.log(localStorage["isBoxActive"])
+
+$(window).on('beforeunload', function(){
+	localStorage["isBoxActive"] = JSON.stringify(false);
+});
+
 /*****************************
  * Boxview
  * 
@@ -361,12 +367,13 @@ var page = 0;
 var order = 'dateNew';
 var isFilterFriends = false;
 
-function runloadBox(isRemoveHtml, isActive) {
+function runloadBox(isRemoveHtml) {
+	isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
     page = 0;
   }
   
-  if (isActive && getIsLoaded()) {
+  if (isBoxActive && getIsLoaded()) {
     revertState();
     setCategory(category);
     setOrder(order);
@@ -427,7 +434,7 @@ function runloadBox(isRemoveHtml, isActive) {
   }
   
   $containerHtml = $(savedHtml);        //Sets new HTML to any saved HTML
-  if(isActive && getIsLoaded()) {
+  if(isBoxActive && getIsLoaded()) {
     $container.append($containerHtml).masonry('appended', $containerHtml);
     $container.masonry();
     $(window).scrollTop(getScroll())
@@ -489,7 +496,7 @@ function search(){
 
 function searchbarCancel() {   //cancel for the search bar
   document.getElementById('searchbar').value = '';
-  runloadBox(true, false);
+  runloadBox(true);
 }
 
 function priceboxCancel() {   //cancel for the price box
@@ -593,10 +600,9 @@ function toggleFriendsFilter(){
     } else {
         $("#friends-li").removeClass("active");
     }
-    runloadBox(true, false);
+    runloadBox(true);
   }
 
 /*****************************
  * End of Boxview
  * **************************/
-

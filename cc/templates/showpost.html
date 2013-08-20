@@ -118,23 +118,27 @@
 {% endblock %}
 
 {% block post_js %}
-    {% load static %}
-    <script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-tooltip.js"></script>
-    <script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-popover.js"></script>
-    <script type="text/javascript">
-    $(document).ready( function() {
-        {% if not is_bookmarked %}
-            //toggler("bookmark-icon")
-            $("#active-bookmark").show()
-            $("#not-active-bookmark").hide()
-        {% endif %}
+	{% load static %}
+		<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-tooltip.js"></script>
+		<script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-popover.js"></script>
+		<script type="text/javascript">
+			$(document).ready( function() {
+				$(window).on('unload', function(){
+					localStorage["isBoxActive"] = JSON.stringify(true)
+				});
 
-        {% if new == 1 and request.user == post.owner %}
-            $('#sellModal').modal('show');
-        {% endif %}
-    })
-    </script>
+				{% if not is_bookmarked %}
+						//toggler("bookmark-icon")
+						$("#active-bookmark").show()
+						$("#not-active-bookmark").hide()
+				{% endif %}
+
+				{% if new == 1 and request.user == post.owner %}
+						$('#sellModal').modal('show');
+				{% endif %}
+			})
+		</script>
     <script type="text/javascript" src="{% get_static_prefix %}js/profile_messages.js?v=1"></script>
     <script type="text/javascript" src="{% get_static_prefix %}js/showpost.js"></script>
 

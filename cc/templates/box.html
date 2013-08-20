@@ -40,17 +40,17 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapseOne" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="Everything-category" class="side-item category" onclick="setCategory('Everything'); runloadBox(true, false);">
+              <li id="Everything-category" class="side-item category" onclick="setCategory('Everything'); runloadBox(true);">
                 <div id="Everything_category" class="side-text">Everything</div>
               </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
-                <li id="{{ cat.name }}-category" class="side-item category" onclick="setCategory('{{cat.name}}'); runloadBox(true, false);">
+                <li id="{{ cat.name }}-category" class="side-item category" onclick="setCategory('{{cat.name}}'); runloadBox(true);">
                   <div id="{{cat.name}}_category" class="side-text">{{cat.name}}</div>
                 </li>
                 {% endif %}
               {% endfor %}
-              <li id="Other-category" class="side-item category" onclick="setCategory('Other'); runloadBox(true, false);">
+              <li id="Other-category" class="side-item category" onclick="setCategory('Other'); runloadBox(true);">
                 <div id="Other_category" class="side-text">Other</div>
               </li>
             </ul>
@@ -68,13 +68,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapse2" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="dateNew-li" class="side-item sort" onclick="setOrder('dateNew'); runloadBox(true, false);">
+              <li id="dateNew-li" class="side-item sort" onclick="setOrder('dateNew'); runloadBox(true);">
                 <div class="side-text order-text">Date: Newest First</div>
               </li>
-              <li id="priceLow-li" class="side-item sort" onclick="setOrder('priceLow'); runloadBox(true, false);">
+              <li id="priceLow-li" class="side-item sort" onclick="setOrder('priceLow'); runloadBox(true);">
                 <div class="side-text order-text">Price: Lowest First</div>
               </li>
-              <li id="priceHigh-li" class="side-item sort" onclick="setOrder('priceHigh'); runloadBox(true, false);">
+              <li id="priceHigh-li" class="side-item sort" onclick="setOrder('priceHigh'); runloadBox(true);">
                 <div class="side-text order-text">Price: Highest First</div>
               </li>
             </ul>
@@ -114,8 +114,8 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
                 <div class="form-inline price-box">
                   <input id="min" type="text" class="input-mini" placeholder="Low"> ~
                   <input id="max" type="text" class="input-mini" placeholder="High" style="margin-right:8px;">
-                  <i id="price-go" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox(true, false);"></i>
-                  <i id="price-cancel" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel(); runloadBox(true, false);"></i>
+                  <i id="price-go" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox(true);"></i>
+                  <i id="price-cancel" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel(); runloadBox(true);"></i>
                 </div>
               </li>
             </ul>
@@ -160,23 +160,23 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     runloadBox(false, true);
     
     /*****************************/
-    
+    console.log(window.history.state)
     $(window).scroll(function(){
       if($(window).scrollTop() + $(window).height() >= $(document).height()) {
         page++;
-        runloadBox(false, false);
+        runloadBox(false);
       }
     });
     
     $("#min").keypress(function(e) {
       if(e.which == 13) {
-        runloadBox(true, false);
+        runloadBox(true);
       }
     });
     
     $("#max").keypress(function(e) {
       if(e.which == 13) {
-        runloadBox(true, false);
+        runloadBox(true);
       }
     });
     
@@ -190,8 +190,8 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     $("body").css("padding-top","+=70px");
     $(".navbar .container").css("min-width","97%");
 
-    $("#searchbarform").attr("action","javascript: runloadBox(true, false);");
-    $("#search-go-nav").attr("onclick", "runloadBox(true, false)");
+    $("#searchbarform").attr("action","javascript: runloadBox(true);");
+    $("#search-go-nav").attr("onclick", "runloadBox(true)");
 
     {% if q %}
       //if query exists, keep at the top
