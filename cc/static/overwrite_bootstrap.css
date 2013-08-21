@@ -339,8 +339,8 @@ img.medium {
 }
 
 /*box*/
-#boxDiv {
-
+#box {
+  margin-top: 30px;
 }
 
 .box-item {

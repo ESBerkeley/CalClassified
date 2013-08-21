@@ -87,7 +87,7 @@
         <div class="container">
           <a class="brand" id="logo" href="/"><img style="height:37px; width:126px;" src="{% get_static_prefix %}124ta-beta.png"></a>
           <ul class="nav">
-            <li><a href="{% url browse %}">Browse</a></li>
+            <li><a href="{% url browse %}" onclick="setInactive()">Browse</a></li>
             <li><a href="{% url createIFS %}">Sell</a></li>
             <li><a href="{% url feedback %}">Feedback</a></li>
           </ul>
@@ -240,6 +240,12 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       clear_notif_number();
     });
 
+    function setInactive() {
+	  $(window).on('unload', function(){
+		localStorage["isBoxActive"] = JSON.stringify(false);
+	  });
+    }
+    
     </script>
     {% endblock %}
 

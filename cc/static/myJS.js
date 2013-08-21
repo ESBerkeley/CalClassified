@@ -319,31 +319,32 @@ $("#modal-send").on("click", function(){
   });
 });
 
-console.log(localStorage["isBoxActive"])
-
+//Sets "isBoxActive" false for all pages
 $(window).on('beforeunload', function(){
-	localStorage["isBoxActive"] = JSON.stringify(false);
+  localStorage["isBoxActive"] = JSON.stringify(false);
 });
 
 /*****************************
  * Boxview
  * 
- * isRemoveHtml: Boolean that determines if I want to clear out the boxes, e.g., clicking on a new category, I want to keep it true so the boxes get cleared out. On a scroll down load, I want to preserve my current html.
- * isActive: Boolean, whether we check for a previous session, e.g., on an initial page load, I want to check if there was a previous session.
+ * States are stored using "localstorage" which is persistent until a cache/cookie clear.
  * 
- * States are stored using "localstorage" which is persistent until a cache clear.
+ * isRemoveHtml: Boolean that determines if I want to clear out the boxes, e.g., clicking on a new category, I want to keep it true so the boxes get cleared out. On a scroll down load, I want to preserve my current html.
+ * isBoxActive: Boolean, saved in localStorage. Indicates if we want the saved state. Set to false on every page except "viewitem" using the beforeunload and unload functions. Also, force a false on all "browse" clicks. That way, we only load an old session on a "back" from an item view.
+ * 
  * 
  * 1. Check isRemoveHtml and reset page value if true, otherwise page will get incremented and is stored.
- * 2. Check isActive and if a session is stored. Then, set all variables based on what is in storage if true.
+ * 2. Check isBoxActive and if a session is stored. Then, set all variables based on what is in storage if true.
  * 3. Query and price filter icon stuff.
  * 4. Set URLS. A categoryObject is created, which is the list of booleans the backend wants to get.
  * 5. Setting up the box: Check if active and if a session is stored. If so, populate the the box using HTML in storage and scroll to the proper position.
  * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. Fill in some filter text. !!! Load the current variables into storage.
- * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true.
+ * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true. We also force isBoxActive false and the animation so the user can navigate after a session load normally.
  * 
  * Functions that are running alongside:
  * 1. A scroll function that monitors the position and increments the page and fires a loadbox if we scroll down.
  * 2. A function fires on page exit which saves the current scroll position in storage. (Located in box.html)
+ * 3. Functions that fire on page "unloads" and "beforeunloads" that set isBoxActive.
  * 
  *****************************/
 
@@ -355,8 +356,18 @@ var savedHtml = "";
 $container.masonry({
   gutter: 5,
   itemSelector: '.box-item',
-  transitionDuration: '0.6s'      //default 0.4
 });
+
+//Set animation. Ignore animation if we are loading a session to make the transition seem more "seamless".
+if (JSON.parse(localStorage["isBoxActive"])) {
+  $container.masonry({
+	transitionDuration: 0
+  })
+} else {
+  $container.masonry({
+	transitionDuration: '0.6s'		//default 0.4s
+  })
+}
 
 var query = "";
 var minPrice = null;
@@ -368,7 +379,7 @@ var order = 'dateNew';
 var isFilterFriends = false;
 
 function runloadBox(isRemoveHtml) {
-	isBoxActive = JSON.parse(localStorage["isBoxActive"])
+  isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
     page = 0;
   }
@@ -457,7 +468,7 @@ function runloadBox(isRemoveHtml) {
           for(i = 0; i < data.length; i++) {
             var title = data[i].fields.title;
             var thumbnailUrl = data[i].extras.get_thumbnail_url;
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center center no-repeat;'> </div></div></a>"
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center center no-repeat;'></div></div></a>"
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);
@@ -482,6 +493,10 @@ function runloadBox(isRemoveHtml) {
     });
   }
   setIsLoaded(true);
+  localStorage["isBoxActive"] = JSON.stringify(false);
+  $container.masonry({
+	transitionDuration: '0.6s'
+  })
 }
 
 function getScroll() {

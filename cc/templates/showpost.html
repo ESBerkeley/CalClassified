@@ -124,6 +124,7 @@
 		<script type="text/javascript" src="{% get_static_prefix %}bootstrap/js/bootstrap-popover.js"></script>
 		<script type="text/javascript">
 			$(document).ready( function() {
+				//Sets isBoxActive true just for this page
 				$(window).on('unload', function(){
 					localStorage["isBoxActive"] = JSON.stringify(true)
 				});
