@@ -354,7 +354,7 @@ var containerHtml = "";
 var $containerHtml = $("");
 var savedHtml = "";
 $container.masonry({
-  gutter: 5,
+  gutter: 10,
   itemSelector: '.box-item',
 });
 
@@ -468,7 +468,8 @@ function runloadBox(isRemoveHtml) {
           for(i = 0; i < data.length; i++) {
             var title = data[i].fields.title;
             var thumbnailUrl = data[i].extras.get_thumbnail_url;
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center center no-repeat;'></div></div></a>"
+						var price = "$"+data[i].fields.price;
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center top no-repeat;'></div> <div class='box-text'><span>"+title+"</span><span class='pull-right'>"+price+"</span></div> </div></a>"
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);
