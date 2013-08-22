@@ -827,8 +827,8 @@ def ajax_box(request):
             deleted=False,
             expire_date__gte=datetime.datetime.now()
         )
-    load_from = 21 * p
-    load_to = 21 * (p+1)
+    load_from = 24 * p
+    load_to = 24 * (p+1)
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
     order  = request.GET['order']
     if order == 'dateNew':

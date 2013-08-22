@@ -340,7 +340,7 @@ img.medium {
 
 /*box*/
 #box {
-  margin-top:30px;
+  margin-top:18px;
 }
 
 .box-item {
@@ -372,6 +372,20 @@ img.medium {
   margin-left:auto;
   margin-right:auto;
   /*border-style:dotted;*/
+}
+
+.box-title {
+  display:inline-block;
+  width:217px;
+  height:24px;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap; 
+  /*border-style:dotted;*/
+}
+
+.box-price {
+  display:inline-block;
 }
 
 #pac-ajax {
