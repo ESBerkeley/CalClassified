@@ -344,48 +344,86 @@ img.medium {
 }
 
 .box-item {
-  margin-bottom:10px;	/*vertical gutter*/
+  margin-bottom:13px;	/*vertical gutter*/
   width:300px;
-  height:270px;
+  height:310px;
   background-color:white;
   -moz-border-radius:2px;
   border-radius:2px;
   box-shadow:1px 2px 2px #CCCCCC;
+/*   border-style:dotted; */
 }
 
 .box-image {
-  width:260px;
+  max-width:260px;
   height:195px;
   margin-top:20px;
   margin-left:auto;
   margin-right:auto;
-  /*border-style:dotted;*/
+  display:block;
+/*   border-style:dotted; */
 }
 
 .box-text {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 300;
   color:black;
-  font-size:25px;
+  font-size:20px;
   width:260px;
-  margin-top:15px;
+  margin-top:8px;
   margin-left:auto;
   margin-right:auto;
-  /*border-style:dotted;*/
+/*   border-style:dotted; */
 }
 
 .box-title {
-  display:inline-block;
-  width:217px;
-  height:24px;
+/*   display:inline-block; */
+  height:29px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size:20px;
   text-overflow:ellipsis;
   overflow:hidden;
   white-space:nowrap; 
-  /*border-style:dotted;*/
+/*   border-style:dotted; */
+}
+
+.box-hr {
+  border-bottom:1px solid #DDDDDD;
+  width:260px;
+}
+
+.box-left {
+  margin-top:9px;
+  float:left;
+  width:200px;
+/*   border-style:dotted; */
 }
 
 .box-price {
-  display:inline-block;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size:22px;
+}
+
+.box-date {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size:14px;
+  color:#333333;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap; 
+/*   border-style:dotted; */
+}
+
+.box-right {
+  margin-top:9px;
+  float:right;
+/*   border-style:dotted; */
+}
+
+.box-profile {
+  height:37px;
+  width:37px;
 }
 
 #pac-ajax {

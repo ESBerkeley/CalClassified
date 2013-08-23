@@ -354,7 +354,7 @@ var containerHtml = "";
 var $containerHtml = $("");
 var savedHtml = "";
 $container.masonry({
-  gutter: 10,
+  gutter: 13,
   itemSelector: '.box-item',
 });
 
@@ -468,9 +468,8 @@ function runloadBox(isRemoveHtml) {
           for(i = 0; i < data.length; i++) {
             var thumbnailUrl = data[i].extras.get_thumbnail_url;
 			var price = "$"+data[i].fields.price;
-			//var title = data[i].fields.title;
-			var title = "pppp ggggggg pppppppppp"
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center top no-repeat;'></div> <div class='box-text'><span class='box-title'>"+title+"</span><span class='pull-right'>"+price+"</span></div> </div></a>"
+			var title = data[i].fields.title;
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted 29 days ago by Eva-Antoinette</div></span> <div class='box-right'><img class='box-profile' src='"+profileLink+"'></div> </div> </div></a>"
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);
