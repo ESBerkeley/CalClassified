@@ -379,6 +379,7 @@ var order = 'dateNew';
 var isFilterFriends = false;
 
 function runloadBox(isRemoveHtml) {
+  alert('test')
   isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
     page = 0;
