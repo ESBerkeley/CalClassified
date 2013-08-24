@@ -379,7 +379,6 @@ var order = 'dateNew';
 var isFilterFriends = false;
 
 function runloadBox(isRemoveHtml) {
-  alert('test')
   isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
     page = 0;
@@ -395,7 +394,7 @@ function runloadBox(isRemoveHtml) {
     minPrice = document.getElementById('min').value;
     maxPrice = document.getElementById('max').value;
   }
-  console.log('query:'+query+' minprice:'+minPrice+' maxprice:'+maxPrice+' category:'+category+' page:'+page+' order:'+order);
+  
   var cir_status = getCircs();
   
   //load pacman
@@ -601,7 +600,6 @@ function getIsLoaded() {
 
 function revertState() {
   query = JSON.parse(localStorage["query"]);
-  console.log(query)
   minPrice = JSON.parse(localStorage["minPrice"]);
   maxPrice = JSON.parse(localStorage["maxPrice"]);
   category = JSON.parse(localStorage["category"]);
