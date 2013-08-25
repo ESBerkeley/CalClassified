@@ -33,7 +33,7 @@
     </div>
     <div class="modal-body">
       <p>Confirm this purchase with the buyer and send a message! Your item will be taken down from the search results.</p>
-      <textarea autocomplete="off" class="input-xlarge field span7" id="modal-message" rows="5" style="height:300px;"></textarea>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="confirm-message" rows="5" style="height:300px;"></textarea>
     </div>
     <div class="modal-footer">
       <button id="confirm-modal-send" class="btn btn-primary" data-loading-text="Sending...">Confirm</button>
@@ -48,7 +48,7 @@
         <h3>Confirm Purchase</h3>
     </div>
     <div class="modal-body">
-      <p> Successfully confirmed purchase with {{ post.pending_buyer.get_full_name }}! </p>
+      <p> Successfully confirmed purchase with buyer! </p>
     </div>
     <div class="modal-footer">
       <button class="btn close-refresh" data-dismiss="modal">Close</button>
@@ -62,7 +62,7 @@
     </div>
     <div class="modal-body">
       <p>Decline this purchase with the buyer and leave a message saying why.</p>
-      <textarea autocomplete="off" class="input-xlarge field span7" id="modal-message" rows="5" style="height:300px;"></textarea>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="decline-message" rows="5" style="height:300px;"></textarea>
     </div>
     <div class="modal-footer">
       <button id="decline-modal-send" class="btn btn-primary" data-loading-text="Sending...">Decline</button>

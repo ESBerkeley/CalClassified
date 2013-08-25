@@ -78,7 +78,7 @@ $(".verify-bump").click(function(){
 
 $("#confirm-modal-send").on("click", function(){
     $(this).button('loading');
-    var message = $("#modal-message").val();
+    var message = $("#confirm-message").val();
     data= {};
     //data['sender_pk'] = sender_pk; user data can be accessed in the request
     data['recipient_pk'] = recipient_pk;
@@ -98,7 +98,7 @@ $("#confirm-modal-send").on("click", function(){
 
 $("#decline-modal-send").on("click", function(){
     $(this).button('loading');
-    var message = $("#modal-message").val();
+    var message = $("#decline-message").val();
     data= {};
     //data['sender_pk'] = sender_pk; user data can be accessed in the request
     data['recipient_pk'] = recipient_pk;

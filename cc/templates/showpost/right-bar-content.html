@@ -58,6 +58,13 @@
                {% endif %}
            {% elif post.owner != request.user %}
                <!-- BUY NOW BUTTON -->
+               {% if thread %}
+                   <div class="blue-wrap">
+                       <div class="main-btn-wrapper">
+                           <a href="{{ thread.get_absolute_url }}" class="btn btn-primary btn-block">View Messages</a>
+                       </div>
+                   </div>
+               {% else %}
                <div class="green-wrap">
                    <div id="buy-now-wrapper">
                        <button id="contact-now" data-toggle="modal" data-target="#buynow-modal"
@@ -71,6 +78,7 @@
                        What's going to happen?
                    </a>
                </div>
+               {% endif %}
            {% endif %}
 
            {% if post.owner == request.user and not post.pending_flag and not post.sold %}
