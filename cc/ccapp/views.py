@@ -378,22 +378,8 @@ def showpost(request, pid, super_cat):
             
         return HttpResponseRedirect(request.path)
 
-    
     else:
         related_posts = []
-
-        # category_posts = super_cat.objects.filter(category=post.category).exclude(id=pid)
-        # cat_length = len(category_posts)
-        # if cat_length>=4:
-            # while len(related_posts)<4:
-                # rand_post = random.choice(category_posts)
-                    # if rand_post not in related_posts:
-                    # related_posts.append(rand_post)
-        # else:
-            # while len(related_posts)<cat_length:
-                # rand_post = random.choice(category_posts)
-                # if rand_post not in related_posts:
-                    # related_posts.append(rand_post)\
 
         cForm = CommentForm()
 
@@ -445,6 +431,8 @@ def showpost(request, pid, super_cat):
                     ecks['thread'] = thread
         ecks['this_is_a_post'] = True
 
+        ecks['reviews'] = ItemReview.objects.filter(seller=post.owner).order_by('-time_created')
+        ecks['reviews_avg'] = ItemReview.objects.filter(seller=post.owner).aggregate(Avg('score'))['score__avg']
             
         ecks.update(csrf(request))
         return render_to_response('showpost.html',ecks,context_instance=RequestContext(request))
@@ -1358,7 +1346,7 @@ def account_setup(request):
         user_profile.save()
         return render_to_response('registration/account_setup.html', data, context_instance=RequestContext(request))
 
-def user(request, user_id):
+def user(request, user_id, review_page=False):
     data = {}
     user = User.objects.get(id=user_id)
     data['user'] = user
@@ -1368,20 +1356,11 @@ def user(request, user_id):
     data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
     data['reviews'] = ItemReview.objects.filter(seller=user).order_by('-time_created')
     data['reviews_avg'] = ItemReview.objects.filter(seller=user).aggregate(Avg('score'))['score__avg']
+    data['review_page'] = review_page #if True, the html will go to the reviews page
     return render_to_response('user.html', data, context_instance=RequestContext(request))
 
 def user_reviews(request, user_id):
-    data = {}
-    user = User.objects.get(id=user_id)
-    data['user'] = user
-    data['user_profile'] = user.get_profile()
-    data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True, deleted=False).order_by('-time_created')
-    data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True, deleted=False).order_by('-time_created')
-    data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
-    data['review_page'] = True
-    data['reviews'] = ItemReview.objects.filter(seller=user).order_by('-time_created')
-    data['reviews_avg'] = ItemReview.objects.filter(seller=user).aggregate(Avg('score'))['score__avg']
-    return render_to_response('user.html', data, context_instance=RequestContext(request))
+    return user(request, user_id, review_page=True)
 
 @login_required
 def upload_temp_photo(request):

@@ -9,6 +9,7 @@
     background: white;
     padding: 20px;
     border: 1px solid #d1d1d1;
+    position: relative;
 }
 
 .image-column {
@@ -47,12 +48,27 @@
     color: #28b4ef;
 }
 
+#reviews-avg-wrapper {
+    margin-top: 12px;
+}
+
+#reviews-avg {
+    display: inline-block;
+}
+
+#num-reviews {
+    display: inline-block;
+    font-size: 20px;
+    vertical-align: middle;
+    color: rgb(153, 153, 153);
+}
+
 .relevant-wrapper {
     float:left;
 }
 
 .relevant-item-data {
-    margin-top: 120px;
+    margin-top: 85px;
     font-size: 18px;
     color: rgb(95, 95, 95);
 }
@@ -75,6 +91,23 @@
 
 #items-bought {
     padding-left: 10px;
+}
+
+.profile-options {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 180px;
+    height: 182px;
+    background-color: #2e2e2e;
+    padding: 20px;
+}
+
+.profile-options a{
+    color: white;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 10px;
 }
 
 #listings-header {
@@ -161,4 +194,34 @@
 
 .no-items-listed {
     font-size: 24px;
+}
+
+.review {
+    background-color: white;
+    border: 1px solid #d1d1d1;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+}
+
+.score {
+    display: inline-block;
+    padding-left: 10px;
+}
+
+.review-title {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.review-date {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.review-by {
+    margin-bottom: 5px;
+}
+
+.edit-review {
+    vertical-align: middle;
 }

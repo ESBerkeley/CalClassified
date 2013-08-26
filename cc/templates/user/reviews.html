@@ -9,6 +9,9 @@
         <a class="review-title" href="{{ review.item.get_absolute_url }}">{{ review.item.title }}</a>
         <div class="score" data-score="{{ review.score }}"></div>
         <div class="review-date">{{ review.time_created.date }}</div>
+        {% if review.buyer == request.user %}
+            <a class="edit-review" href="{% url review_item review.item.id %}"> edit</a>
+        {% endif %}
         <br>
         <div class="review-by">by <a href="{% url user review.buyer.id %}">{{ review.buyer.get_full_name }}</a></div>
         {{ review.comment }}

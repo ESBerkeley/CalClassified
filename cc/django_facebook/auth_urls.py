@@ -84,5 +84,8 @@ urlpatterns = patterns('',
                        url(r'^profile/groups/$',
                             'ccapp.views.profile_circles',
                             name='account_circles'),
+                       url(r'^profile/reviews/$',
+                            'ccapp.views.profile_reviews',
+                            name='account_reviews'),
                        url(r'^change_name/$', 'ccapp.views.change_name', name="auth_change_name")
 )

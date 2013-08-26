@@ -48,6 +48,10 @@
                     Items Bought
                 </div>
             </div>
+            <div class="profile-options">
+                <a href="{% url user user.id %}">Listings</a>
+                <a href="{% url user_reviews user.id %}">Reviews</a>
+            </div>
         </div>
     </div><!--end profile-card container -->
 

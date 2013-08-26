@@ -118,7 +118,7 @@ function get_friend_notifications(){
           var x = "";
 
           if(count){
-            x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-warning\">" + obj[0].extras.num_unread + "</span> <i class=\" icon-exclamation-sign\" style=\"text-decoration:none; color:black;\"></i></a>";
+            x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-info\">" + obj[0].extras.num_unread + "</span> <i class=\" icon-exclamation-sign\" style=\"text-decoration:none; color:black;\"></i></a>";
             x += "<ul class=\"dropdown-menu no-collapse pull-right\">";
 
             for(var k = 0; k < count; k++){
@@ -168,7 +168,7 @@ function get_friend_notifications(){
          x += "</ul>";
          }
           else {
-            x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-success\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"text-decoration:none; color:black;\"></i></a>";
+            x += "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" style=\"text-decoration:none\"> <span class=\"badge badge-info\">"+count+"</span> <i class=\" icon-exclamation-sign\" style=\"text-decoration:none; color:black;\"></i></a>";
           }
           element_in_question.innerHTML = x;
         }
