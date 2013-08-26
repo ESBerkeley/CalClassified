@@ -48,6 +48,8 @@ sale_complete_signal = Signal()
 repost_signal = Signal()
 message_to_seller_signal = Signal()
 message_to_buyer_signal = Signal()
+confirm_purchase_signal = Signal()
+decline_purchase_signal = Signal()
 
 #@receiver(post_save, dispatch_uid="AAAAARGH")
 def post_save_hndlr(sender, **kwargs):
@@ -166,7 +168,7 @@ def buy_button_hndlr(sender, **kwargs):
         item = kwargs['instance']
         message = kwargs['message']
         seller = item.owner.get_profile()
-        buyer = item.pending_buyer.get_profile()
+        buyer = kwargs['buyer'].get_profile()
         new_note = Notification(post_from = item, going_to = seller, type = 3)
         new_note.second_party = buyer
         item.sold_date = datetime.now()
@@ -261,9 +263,11 @@ def message_to_seller_hndlr(sender, **kwargs):
     ''''notify the seller that the buyer has sent him a message'''
     if sender == ItemForSale:
         item = kwargs['instance']
-        seller = item.owner.get_profile()
-        buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
+        buyer_user = kwargs['buyer']
+
+        seller = item.owner.get_profile()
+        buyer = buyer_user.get_profile()
         new_note = Notification(post_from=item, going_to=seller, type=6)
         new_note.second_party = buyer
         thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person=buyer.user)
@@ -297,9 +301,11 @@ def message_to_buyer_hndlr(sender, **kwargs):
     ''''notify the buyer that the seller has sent him a message'''
     if sender == ItemForSale:
         item = kwargs['instance']
-        seller = item.owner.get_profile()
-        buyer = item.pending_buyer.get_profile()
+        buyer_user = kwargs['buyer']
         message = kwargs['message']
+
+        seller = item.owner.get_profile()
+        buyer = buyer_user.get_profile()
         new_note = Notification(post_from=item, going_to=buyer, type=7)
         new_note.second_party = seller
         thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)
@@ -324,6 +330,68 @@ def message_to_buyer_hndlr(sender, **kwargs):
             )
     return
 
+def confirm_purchase_hndlr(sender, **kwargs):
+    ''''notify the buyer that the seller has confirmed his purchase'''
+    if sender == ItemForSale:
+        item = kwargs['instance']
+        seller = item.owner.get_profile()
+        buyer = item.pending_buyer.get_profile()
+        message = kwargs['message']
+        new_note = Notification(post_from=item, going_to=buyer, type=8)
+        new_note.second_party = seller
+        thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)
+        new_note.thread_id = thread.id
+        new_note.save()
+        buyer.friend_notifications += 1
+        buyer.save()
+        buyer_full_name = buyer.user.get_full_name()
+
+        if buyer.message_email:
+            send_email_task.delay(
+                template_name='confirm',
+                from_email='BuyNearMe <noreply@buynear.me>',
+                recipient_list=[add_name_to_email(buyer_full_name, buyer.user.email)],
+                context={
+                    'message':message.body,
+                    'post':item.id,
+                    'sender':seller.user.get_full_name(),
+                    'recipient':buyer_full_name,
+                    'thread':thread.id
+                    },
+            )
+    return
+
+def decline_purchase_hndlr(sender, **kwargs):
+    ''''notify the buyer that the seller has declined his purchase request'''
+    if sender == ItemForSale:
+        item = kwargs['instance']
+        seller = item.owner.get_profile()
+        buyer = kwargs['buyer'].get_profile()
+        message = kwargs['message']
+        new_note = Notification(post_from=item, going_to=buyer, type=9)
+        new_note.second_party = seller
+        thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)
+        new_note.thread_id = thread.id
+        new_note.save()
+        buyer.friend_notifications += 1
+        buyer.save()
+        buyer_full_name = buyer.user.get_full_name()
+
+        if buyer.message_email:
+            send_email_task.delay(
+                template_name='decline',
+                from_email='BuyNearMe <noreply@buynear.me>',
+                recipient_list=[add_name_to_email(buyer_full_name, buyer.user.email)],
+                context={
+                    'message':message.body,
+                    'post':item.id,
+                    'sender':seller.user.get_full_name(),
+                    'recipient':buyer_full_name,
+                    'thread':thread.id
+                    },
+            )
+    return
+
 
 new_comment_signal.connect(comment_save_hndlr, sender = Comment, dispatch_uid = "yolo")
 seller_response_signal.connect(seller_response_hndlr, sender = Comment, dispatch_uid = "99xp")
@@ -332,4 +400,5 @@ sale_complete_signal.connect(sale_complete_hndlr, sender = ItemForSale, dispatch
 repost_signal.connect(item_repost_hndlr, sender = ItemForSale, dispatch_uid = "333")
 message_to_seller_signal.connect(message_to_seller_hndlr, sender = ItemForSale, dispatch_uid = "234")
 message_to_buyer_signal.connect(message_to_buyer_hndlr, sender = ItemForSale, dispatch_uid = "woodchip")
-
+confirm_purchase_signal.connect(confirm_purchase_hndlr, sender=ItemForSale, dispatch_uid="confirmed")
+decline_purchase_signal.connect(decline_purchase_hndlr, sender=ItemForSale, dispatch_uid="declined")

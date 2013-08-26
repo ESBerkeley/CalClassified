@@ -2,7 +2,8 @@ from cc.swamp_logging import logit, custom_log_message
 
 from cc.ccapp.models import *
 from cc.ccapp.signals import *
-from cc.ccapp.utils import send_bnm_message, save_fb_items_to_model, fb_group_post, free_for_sale_post, image_rotate, get_exif
+from cc.ccapp.utils import send_bnm_message, change_purchase, save_fb_items_to_model, \
+    fb_group_post, free_for_sale_post, image_rotate, get_exif
 from cc.ccapp.forms import EmailForm, FeedbackForm, CreditCardForm
 
 from django.conf import settings
@@ -437,6 +438,11 @@ def showpost(request, pid, super_cat):
                 thread = Thread.objects.filter(owner=request.user, other_person=post.pending_buyer, post_id=post.id)
                 if thread:
                     ecks['thread'] = thread[0]
+        elif post.owner != request.user and request.user.is_authenticated():
+            threads = Thread.objects.filter(owner=request.user, post_id=post.id)
+            for thread in threads:
+                if not thread.declined:
+                    ecks['thread'] = thread
         ecks['this_is_a_post'] = True
 
             
@@ -469,6 +475,7 @@ def modify_post(request):
                 repost_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer.get_profile())
                 post.pending_flag = False
                 post.pending_buyer = None
+                post.expire_date = datetime.datetime.now()
                 custom_log_message('user ' + str(request.user.id) + ' reposted item :( ' + str(post_pk))
                 post.save()
                 return HttpResponseRedirect("/"+str(post_pk))
@@ -607,8 +614,19 @@ def ajax_delete_response(request, comment_id):
 def ajax_contact_seller(request):
     if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
         send_bnm_message(request)#in utils.py
-
         # send_mail(post.title+" Response - "+recipient_name, post.body, 'noreply@buynear.me', [recipient.email])
+        return HttpResponse("success")
+
+@login_required
+def ajax_confirm_purchase(request):
+    if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
+        change_purchase(request, True) #in utils.py
+        return HttpResponse("success")
+
+@login_required
+def ajax_decline_purchase(request):
+    if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
+        change_purchase(request, False)#in utils.py
         return HttpResponse("success")
 
 @logit
@@ -809,8 +827,8 @@ def ajax_box(request):
             deleted=False,
             expire_date__gte=datetime.datetime.now()
         )
-    load_from = 21 * p
-    load_to = 21 * (p+1)
+    load_from = 24 * p
+    load_to = 24 * (p+1)
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
     order  = request.GET['order']
     if order == 'dateNew':
@@ -1145,19 +1163,28 @@ def profile_selling(request):
     user = request.user
 
     base_unsold_itemset = ItemForSale.objects.filter(owner=user,
-                                                  pending_flag=False,
+                                                  pending_flag=False, sold=False,
                                                   deleted=False).order_by('-time_created')
-    ifs_waiting_list = (item for item in base_unsold_itemset if not item.is_expired)
+    ifs_waiting_list = [item for item in base_unsold_itemset if not item.is_expired]
     expired_items = [item for item in base_unsold_itemset if item.is_expired]
 
-    pending_items = ItemForSale.objects.filter(owner=user, pending_flag=True, sold=False)
-    pending_threads_ids = []
-    for item in pending_items:
+    bought_items = ItemForSale.objects.filter(owner=user, pending_flag=True, sold=False)
+    bought_threads_ids = []
+    for item in bought_items:
         try: #for some odd reason if .get fails, fail silently
-            pending_thread = Thread.objects.get(owner=user, other_person=item.pending_buyer, item=item)
-            pending_threads_ids.append(pending_thread.id)
+            bought_thread = Thread.objects.get(owner=user, other_person=item.pending_buyer, item=item)
+            bought_threads_ids.append(bought_thread.id)
         except:
             pass
+
+    bought_threads = Thread.objects.filter(id__in=bought_threads_ids).order_by('is_read','-newest_message_time')
+
+    pending_threads_ids = []
+    for item in ifs_waiting_list:
+        pending_threads = Thread.objects.filter(owner=user, item=item)
+        for thread in pending_threads:
+            if thread.item and thread.item.owner == user:
+                pending_threads_ids.append(thread.id)
     pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
 
     sold_items = ItemForSale.objects.filter(owner=user, sold=True)
@@ -1170,7 +1197,8 @@ def profile_selling(request):
             pass
     sold_threads = Thread.objects.filter(id__in = sold_threads_ids).order_by('is_read','-newest_message_time')
 
-    data['my_threads'] = pending_threads              #pending (need to exclude unsold threads)
+    data['pending_threads'] = pending_threads         #needs confirmation
+    data['my_threads'] = bought_threads               #bought threads
     data['ifs_waiting_list'] = ifs_waiting_list       #unsold
     data['ifs_sold'] = sold_threads                   #sold
     data['ifs_expired'] = expired_items               #expired items
@@ -1195,6 +1223,14 @@ def profile_buying(request):
 
     completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
 
+
+    pending_threads = Thread.objects.filter(owner=user)
+    pending_threads_ids = []
+    for thread in pending_threads:
+        if thread.item and thread.item.pending_flag == False and thread.item.owner != user:
+            pending_threads_ids.append(thread.id)
+    pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
+
     for thread in my_threads:
         try:
             ItemForSale.objects.get(id=thread.post_id)
@@ -1211,6 +1247,7 @@ def profile_buying(request):
 
     data['my_threads'] = my_threads
     data['completed_threads'] = completed_threads
+    data['pending_threads'] = pending_threads
     
     user_profile = user.get_profile()
     user_profile.notifications = 0

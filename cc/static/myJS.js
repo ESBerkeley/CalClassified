@@ -151,8 +151,16 @@ function get_friend_notifications(){
                 x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Buyer <strong>" + obj[k].extras.second_username + "</strong> has sent you a message about your post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
               }
          
-              else{   //seller "bob" has messaged you about their post "dogfood"
+              else if(obj[k].fields.type == 7){   //seller "bob" has messaged you about their post "dogfood"
                 x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has sent you a message about their post  <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+              }
+
+              else if(obj[k].fields.type == 8){   //seller "bob" has confirmed your purchase
+                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has confirmed your purchase of <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+              }
+
+              else if(obj[k].fields.type == 9){   //seller "bob" has declined your purchase
+                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has declined your purchase of <strong>" + obj[k].extras.title + "</strong>.</a></li>";
               }
            } 
 
@@ -257,27 +265,27 @@ function notification_sentence(obj, k) {    //list of notifications, position in
   notif[1] = "";
   notif[2] = obj[k].fields.time_created.substring(0, 10);
 
-  if(obj[k].fields.type == 0){
+  if(obj[k].fields.type == 0){ // friend posted _____
     notif[0] += obj[k].extras.username + " posted " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from;
   }
-  else if(obj[k].fields.type == 1){
+  else if(obj[k].fields.type == 1){ // user commented on ______
     notif[0] += "<strong>" + obj[k].extras.second_username + "</strong> commented on " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from + "#comments_section";
   }
-  else if(obj[k].fields.type == 2){
+  else if(obj[k].fields.type == 2){ // Seller replied to comment _____
     notif[0] += "<strong>" + obj[k].extras.username + "</strong> replied to your comment on " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from + "#comments_section";
   }
-  else if(obj[k].fields.type == 3){
+  else if(obj[k].fields.type == 3){ // Buyer has purchased item
     notif[0] += "<strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title;
     notif[1] += "/accounts/profile/selling/";
   }
-  else if(obj[k].fields.type == 4){
+  else if(obj[k].fields.type == 4){ //Marked sale complete
     notif[0] += "<strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete.";
     notif[1] += "/" +obj[k].fields.post_from;
   }
-  else if(obj[k].fields.type == 5){
+  else if(obj[k].fields.type == 5){ // Cancelled sale of _____
     notif[0] += "<strong>" + obj[k].extras.username + "</strong> has cancelled the sale of " + obj[k].extras.title;
     notif[1] += "/" +obj[k].fields.post_from;
   }
@@ -311,25 +319,32 @@ $("#modal-send").on("click", function(){
   });
 });
 
+//Sets "isBoxActive" false for all pages
+$(window).on('beforeunload', function(){
+  localStorage["isBoxActive"] = JSON.stringify(false);
+});
+
 /*****************************
  * Boxview
  * 
- * isRemoveHtml: Boolean that determines if I want to clear out the boxes, e.g., clicking on a new category, I want to keep it true so the boxes get cleared out. On a scroll down load, I want to preserve my current html.
- * isActive: Boolean, whether we check for a previous session, e.g., on an initial page load, I want to check if there was a previous session.
+ * States are stored using "localstorage" which is persistent until a cache/cookie clear.
  * 
- * States are stored using "localstorage" which is persistent until a cache clear.
+ * isRemoveHtml: Boolean that determines if I want to clear out the boxes, e.g., clicking on a new category, I want to keep it true so the boxes get cleared out. On a scroll down load, I want to preserve my current html.
+ * isBoxActive: Boolean, saved in localStorage. Indicates if we want the saved state. Set to false on every page except "viewitem" using the beforeunload and unload functions. Also, force a false on all "browse" clicks. That way, we only load an old session on a "back" from an item view.
+ * 
  * 
  * 1. Check isRemoveHtml and reset page value if true, otherwise page will get incremented and is stored.
- * 2. Check isActive and if a session is stored. Then, set all variables based on what is in storage if true.
+ * 2. Check isBoxActive and if a session is stored. Then, set all variables based on what is in storage if true.
  * 3. Query and price filter icon stuff.
  * 4. Set URLS. A categoryObject is created, which is the list of booleans the backend wants to get.
  * 5. Setting up the box: Check if active and if a session is stored. If so, populate the the box using HTML in storage and scroll to the proper position.
  * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. Fill in some filter text. !!! Load the current variables into storage.
- * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true.
+ * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true. We also force isBoxActive false and the animation so the user can navigate after a session load normally.
  * 
  * Functions that are running alongside:
  * 1. A scroll function that monitors the position and increments the page and fires a loadbox if we scroll down.
  * 2. A function fires on page exit which saves the current scroll position in storage. (Located in box.html)
+ * 3. Functions that fire on page "unloads" and "beforeunloads" that set isBoxActive.
  * 
  *****************************/
 
@@ -339,10 +354,20 @@ var containerHtml = "";
 var $containerHtml = $("");
 var savedHtml = "";
 $container.masonry({
-  gutter: 5,
+  gutter: 13,
   itemSelector: '.box-item',
-  transitionDuration: '0.6s'      //default 0.4
 });
+
+//Set animation. Ignore animation if we are loading a session to make the transition seem more "seamless".
+if (JSON.parse(localStorage["isBoxActive"])) {
+  $container.masonry({
+	transitionDuration: 0
+  })
+} else {
+  $container.masonry({
+	transitionDuration: '0.6s'		//default 0.4s
+  })
+}
 
 var query = "";
 var minPrice = null;
@@ -351,13 +376,15 @@ var category = "Everything";
 var categoryObject;
 var page = 0;
 var order = 'dateNew';
+var isFilterFriends = false;
 
-function runloadBox(isRemoveHtml, isActive) {
+function runloadBox(isRemoveHtml) {
+  isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
     page = 0;
   }
   
-  if (isActive && getIsLoaded()) {
+  if (isBoxActive && getIsLoaded()) {
     revertState();
     setCategory(category);
     setOrder(order);
@@ -367,7 +394,7 @@ function runloadBox(isRemoveHtml, isActive) {
     minPrice = document.getElementById('min').value;
     maxPrice = document.getElementById('max').value;
   }
-  //console.log('query:'+query+' minprice:'+minPrice+' maxprice:'+maxPrice+' category:'+category+' page:'+page+' order:'+order);
+  
   var cir_status = getCircs();
   
   //load pacman
@@ -406,19 +433,19 @@ function runloadBox(isRemoveHtml, isActive) {
     }
   }
   
-  for (key in cir_status) {
+  /*for (key in cir_status) {
     if (cir_status[key]==true) {
       cir_pk = key
       url = url + "&" + "circle=" + cir_pk;
     }
-  }
+  }*/
   
-  if(filtering_by_friends){
+  if(isFilterFriends){
     url = url+"&fbf=1";
   }
   
   $containerHtml = $(savedHtml);        //Sets new HTML to any saved HTML
-  if(isActive && getIsLoaded()) {
+  if(isBoxActive && getIsLoaded()) {
     $container.append($containerHtml).masonry('appended', $containerHtml);
     $container.masonry();
     $(window).scrollTop(getScroll())
@@ -439,9 +466,10 @@ function runloadBox(isRemoveHtml, isActive) {
         if(data.length !== 0) {
           containerHtml = "";
           for(i = 0; i < data.length; i++) {
-            var title = data[i].fields.title;
             var thumbnailUrl = data[i].extras.get_thumbnail_url;
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><div class='box-image' style='background:url("+thumbnailUrl+") center center no-repeat;'> </div></div></a>"
+			var price = "$"+data[i].fields.price;
+			var title = data[i].fields.title;
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted 29 days ago by Eva-Antoinette</div></span> <div class='box-right'><img class='box-profile' src='"+profileLink+"'></div> </div> </div></a>"
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);
@@ -466,14 +494,11 @@ function runloadBox(isRemoveHtml, isActive) {
     });
   }
   setIsLoaded(true);
+  localStorage["isBoxActive"] = JSON.stringify(false);
+  $container.masonry({
+	transitionDuration: '0.6s'
+  })
 }
-
-$(window).scroll(function(){
-  if($(window).scrollTop() + $(window).height() >= $(document).height()) {
-    page++;
-    runloadBox(false, false);
-  }
-});
 
 function getScroll() {
   return JSON.parse(localStorage["scroll"]);
@@ -487,7 +512,7 @@ function search(){
 
 function searchbarCancel() {   //cancel for the search bar
   document.getElementById('searchbar').value = '';
-  runloadBox(true, false);
+  runloadBox(true);
 }
 
 function priceboxCancel() {   //cancel for the price box
@@ -502,7 +527,7 @@ function setPricebox(min, max) {
 
 function createCategoryObject(category) {
   if(category === "Everything") {
-    return {"Apparel": true, "Appliances": true, "Automotive": true, "Books": true, "Electronics": true, "Furniture": true, "Movies and Games": true, "Music": true, "Tickets": true, "Other": true}
+    return {}
   } else if(category === "Apparel") {
     return {"Apparel": true}
   } else if(category === "Appliances") {
@@ -583,7 +608,16 @@ function revertState() {
   savedHtml = JSON.parse(localStorage["savedHtml"]);
 }
 
+function toggleFriendsFilter(){
+    isFilterFriends = !isFilterFriends;
+    if (isFilterFriends) {
+        $("#friends-li").addClass("active");
+    } else {
+        $("#friends-li").removeClass("active");
+    }
+    runloadBox(true);
+  }
+
 /*****************************
  * End of Boxview
  * **************************/
-

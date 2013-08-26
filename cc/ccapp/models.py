@@ -136,7 +136,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
             if self.cached_thumb == '':
                 from cc.sorl.thumbnail import get_thumbnail
                 image = self.image_set.order_by('id')[0]
-                im = get_thumbnail(image, "250x250", quality=50)
+                im = get_thumbnail(image, "260x195", quality=70)
                 self.cached_thumb = im.url
                 self.save()
                 return self.cached_thumb
@@ -153,7 +153,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
                 #return self.facebookpost.thumbnail_url
             from cc.sorl.thumbnail import get_thumbnail
             image = self.image_set.order_by('id')[0]
-            im = get_thumbnail(image, "250x250", quality=50)
+            im = get_thumbnail(image, "260x195", quality=70)
             self.cached_thumb = im.url
             self.save()
             return self.cached_thumb
@@ -167,7 +167,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
         from cc.sorl.thumbnail import get_thumbnail
         for image in self.image_set.order_by('id'):
 #image quality
-            im = get_thumbnail(image, "250x250", quality=50)
+            im = get_thumbnail(image, "260x195", quality=70)
             thumb_url = im.url
             urls.append(thumb_url)
         return urls
@@ -226,7 +226,7 @@ class ItemForSaleForm(ModelForm):
     class Meta:
         model = ItemForSale
         exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer',
-                   'pending_flag', 'sold', 'sold_date', 'deleted', 'approved','circles', 'expire_date')
+                   'pending_date', 'pending_flag', 'sold', 'sold_date', 'deleted', 'approved','circles', 'expire_date')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 
@@ -345,7 +345,7 @@ class Thread(models.Model):
     # owner and other_person are meant so msging backen d can be more fluent.
     # owner should either be the sender or recipient and other_person should be the one owner isn't  <-- 10/10 real helpful
     owner = models.ForeignKey(User, related_name='owner_msg_set',null=True)
-    other_person =  models.ForeignKey(User, related_name='other_msg_set',null=True)
+    other_person = models.ForeignKey(User, related_name='other_msg_set',null=True)
     item = models.ForeignKey(ItemForSale, null=True, blank=True)
     post_title = models.CharField(max_length=50,default="",blank=True)
     post_id = models.IntegerField(null=True,blank=True)
@@ -354,6 +354,8 @@ class Thread(models.Model):
     messages = models.ManyToManyField("Message")
     is_read = models.BooleanField(default=True)
     newest_message_time = models.DateTimeField(null=True)
+    declined = models.BooleanField(default=False)
+
     def get_absolute_url(self):
         return '/accounts/profile/messages/%i' % self.id
     def get_mobile_url(self):

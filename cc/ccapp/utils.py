@@ -1,4 +1,4 @@
-from ccapp.models import *
+from cc.ccapp.models import *
 from cc.swamp_logging import logit, custom_log_message
 from urlparse import urlparse, parse_qs
 from django.db import connection
@@ -22,6 +22,58 @@ from PIL.ExifTags import TAGS
 from django.core.files.uploadedfile import InMemoryUploadedFile
 #
 
+def change_purchase(request, confirm):
+    body = request.POST['message']
+    recipient_pk = request.POST['recipient_pk']
+    post_pk = request.POST['post_pk']
+    post = ItemForSale.objects.get(id=int(post_pk))
+    sender = request.user
+    recipient = User.objects.get(id=int(recipient_pk)) #buyer for confirmed purchase by seller
+
+    # Confirm purchase by assigning pending buyer to recipient
+    if confirm:
+        post.pending_buyer = recipient
+        post.pending_flag = True
+        post.pending_date = datetime.now()
+        post.save()
+
+    # Create message object
+    message = Message()
+    message.body = body
+    message.post_title = post.title
+    message.sender = sender
+    message.recipient = recipient
+    message.save()
+
+    thread1 = Thread.objects.get(owner=sender, other_person=recipient, item=post, post_title=post.title, post_id=post.id)
+    thread2 = Thread.objects.get(owner=recipient, other_person=sender, item=post, post_title=post.title, post_id=post.id)
+
+    # Add messages to threads
+    thread1.messages.add(message)
+    thread2.messages.add(message)
+    thread1.newest_message_time = message.time_created
+    thread2.newest_message_time = message.time_created
+    thread2.is_read = False
+    if not confirm:
+        thread1.declined = True
+        thread2.declined = True
+    else:
+        thread1.declined = False
+        thread2.declined = False
+    thread1.save()
+    thread2.save()
+
+    if confirm:
+        # Signal to buyer that seller has confirmed purchase
+        confirm_purchase_signal.send(sender=ItemForSale, instance=post, message=message)
+    else:
+        decline_purchase_signal.send(sender=ItemForSale, instance=post, message=message, buyer=recipient)
+
+    # add notifications to profile
+    rec_profile = recipient.get_profile()
+    rec_profile.notifications += 1
+    rec_profile.save()
+
 def send_bnm_message(request):
     body = request.POST['message']
     recipient_pk = request.POST['recipient_pk']
@@ -31,19 +83,18 @@ def send_bnm_message(request):
     recipient = User.objects.get(id=int(recipient_pk))
     first_message = False
     
-    if post.pending_flag:
-        if request.user not in [post.owner, post.pending_buyer]:
-            return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username)
-            #crap someone else got it before you, sorrym8
+    #if post.pending_flag:
+    #    if request.user not in [post.owner, post.pending_buyer]:
+    #        return HttpResponse("crap " + request.user.username + post.owner.username + post.pending_buyer.username)
+            ######crap someone else got it before you, sorrym8
 
-    else:
-        first_message = True
-        post.pending_buyer = request.user
-        post.pending_flag = True
-        post.save()
-        custom_log_message("user " + str(request.user.id) + " bought item " + str(post_pk))
-    
-    
+    #else:
+        # OLD Claim item code
+        #post.pending_buyer = request.user
+        #post.pending_flag = True
+        #post.pending_date = datetime.datetime.now()
+        #post.save()
+
     message = Message()
     message.body = body
     message.post_title = post.title
@@ -51,27 +102,27 @@ def send_bnm_message(request):
     message.recipient = recipient
     message.save()
 
-          
-
     #Create 2 Threads for both ends
     try: #see if thread exists, if not create it
         thread1 = Thread.objects.get(owner=sender, other_person=recipient, item=post, post_title=post.title, post_id=post.id)
     except:
+        first_message = True
         thread1 = Thread.objects.create(owner=sender, other_person=recipient, item=post, post_title=post.title, post_id=post.id)
         
     try: #see if thread exists, if not create it
         thread2 = Thread.objects.get(owner=recipient, other_person=sender, item=post, post_title=post.title, post_id=post.id)
     except:
+        first_message = True
         thread2 = Thread.objects.create(owner=recipient, other_person=sender, item=post, post_title=post.title, post_id=post.id)
 
     if first_message:
-        buy_button_signal.send(sender=ItemForSale, instance=post, message=message)
-
+        custom_log_message("user " + str(request.user.id) + " bought item " + str(post_pk))
+        buy_button_signal.send(sender=ItemForSale, instance=post, message=message, buyer=sender)
     else:
         if request.user == post.owner: #sending a message to a buyer
-            message_to_buyer_signal.send(sender=ItemForSale, instance=post, message=message)
+            message_to_buyer_signal.send(sender=ItemForSale, buyer=recipient, instance=post, message=message)
         else:   #sending a message to a seller
-            message_to_seller_signal.send(sender=ItemForSale, instance=post, message=message)
+            message_to_seller_signal.send(sender=ItemForSale, buyer=sender, instance=post, message=message)
 
     thread1.messages.add(message)
     thread2.messages.add(message)

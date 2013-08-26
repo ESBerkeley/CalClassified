@@ -6,35 +6,25 @@
 
 {% block profile_content %}
 <div>
+  {% if thread.declined %}
+      <div id="declined-alert" class="alert alert-block alert-error fade in">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <b>Your purchase has been declined</b>
+      </div>
+  {% endif %}
+
+  {% if not post.pending_flag and post.owner == request.user and not thread.declined %}
+    <button class="btn btn-info" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Confirm Purchase</button>
+    <button class="btn" data-toggle="modal" data-target="#decline-modal" style="margin-right:10px;">Decline Purchase</button>
+  {% elif not post.pending_flag and post.owner == request.user %}
+    <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+    <button class="btn btn-info" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Confirm Purchase</button>
+  {% else %}
   <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+  {% endif %}
   <br><br>
-  <div class="modal fade hide msg-modal" id="contact-modal">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
-        <h3>Reply</h3>
-    </div>
-    <div class="modal-body">
-      <textarea autocomplete="off" class="input-xlarge field span7" id="modal-message" rows="5" style="height:300px;"></textarea>
-    </div>
-    <div class="modal-footer">
-      <button id="modal-send" class="btn btn-primary" data-loading-text="Sending...">Send</button>
-      <button class="btn" data-dismiss="modal">Close</button>
-    </div>
-  </div>
-    
-  <!-- this modal activates when message is sent -->
-  <div class="modal fade hide" id="success-modal">
-    <div class="modal-header">
-      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
-        <h3>Reply</h3>
-    </div>
-    <div class="modal-body">
-      <p> Message Sent! </p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn close-refresh" data-dismiss="modal">Close</button>
-    </div>
-  </div>
+
+  {% include "profile/view_thread/modals.html" %}
 
   <table class="table table-hover table-bordered">
     <tbody>
@@ -57,43 +47,19 @@
   </table>
 
   {% if is_owner %}
-    <div class="modal fade hide" id="confirm-modal">
-        <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
-        <h3>Confirm Transaction</h3>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to mark this transaction complete?</p> 
-      </div>
-      <div class="modal-footer">
-        <a id="confirm-yes" class="btn btn-primary" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=done">Done!</a>
-        <button class="btn" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
 
-    <div class="modal fade hide" id="repost-modal">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
-        <h3>Confirm Repost</h3>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to give up on the current buyer and repost the item?</p>
-      </div>
-      <div class="modal-footer">
-        <a id="confirm-yes" class="btn btn-primary" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=repost">Repost Item</a>
-        <button class="btn" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
 
     {% if post.pending_flag and not post.sold %}
       <div>
         <h3>Have you sold your item?</h3>
         <p style="font-size:14px; font-weight:bold; margin-top:-12px; margin-bottom:15px;">If it didn't work out, we can repost this item for you automatically.<p>
-        <a class="btn btn-primary" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Sold It</a>       
+        <a class="btn btn-primary" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Sold It</a>
         <a class="btn" data-toggle="modal" data-target="#repost-modal">Didn't work out</a>
       </div>
-    {% else %}
+    {% elif post.sold %}
       This sale is complete.
+    {% else %}
+      This sale is pending confirmation.
     {% endif %}
 
   {% else %}
@@ -125,6 +91,13 @@
       $('#contact-modal').on('shown', function () {
         $('#modal-message').focus();
       });
+      $('#confirm-modal').on('shown', function () {
+        $('#modal-message').focus();
+      });
+      $('#decline-modal').on('shown', function () {
+        $('#modal-message').focus();
+      });
     });
   </script>
+  <script src="{{ STATIC_URL }}js/profile_messages.js?v=2"></script>
 {% endblock %}

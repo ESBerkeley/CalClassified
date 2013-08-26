@@ -1,0 +1,16 @@
+{% extends "base.email" %}
+
+{% block subj %}Confirmed Purchase: {{ post.title }}{% endblock %}
+{% block content %}
+  <p>Hi {{ recipient }},</p>
+  <p>{{ sender }} has confirmed your purchase of the item "{{ post.title }}"! </p>
+  <p>Message:</p>
+  <blockquote>
+  {{ message }}
+  </blockquote>
+  <p>
+    <a href="http://buynear.me{{ thread.get_absolute_url }}">Click here</a> to view the message thread.<br>
+    <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view your item!
+  <br>
+  </p>
+{% endblock %}

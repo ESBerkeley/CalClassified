@@ -1,0 +1,114 @@
+  <div class="modal fade hide msg-modal" id="contact-modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Reply</h3>
+    </div>
+    <div class="modal-body">
+      <textarea autocomplete="off" class="input-xlarge field span7" id="modal-message" rows="5" style="height:300px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button id="modal-send" class="btn btn-primary" data-loading-text="Sending...">Send</button>
+      <button class="btn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <!-- this modal activates when message is sent -->
+  <div class="modal fade hide" id="success-modal">
+    <div class="modal-header">
+      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Reply</h3>
+    </div>
+    <div class="modal-body">
+      <p> Message Sent! </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn close-refresh" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <div class="modal fade hide msg-modal" id="confirm-modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Confirm Purchase</h3>
+    </div>
+    <div class="modal-body">
+      <p>Confirm this purchase with the buyer and send a message! Your item will be taken down from the search results.</p>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="confirm-message" rows="5" style="height:300px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button id="confirm-modal-send" class="btn btn-primary" data-loading-text="Sending...">Confirm</button>
+      <button class="btn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <!-- this modal activates when purchase is confirmed -->
+  <div class="modal fade hide" id="confirm-success-modal">
+    <div class="modal-header">
+      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Confirm Purchase</h3>
+    </div>
+    <div class="modal-body">
+      <p> Successfully confirmed purchase with buyer! </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn close-refresh" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <div class="modal fade hide msg-modal" id="decline-modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Decline Purchase</h3>
+    </div>
+    <div class="modal-body">
+      <p>Decline this purchase with the buyer and leave a message saying why.</p>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="decline-message" rows="5" style="height:300px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button id="decline-modal-send" class="btn btn-primary" data-loading-text="Sending...">Decline</button>
+      <button class="btn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <!-- this modal activates when purchase is confirmed -->
+  <div class="modal fade hide" id="decline-success-modal">
+    <div class="modal-header">
+      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Decline Purchase</h3>
+    </div>
+    <div class="modal-body">
+      <p> Purchase declined! </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn close-refresh" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+    <div class="modal fade hide" id="confirm-modal">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Confirm Completed Transaction</h3>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to mark this transaction complete?</p>
+      </div>
+      <div class="modal-footer">
+        <a id="confirm-yes" class="btn btn-primary" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=done">Done!</a>
+        <button class="btn" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+
+     <!-- this modal activates when purchase is confirmed -->
+    <div class="modal fade hide" id="repost-modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Confirm Repost</h3>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to give up on the current buyer and repost the item?</p>
+      </div>
+      <div class="modal-footer">
+        <a id="confirm-yes" class="btn btn-primary" type="button"  href = "/modify_post?post_pk={{ thread.post_id }}&action=repost">Repost Item</a>
+        <button class="btn" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
