@@ -458,6 +458,7 @@ def modify_post(request):
             if action == "done":
                 #the sale is complete (yay). delete post and redirect to profile page
                 post.sold = True
+                post.sold_date = datetime.datetime.now()
                 post.save()
                 custom_log_message('user ' + str(request.user.id) + ' sold item :) ' + str(post_pk))
                 sale_complete_signal.send(sender = ItemForSale, instance = post)
@@ -808,17 +809,18 @@ def ajax_box(request):
             deleted=False,
             expire_date__gte=datetime.datetime.now()
         )
-    
+    load_from = 21 * p
+    load_to = 21 * (p+1)
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
     order  = request.GET['order']
     if order == 'dateNew':
-        found_entries = found_entries.order_by('-time_created').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('-time_created').load_all()[load_from:load_to]
     elif order == 'dateOld':
-        found_entries = found_entries.order_by('time_created').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('time_created').load_all()[load_from:load_to]
     elif order == 'priceLow':
-        found_entries = found_entries.order_by('price').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('price').load_all()[load_from:load_to]
     elif order == 'priceHigh':
-        found_entries = found_entries.order_by('-price').load_all()[(100*p):(100*(p+1))]
+        found_entries = found_entries.order_by('-price').load_all()[load_from:load_to]
 
     #is user logged in? highlight his friends' posts
     #TODO: this could be very inefficient. consider performance optimization... perhaps store facebook user id of creator in post model...
@@ -1383,7 +1385,7 @@ def delete_profile_photo(request):
 def repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
-        if request.user == item.owner and item.is_bumpable:
+        if request.user == item.owner:
             expired = item.is_expired
             item.expire_date = datetime.datetime.now()+timedelta(days=60)
             item.time_created = datetime.datetime.now()
@@ -1398,7 +1400,7 @@ def repost_item(request):
 def ajax_repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
-        if request.user == item.owner and item.is_bumpable:
+        if request.user == item.owner:
             item.expire_date = datetime.datetime.now()+timedelta(days=60)
             item.time_created = datetime.datetime.now()
             item.save()

@@ -16,9 +16,9 @@
     <caption><h4> Items Being Purchased </h4></caption>
     <thead>
         <tr>
-            <th>Item Title</th>
-            <th>Messages</th>
-            <th>Buyer</th>
+            <th class="table-start">Item Title</th>
+            <th class="table-mid">Messages</th>
+            <th class="table-mid2">Buyer</th>
             <th>Recent Message</th>
         </tr>
     </thead>
@@ -55,7 +55,13 @@
     <thead>
         <tr>
             <th class="table-start">Item Title</th>
-            <th class="table-mid">Date Expires</th>
+            <th>Date Expires</th>
+            <th><center>Bump Item
+                <a href="#" class="post-icon no-underline" onclick="return false;" data-toggle="popover" title=""
+               data-content="<span style='font-weight:300;'>This item will not show up in search results once it has expired.<br><br>
+               Click the refresh button to the left to reset the expiration date to 60 days from now!</span>"
+               data-placement="right" data-trigger="hover" data-original-title="">
+           <i class="icon-question-sign" style="color:black; font-size:18px;"></i></a></center></th>
             <th><center>Delete Item</center></th>
         </tr>
     </thead>
@@ -72,9 +78,28 @@
           {{ item.expire_date.date }}
       </td>
       <td>
-        <center><a class="icon-trash" data-toggle="modal" href="#delete-modal-{{ item.id }}"></a></center>
-      
+        <center>
+            <a class="icon-refresh no-underline" data-toggle="modal" style="font-size:18px;" href="#bump-modal-{{ item.id }}"></a></center>
+            <!-- "are you sure you want to delete" modal window -->
+            <div class="modal fade hide" id="bump-modal-{{ item.id }}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+                    <h3>Bump Item</h3>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Are you sure you want to bump your item '{{ item.title }}'?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary verify-bump" value="{{ item.id }}" type="button" data-loading-text="Bumping...">Bump</button>
+                    <button class="btn" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+      </td>
 
+      <td>
+        <center><a class="icon-trash" style="font-size:18px;" data-toggle="modal" href="#delete-modal-{{ item.id }}"></a></center>
 
       <!-- "are you sure you want to delete" modal window -->
       <div class="modal fade hide" id="delete-modal-{{ item.id }}">
@@ -233,15 +258,32 @@
             <button class="btn close-refresh" data-dismiss="modal">Close</button>
         </div>
     </div>
+
+    <!-- repost success modal -->
+    <div class="modal fade hide" id="bump-success-modal">
+        <div class="modal-header">
+            <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+            <h3>Bump Item</h3>
+        </div>
+        <div class="modal-body">
+            <p>Success, item bumped to latest date!</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn close-refresh" data-dismiss="modal">Close</button>
+        </div>
+    </div>
 {% endblock %}
 
 {% block post_js %}
     {% load static %}
-
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap-popover.js"></script>
     <script type="text/javascript">
         $(document).ready( function() {
             $("#messages-tab").addClass("active");
-
+            $(".post-icon").popover({
+                template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
+                html: true
+            });
         })
         var csrf_token = "{{ csrf_token }}";
     </script>
