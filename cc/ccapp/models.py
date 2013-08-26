@@ -443,3 +443,6 @@ class ItemReview(models.Model):
     item = models.ForeignKey(ItemForSale)
     score = models.IntegerField(choices=SCORE_CHOICES)
     comment = models.TextField()
+    time_created = models.DateTimeField(auto_now_add=True)
+    def __unicode__(self):
+        return self.item.title + " - " + str(self.score) + "/5 stars"

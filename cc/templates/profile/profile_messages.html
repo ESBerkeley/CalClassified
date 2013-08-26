@@ -93,9 +93,8 @@
     <script type="text/javascript">
         $(document).ready( function() {
             $("#messages-tab").addClass("active");
-
         })
         var csrf_token = "{{ csrf_token }}";
     </script>
-    <script src="{% get_static_prefix %}js/profile_messages.js?v=1"></script>
+    <script src="{% get_static_prefix %}js/profile/profile_messages.js?v=1"></script>
 {% endblock %}

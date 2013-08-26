@@ -200,6 +200,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     <script src="{% get_static_prefix %}/js/masonry.pkgd.min.js"></script>
     <script>
     if (!window.jQuery) {
+        // import jquery from local server if google server is unavailable
         document.write('<script src="{{ STATIC_URL }}js/jquery.min.js"><\/script>');
     }
     </script>
@@ -211,7 +212,9 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     {% endblock %}
 
     {% block js_script %}
-    <script>
+    <script type="text/javascript">
+    $.myproject = {} // namespace
+    $.myproject.STATIC_URL = '{{ STATIC_URL }}';
     $(".collapse").collapse();
     $("#search-cancel-nav").hide();  //hides search cancel button initially
     $('.tooltips').tooltip('hide');  //activates tooltips. Use class "tooltips" plural. "tooltips" is taken and messes up
@@ -247,10 +250,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     <!--script src="{% get_static_prefix %}js/statictest.js" type="text/javascript"></script-->
     {% include 'django_facebook/_facebook_js.html' %}
 
-    {% block post_js %}
-
-    {% endblock %}
-  {% block post_js_1 %}{% endblock %}<!-- for include templates -->
+    {% block post_js %}{% endblock %}
 
   </div>
   </body>

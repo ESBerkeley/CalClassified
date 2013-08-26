@@ -1271,6 +1271,8 @@ def profile_reviews(request):
     not_reviewed_items = ItemForSale.objects.filter(sold=True, pending_buyer=request.user).exclude(id__in = reviewed_item_ids)
     data['written_reviews'] = written_reviews
     data['not_reviewed_items'] = not_reviewed_items
+    if "message" in request.GET:
+        data['message'] = request.GET['message']
     return render_to_response('profile/profile_reviews.html', data, context_instance=RequestContext(request))
 
 @login_required
@@ -1327,6 +1329,21 @@ def user(request, user_id):
     data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
+    data['reviews'] = ItemReview.objects.filter(seller=user).order_by('-time_created')
+    data['reviews_avg'] = ItemReview.objects.filter(seller=user).aggregate(Avg('score'))['score__avg']
+    return render_to_response('user.html', data, context_instance=RequestContext(request))
+
+def user_reviews(request, user_id):
+    data = {}
+    user = User.objects.get(id=user_id)
+    data['user'] = user
+    data['user_profile'] = user.get_profile()
+    data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True, deleted=False).order_by('-time_created')
+    data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True, deleted=False).order_by('-time_created')
+    data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
+    data['review_page'] = True
+    data['reviews'] = ItemReview.objects.filter(seller=user).order_by('-time_created')
+    data['reviews_avg'] = ItemReview.objects.filter(seller=user).aggregate(Avg('score'))['score__avg']
     return render_to_response('user.html', data, context_instance=RequestContext(request))
 
 @login_required
@@ -1419,4 +1436,27 @@ def review_item(request, item_id):
     data = {}
     if request.method == "GET":
         data['item'] = item
+        filter = ItemReview.objects.filter(buyer=request.user, seller=item.owner, item=item)
+        if filter:
+            review = filter[0]
+            data['score'] = review.score
+            data['comment'] = review.comment
         return render_to_response('review_item.html', data, context_instance=RequestContext(request))
+    else:
+        score = request.POST["score"]
+        comment = request.POST["comment"]
+        filter = ItemReview.objects.filter(buyer=request.user, seller=item.owner, item=item)
+        if filter:
+            review = filter[0]
+            review.score = score
+            review.comment = comment
+            review.save()
+        else:
+            review = ItemReview.objects.create(buyer=request.user,
+                                               seller=item.owner,
+                                               item=item,
+                                               score=score,
+                                               comment=comment)
+        response = redirect('account_reviews')
+        response['Location'] += '?message=Your review has been posted.'
+        return response

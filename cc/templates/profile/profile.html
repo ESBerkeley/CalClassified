@@ -11,6 +11,7 @@
     <div class="small-title small-title-white">
       <h2> Account <span class="divider"> | </span> {% block profile_title %}{% endblock %}</h2>
     </div>
+    <div style="padding-bottom: 25px"></div>
     <div id="profile-sidebar" class="span2">
 
         <ul class="nav nav-tabs nav-stacked">
@@ -36,6 +37,9 @@
                 <i class="icon-envelope" style="text-decoration:none; color:black;"></i>
               {% endif %}
             </a>
+          </li>
+          <li>
+            <a href="{% url account_reviews %}">Reviews</a>
           </li>
           <li>
             <a href="{% url account_settings %}">Settings</a>
