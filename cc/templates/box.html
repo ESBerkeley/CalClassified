@@ -43,7 +43,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
               <li id="Everything-category" class="side-item category" onclick="setCategory('Everything'); runloadBox(true);">
                 <div id="Everything_category" class="side-text">Everything</div>
               </li>
-
+              {% for cat in cc_cats %}
+                {% if cat.name != "Other" %}
+                <li id="{{ cat.name }}-category" class="side-item category" onclick="setCategory('{{cat.name}}'); runloadBox(true);">
+                  <div id="{{cat.name}}_category" class="side-text">{{cat.name}}</div>
+                </li>
+                {% endif %}
+              {% endfor %}
               <li id="Other-category" class="side-item category" onclick="setCategory('Other'); runloadBox(true);">
                 <div id="Other_category" class="side-text">Other</div>
               </li>
