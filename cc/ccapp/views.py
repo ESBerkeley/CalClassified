@@ -378,22 +378,8 @@ def showpost(request, pid, super_cat):
             
         return HttpResponseRedirect(request.path)
 
-    
     else:
         related_posts = []
-
-        # category_posts = super_cat.objects.filter(category=post.category).exclude(id=pid)
-        # cat_length = len(category_posts)
-        # if cat_length>=4:
-            # while len(related_posts)<4:
-                # rand_post = random.choice(category_posts)
-                    # if rand_post not in related_posts:
-                    # related_posts.append(rand_post)
-        # else:
-            # while len(related_posts)<cat_length:
-                # rand_post = random.choice(category_posts)
-                # if rand_post not in related_posts:
-                    # related_posts.append(rand_post)\
 
         cForm = CommentForm()
 
@@ -445,6 +431,8 @@ def showpost(request, pid, super_cat):
                     ecks['thread'] = thread
         ecks['this_is_a_post'] = True
 
+        ecks['reviews'] = ItemReview.objects.filter(seller=post.owner).order_by('-time_created')
+        ecks['reviews_avg'] = ItemReview.objects.filter(seller=post.owner).aggregate(Avg('score'))['score__avg']
             
         ecks.update(csrf(request))
         return render_to_response('showpost.html',ecks,context_instance=RequestContext(request))
@@ -1254,10 +1242,6 @@ def profile_buying(request):
     user_profile.save()
     return render_to_response('profile/profile_buying.html',data,context_instance=RequestContext(request))
 
-
-
-
-    
 #@login_required(redirect_field_name='/view_thread')
 @login_required
 def profile_view_thread(request,thread_id):
@@ -1286,8 +1270,6 @@ def profile_view_thread(request,thread_id):
 
     return render_to_response('profile/profile_view_thread.html',data,context_instance=RequestContext(request))
 
-
-
 @login_required
 def profile_circles(request):
     data = {}
@@ -1304,9 +1286,19 @@ def profile_circles(request):
         data['is_facebook'] = True
     if 'msg' in request.GET:
         data['msg'] = request.GET['msg']
-    return render_to_response('profile/profile_circles.html',
-                             data,
-                             context_instance=RequestContext(request))
+    return render_to_response('profile/profile_circles.html', data, context_instance=RequestContext(request))
+
+@login_required
+def profile_reviews(request):
+    data = {}
+    written_reviews = ItemReview.objects.filter(buyer=request.user)
+    reviewed_item_ids = [review.item.id for review in written_reviews]
+    not_reviewed_items = ItemForSale.objects.filter(sold=True, pending_buyer=request.user).exclude(id__in = reviewed_item_ids)
+    data['written_reviews'] = written_reviews
+    data['not_reviewed_items'] = not_reviewed_items
+    if "message" in request.GET:
+        data['message'] = request.GET['message']
+    return render_to_response('profile/profile_reviews.html', data, context_instance=RequestContext(request))
 
 @login_required
 @logit
@@ -1354,7 +1346,7 @@ def account_setup(request):
         user_profile.save()
         return render_to_response('registration/account_setup.html', data, context_instance=RequestContext(request))
 
-def user(request, user_id):
+def user(request, user_id, review_page=False):
     data = {}
     user = User.objects.get(id=user_id)
     data['user'] = user
@@ -1362,7 +1354,13 @@ def user(request, user_id):
     data['items_sold'] = ItemForSale.objects.filter(owner=user,pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_bought'] = ItemForSale.objects.filter(pending_buyer=user, pending_flag=True, sold=True, deleted=False).order_by('-time_created')
     data['items_listed'] = ItemForSale.objects.filter(owner=user, pending_flag=False, sold=False, deleted=False).order_by('-time_created') #currently listed
+    data['reviews'] = ItemReview.objects.filter(seller=user).order_by('-time_created')
+    data['reviews_avg'] = ItemReview.objects.filter(seller=user).aggregate(Avg('score'))['score__avg']
+    data['review_page'] = review_page #if True, the html will go to the reviews page
     return render_to_response('user.html', data, context_instance=RequestContext(request))
+
+def user_reviews(request, user_id):
+    return user(request, user_id, review_page=True)
 
 @login_required
 def upload_temp_photo(request):
@@ -1442,3 +1440,39 @@ def ajax_repost_item(request):
             return HttpResponse("OK")
         else:
             return HttpResponse("Repost Item Failed")
+
+@login_required
+def review_item(request, item_id):
+    item = ItemForSale.objects.get(id=item_id)
+    if not item.sold or item.pending_buyer != request.user:
+        title = "Error"
+        msg = "I can't let you do that, Dave. No but seriously, something went wrong. Contact support for further assistance."
+        return render_to_response('message.html',{'title':title,'message':msg},context_instance=RequestContext(request))
+
+    data = {}
+    if request.method == "GET":
+        data['item'] = item
+        filter = ItemReview.objects.filter(buyer=request.user, seller=item.owner, item=item)
+        if filter:
+            review = filter[0]
+            data['score'] = review.score
+            data['comment'] = review.comment
+        return render_to_response('review_item.html', data, context_instance=RequestContext(request))
+    else:
+        score = request.POST["score"]
+        comment = request.POST["comment"]
+        filter = ItemReview.objects.filter(buyer=request.user, seller=item.owner, item=item)
+        if filter:
+            review = filter[0]
+            review.score = score
+            review.comment = comment
+            review.save()
+        else:
+            review = ItemReview.objects.create(buyer=request.user,
+                                               seller=item.owner,
+                                               item=item,
+                                               score=score,
+                                               comment=comment)
+        response = redirect('account_reviews')
+        response['Location'] += '?message=Your review has been posted.'
+        return response

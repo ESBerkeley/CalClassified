@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Buy Near Me - {{ user.get_full_name }}{% endblock %}
+{% block title %}{{ user.get_full_name }}{% endblock %}
 
 {% block head %}
     <link href="{{ STATIC_URL }}css/user.css" rel="stylesheet" type="text/css">
@@ -27,6 +27,10 @@
         </div>
         <div class="user-info">
             <div id="user-name">{{ user.get_full_name }}</div>
+            <div id="reviews-avg-wrapper">
+                <div id="reviews-avg" data-score="{{ reviews_avg }}"></div>
+                <div id="num-reviews">{{ reviews|length }} reviews</div>
+            </div>
             <div class="relevant-item-data">
                 <div id="items-listed" class="relevant-wrapper">
                     <span class="relevant-item-number">{{ items_listed|length }}</span>
@@ -44,32 +48,19 @@
                     Items Bought
                 </div>
             </div>
+            <div class="profile-options">
+                <a href="{% url user user.id %}">Listings</a>
+                <a href="{% url user_reviews user.id %}">Reviews</a>
+            </div>
         </div>
     </div><!--end profile-card container -->
-    <hr id="listings-header-line" />
-    <center>
-        <div id="listings-header">
-            LISTINGS
-        </div>
-    </center>
-    <div class="items-container container">
-        {% for item in items_listed %}
-            <a href="{{ item.get_absolute_url }}">
-                <div class="item">
-                    <center><img class="item-image" src="{{ item.get_thumbnail_url }}" /></center>
-                    <div class="item-text">
-                        {{ item.title }}
-                    </div>
-                    <div class="item-price">
-                        {{ item.price }}
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-        {% if not items_listed %}
-            <center><div class="no-items-listed">No items listed</div></center>
-        {% endif %}
-    </div>
+
+    {% if review_page %}
+        {% include "user/reviews.html" %}
+    {% else %}
+        {% include "user/listings.html" %}
+    {% endif %}
+
 </div>
 
 {% include "shared/change-photo-modal.html" %}
@@ -77,6 +68,7 @@
 {% endblock %}
 
 {% block post_js %}
+    <script type="text/javascript" src="{{ STATIC_URL }}raty-master/lib/jquery.raty.min.js"></script>
     <script src="{{ STATIC_URL }}js/user.js"></script>
 
     <!-- profile modal js stuff -->

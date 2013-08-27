@@ -22,48 +22,6 @@ from PIL.ExifTags import TAGS
 from django.core.files.uploadedfile import InMemoryUploadedFile
 #
 
-def confirm_purchase(request):
-    body = request.POST['message']
-    recipient_pk = request.POST['recipient_pk']
-    post_pk = request.POST['post_pk']
-    post = ItemForSale.objects.get(id=int(post_pk))
-    sender = request.user
-    recipient = User.objects.get(id=int(recipient_pk)) #buyer for confirmed purchase by seller
-
-    # Confirm purchase by assigning pending buyer to recipient
-    post.pending_buyer = recipient
-    post.pending_flag = True
-    post.pending_date = datetime.now()
-    post.save()
-
-    # Create message object
-    message = Message()
-    message.body = body
-    message.post_title = post.title
-    message.sender = sender
-    message.recipient = recipient
-    message.save()
-
-    thread1 = Thread.objects.get(owner=sender, other_person=recipient, item=post, post_title=post.title, post_id=post.id)
-    thread2 = Thread.objects.get(owner=recipient, other_person=sender, item=post, post_title=post.title, post_id=post.id)
-
-    # Add messages to threads
-    thread1.messages.add(message)
-    thread2.messages.add(message)
-    thread1.newest_message_time = message.time_created
-    thread2.newest_message_time = message.time_created
-    thread2.is_read = False
-    thread1.save()
-    thread2.save()
-
-    # Signal to buyer that seller has confirmed purchase
-    confirm_purchase_signal.send(sender=ItemForSale, instance=post, message=message)
-
-    # add notifications to profile
-    rec_profile = recipient.get_profile()
-    rec_profile.notifications += 1
-    rec_profile.save()
-
 def change_purchase(request, confirm):
     body = request.POST['message']
     recipient_pk = request.POST['recipient_pk']
@@ -99,6 +57,9 @@ def change_purchase(request, confirm):
     if not confirm:
         thread1.declined = True
         thread2.declined = True
+    else:
+        thread1.declined = False
+        thread2.declined = False
     thread1.save()
     thread2.save()
 
@@ -106,7 +67,7 @@ def change_purchase(request, confirm):
         # Signal to buyer that seller has confirmed purchase
         confirm_purchase_signal.send(sender=ItemForSale, instance=post, message=message)
     else:
-        decline_purchase_signal.send(sender=ItemForSale, instance=post, message=message)
+        decline_purchase_signal.send(sender=ItemForSale, instance=post, message=message, buyer=recipient)
 
     # add notifications to profile
     rec_profile = recipient.get_profile()
@@ -159,9 +120,9 @@ def send_bnm_message(request):
         buy_button_signal.send(sender=ItemForSale, instance=post, message=message, buyer=sender)
     else:
         if request.user == post.owner: #sending a message to a buyer
-            message_to_buyer_signal.send(sender=ItemForSale, instance=post, message=message)
+            message_to_buyer_signal.send(sender=ItemForSale, buyer=recipient, instance=post, message=message)
         else:   #sending a message to a seller
-            message_to_seller_signal.send(sender=ItemForSale, instance=post, message=message)
+            message_to_seller_signal.send(sender=ItemForSale, buyer=sender, instance=post, message=message)
 
     thread1.messages.add(message)
     thread2.messages.add(message)

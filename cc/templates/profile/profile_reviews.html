@@ -1,0 +1,67 @@
+{% extends 'profile/profile.html' %}
+
+{% block profile_title %}Reviews{% endblock %}
+
+{% block title %}Account - Reviews {% endblock %}
+
+{% block head %}
+     <link href="{{ STATIC_URL }}css/profile.css" rel="stylesheet">
+{% endblock %}
+
+{% block profile_content %}
+    {% if message %}
+    <div class="alert alert-block alert-info fade in">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <h4>Write Reviews</h4>
+    {% if not_reviewed_items %}
+        <table class="table table-striped">
+            <tbody>
+            {% for item in not_reviewed_items %}
+                <tr>
+                  <td><a href="{% url review_item item.id %}">{{ item.title }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="help-msg">You have no items to review.</div>
+    {% endif %}
+    <br>
+    <h4>Reviews you've wrote</h4>
+    {% if written_reviews %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Seller</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in written_reviews %}
+                    <tr>
+                        <td><a href="{% url user_reviews review.seller.id %}#review-{{ review.id }}">{{ review.item.title }}</a></td>
+                        <!-- hyper link to #review-{id number} on reviews page -->
+                        <td>{{ review.seller.get_full_name }}</td>
+                        <td><div class="score" data-score="{{ review.score }}"></div></td>
+                        <td><a href="{% url review_item review.item.id %}">edit</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="help-msg">You haven't written any reviews.</div>
+    {% endif %}
+{% endblock %}
+
+{% block post_js %}
+    <script type="text/javascript">
+        var csrf_token = "{{ csrf_token }}";
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}raty-master/lib/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/profile/profile_reviews.js"></script>
+{% endblock %}

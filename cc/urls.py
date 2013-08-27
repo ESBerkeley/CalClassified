@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^(?P<pid>\d+)$','ccapp.views.showpostIFS'),
     url(r'^repost/$', 'ccapp.views.repost_item', name='repost_item'),
     url(r'^pay_for_item/$', 'ccapp.views.pay_for_item', name='pay_for_item'),
+    url(r'review_item/(?P<item_id>\d+)/$','ccapp.views.review_item', name='review_item'),
 
 
     #ACCOUNT:
@@ -42,6 +43,7 @@ urlpatterns = patterns('',
     url(r'^verify_user/(?P<auth_key>[\w\+%_& ]+)/$','ccapp.views.verify_user'),
     url(r'^change_email/(?P<auth_key>[\w\+%_& ]+)/$','ccapp.views.change_email'),
     url(r'^user/(?P<user_id>\d+)/$', 'ccapp.views.user', name='user'),
+    url(r'^user/(?P<user_id>\d+)/reviews/$', 'ccapp.views.user_reviews', name='user_reviews'),
 
     #ADMIN/DEBUG
     url(r'^friends/debug/$', 'ccapp_facebook.views.friendslist', name='test_friends'),

@@ -148,10 +148,11 @@
     font-size: 16px;
 }
 
-.seller-name .posted-title {
-  font-size: 12px;
-  font-weight: 400;
-  height: 17px;
+.num-reviews {
+    vertical-align: middle;
+    font-size: 14px;
+    display: inline-block;
+    margin-left: 5px;
 }
 
 #item-info {

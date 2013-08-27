@@ -443,3 +443,14 @@ class FacebookPostForExcel(models.Model):
 
     class Meta:
         unique_together = ['user_id', 'facebook_id']
+
+class ItemReview(models.Model):
+    SCORE_CHOICES = ((1,1), (2,2), (3,3), (4,4), (5,5))
+    seller = models.ForeignKey(User, related_name="itemreview_seller")
+    buyer = models.ForeignKey(User, related_name="itemreview_buyer")
+    item = models.ForeignKey(ItemForSale)
+    score = models.IntegerField(choices=SCORE_CHOICES)
+    comment = models.TextField()
+    time_created = models.DateTimeField(auto_now_add=True)
+    def __unicode__(self):
+        return self.item.title + " - " + str(self.score) + "/5 stars"

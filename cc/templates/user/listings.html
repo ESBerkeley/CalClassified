@@ -1,0 +1,24 @@
+<hr id="listings-header-line" />
+<center>
+    <div id="listings-header">
+        LISTINGS
+    </div>
+</center>
+<div class="items-container container">
+    {% for item in items_listed %}
+        <a href="{{ item.get_absolute_url }}">
+            <div class="item">
+                <center><img class="item-image" src="{{ item.get_thumbnail_url }}" /></center>
+                <div class="item-text">
+                    {{ item.title }}
+                </div>
+                <div class="item-price">
+                    {{ item.price }}
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+    {% if not items_listed %}
+        <center><div class="no-items-listed">No items listed</div></center>
+    {% endif %}
+</div>

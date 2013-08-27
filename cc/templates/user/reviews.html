@@ -1,0 +1,23 @@
+<hr id="listings-header-line" />
+<center>
+    <div id="listings-header">
+        REVIEWS
+    </div>
+</center>
+{% for review in reviews %}
+    <div id="review-{{ review.id }}" class="review container">
+        <a class="review-title" href="{{ review.item.get_absolute_url }}">{{ review.item.title }}</a>
+        <div class="score" data-score="{{ review.score }}"></div>
+        <div class="review-date">{{ review.time_created.date }}</div>
+        {% if review.buyer == request.user %}
+            <a class="edit-review" href="{% url review_item review.item.id %}"> edit</a>
+        {% endif %}
+        <br>
+        <div class="review-by">by <a href="{% url user review.buyer.id %}">{{ review.buyer.get_full_name }}</a></div>
+        {{ review.comment }}
+    </div>
+{% endfor %}
+
+{% if not reviews %}
+    <center><div class="no-items-listed">No Reviews Available</div></center>
+{% endif %}

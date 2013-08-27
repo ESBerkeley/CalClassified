@@ -263,9 +263,11 @@ def message_to_seller_hndlr(sender, **kwargs):
     ''''notify the seller that the buyer has sent him a message'''
     if sender == ItemForSale:
         item = kwargs['instance']
-        seller = item.owner.get_profile()
-        buyer = item.pending_buyer.get_profile()
         message = kwargs['message']
+        buyer_user = kwargs['buyer']
+
+        seller = item.owner.get_profile()
+        buyer = buyer_user.get_profile()
         new_note = Notification(post_from=item, going_to=seller, type=6)
         new_note.second_party = buyer
         thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person=buyer.user)
@@ -299,9 +301,11 @@ def message_to_buyer_hndlr(sender, **kwargs):
     ''''notify the buyer that the seller has sent him a message'''
     if sender == ItemForSale:
         item = kwargs['instance']
-        seller = item.owner.get_profile()
-        buyer = item.pending_buyer.get_profile()
+        buyer_user = kwargs['buyer']
         message = kwargs['message']
+
+        seller = item.owner.get_profile()
+        buyer = buyer_user.get_profile()
         new_note = Notification(post_from=item, going_to=buyer, type=7)
         new_note.second_party = seller
         thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)

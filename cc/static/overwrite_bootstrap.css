@@ -70,20 +70,20 @@ h4 {
 }
 
 .navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
-  color: #e37800;
+  color: #51A2D9;
 }
 
 .navbar .nav > li > a {
     color: #414141;
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
-    padding: 10px 10px 7px 10px;
+    padding: 7px 10px 7px 10px;
     font-size: 15px;
     text-shadow: none;
 }
 
 #friend_notifications_dropdown {
-    padding: 10px;
+    padding: 8px;
 }
 
 .navbar-search .search-query {
@@ -100,8 +100,8 @@ h4 {
 
 .navbar .container{
   min-width:940px;  /*default .navbar .container has width:auto, which makes it stretch out*/
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .navbar-inner {
@@ -126,7 +126,7 @@ h4 {
 }
 
 #searchbarform {
-    padding-top: 4px;
+    padding-top: 2px;
 }
 
 #logo {
@@ -655,7 +655,6 @@ body {
 .small-title {
   border-bottom: 1px solid #E0E0E0;
   padding: 10px 40px 10px 40px;
-  margin-bottom: 20px;
 }
 
 .small-title-message {
@@ -680,7 +679,7 @@ body {
 
 .small-body {
   background-color: white;
-  padding: 0px 40px 10px 40px;
+  padding: 20px 40px 20px 40px;
   margin: 0;
 }
 

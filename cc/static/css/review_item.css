@@ -1,0 +1,31 @@
+.wrapper {
+    overflow: auto;
+}
+
+.img-wrap {
+    float: left;
+}
+
+.img-wrap .item-img{
+    width: 100px;
+}
+
+.item-info {
+    float: left;
+    padding-left: 20px;
+}
+
+.title {
+    font-size: 22px;
+}
+
+.input-label {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+#review-form textarea {
+    width: 400px;
+    height: 100px;
+}
