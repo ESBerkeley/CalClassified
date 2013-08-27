@@ -503,7 +503,8 @@ function runloadBox(isRemoveHtml) {
             var title = data[i].fields.title;
             var date = smartDate(data[i].fields.time_created);
             var username = data[i].extras.get_seller_first_name;
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profileLink+"'></div> </div> </div></a>"
+            var profilePicture = data[i].extras.get_seller_profile_picture;
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profilePicture+"'></div> </div> </div></a>"
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);

@@ -136,7 +136,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
             if self.cached_thumb == '':
                 from cc.sorl.thumbnail import get_thumbnail
                 image = self.image_set.order_by('id')[0]
-                im = get_thumbnail(image, "260x195", quality=70)
+                im = get_thumbnail(image, "260x195", quality=75)
                 self.cached_thumb = im.url
                 self.save()
                 return self.cached_thumb
@@ -153,7 +153,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
                 #return self.facebookpost.thumbnail_url
             from cc.sorl.thumbnail import get_thumbnail
             image = self.image_set.order_by('id')[0]
-            im = get_thumbnail(image, "260x195", quality=70)
+            im = get_thumbnail(image, "260x195", quality=75)
             self.cached_thumb = im.url
             self.save()
             return self.cached_thumb
@@ -167,7 +167,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
         from cc.sorl.thumbnail import get_thumbnail
         for image in self.image_set.order_by('id'):
 #image quality
-            im = get_thumbnail(image, "260x195", quality=70)
+            im = get_thumbnail(image, "260x195", quality=75)
             thumb_url = im.url
             urls.append(thumb_url)
         return urls
@@ -177,6 +177,9 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
     
     def get_seller_first_name(self):
         return self.owner.first_name
+    
+    def get_seller_profile_picture(self):
+        return self.owner.get_profile().get_image_url()
 
     def is_category_image(self):
         try:
