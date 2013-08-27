@@ -67,7 +67,7 @@ def change_purchase(request, confirm):
         # Signal to buyer that seller has confirmed purchase
         confirm_purchase_signal.send(sender=ItemForSale, instance=post, message=message)
     else:
-        decline_purchase_signal.send(sender=ItemForSale, instance=post, message=message, buyer=recipient)
+        decline_purchase_signal.send(sender=ItemForSale, instance=post, message=message, buyer=sender)
 
     # add notifications to profile
     rec_profile = recipient.get_profile()

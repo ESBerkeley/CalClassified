@@ -27,7 +27,7 @@
         <tr {% if not thread.is_read %}class="info"{% endif %}>
 
           <td>
-        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        <a class="item-title" href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
         {% if not thread.is_read %}
             (Unread)
         {% endif %}
@@ -65,7 +65,7 @@
         <tr {% if not thread.is_read %}class="info"{% endif %}>
 
           <td>
-        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        <a class="item-title" href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
         {% if not thread.is_read %}
             (Unread)
         {% endif %}
@@ -107,7 +107,7 @@
     {% for item in ifs_waiting_list %} 
     <tr>
       <td>
-        <a href = "/{{ item.pk }}"> {{ item.title }} </a>
+        <a class="item-title" href = "/{{ item.pk }}"> {{ item.title }} </a>
         {% if item.is_expired %}
             <span style="color:red">(Expired)</span>
         {% endif %}
@@ -182,7 +182,7 @@
         {% for item in ifs_expired %}
             <tr>
                 <td>
-                    <a href = "/{{ item.pk }}"> {{ item.title }} </a>
+                    <a class="item-title" href = "/{{ item.pk }}"> {{ item.title }} </a>
                 </td>
                 <td>
                     {{ item.expire_date.date }}
@@ -267,7 +267,46 @@
           <a href="{% url createIFS %}">Create a post now!</a>
         </h4>
     {% endif %}
-    </div>
+
+    {% if declined_threads %}
+    <table class="table table-striped" >
+    <caption><h4> Declined Purchases </h4></caption>
+    <thead>
+        <tr>
+            <th class="table-start">Item Title</th>
+            <th class="table-mid">Message</th>
+            <th class="table-mid2">Buyer</th>
+            <th>Recent Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for thread in declined_threads %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
+
+          <td>
+        <a class="item-title" href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        {% if not thread.is_read %}
+            (Unread)
+        {% endif %}
+          <td>
+            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope-alt"></i></a>
+          </td>
+          <td>
+            {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}
+          </td>
+
+          <td>
+            {{ thread.newest_message_time }}
+          </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    <br>
+    {% endif %}
+
+    </div> <!-- End Tables DIV-->
 
     <!-- delete post success modal -->
     <div class="modal fade hide" id="delete-success-modal">

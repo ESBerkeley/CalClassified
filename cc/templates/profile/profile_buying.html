@@ -27,7 +27,7 @@
         <tr {% if not thread.is_read %}class="info"{% endif %}>
 
           <td>
-        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        <a class="item-title" href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
         {% if not thread.is_read %}
             (Unread)
         {% endif %}
@@ -60,9 +60,9 @@
     <caption><h4> You're currently buying </h4></caption>
     <thead>
         <tr>
-            <th>Item Title</th>
-            <th>Messages</th>
-            <th>Seller</th>
+            <th class="table-start">Item Title</th>
+            <th class="table-mid">Messages</th>
+            <th class="table-mid2">Seller</th>
             <th>Recent Message</th>
         </tr>
     </thead>
@@ -71,7 +71,7 @@
         <tr {% if not thread.is_read %}class="info"{% endif %}>
 
           <td>
-        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        <a class="item-title" href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
         {% if not thread.is_read %}
             (Unread)
         {% endif %}
@@ -115,7 +115,7 @@
     {% for thread in completed_threads %}
         <tr {% if not thread.is_read %}class="info"{% endif %}>
           <td>
-        <a href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        <a class="item-title" href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
         {% if not thread.is_read %}
             (Unread)
         {% endif %}
@@ -143,7 +143,51 @@
     </table>
     {% endif %}
 
-    {% if not my_threads and not completed_threads and not pending_threads %}
+    {% if declined_threads %}
+    <table class="table table-striped">
+    <caption><h4> Declined Purchases </h4></caption>
+    <thead>
+        <tr>
+            <th class="table-start">Item Title</th>
+            <th class="table-mid">Messages</th>
+            <th class="table-mid2">Seller</th>
+            <th>Recent Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for thread in declined_threads %}
+        <tr {% if not thread.is_read %}class="info"{% endif %}>
+
+          <td>
+        <a class="item-title" href="/{{ thread.post_id }}"> {{ thread.post_title }} </a>
+        {% if not thread.is_read %}
+            (Unread)
+        {% endif %}
+        {% if thread.post_deleted %}
+            (Post Deleted)
+        {% endif %}
+          </td>
+          <td>
+          <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope-alt"></i></a>
+          </td>
+          <td>
+            {% if thread.other_person.get_full_name %}
+              {{ thread.other_person.get_full_name }}
+            {% else %}
+              {{ thread.other_person.username }}
+            {% endif %}
+          </td>
+          <td>
+            {{ thread.newest_message_time }}
+          </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% endif %}
+
+    {% if not my_threads and not completed_threads and not pending_threads and not declined_threads %}
         <h2> You are not in the process of buying anything. </h2>
     {% endif %}
     </div>

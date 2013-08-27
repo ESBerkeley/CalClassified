@@ -4,23 +4,65 @@
 
 {% block title %} Messages - {{ thread.post_title }} {% if thread.post_deleted %}(Post Deleted){%endif%} {% endblock %}
 
+{% block head %}
+     <link href="{{ STATIC_URL }}css/profile.css" rel="stylesheet">
+{% endblock %}
+
 {% block profile_content %}
 <div>
   {% if thread.declined %}
-      <div id="declined-alert" class="alert alert-block alert-error fade in">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <b>Your purchase has been declined</b>
+      <div class="alert alert-error fade in">
+        <p>This purchase has been declined by the buyer.</p>
       </div>
+  {% elif is_owner %}
+    {% if post.pending_flag and not post.sold %}
+      <div class="alert alert-info fade in">
+        <h3>Have you sold your item?</h3>
+        <p style="margin-bottom:10px">If it didn't work out, we can repost this item for you automatically.<p>
+        <a class="btn btn-primary" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Sold It</a>
+        <a class="btn" data-toggle="modal" data-target="#repost-modal">Didn't work out</a>
+      </div>
+    {% elif post.sold %}
+      <div class="alert alert-info fade in">
+        <p>This sale is complete.</p>
+      </div>
+    {% else %}
+      <div class="alert alert-warning fade in">
+        <p>This sale is pending confirmation.</p>
+      </div>
+    {% endif %}
+  {% else %}
+    {% if post.sold %}
+      <div class="alert alert-info fade in">
+        <p>This sale has been marked completed by the seller.</p>
+      </div>
+    {% elif post.pending_flag %}
+      <div class="alert alert-info fade in">
+        <p>This sale is in progress, and has not been marked complete by the seller.</p>
+      </div>
+    {% else %}
+      <div class="alert alert-warning fade in">
+        <p>This sale is pending confirmation.</p>
+      </div>
+    {% endif %}
   {% endif %}
 
-  {% if not post.pending_flag and post.owner == request.user and not thread.declined %}
-    <button class="btn btn-info" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Confirm Purchase</button>
-    <button class="btn" data-toggle="modal" data-target="#decline-modal" style="margin-right:10px;">Decline Purchase</button>
-  {% elif not post.pending_flag and post.owner == request.user %}
-    <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
-    <button class="btn btn-info" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Confirm Purchase</button>
+  {% if not post.pending_flag and is_owner and not thread.declined %}
+    <div class="button-row">
+      <button class="btn" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Confirm Purchase</button>
+      <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+    </div>
+    Confirm purchase to remove the item from search results and show your commitment to this buyer.
+  {% elif not is_owner and request.user != post.pending_buyer and not thread.declined %}
+    <div class="button-row">
+      <button class="btn" data-toggle="modal" data-target="#decline-modal" style="margin-right:10px;">Decline Purchase</button>
+      <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+    </div>
+    Decline purchase if you no longer want to buy this item.
+  {% elif thread.declined and not is_owner %}
+      <button class="btn" data-toggle="modal" data-target="#undo-decline-modal" style="margin-right:10px;">Undo Decline Purchase</button>
   {% else %}
-  <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+    <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
   {% endif %}
   <br><br>
 
@@ -45,30 +87,6 @@
       {% endfor %}
     </tbody>
   </table>
-
-  {% if is_owner %}
-
-
-    {% if post.pending_flag and not post.sold %}
-      <div>
-        <h3>Have you sold your item?</h3>
-        <p style="font-size:14px; font-weight:bold; margin-top:-12px; margin-bottom:15px;">If it didn't work out, we can repost this item for you automatically.<p>
-        <a class="btn btn-primary" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Sold It</a>
-        <a class="btn" data-toggle="modal" data-target="#repost-modal">Didn't work out</a>
-      </div>
-    {% elif post.sold %}
-      This sale is complete.
-    {% else %}
-      This sale is pending confirmation.
-    {% endif %}
-
-  {% else %}
-    {% if post.sold %}
-      This sale has been marked completed by the seller.
-    {% else %}
-      This sale is currently pending, and has not been marked complete by the seller.
-    {% endif %}
-  {% endif %}   
 </div>
 {% endblock %}
 

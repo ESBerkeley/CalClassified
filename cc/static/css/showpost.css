@@ -34,7 +34,9 @@
   line-height: normal;
 }
 
-
+.popover {
+    width:300px;
+}
 
 #postCarousel {
   height:327px;
@@ -164,14 +166,14 @@
 
 .info-title {
   font-size: 12px;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   color: rgb(85, 85, 85);
   height: 17px;
 }
 
 .info-detail {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-weight: 400;
   margin-bottom: 4px;
 }

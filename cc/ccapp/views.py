@@ -426,14 +426,16 @@ def showpost(request, pid, super_cat):
                     ecks['thread'] = thread[0]
         elif post.owner != request.user and request.user.is_authenticated():
             threads = Thread.objects.filter(owner=request.user, post_id=post.id)
-            for thread in threads:
-                if not thread.declined:
-                    ecks['thread'] = thread
+            if threads.exists():
+                ecks['thread'] = threads[0]
+        elif post.owner == request.user:
+            threads = Thread.objects.filter(owner=request.user, post_id=post.id)
+            if threads.exists():
+                ecks['offers'] = True
         ecks['this_is_a_post'] = True
-
         ecks['reviews'] = ItemReview.objects.filter(seller=post.owner).order_by('-time_created')
         ecks['reviews_avg'] = ItemReview.objects.filter(seller=post.owner).aggregate(Avg('score'))['score__avg']
-            
+
         ecks.update(csrf(request))
         return render_to_response('showpost.html',ecks,context_instance=RequestContext(request))
  
@@ -615,6 +617,26 @@ def ajax_confirm_purchase(request):
 def ajax_decline_purchase(request):
     if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
         change_purchase(request, False)#in utils.py
+        return HttpResponse("success")
+
+@login_required
+def ajax_undo_decline_purchase(request):
+    if request.is_ajax() and request.method == "POST" and request.user.is_authenticated():
+        recipient_pk = request.POST['recipient_pk']
+        post_pk = request.POST['post_pk']
+
+        recipient = User.objects.get(id=int(recipient_pk))
+        post = ItemForSale.objects.get(id=int(post_pk))
+        sender = request.user
+
+        thread1 = Thread.objects.get(owner=sender, other_person=recipient, item=post, post_title=post.title, post_id=post.id)
+        thread2 = Thread.objects.get(owner=recipient, other_person=sender, item=post, post_title=post.title, post_id=post.id)
+        thread1.declined = False
+        thread2.declined = False
+        thread1.save()
+        thread2.save()
+
+        send_bnm_message(request)#in utils.py
         return HttpResponse("success")
 
 @logit
@@ -1169,11 +1191,19 @@ def profile_selling(request):
 
     pending_threads_ids = []
     for item in ifs_waiting_list:
-        pending_threads = Thread.objects.filter(owner=user, item=item)
+        pending_threads = Thread.objects.filter(owner=user, item=item, declined=False)
         for thread in pending_threads:
             if thread.item and thread.item.owner == user:
                 pending_threads_ids.append(thread.id)
     pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
+
+    declined_threads_ids = []
+    for item in ifs_waiting_list:
+        declined_threads = Thread.objects.filter(owner=user, item=item, declined=True)
+        for thread in declined_threads:
+            if thread.item and thread.item.owner == user:
+                declined_threads_ids.append(thread.id)
+    declined_threads = Thread.objects.filter(id__in=declined_threads_ids).order_by('is_read','-newest_message_time')
 
     sold_items = ItemForSale.objects.filter(owner=user, sold=True)
     sold_threads_ids = []
@@ -1190,6 +1220,7 @@ def profile_selling(request):
     data['ifs_waiting_list'] = ifs_waiting_list       #unsold
     data['ifs_sold'] = sold_threads                   #sold
     data['ifs_expired'] = expired_items               #expired items
+    data['declined_threads'] = declined_threads       #declined purchase requests
     
     user_profile = user.get_profile()
     user_profile.notifications = 0
@@ -1212,12 +1243,19 @@ def profile_buying(request):
     completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
 
 
-    pending_threads = Thread.objects.filter(owner=user)
+    pending_threads = Thread.objects.filter(owner=user, declined=False)
     pending_threads_ids = []
     for thread in pending_threads:
         if thread.item and thread.item.pending_flag == False and thread.item.owner != user:
             pending_threads_ids.append(thread.id)
     pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
+
+    declined_threads = Thread.objects.filter(owner=user, declined=True)
+    declined_threads_ids = []
+    for thread in declined_threads:
+        if thread.item and thread.item.pending_flag == False and thread.item.owner != user:
+            declined_threads_ids.append(thread.id)
+    declined_threads = Thread.objects.filter(id__in=declined_threads_ids).order_by('is_read','-newest_message_time')
 
     for thread in my_threads:
         try:
@@ -1236,6 +1274,7 @@ def profile_buying(request):
     data['my_threads'] = my_threads
     data['completed_threads'] = completed_threads
     data['pending_threads'] = pending_threads
+    data['declined_threads'] = declined_threads
     
     user_profile = user.get_profile()
     user_profile.notifications = 0

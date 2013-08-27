@@ -4,7 +4,7 @@
         <h3>Reply</h3>
     </div>
     <div class="modal-body">
-      <textarea autocomplete="off" class="input-xlarge field span7" id="modal-message" rows="5" style="height:300px;"></textarea>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="modal-message" rows="5" style="height:250px;"></textarea>
     </div>
     <div class="modal-footer">
       <button id="modal-send" class="btn btn-primary" data-loading-text="Sending...">Send</button>
@@ -33,7 +33,7 @@
     </div>
     <div class="modal-body">
       <p>Confirm this purchase with the buyer and send a message! Your item will be taken down from the search results.</p>
-      <textarea autocomplete="off" class="input-xlarge field span7" id="confirm-message" rows="5" style="height:300px;"></textarea>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="confirm-message" rows="5" style="height:250px;"></textarea>
     </div>
     <div class="modal-footer">
       <button id="confirm-modal-send" class="btn btn-primary" data-loading-text="Sending...">Confirm</button>
@@ -61,8 +61,8 @@
         <h3>Decline Purchase</h3>
     </div>
     <div class="modal-body">
-      <p>Decline this purchase with the buyer and leave a message saying why.</p>
-      <textarea autocomplete="off" class="input-xlarge field span7" id="decline-message" rows="5" style="height:300px;"></textarea>
+      <p>Decline this purchase with the seller and leave a message saying why.</p>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="decline-message" rows="5" style="height:250px;"></textarea>
     </div>
     <div class="modal-footer">
       <button id="decline-modal-send" class="btn btn-primary" data-loading-text="Sending...">Decline</button>
@@ -70,14 +70,43 @@
     </div>
   </div>
 
-  <!-- this modal activates when purchase is confirmed -->
+  <!-- this modal activates when purchase is declined -->
   <div class="modal fade hide" id="decline-success-modal">
     <div class="modal-header">
       <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
         <h3>Decline Purchase</h3>
     </div>
     <div class="modal-body">
-      <p> Purchase declined! </p>
+      <p> Purchase declined. </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn close-refresh" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <div class="modal fade hide msg-modal" id="undo-decline-modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Undo Decline Purchase</h3>
+    </div>
+    <div class="modal-body">
+      <p>Changed your mind? Tell the seller why.</p>
+      <textarea autocomplete="off" class="input-xlarge field span7" id="undo-decline-message" rows="5" style="height:250px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button id="undo-decline-modal-send" class="btn btn-primary" data-loading-text="Sending...">Decline</button>
+      <button class="btn" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <!-- this modal activates when purchase is declined -->
+  <div class="modal fade hide" id="undo-decline-success-modal">
+    <div class="modal-header">
+      <button type="button" class="close close-refresh" data-dismiss="modal"><i class="icon-remove"></i></button>
+        <h3>Undo Decline Purchase</h3>
+    </div>
+    <div class="modal-body">
+      <p> Purchase no longer declined. </p>
     </div>
     <div class="modal-footer">
       <button class="btn close-refresh" data-dismiss="modal">Close</button>

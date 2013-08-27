@@ -37,7 +37,10 @@ $(document).ready( function() {
     })
 
     //$("#post-icon").tooltip();
-    $("#what-happens").popover({template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'});     //craziness that creates a popover with no title
+    $("#what-happens").popover({
+        template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
+        html: true
+    });     //craziness that creates a popover with no title
     $(".delete-comment").tooltip();
     $(".delete-response").tooltip();
 

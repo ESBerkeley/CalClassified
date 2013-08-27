@@ -73,7 +73,8 @@
                        </button>
                    </div>
                    <a id="what-happens" href="#" onclick="return false" data-toggle="popover" title=""
-                             data-content="Claim the item and send a message to the seller to work out the details."
+                             data-content="Send a message to the seller to show your intent to buy the item.<br><br>
+                             The seller will confirm your purchase and then the item will no longer be listed."
                              data-placement="bottom" data-trigger="hover">
                        What's going to happen?
                    </a>
@@ -82,6 +83,13 @@
            {% endif %}
 
            {% if post.owner == request.user and not post.pending_flag and not post.sold %}
+               {% if offers %}
+               <div class="blue-wrap">
+                   <div class="main-btn-wrapper">
+                       <a href="{% url account_selling %}" class="btn btn-primary btn-block">View Offers</a>
+                   </div>
+               </div>
+               {% endif %}
                <div class="basic-wrap">
                    <div class="main-btn-wrapper">
                        <a href="{% url edit_item post.id %}" class="btn btn-block">
