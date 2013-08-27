@@ -91,6 +91,7 @@ urlpatterns = patterns('',
     #AJAX
     url(r'^ajax_confirm_purchase/$','ccapp.views.ajax_confirm_purchase'),
     url(r'^ajax_decline_purchase/$','ccapp.views.ajax_decline_purchase'),
+    url(r'^ajax_undo_decline_purchase/$','ccapp.views.ajax_undo_decline_purchase'),
     url(r'^ajax_contact_seller/$','ccapp.views.ajax_contact_seller'),
     url(r'^ajax_delete_thread/$','ccapp.views.ajax_delete_thread'),
     url(r'^ajax_delete_post/$','ccapp.views.ajax_delete_post'),

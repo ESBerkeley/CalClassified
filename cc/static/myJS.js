@@ -136,7 +136,7 @@ function get_friend_notifications(){
               }
 
               else if(obj[k].fields.type == 3){
-                x += "<li><a href=\"/accounts/profile/selling/\"><strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title + "</a></li>";
+                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\"><strong>" + obj[k].extras.second_username + "</strong> has purchased your item: " + obj[k].extras.title + "</a></li>";
               }
 
               else if(obj[k].fields.type == 4){
@@ -159,8 +159,8 @@ function get_friend_notifications(){
                 x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has confirmed your purchase of <strong>" + obj[k].extras.title + "</strong>.</a></li>";
               }
 
-              else if(obj[k].fields.type == 9){   //seller "bob" has declined your purchase
-                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.username + "</strong> has declined your purchase of <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+              else if(obj[k].fields.type == 9){   //buyer "bob" has declined to purchase item
+                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Buyer <strong>" + obj[k].extras.username + "</strong> is no longer purchasing <strong>" + obj[k].extras.title + "</strong>.</a></li>";
               }
            } 
 

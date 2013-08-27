@@ -3,7 +3,7 @@
 {% block subj %}Declined Purchase: {{ post.title }}{% endblock %}
 {% block content %}
   <p>Hi {{ recipient }},</p>
-  <p>{{ sender }} has declined your purchase of the item "{{ post.title }}"! </p>
+  <p>{{ sender }} is no longer purchasing the item "{{ post.title }}". </p>
   <p>Message:</p>
   <blockquote>
   {{ message }}

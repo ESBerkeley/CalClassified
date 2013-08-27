@@ -362,14 +362,14 @@ def confirm_purchase_hndlr(sender, **kwargs):
     return
 
 def decline_purchase_hndlr(sender, **kwargs):
-    ''''notify the buyer that the seller has declined his purchase request'''
+    ''''notify the seller that the buyer has declined his purchase request'''
     if sender == ItemForSale:
         item = kwargs['instance']
         seller = item.owner.get_profile()
         buyer = kwargs['buyer'].get_profile()
         message = kwargs['message']
-        new_note = Notification(post_from=item, going_to=buyer, type=9)
-        new_note.second_party = seller
+        new_note = Notification(post_from=item, going_to=seller, type=9)
+        new_note.second_party = buyer
         thread = Thread.objects.get(owner=buyer.user, post_id=item.id, other_person=seller.user)
         new_note.thread_id = thread.id
         new_note.save()
@@ -385,7 +385,7 @@ def decline_purchase_hndlr(sender, **kwargs):
                 context={
                     'message':message.body,
                     'post':item.id,
-                    'sender':seller.user.get_full_name(),
+                    'sender':buyer.user.get_full_name(),
                     'recipient':buyer_full_name,
                     'thread':thread.id
                     },
