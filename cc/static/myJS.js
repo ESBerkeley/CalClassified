@@ -410,6 +410,7 @@ var order = 'dateNew';
 var isFilterFriends = false;
 
 function runloadBox(isRemoveHtml) {
+  alert('asdf')
   isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
     page = 0;
@@ -475,6 +476,18 @@ function runloadBox(isRemoveHtml) {
     url = url+"&fbf=1";
   }
   
+  //Calvin's random unimportant sidebar crap
+  var filters = "";          
+  if(query) {
+    filters = "<li>" + "Search: " + query + "</li>";
+  }
+  if(minPrice || maxPrice) {
+    filters = filters + "<li>" + "Price: $" + minPrice + " to $" + maxPrice + "<li>";
+  }
+  if((typeof filters === 'undefined') || (filters === "")) {
+    filters = "<li> None </li>";
+  }
+  
   $containerHtml = $(savedHtml);        //Sets new HTML to any saved HTML
   if(isBoxActive && getIsLoaded()) {
     $container.append($containerHtml).masonry('appended', $containerHtml);
@@ -511,18 +524,6 @@ function runloadBox(isRemoveHtml) {
           $containerHtml = $(containerHtml);
           $container.append($containerHtml).masonry('appended', $containerHtml);
           $container.masonry();
-          
-          //Calvin's random unimportant sidebar crap
-          var filters = "";          
-          if(query) {
-            filters = "<li>" + "Search: " + query + "</li>";
-          }
-          if(minPrice || maxPrice) {
-            filters = filters + "<li>" + "Price: $" + minPrice + " to $" + maxPrice + "<li>";
-          }
-          if((typeof filters === 'undefined') || (filters === "")) {
-            filters = "<li> None </li>";
-          }
         }
         $("#pac-ajax").hide();
         setNewState();
@@ -532,8 +533,8 @@ function runloadBox(isRemoveHtml) {
   setIsLoaded(true);
   localStorage["isBoxActive"] = JSON.stringify(false);
   $container.masonry({
-  transitionDuration: '0.6s'
-  })
+    transitionDuration: '0.6s'
+  });
 }
 
 function getScroll() {
