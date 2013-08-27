@@ -171,6 +171,12 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
             thumb_url = im.url
             urls.append(thumb_url)
         return urls
+    
+    def get_seller_name(self):
+        return self.owner.get_full_name()
+    
+    def get_seller_first_name(self):
+        return self.owner.first_name
 
     def is_category_image(self):
         try:

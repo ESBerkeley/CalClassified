@@ -893,7 +893,7 @@ def ajax_box(request):
     #        fatty_cheese_wheel.append(x.object)
     
 
-    data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','pending_flag','friend','friendname','get_thumbnail_url','score'))
+    data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','pending_flag','friend','friendname','get_thumbnail_url', 'get_seller_first_name', 'score'))
     return HttpResponse(data,'application/javascript')
 
 def foreveralone(found_entries, fbf, fatty_cheese_wheel):

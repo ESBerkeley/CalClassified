@@ -215,6 +215,37 @@ function date_change(oldDate) {     //returns a date with year-month-day format 
   return newDate
 }
 
+function smartDate(time){
+	var date = moment(time);
+	var now = moment();
+	
+	var mins = now.diff(date, "minutes");
+	if(mins <= 1)
+		return "1 minute ago";
+	if(mins < 60)
+		return mins + " minutes ago";
+	var hours = now.diff(date, "hours");
+	if(hours == 1)
+		return "1 hour ago";
+	if(hours < 24)
+		return hours + " hours ago";
+	var days = now.diff(date, "days");
+	if(days == 1)
+		return "1 day ago";
+	if(days < 7)
+		return days + " days ago";
+	var weeks = now.diff(date, "weeks");
+	if(weeks == 1)
+		return "1 week ago";
+	if(days < 28)
+		return weeks + " weeks ago";
+	var months = now.diff(date, "months");
+	if(months == 1)
+		return "1 month ago";
+	else
+		return months + " months ago";
+}
+
 function notification_table() {
   var xhr;
   if(window.XMLHttpRequest){ xhr = new XMLHttpRequest();}
@@ -465,11 +496,14 @@ function runloadBox(isRemoveHtml) {
         }
         if(data.length !== 0) {
           containerHtml = "";
+          console.log(data[0])
           for(i = 0; i < data.length; i++) {
             var thumbnailUrl = data[i].extras.get_thumbnail_url;
-			var price = "$"+data[i].fields.price;
-			var title = data[i].fields.title;
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted 29 days ago by Eva-Antoinette</div></span> <div class='box-right'><img class='box-profile' src='"+profileLink+"'></div> </div> </div></a>"
+            var price = "$"+data[i].fields.price;
+            var title = data[i].fields.title;
+            var date = smartDate(data[i].fields.time_created);
+            var username = data[i].extras.get_seller_first_name;
+            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profileLink+"'></div> </div> </div></a>"
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);
@@ -496,7 +530,7 @@ function runloadBox(isRemoveHtml) {
   setIsLoaded(true);
   localStorage["isBoxActive"] = JSON.stringify(false);
   $container.masonry({
-	transitionDuration: '0.6s'
+  transitionDuration: '0.6s'
   })
 }
 
