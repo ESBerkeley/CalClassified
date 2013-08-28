@@ -509,7 +509,6 @@ function runloadBox(isRemoveHtml) {
         if(data.length !== 0) {
           containerHtml = "";
           for(i = 0; i < data.length; i++) {
-            if(!data[i].fields.sold_date) {
               var thumbnailUrl = data[i].extras.get_thumbnail_url;
               var price = "$"+data[i].fields.price;
               var title = data[i].fields.title;
@@ -517,7 +516,6 @@ function runloadBox(isRemoveHtml) {
               var username = data[i].extras.get_seller_first_name;
               var profilePictureUrl = data[i].extras.get_seller_profile_picture;
               containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profilePictureUrl+"'></div> </div> </div></a>";
-            }
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);
