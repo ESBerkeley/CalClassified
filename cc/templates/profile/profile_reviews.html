@@ -19,10 +19,17 @@
     <h4>Write Reviews</h4>
     {% if not_reviewed_items %}
         <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Seller</th>
+                </tr>
+            </thead>
             <tbody>
             {% for item in not_reviewed_items %}
                 <tr>
                   <td><a href="{% url review_item item.id %}">{{ item.title }}</a></td>
+                  <td><a href="{% url user item.owner.id %}">{{ item.owner.get_full_name }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -46,7 +53,7 @@
                     <tr>
                         <td><a href="{% url user_reviews review.seller.id %}#review-{{ review.id }}">{{ review.item.title }}</a></td>
                         <!-- hyper link to #review-{id number} on reviews page -->
-                        <td>{{ review.seller.get_full_name }}</td>
+                        <td><a href="{% url user review.seller.id %}">{{ review.seller.get_full_name }}</a></td>
                         <td><div class="score" data-score="{{ review.score }}"></div></td>
                         <td><a href="{% url review_item review.item.id %}">edit</a></td>
                     </tr>
