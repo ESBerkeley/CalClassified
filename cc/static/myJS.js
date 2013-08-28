@@ -369,7 +369,7 @@ $(window).on('beforeunload', function(){
  * 3. Query and price filter icon stuff.
  * 4. Set URLS. A categoryObject is created, which is the list of booleans the backend wants to get.
  * 5. Setting up the box: Check if active and if a session is stored. If so, populate the the box using HTML in storage and scroll to the proper position.
- * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. Fill in some filter text. !!! Load the current variables into storage.
+ * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Check if a post is being "sold" using the "sold date"(unsure if best implementation)?? Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. Fill in some filter text. !!! Load the current variables into storage.
  * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true. We also force isBoxActive false and the animation so the user can navigate after a session load normally.
  * 
  * Functions that are running alongside:
@@ -475,6 +475,18 @@ function runloadBox(isRemoveHtml) {
     url = url+"&fbf=1";
   }
   
+  //Calvin's random unimportant sidebar crap
+  var filters = "";          
+  if(query) {
+    filters = "<li>" + "Search: " + query + "</li>";
+  }
+  if(minPrice || maxPrice) {
+    filters = filters + "<li>" + "Price: $" + minPrice + " to $" + maxPrice + "<li>";
+  }
+  if((typeof filters === 'undefined') || (filters === "")) {
+    filters = "<li> None </li>";
+  }
+  
   $containerHtml = $(savedHtml);        //Sets new HTML to any saved HTML
   if(isBoxActive && getIsLoaded()) {
     $container.append($containerHtml).masonry('appended', $containerHtml);
@@ -496,32 +508,19 @@ function runloadBox(isRemoveHtml) {
         }
         if(data.length !== 0) {
           containerHtml = "";
-          console.log(data[0])
           for(i = 0; i < data.length; i++) {
-            var thumbnailUrl = data[i].extras.get_thumbnail_url;
-            var price = "$"+data[i].fields.price;
-            var title = data[i].fields.title;
-            var date = smartDate(data[i].fields.time_created);
-            var username = data[i].extras.get_seller_first_name;
-            var profilePicture = data[i].extras.get_seller_profile_picture;
-            containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profilePicture+"'></div> </div> </div></a>"
+              var thumbnailUrl = data[i].extras.get_thumbnail_url;
+              var price = "$"+data[i].fields.price;
+              var title = data[i].fields.title;
+              var date = smartDate(data[i].fields.time_created);
+              var username = data[i].extras.get_seller_first_name;
+              var profilePictureUrl = data[i].extras.get_seller_profile_picture;
+              containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profilePictureUrl+"'></div> </div> </div></a>";
           }
           savedHtml += containerHtml;
           $containerHtml = $(containerHtml);
           $container.append($containerHtml).masonry('appended', $containerHtml);
           $container.masonry();
-          
-          //Calvin's random unimportant sidebar crap
-          var filters = "";          
-          if(query) {
-            filters = "<li>" + "Search: " + query + "</li>";
-          }
-          if(minPrice || maxPrice) {
-            filters = filters + "<li>" + "Price: $" + minPrice + " to $" + maxPrice + "<li>";
-          }
-          if((typeof filters === 'undefined') || (filters === "")) {
-            filters = "<li> None </li>";
-          }
         }
         $("#pac-ajax").hide();
         setNewState();
@@ -531,8 +530,8 @@ function runloadBox(isRemoveHtml) {
   setIsLoaded(true);
   localStorage["isBoxActive"] = JSON.stringify(false);
   $container.masonry({
-  transitionDuration: '0.6s'
-  })
+    transitionDuration: '0.6s'
+  });
 }
 
 function getScroll() {

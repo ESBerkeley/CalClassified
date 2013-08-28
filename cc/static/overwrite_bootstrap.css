@@ -358,6 +358,10 @@ img.medium {
 /*   border-style:dotted; */
 }
 
+.box-item:hover {
+  box-shadow:1px 2px 8px #BBBBBB;
+}
+
 .box-image {
   max-width:260px;
   height:195px;
