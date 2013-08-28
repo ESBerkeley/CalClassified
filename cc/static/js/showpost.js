@@ -150,7 +150,7 @@ $(document).ready( function() {
 
       $("#flag-post").click(function(){
         if (confirm("Are you sure you want to flag this post?")) {
-            window.location.href="/flag/{{ post.pk }}"
+            window.location.href="/flag/"+post_pk;
         }
       });
 
