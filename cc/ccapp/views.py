@@ -429,7 +429,7 @@ def showpost(request, pid, super_cat):
             if threads.exists():
                 ecks['thread'] = threads[0]
         elif post.owner == request.user:
-            threads = Thread.objects.filter(owner=request.user, post_id=post.id)
+            threads = Thread.objects.filter(owner=request.user, post_id=post.id, declined=False)
             if threads.exists():
                 ecks['offers'] = True
         ecks['this_is_a_post'] = True
@@ -1240,7 +1240,7 @@ def profile_buying(request):
 
     my_threads = Thread.objects.filter(owner=user).filter(post_id__in=pending_buying_ids).order_by('is_read','-newest_message_time','-timestamp')
 
-    completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
+    completed_threads = Thread.objects.filter(owner=user, post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
 
 
     pending_threads = Thread.objects.filter(owner=user, declined=False)
