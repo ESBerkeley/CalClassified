@@ -26,9 +26,9 @@ consult a specific backend's documentation for details.
 from django.conf.urls.defaults import *
 
 from django.contrib.auth import views as auth_views
-from django_facebook import registration_views
-from django_facebook.utils import replication_safe
-from django_facebook import views as facebook
+from cc.django_facebook import registration_views
+from cc.django_facebook.utils import replication_safe
+from cc.django_facebook import views as facebook
 
 urlpatterns = patterns('',
                        url(r'^login/$',

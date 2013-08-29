@@ -1,5 +1,7 @@
 from django.conf import settings
+import logging
 
+logger = logging.getLogger(__name__)
 
 # these 3 should be provided by your app
 FACEBOOK_APP_ID = getattr(settings, 'FACEBOOK_APP_ID', None)
@@ -10,6 +12,10 @@ FACEBOOK_DEFAULT_SCOPE = getattr(settings, 'FACEBOOK_DEFAULT_SCOPE', [
 # Absolute canvas page url as per facebook standard
 FACEBOOK_CANVAS_PAGE = getattr(settings, 'FACEBOOK_CANVAS_PAGE',
                                'http://apps.facebook.com/buynearme/')
+
+# Disable this setting if you don't want to store a local image
+FACEBOOK_STORE_LOCAL_IMAGE = getattr(
+    settings, 'FACEBOOK_STORE_LOCAL_IMAGE', True)
 
 # These you don't need to change
 FACEBOOK_HIDE_CONNECT_TEST = getattr(settings,
@@ -45,19 +51,58 @@ for setting_name in required_settings:
 
 # Allow custom registration template
 FACEBOOK_REGISTRATION_TEMPLATE = getattr(settings,
-    'FACEBOOK_REGISTRATION_TEMPLATE', 'registration/registration_form.html')
+                                         'FACEBOOK_REGISTRATION_TEMPLATE', ['django_facebook/registration.html', 'registration/registration_form.html'])
+
+# Allow custom signup form
+FACEBOOK_REGISTRATION_FORM = getattr(settings,
+                                     'FACEBOOK_REGISTRATION_FORM', None)
+
+default_registration_backend = 'django_facebook.registration_backends.FacebookRegistrationBackend'
+FACEBOOK_REGISTRATION_BACKEND = getattr(
+    settings, 'FACEBOOK_REGISTRATION_BACKEND', default_registration_backend)
+
+# Fall back redirect location when no other location was found
+FACEBOOK_LOGIN_DEFAULT_REDIRECT = getattr(
+    settings, 'FACEBOOK_LOGIN_DEFAULT_REDIRECT', '/')
 
 # Force profile update every login
 FACEBOOK_FORCE_PROFILE_UPDATE_ON_LOGIN = getattr(
     settings, 'FACEBOOK_FORCE_PROFILE_UPDATE_ON_LOGIN', False)
 
-# Allow custom signup form
-FACEBOOK_REGISTRATION_FORM = getattr(settings,
-    'FACEBOOK_REGISTRATION_FORM', None)
 
+# Retry an open graph share 6 times (once every 15 minutes)
+FACEBOOK_OG_SHARE_RETRIES = getattr(settings, 'FACEBOOK_OG_SHARE_RETRIES', 6)
+# Retry a failed open graph share (when we have an updated token) for this
+# number of days
+FACEBOOK_OG_SHARE_RETRY_DAYS = getattr(
+    settings, 'FACEBOOK_OG_SHARE_RETRY_DAYS', 7)
+FACEBOOK_OG_SHARE_DB_TABLE = getattr(
+    settings, 'FACEBOOK_OG_SHARE_DB_TABLE', None)
 
 default_registration_backend = 'django_facebook.registration_backends.FacebookRegistrationBackend'
 FACEBOOK_REGISTRATION_BACKEND = getattr(settings, 'FACEBOOK_REGISTRATION_BACKEND', default_registration_backend)
 
-#Fall back redirect location when no other location was found
-FACEBOOK_LOGIN_DEFAULT_REDIRECT = getattr(settings, 'FACEBOOK_LOGIN_DEFAULT_REDIRECT', '/') 
+# Force profile update every login
+FACEBOOK_FORCE_PROFILE_UPDATE_ON_LOGIN = getattr(
+    settings, 'FACEBOOK_FORCE_PROFILE_UPDATE_ON_LOGIN', False)
+
+# Profile image location
+FACEBOOK_PROFILE_IMAGE_PATH = getattr(
+    settings, 'FACEBOOK_PROFILE_IMAGE_PATH', None)
+
+# Ability to easily overwrite classes used for certain tasks
+FACEBOOK_CLASS_MAPPING = getattr(
+    settings, 'FACEBOOK_CLASS_MAPPING', None)
+
+
+# check for required settings
+required_settings = ['FACEBOOK_APP_ID', 'FACEBOOK_APP_SECRET']
+locals_dict = locals()
+for setting_name in required_settings:
+    setting_available = locals_dict.get(setting_name) is not None
+    assert setting_available, 'Please provide setting %s' % setting_name
+
+# Make sure the settings make sense
+if (FACEBOOK_STORE_LIKES or FACEBOOK_STORE_FRIENDS) and not FACEBOOK_CELERY_STORE:
+    logger.warn(
+        'storing Facebook likes or friends while not using Celery really slows down Facebook authentication. Either disable FACEBOOK_STORE_FRIENDS or enable FACEBOOK_CELERY_STORE')

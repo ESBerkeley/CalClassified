@@ -49,9 +49,10 @@ class OpenFacebookException(Exception):
 class ParameterException(OpenFacebookException):
 
     '''
-    100-200
+    100-189
+    190 and up are oauth errors
     '''
-    codes = (100, 199)
+    codes = (100, 189)
 
 
 class UnknownException(OpenFacebookException):
@@ -84,6 +85,14 @@ class FeedActionLimit(UserPermissionException):
     When you posted too many times from one user acount
     '''
     codes = 341
+
+
+class OpenGraphException(OpenFacebookException):
+    '''
+    Raised when we get error 3502, representing a problem with facebook
+    open graph data on the page
+    '''
+    codes = 3502
 
 
 class DuplicateStatusMessage(OpenFacebookException):

@@ -1,6 +1,8 @@
 from celery import task
 from django.db import IntegrityError
 import logging
+from django_facebook.utils import get_class_for
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,14 +20,19 @@ def store_likes(user, likes):
 
     :param user: The user for which we are storing
     :type user: User object
-    
+
     :param friends: List of your likes
     :type friends: list
     '''
-    from django_facebook.api import FacebookUserConverter
+    converter_class = get_class_for('user_conversion')
     logger.info('celery is storing %s likes' % len(likes))
-    FacebookUserConverter._store_likes(user, likes)
+    converter_class._store_likes(user, likes)
     return likes
+
+
+@task.task(ignore_result=True)
+def remove_share(share):
+    share._remove()
 
 
 @task.task(ignore_result=True)
@@ -33,13 +40,13 @@ def get_and_store_likes(user, facebook):
     '''
     Since facebook is quite slow this version also runs the get
     on the background
-    
+
     Inserting again will not cause any errors, so this is safe
     for multiple executions
 
     :param user: The user for which we are storing
     :type user: User object
-    
+
     :param facebook: The graph connection to facebook
     :type facebook: FacebookUserConverter object
     '''
@@ -104,9 +111,9 @@ def store_friends(user, friends):
     :param friends: List of your friends
     :type friends: list
     '''
-    from django_facebook.api import FacebookUserConverter
+    converter_class = get_class_for('user_conversion')
     logger.info('celery is storing %s friends' % len(friends))
-    FacebookUserConverter._store_friends(user, friends)
+    converter_class._store_friends(user, friends)
     return friends
 
 
@@ -115,13 +122,13 @@ def get_and_store_friends(user, facebook):
     '''
     Since facebook is quite slow this version also runs the get
     on the background
-    
+
     Inserting again will not cause any errors, so this is safe
     for multiple executions
 
     :param user: The user for which we are storing
     :type user: User object
-    
+
     :param facebook: The graph connection to facebook
     :type facebook: FacebookUserConverter object
     '''
@@ -131,7 +138,8 @@ def get_and_store_friends(user, facebook):
         logger.info('celery is storing %s friends', len(stored_friends))
         return stored_friends
     except IntegrityError, e:
-        logger.warn('get_and_store_friends failed for %s with error %s', user.id, e)
+        logger.warn(
+            'get_and_store_friends failed for %s with error %s', user.id, e)
 
 
 @task.task()

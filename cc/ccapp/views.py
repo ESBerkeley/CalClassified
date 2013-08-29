@@ -151,7 +151,7 @@ def confirmviewIFS(request,pid,secret):
     confirmview(request,pid,secret,ItemForSale)"""
 
 @logit
-@facebook_required(scope='publish_actions')
+@facebook_required_lazy(scope='publish_actions')
 def sell_item(request, super_cat_form, super_cat_model,**kwargs):
     if request.user.is_authenticated():
         
@@ -185,6 +185,9 @@ def sell_item(request, super_cat_form, super_cat_model,**kwargs):
         #    circle = circles[0]
         #    ecks['specificCircleName']=circle.name
         #    form = ItemForSaleForm(initial={'circles':circles},instance=model)
+
+        graph = require_persistent_graph(request)
+
         ecks['form'] = form
         if user_profile.facebook_id:
             ecks['is_facebook'] = True

@@ -27,7 +27,7 @@ class Post(models.Model):
     owner = models.ForeignKey(User, null=True, default=None)
     approved = models.BooleanField(default=True)
     owner_facebook_id = models.BigIntegerField(blank=True, null=True)
-    expire_date = models.DateTimeField(default=datetime.now()+timedelta(days=60))
+    expire_date = models.DateTimeField(default=datetime.now()+timedelta(days=30))
 
     class Meta:  #abstract base class. no actual db table
         abstract = True

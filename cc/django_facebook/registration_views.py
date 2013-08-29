@@ -11,6 +11,8 @@ from templated_email import send_templated_mail
 
 import random
 
+from django_facebook.connect import CONNECT_ACTIONS
+
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 
