@@ -194,7 +194,7 @@ def sell_item(request, super_cat_form, super_cat_model,**kwargs):
         ecks.update(csrf(request))
         return render_to_response('sell_item.html',ecks,context_instance=RequestContext(request))
 
-@login_required
+
 def sell_item_POST(request):
     if request.user.is_authenticated():
         user = request.user
@@ -267,6 +267,11 @@ def sell_item_POST(request):
 
             else:
                 return render_to_response('sell_item.html',{'form':form},context_instance=RequestContext(request))
+        else:
+            form = ItemForSaleForm()
+            return render_to_response('sell_item.html',{'form':form},context_instance=RequestContext(request))
+    else:
+        redirect("/accounts/login/")
 
 
 @login_required
