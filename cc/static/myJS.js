@@ -369,7 +369,7 @@ $(window).on('beforeunload', function(){
  * 3. Query and price filter icon stuff.
  * 4. Set URLS. A categoryObject is created, which is the list of booleans the backend wants to get.
  * 5. Setting up the box: Check if active and if a session is stored. If so, populate the the box using HTML in storage and scroll to the proper position.
- * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Check if a post is being "sold" using the "sold date"(unsure if best implementation)?? Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. Fill in some filter text. !!! Load the current variables into storage.
+ * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Check length of data, display text if data is empty. Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. !!! Load the current variables into storage.
  * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true. We also force isBoxActive false and the animation so the user can navigate after a session load normally.
  * 
  * Functions that are running alongside:
@@ -507,6 +507,7 @@ function runloadBox(isRemoveHtml) {
           $(window).scrollTop(0)
         }
         if(data.length !== 0) {
+          $('#box').html("");   //clear out any "no items" text
           containerHtml = "";
           for(i = 0; i < data.length; i++) {
               var thumbnailUrl = data[i].extras.get_thumbnail_url;
@@ -521,6 +522,8 @@ function runloadBox(isRemoveHtml) {
           $containerHtml = $(containerHtml);
           $container.append($containerHtml).masonry('appended', $containerHtml);
           $container.masonry();
+        } else {
+          $('#box').html("<h2>Sorry, there were no items that matched your search.</h2>");
         }
         $("#pac-ajax").hide();
         setNewState();
