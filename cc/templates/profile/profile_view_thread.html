@@ -65,6 +65,9 @@
     <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
   {% endif %}
   <br><br>
+  {% if not is_owner and post.pending_flag and post.pending_buyer == request.user %}
+    <a href="{% url review_item post.id %}">Have you already received the item? Click here to review it!</a>
+  {% endif %}
 
   {% include "profile/view_thread/modals.html" %}
 
