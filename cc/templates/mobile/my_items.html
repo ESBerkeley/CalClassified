@@ -6,17 +6,42 @@
     <div>
         <center><h2 id="colored-page-header">What I'm Selling</h2></center>
         
-        {% if not my_threads and not ifs_waiting_list %}
+        {% if not my_threads and not ifs_waiting_list and not pending_threads %}
             <center>
             <p>
             You aren't selling anything :(
             </p>
             </center>
         {% endif %}
-        
-        {% if my_threads %}
+
+        {% if pending_threads %}
         <div id="browse-list-header">
             Being Purchased
+        </div>
+            <ul data-role="listview" id="browse-list">
+                {% for thread in pending_threads %}
+
+                <li class="browse-item">
+                <a href="{{ thread.get_mobile_url }}" rel="external">
+                    <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;"/>
+                    <h3>
+                        {{ thread.post_title }}
+                        {% if not thread.is_read %}
+                        (Unread)
+                        {% endif %}
+                    </h3>
+                    <p>With: <b>{{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</b></p>
+                </a>
+                </li>
+
+                {% endfor %}
+            </ul>
+            <br>
+        {% endif %}
+
+        {% if my_threads %}
+        <div id="browse-list-header">
+            Confirmed Purchases
         </div>
             <ul data-role="listview" id="browse-list">
                 {% for thread in my_threads %}

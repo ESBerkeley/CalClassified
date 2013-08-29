@@ -34,7 +34,7 @@ label.error {
   {% if message %}
   <p style="color:red">{{ message }}</p>
   {% endif %}
-  <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
+  <form action="{% url registration_register %}"  method="post" class="form-horizontal" id="registerForm">{% csrf_token %}
   <div id="fields form">
     {% for field in form %}
       <div class="control-group">
@@ -65,7 +65,7 @@ label.error {
 
 
 $(document).ready(function(){
-    $("#sellForm").validate({
+    $("#registerForm").validate({
       rules: {
         email: {
           required: true,

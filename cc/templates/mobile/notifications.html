@@ -26,6 +26,10 @@
         <a href="/view_messages/{{ note.thread_id }}/" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has sent you a message about "{{ note.post_from.title }}"</p></a>
     {% elif note.type == 7 %} <!-- notify the buyer that the seller has sent him a message -->
         <a href="/view_messages/{{ note.thread_id }}/" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has sent you a message about "{{ note.post_from.title }}"</p></a>
+    {% elif note.type == 8 %} <!-- notify the buyer that the seller has confirmed his purchase -->
+        <a href="/view_messages/{{ note.thread_id }}/" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has confirmed your purchase of "{{ note.post_from.title }}"</p></a>
+    {% elif note.type == 9 %} <!-- notify the seller that his purchase has been declined -->
+        <a href="/view_messages/{{ note.thread_id }}/" rel="external"><p style="white-space:normal"><b>{{ note.second_party.user.get_full_name }}</b> has declined the purchase of "{{ note.post_from.title }}"</p></a>
     {% endif %}
     </li>
 {% endfor %}

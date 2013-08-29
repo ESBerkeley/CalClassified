@@ -170,6 +170,64 @@ $("#modal-send").click(function(){
 
 })
 
+$("#confirm-modal-send").click(function(){
+
+    if ($("#confirm-message-text").val() == "") {
+        $("#confirm-no-modal-msg").show();
+        return;
+    }
+
+    $('#confirm-modal-send').button('disable');
+
+    $.mobile.loading( 'show', {
+        text: 'Sending Message...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+    });
+
+    data = {}
+    data['recipient_pk'] = recipient_pk
+    data['post_pk'] = post_pk
+    data['message'] = $("#confirm-message-text").val();
+    data['csrfmiddlewaretoken'] = csrfmiddlewaretoken;
+
+    $.ajax({
+        type: "POST",
+        url: "/ajax/confirm_purchase/",
+        data: data,
+
+        error: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+            alert("Oops! Something went wrong. Please contact support.")
+
+        },
+        success: function(){
+            $.mobile.loading( 'hide', {
+                text: 'foo',
+                //textVisible: true,
+                theme: 'a',
+                html: ""
+            });
+            if (view_thread == false){
+                alert("Message Sent!");
+            }
+            //refreshPage();
+            location.reload(true);
+        }
+
+    })
+
+    return false;
+
+})
+
+
 function refreshPage() {
     $.mobile.changePage(
         window.location.href,

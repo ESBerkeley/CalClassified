@@ -146,7 +146,15 @@
                 This item is being purchased and is no longer listed.
               {% endif %}
           {% elif item.owner != request.user %}
-                <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Buy Now</a> 
+                {% if thread %}
+                    <a href="{{ thread.get_mobile_url }}" data-role="button" rel="external">View Messages</a>
+                {% else %}
+                <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Buy Now</a>
+                {% endif %}
+          {% else %} <!-- is item owner -->
+              {% if offers %}
+                <a href="{% url my_items %}" data-role="button" rel="external">View Offers</a>
+              {% endif %}
           {% endif %}
           <button id="item-flag-btn" data-icon="alert">Flag as inappropriate</button>
           
@@ -235,8 +243,6 @@
         <textarea id="message-text" placeholder="Can you meet at Dwinelle this Friday at 12pm? Thanks!"></textarea>
         
         <p id="no-modal-msg" style="color:red; display: none;">Please enter a message</p>
-        
-        <p><b>Note:</b> Once you buy the product, this item will no longer be listed. So please buy accordingly!</p>      
     
     <fieldset class="ui-grid-a">
         <div class="ui-block-a"><a href="{{ item.get_absolute_url }}" data-rel="back" data-role="button" data-theme="c">Cancel</a></div>

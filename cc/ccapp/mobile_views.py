@@ -236,7 +236,7 @@ def my_items(request):
     data = {}
     user = request.user
 
-    selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = False).filter(deleted=False)]
+    selling_ids = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold=False).filter(deleted=False)]
 
     #sold_ids    = [x.id for x in ItemForSale.objects.filter(owner=request.user).filter(sold = True).filter(deleted=False)] #unused?? -seung
 
@@ -245,8 +245,17 @@ def my_items(request):
 
     unsold_ids = [x.id for x in ifs_waiting_list]
 
-    my_threads = Thread.objects.filter(owner=user,post_id__in=selling_ids).exclude(post_id__in=unsold_ids).order_by('is_read','-newest_message_time')  
-    
+    pending_threads_ids = []
+    for item in ifs_waiting_list:
+        pending_threads = Thread.objects.filter(owner=user, item=item, declined=False)
+        for thread in pending_threads:
+            if thread.item and thread.item.owner == user:
+                pending_threads_ids.append(thread.id)
+    pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
+
+    my_threads = Thread.objects.filter(owner=user,post_id__in=selling_ids).exclude(
+        post_id__in=unsold_ids).order_by('is_read','-newest_message_time')
+
     for thread in my_threads:
         try:
             ifs = ItemForSale.objects.get(id=thread.post_id)
@@ -258,6 +267,7 @@ def my_items(request):
     data['my_threads'] = my_threads                #pending (need to exclude unsold threads)
     data['ifs_waiting_list'] = ifs_waiting_list    #unsold
     data['ifs_sold'] = ifs_sold                    #sold
+    data['pending_threads'] = pending_threads      #unconfirmed
     
     user_profile = user.get_profile()
     user_profile.notifications = 0
@@ -279,6 +289,13 @@ def buying(request):
 
     completed_threads = Thread.objects.filter(owner=user).filter(post_id__in=completed_ids).order_by('is_read','-newest_message_time','-timestamp')
 
+    pending_threads = Thread.objects.filter(owner=user, declined=False)
+    pending_threads_ids = []
+    for thread in pending_threads:
+        if thread.item and thread.item.pending_flag == False and thread.item.owner != user:
+            pending_threads_ids.append(thread.id)
+    pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
+
     for thread in my_threads:
         try:
             ifs = ItemForSale.objects.get(id=thread.post_id)
@@ -296,6 +313,7 @@ def buying(request):
 
     data['my_threads'] = my_threads
     data['completed_threads'] = completed_threads
+    data['pending_threads'] = pending_threads
     
     user_profile = user.get_profile()
     user_profile.notifications = 0
@@ -325,6 +343,14 @@ def view_item(request,pid):
             thread = Thread.objects.filter(owner=item.owner, post_id=item.id)
             if thread:
                 data['thread'] = thread[0]
+        elif item.owner == request.user:
+            threads = Thread.objects.filter(owner=request.user, post_id=item.id, declined=False)
+            if threads.exists():
+                data['offers'] = True
+        elif item.owner != request.user and request.user.is_authenticated():
+            threads = Thread.objects.filter(owner=request.user, post_id=item.id)
+            if threads.exists():
+                data['thread'] = threads[0]
                 
         relevant_comments = Comment.objects.filter(item = item).order_by('time_created')
         data['comments'] = relevant_comments
@@ -383,6 +409,12 @@ def flag_item(request,pid):
 def ajax_message_send(request):
     if request.is_ajax() and request.user.is_authenticated() and request.method=="POST" and "message" in request.POST:
         send_bnm_message(request) # in utils.py
+
+        return HttpResponse()
+
+def ajax_confirm_purchase(request):
+    if request.is_ajax() and request.user.is_authenticated() and request.method=="POST" and "message" in request.POST:
+        change_purchase(request, True) # in utils.py
 
         return HttpResponse()
 

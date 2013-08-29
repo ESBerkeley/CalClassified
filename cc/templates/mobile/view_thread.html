@@ -7,10 +7,26 @@
     <h3 class="source-font" style="text-align: center; margin-bottom: 0;">
         <a href="{{ item.get_absolute_url }}" rel="external">{{ thread.post_title }}</a></h3>
     <p style="text-align:center; margin-top:0;">with: {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</p>
+    <p style="text-align:center; margin-top:0;">
+    {% if thread.declined %}
+        This purchase has been declined by the buyer.
+    {% elif not item.pending_flag %}
+        This item is pending confirmation.
+    {% endif %}
+    </p>
 
-
-    
-    <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Reply</a>
+    {% if not item.pending_flag and not thread.declined and item.owner == request.user %}
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a">
+            <a href="#confirm-modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="c">Confirm Purchase</a>
+        </div>
+        <div class="ui-block-b">
+            <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Reply</a>
+        </div>
+    </fieldset>
+    {% else %}
+        <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Reply</a>
+    {% endif %}
 <br>
 <ul data-role="listview">
     {% for message in messages %}
@@ -28,7 +44,7 @@
 
     {% endfor %}
 </ul>
-{% if item.owner == request.user %}
+{% if item.owner == request.user and item.pending_flag %}
 <br>
 <fieldset class="ui-grid-a">
     <div class="ui-block-a"><a href="#sell-fail-modal" data-rel="dialog" data-role="button" data-theme="c">Sale Failed</a></div>
@@ -64,6 +80,31 @@
 
 
     
+</div><!-- /page modal -->
+
+<!-- confirm modal -->
+<div data-role="page" id="confirm-modal">
+
+    <div data-role="header">
+        <h1>Reply</h1>
+
+    </div><!-- /header -->
+
+    <div data-role="content" data-theme="d">
+        <p>Confirm purchase to remove the item from search results and show your commitment to this buyer.</p>
+        <textarea id="confirm-message-text" placeholder="Sure, I can meet you there at 12pm Friday!"></textarea>
+
+        <p id="confirm-no-modal-msg" style="color:red; display: none;">Please enter a message</p>
+
+
+
+    <fieldset class="ui-grid-a">
+        <div class="ui-block-a"><a data-rel="back" data-role="button" data-theme="c">Cancel</a></div>
+        <div class="ui-block-b"><button id="confirm-modal-send" data-theme="b">Send</button></div>
+    </fieldset>
+
+    </div><!-- /content -->
+
 </div><!-- /page modal -->
 
 <!-- sell-fail modal -->

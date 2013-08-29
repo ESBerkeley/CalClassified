@@ -3,13 +3,14 @@
 {% block subj %}{{ buyer }} Bought {{ post.title }}{% endblock %}
 {% block content %}
   <p>Hi {{ seller }},</p>
-  <p>{{ buyer }} has bought your item! </p>
+  <p>{{ buyer }} wants to buy your item! </p>
   <p>Here is the message:</p>
   <blockquote>
   {{ message }}
   </blockquote>
   <p>
-  <a href="http://buynear.me{{ thread.get_absolute_url }}">Message the buyer</a> to decide on a meeting location and complete the sale.
+  <a href="http://buynear.me{{ thread.get_absolute_url }}">Confirm his purchase</a> and message the buyer to decide on a
+    meeting location and complete the sale.
   <br>
   <a href="http://buynear.me{{ post.get_absolute_url }}">Click here</a> to view your item.
   </p>

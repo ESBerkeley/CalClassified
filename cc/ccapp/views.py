@@ -1195,15 +1195,16 @@ def profile_selling(request):
     bought_threads = Thread.objects.filter(id__in=bought_threads_ids).order_by('is_read','-newest_message_time')
 
     pending_threads_ids = []
-    for item in ifs_waiting_list:
+    for item in base_unsold_itemset:
         pending_threads = Thread.objects.filter(owner=user, item=item, declined=False)
         for thread in pending_threads:
             if thread.item and thread.item.owner == user:
                 pending_threads_ids.append(thread.id)
     pending_threads = Thread.objects.filter(id__in=pending_threads_ids).order_by('is_read','-newest_message_time')
 
+
     declined_threads_ids = []
-    for item in ifs_waiting_list:
+    for item in base_unsold_itemset:
         declined_threads = Thread.objects.filter(owner=user, item=item, declined=True)
         for thread in declined_threads:
             if thread.item and thread.item.owner == user:

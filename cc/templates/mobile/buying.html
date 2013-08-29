@@ -13,10 +13,34 @@
             </p>
             </center>
         {% endif %}
-        
+
+        {% if pending_threads %}
+        <div id="browse-list-header">
+            I'm Buying (Needs Seller Confirmation)
+        </div>
+            <ul data-role="listview" id="browse-list">
+                {% for thread in pending_threads %}
+
+                <li class="browse-item">
+                <a href="{{ thread.get_mobile_url }}" rel="external">
+                    <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;" />
+                    <h3>
+                        {{ thread.post_title }}
+                        {% if not thread.is_read %}
+                        (Unread)
+                        {% endif %}
+                    </h3>
+                    <p>With: <b>{{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</b></p>
+                </a>
+                </li>
+
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         {% if my_threads %}
         <div id="browse-list-header">
-            I'm Buying
+            I'm Buying (Confirmed Purchase)
         </div>
             <ul data-role="listview" id="browse-list">
                 {% for thread in my_threads %}
@@ -36,7 +60,31 @@
 
                 {% endfor %}
             </ul>
-        {% endif %}       
+        {% endif %}
+
+        {% if completed_threads %}
+        <div id="browse-list-header">
+            I've Bought
+        </div>
+            <ul data-role="listview" id="browse-list">
+                {% for thread in completed_threads %}
+
+                <li class="browse-item">
+                <a href="{{ thread.get_mobile_url }}" rel="external">
+                    <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;" />
+                    <h3>
+                        {{ thread.post_title }}
+                        {% if not thread.is_read %}
+                        (Unread)
+                        {% endif %}
+                    </h3>
+                    <p>With: <b>{{ thread.other_person.first_name }} {{ thread.other_person.last_name }}</b></p>
+                </a>
+                </li>
+
+                {% endfor %}
+            </ul>
+        {% endif %}
 
 
     </div>

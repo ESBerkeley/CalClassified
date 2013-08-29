@@ -34,6 +34,7 @@ urlpatterns = patterns('ccapp.mobile_views',
     #AJAX URLS
     url(r'^ajax/browse/$',"ajax_browse", name="ajax_browse"),
     url(r'^ajax/send_message/$',"ajax_message_send", name="ajax_message_send"),
+    url(r'^ajax/confirm_purchase/$',"ajax_confirm_purchase", name="ajax_confirm_purchase"),
     url(r'^ajax/send_comment/$', "ajax_send_comment"),
     url(r'^ajax/reply_comment/$', "ajax_reply_comment"),
     url(r'^ajax/delete_notifications/$', "ajax_delete_notifications"),
