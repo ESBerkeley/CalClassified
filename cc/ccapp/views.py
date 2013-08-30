@@ -845,8 +845,9 @@ def ajax_box(request):
             deleted=False,
             expire_date__gte=datetime.datetime.now()
         )
-    load_from = 50 * p
-    load_to = 50 * (p+1)
+    #These values determine the number of boxes in each GET. Keep divisible by 3.
+    load_from = 39 * p
+    load_to = 39 * (p+1)
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
     order  = request.GET['order']
     if order == 'dateNew':
