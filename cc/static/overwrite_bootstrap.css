@@ -347,6 +347,10 @@ img.medium {
   margin-top:18px;
 }
 
+#box-empty {
+  display:none;
+}
+
 .box-item {
   margin-bottom:13px;	/*vertical gutter*/
   width:300px;
