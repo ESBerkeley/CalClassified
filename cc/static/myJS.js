@@ -221,9 +221,9 @@ function smartDate(time){
 	
 	var mins = now.diff(date, "minutes");
 	if(mins <= 1)
-		return "1 minute ago";
+		return "1 min ago";
 	if(mins < 60)
-		return mins + " minutes ago";
+		return mins + " mins ago";
 	var hours = now.diff(date, "hours");
 	if(hours == 1)
 		return "1 hour ago";
