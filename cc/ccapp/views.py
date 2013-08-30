@@ -778,7 +778,7 @@ def ajax_box(request):
 
     p*=p>0
 
-    fbf=0
+    # fbf=0
             
     checked_circles = request.GET.getlist('circle')
     checked_categories = request.GET.getlist('category')
@@ -794,8 +794,8 @@ def ajax_box(request):
     if ('min_price' in request.GET) and request.GET['min_price'].strip() and float(request.GET['min_price'])>= 0:
         min_price = float(request.GET['min_price'])
 
-    if ('fbf' in request.GET) and request.GET['fbf'].strip() and float(request.GET['fbf'])>= 0:
-        fbf=1
+    # if ('fbf' in request.GET) and request.GET['fbf'].strip() and float(request.GET['fbf'])>= 0:
+    #     fbf=1
 
     checked_circles = map(int,checked_circles)
     checked_categories = map(int, checked_categories)
@@ -811,12 +811,12 @@ def ajax_box(request):
 
     found_entries = SearchQuerySet()
 
-    friends = []
+    # friends = []
 
-    if fbf and request.user.is_authenticated():
-        friends = FacebookUser.objects.filter(user_id = request.user.id)
-        friend_ids = [x.facebook_id for x in friends]
-        found_entries = found_entries.filter(owner_facebook_id__in = friend_ids)
+    # if fbf and request.user.is_authenticated():
+    #     friends = FacebookUser.objects.filter(user_id = request.user.id)
+    #     friend_ids = [x.facebook_id for x in friends]
+    #     found_entries = found_entries.filter(owner_facebook_id__in = friend_ids)
 
 
     if ('q' in request.GET) and request.GET['q'].strip():
@@ -845,8 +845,8 @@ def ajax_box(request):
             deleted=False,
             expire_date__gte=datetime.datetime.now()
         )
-    load_from = 24 * p
-    load_to = 24 * (p+1)
+    load_from = 50 * p
+    load_to = 50 * (p+1)
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
     order  = request.GET['order']
     if order == 'dateNew':
@@ -861,73 +861,74 @@ def ajax_box(request):
     #is user logged in? highlight his friends' posts
     #TODO: this could be very inefficient. consider performance optimization... perhaps store facebook user id of creator in post model...
     
-    fatty_cheese_wheel = []
-            
-    if request.user.is_authenticated(): 
-        user = request.user
-    #    friends = FacebookUser.objects.filter(user_id = user.id)
+    # fatty_cheese_wheel = []
 
-        if fbf and friends:
-            for search_result in found_entries:
-                item = search_result.object
-                item.score = search_result.score
-                try:
-                    m8 = friends.get(facebook_id = item.owner_facebook_id)
-                    item.friend = 1
-                    item.friendname = m8.name
-                except:
-                    item.friend = 0
-                    item.friendname = ""
-                item.boxsize = 1
-
-                fatty_cheese_wheel.append(search_result.object)             
-   
-             #   if fbf:
-             #       if search_result.object.friend:
-             #           fatty_cheese_wheel.append(search_result.object)
-             #   else:
-             #       fatty_cheese_wheel.append(search_result.object)
-        else:
-            foreveralone(found_entries, fbf, fatty_cheese_wheel)
-    else:
-        foreveralone(found_entries, fbf, fatty_cheese_wheel)
-
-
-    #kludge until someone can get haystack to work
-    #filter out all the pending items for sales, filter out the deleted ones, filter out the already sold ones
-    #fatty_cheese2 = []
-    #for x in fatty_cheese_wheel:
-    #    if not x.sold and not x.pending_flag and not x.deleted:
-    #        fatty_cheese2.append(x)
-    #fatty_cheese_wheel = fatty_cheese2
-
-
-
-    #for x in found_entries:
-    #    if fbf:
-    #        if x.object.friend:
-    #            fatty_cheese_wheel.append(x.object)
-    #    else:
-    #        fatty_cheese_wheel.append(x.object)
+    # if request.user.is_authenticated():
+    #     user = request.user
+    # #    friends = FacebookUser.objects.filter(user_id = user.id)
+    #
+    #     if fbf and friends:
+    #         for search_result in found_entries:
+    #             item = search_result.object
+    #             item.score = search_result.score
+    #             try:
+    #                 m8 = friends.get(facebook_id = item.owner_facebook_id)
+    #                 item.friend = 1
+    #                 item.friendname = m8.name
+    #             except:
+    #                 item.friend = 0
+    #                 item.friendname = ""
+    #             item.boxsize = 1
+    #
+    #             fatty_cheese_wheel.append(search_result.object)
+    #
+    #          #   if fbf:
+    #          #       if search_result.object.friend:
+    #          #           fatty_cheese_wheel.append(search_result.object)
+    #          #   else:
+    #          #       fatty_cheese_wheel.append(search_result.object)
+    #     else:
+    #         foreveralone(found_entries, fbf, fatty_cheese_wheel)
+    # else:
+    #     foreveralone(found_entries, fbf, fatty_cheese_wheel)
+    #
+    #
+    # #kludge until someone can get haystack to work
+    # #filter out all the pending items for sales, filter out the deleted ones, filter out the already sold ones
+    # #fatty_cheese2 = []
+    # #for x in fatty_cheese_wheel:
+    # #    if not x.sold and not x.pending_flag and not x.deleted:
+    # #        fatty_cheese2.append(x)
+    # #fatty_cheese_wheel = fatty_cheese2
+    #
+    #
+    #
+    # #for x in found_entries:
+    # #    if fbf:
+    # #        if x.object.friend:
+    # #            fatty_cheese_wheel.append(x.object)
+    # #    else:
+    # #        fatty_cheese_wheel.append(x.object)
     
 
-    data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','pending_flag','friend','friendname','get_thumbnail_url', 'get_seller_first_name', 'get_seller_profile_picture', 'score'))
+    # data = serializers.serialize('json', fatty_cheese_wheel , indent = 4, extras=('boxsize','pending_flag','friend','friendname','get_thumbnail_url', 'get_seller_first_name', 'get_seller_profile_picture', 'score'))
+    data = serializers.serialize('json', [query.object for query in found_entries] , indent = 4, extras=('get_thumbnail_url', 'get_seller_first_name', 'get_seller_profile_picture'))
     return HttpResponse(data,'application/javascript')
 
-def foreveralone(found_entries, fbf, fatty_cheese_wheel):
-#    print(found_entries)
-    for item in found_entries:
-#        print("------SWAG"+str(item))
-        item.object.friend = 0
-        item.object.friendname = ""
-        item.object.boxsize = 1
-        item.object.score = item.score
-        
-        if fbf:
-            if item.object.friend:
-                fatty_cheese_wheel.append(item.object)
-        else:
-            fatty_cheese_wheel.append(item.object)
+# def foreveralone(found_entries, fbf, fatty_cheese_wheel):
+# #    print(found_entries)
+#     for item in found_entries:
+# #        print("------SWAG"+str(item))
+#         item.object.friend = 0
+#         item.object.friendname = ""
+#         item.object.boxsize = 1
+#         item.object.score = item.score
+#
+#         if fbf:
+#             if item.object.friend:
+#                 fatty_cheese_wheel.append(item.object)
+#         else:
+#             fatty_cheese_wheel.append(item.object)
    
 class ContactView(TemplateView):
     template_name = 'contact.html'
