@@ -506,25 +506,20 @@ function runloadBox(isRemoveHtml) {
           savedHtml = "";
           $(window).scrollTop(0)
         }
-        if(data.length !== 0) {
-          $('#box').html("");   //clear out any "no items" text
-          containerHtml = "";
-          for(i = 0; i < data.length; i++) {
-              var thumbnailUrl = data[i].extras.get_thumbnail_url;
-              var price = "$"+data[i].fields.price;
-              var title = data[i].fields.title;
-              var date = smartDate(data[i].fields.time_created);
-              var username = data[i].extras.get_seller_first_name;
-              var profilePictureUrl = data[i].extras.get_seller_profile_picture;
-              containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profilePictureUrl+"'></div> </div> </div></a>";
-          }
-          savedHtml += containerHtml;
-          $containerHtml = $(containerHtml);
-          $container.append($containerHtml).masonry('appended', $containerHtml);
-          $container.masonry();
-        } else {
-          $('#box').html("<h2>Sorry, there were no items that matched your search.</h2>");
+        containerHtml = "";
+        for(i = 0; i < data.length; i++) {
+          var thumbnailUrl = data[i].extras.get_thumbnail_url;
+          var price = "$"+data[i].fields.price;
+          var title = data[i].fields.title;
+          var date = smartDate(data[i].fields.time_created);
+          var username = data[i].extras.get_seller_first_name;
+          var profilePictureUrl = data[i].extras.get_seller_profile_picture;
+          containerHtml += "<a href='/"+data[i].pk+"'><div class='box-item'><img class='box-image' src='"+thumbnailUrl+"' /> <div class='box-text'> <div class='box-title'>"+title+"</div> <div class='box-hr'></div> <span class='box-left'><div class='box-price'>"+price+"</div><div class='box-date'>posted "+date+" by "+username+"</div></span> <div class='box-right'><img class='box-profile' src='"+profilePictureUrl+"'></div> </div> </div></a>";
         }
+        savedHtml += containerHtml;
+        $containerHtml = $(containerHtml);
+        $container.append($containerHtml).masonry('appended', $containerHtml);
+        $container.masonry();
         $("#pac-ajax").hide();
         setNewState();
       }
