@@ -50,6 +50,7 @@ message_to_seller_signal = Signal()
 message_to_buyer_signal = Signal()
 confirm_purchase_signal = Signal()
 decline_purchase_signal = Signal()
+item_reviewed_signal = Signal()
 
 #@receiver(post_save, dispatch_uid="AAAAARGH")
 def post_save_hndlr(sender, **kwargs):
@@ -390,6 +391,27 @@ def decline_purchase_hndlr(sender, **kwargs):
             )
     return
 
+def item_reviewed_handler(sender, **kwargs):
+    """SIGNAL 10- notify the seller that the buyer has reviewed their item"""
+    if sender == ItemReview:
+        review = kwargs['review']
+        item = review.item
+        buyer_profile = review.buyer.get_profile()
+        seller_profile = review.seller.get_profile()
+        notification = Notification(post_from=item, going_to=seller_profile, type=10, second_party=buyer_profile)
+        notification.save()
+        seller_profile.friend_notifications += 1
+        seller_profile.save()
+        if seller_profile.message_email:
+            send_email_task.delay(
+                template_name='item_reviewed',
+                from_email='BuyNearMe <noreply@buynear.me>',
+                recipient_list=[add_name_to_email(seller_profile.user.get_full_name(), seller_profile.user.email)],
+                context = {
+                    'review': review
+                }
+            )
+
 
 new_comment_signal.connect(comment_save_hndlr, sender = Comment, dispatch_uid = "yolo")
 seller_response_signal.connect(seller_response_hndlr, sender = Comment, dispatch_uid = "99xp")
@@ -400,3 +422,4 @@ message_to_seller_signal.connect(message_to_seller_hndlr, sender = ItemForSale, 
 message_to_buyer_signal.connect(message_to_buyer_hndlr, sender = ItemForSale, dispatch_uid = "woodchip")
 confirm_purchase_signal.connect(confirm_purchase_hndlr, sender=ItemForSale, dispatch_uid="confirmed")
 decline_purchase_signal.connect(decline_purchase_hndlr, sender=ItemForSale, dispatch_uid="declined")
+item_reviewed_signal.connect(item_reviewed_handler, sender=ItemReview, dispatch_uid="item_reviewed")

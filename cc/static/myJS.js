@@ -140,7 +140,7 @@ function get_friend_notifications(){
               }
 
               else if(obj[k].fields.type == 4){
-                x += "<li><a href=\"/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete." + "</a></li>";
+                x += "<li><a href=\"/review_item/" + obj[k].fields.post_from + "\"><strong>" + obj[k].extras.username + "</strong> has marked the sale of " + obj[k].extras.title + " as complete." + "</a></li>";
               }
 
               else if(obj[k].fields.type == 5){
@@ -161,6 +161,10 @@ function get_friend_notifications(){
 
               else if(obj[k].fields.type == 9){   //buyer "bob" has declined to purchase item
                 x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Buyer <strong>" + obj[k].extras.username + "</strong> is no longer purchasing <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+              }
+
+              else if(obj[k].fields.type == 10){   //buyer "bob" has reviewed your item
+                x += "<li><a href='/user/" + obj[k].fields.going_to + "/reviews'>Buyer <strong>" + obj[k].extras.second_username + "</strong> has reviewed your item <strong>" + obj[k].extras.title + "</strong>.</a></li>";
               }
            } 
 

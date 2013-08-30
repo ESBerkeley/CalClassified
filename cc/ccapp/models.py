@@ -306,6 +306,9 @@ class Notification(models.Model):
     5 - notify the buyer that the seller has given up on them, and reposted the item
     6 - notify the seller that the buyer has sent him a message
     7 - notify the buyer that the seller has sent him a message
+    8 - notify the buyer that the seller has confirmed the purchase
+    9 - notify the seller that buyer has declined to purchase
+    10 - notify the seller that the buyer has reviewed their item
     """
     going_to  = models.ForeignKey('django_facebook.FacebookProfile')
     type = models.IntegerField(default = 0)
