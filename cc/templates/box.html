@@ -40,19 +40,23 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapseOne" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="Everything-category" class="side-item category" onclick="setCategory('Everything'); runloadBox(true);">
+              <li id="-1-category" class="side-item category" onclick="setCategory(-1); runloadBox(true);">
                 <div id="Everything_category" class="side-text">Everything</div>
               </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
-                <li id="{{ cat.name }}-category" class="side-item category" onclick="setCategory('{{cat.name}}'); runloadBox(true);">
-                  <div id="{{cat.name}}_category" class="side-text">{{cat.name}}</div>
+                <li id="{{ cat.id }}-category" class="side-item category" onclick="setCategory({{cat.id}}); runloadBox(true);">
+                  <div id="{{cat.id}}_category" class="side-text">{{cat.name}}</div>
                 </li>
                 {% endif %}
               {% endfor %}
-              <li id="Other-category" class="side-item category" onclick="setCategory('Other'); runloadBox(true);">
-                <div id="Other_category" class="side-text">Other</div>
-              </li>
+              {% for cat in cc_cats %}
+                {% if cat.name == "Other" %}
+                  <li id="{{ cat.id }}-category" class="side-item category" onclick="setCategory({{cat.id}}); runloadBox(true);">
+                  <div id="{{cat.id}}_category" class="side-text">Other</div>
+                </li>
+                {% endif %}
+              {% endfor %}
             </ul>
           </div>
         </div>
@@ -159,7 +163,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   $(document).ready(function() {  
     /*****************************/
     $('.collapse').collapse({show:true})
-    setCategory("Everything");
+    setCategory(-1);
     $('#dateNew-li').addClass("active");
     runloadBox(false, true);
     
@@ -308,11 +312,15 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
   }*/
   
   function num2cat(num) {  //takes in number, spits out category string.
-    {% for cat in cc_cats %}
-      if(num == {{cat.pk}}) {
-        return "{{cat.name}}";
-      }
-    {% endfor %}
+    if(num === -1) {
+      return "Everything";
+    } else {
+      {% for cat in cc_cats %}
+        if(num == {{cat.pk}}) {
+          return "{{cat.name}}";
+        }
+      {% endfor %}
+    }
     return "whoops";
   }
   

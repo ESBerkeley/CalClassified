@@ -429,7 +429,7 @@ function runloadBox(isRemoveHtml) {
     minPrice = document.getElementById('min').value;
     maxPrice = document.getElementById('max').value;
   }
-  console.log(query)
+  
   var cir_status = getCircs();
   
   //load pacman
@@ -461,11 +461,17 @@ function runloadBox(isRemoveHtml) {
   };
   url = url + $.param(params);
 
-  for (key in categoryObject) {
+  /*for (key in categoryObject) {
     if (categoryObject[key]==true) {
       cat_pk = cat2num(key)
       url = url + "&category="+cat_pk;
     }
+  }*/
+  
+  if (category === -1) {
+    //Everything, do nothing
+  } else {
+    url = url + "&category="+category;
   }
   
   /*for (key in cir_status) {
@@ -572,7 +578,36 @@ function setPricebox(min, max) {
   document.getElementById('max').value = max;
 }
 
-function createCategoryObject(category) {
+function getPage() {
+  return page;
+}
+  
+function setPage(pageValue) {
+  page = pageValue;
+}
+  
+//sort order assigner. UI change AND server notifier
+function setOrder(newOrder) {
+  order = newOrder //assigned to make server filter properly
+  $('.side-item.sort').removeClass("active");
+  $('#'+newOrder+"-li").addClass("active");        //html ids for icons equivalent to the order values
+}
+
+function getCategory() {
+  return category;
+}
+
+function setCategory(catid) {
+  category = catid;
+  //categoryObject = createCategoryObject(cat);
+  //Search Bar Text
+  document.getElementById('searchbar').placeholder = "Search in " + num2cat(catid);
+  //Sidebar stylings
+  $("li.side-item.category").removeClass("active");
+  $("#"+catid+"-category").addClass("active");
+}
+
+/*function createCategoryObject(category) {
   if(category === "Everything") {
     return {}
   } else if(category === "Apparel") {
@@ -596,36 +631,7 @@ function createCategoryObject(category) {
   } else {
     return {"Other": true}
   }
-}
-
-function getPage() {
-  return page;
-}
-  
-function setPage(pageValue) {
-  page = pageValue;
-}
-  
-//sort order assigner. UI change AND server notifier
-function setOrder(newOrder) {
-  order = newOrder //assigned to make server filter properly
-  $('.side-item.sort').removeClass("active");
-  $('#'+newOrder+"-li").addClass("active");        //html ids for icons equivalent to the order values
-}
-
-function getCategory() {
-  return category;
-}
-
-function setCategory(cat) {
-  category = cat;
-  categoryObject = createCategoryObject(cat);
-  //Search Bar Text
-  document.getElementById('searchbar').placeholder = "Search in " + cat;
-  //Sidebar stylings
-  $("li.side-item.category").removeClass("active");
-  $("#"+cat+"-category").addClass("active");
-}
+}*/
 
 function setNewState() {
   localStorage["query"] = JSON.stringify(query);
@@ -667,7 +673,7 @@ function toggleFriendsFilter(){
 
 $.urlParam = function(name){
   var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
-  if (results==null){
+  if (results==""){
     return null;
   }
   else{
