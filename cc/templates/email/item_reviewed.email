@@ -1,0 +1,8 @@
+{% extends "base.email" %}
+
+{% block subj %}{{ review.buyer.get_full_name }} has reviewed your item "{{ review.item.title}}"{% endblock %}
+{% block content %}
+  <p>Hi {{ review.item.seller.get_full_name }},</p>
+  <p>{{ review.buyer.get_full_name }} has written a review for your item "{{ review.item.title}}".</p>
+  <p><a href="http://buynear.me{% url user_reviews review.seller.id %}#review-{{ review.id }}">Click here to see it!</a></p>
+{% endblock %}

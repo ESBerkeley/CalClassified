@@ -1339,9 +1339,9 @@ def profile_circles(request):
 @login_required
 def profile_reviews(request):
     data = {}
-    written_reviews = ItemReview.objects.filter(buyer=request.user)
+    written_reviews = ItemReview.objects.filter(buyer=request.user).order_by('-time_created')
     reviewed_item_ids = [review.item.id for review in written_reviews]
-    not_reviewed_items = ItemForSale.objects.filter(pending_flag=True, pending_buyer=request.user).exclude(id__in = reviewed_item_ids)
+    not_reviewed_items = ItemForSale.objects.filter(pending_flag=True, pending_buyer=request.user).exclude(id__in = reviewed_item_ids).order_by('-time_created')
     data['written_reviews'] = written_reviews
     data['not_reviewed_items'] = not_reviewed_items
     if "message" in request.GET:
@@ -1523,4 +1523,5 @@ def review_item(request, item_id):
                                                comment=comment)
         response = redirect('account_reviews')
         response['Location'] += '?message=Your review has been posted.'
+        item_reviewed_signal.send(sender = ItemReview, review=review)
         return response
