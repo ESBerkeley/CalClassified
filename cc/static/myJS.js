@@ -393,6 +393,12 @@ $container.masonry({
   itemSelector: '.box-item',
 });
 
+//sets isBoxActive if not yet set to prevent JSON conversion errors later
+if(localStorage["isBoxActive"] === null) {
+  localStorage["isBoxActive"] = JSON.stringify(false);
+  console.log('isactive')
+}
+
 //Set animation. Ignore animation if we are loading a session to make the transition seem more "seamless".
 if (JSON.parse(localStorage["isBoxActive"])) {
   $container.masonry({

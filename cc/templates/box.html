@@ -165,10 +165,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     $('.collapse').collapse({show:true})
     setCategory(-1);
     if(!JSON.parse(localStorage["isBoxActive"])) {
-      $("#searchbar").val($.urlParam("q"));
+      {% if q %}
+        $("#searchbar").val("{{q}}");
+      {% endif %}
     }
     $('#dateNew-li').addClass("active");
     runloadBox(false, true);
+    
     /*****************************/
     
     $(window).scroll(function(){
@@ -202,12 +205,12 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     $("#searchbarform").attr("action","javascript: runloadBox(true);");
     $("#search-go-nav").attr("onclick", "runloadBox(true)");
 
-    {% if q %}
+    /*{% if q %}
       //if query exists, keep at the top
       document.getElementById('searchbar').value = "{{ q }}";
     {% endif %}
     
-  /*
+  
     if($.cookie('onpost') === 't'){
        in_restore = 1;
        $.cookie('onpost',null);
