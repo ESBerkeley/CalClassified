@@ -371,7 +371,7 @@ $(window).on('beforeunload', function(){
  * 1. Check isRemoveHtml and reset page value if true, otherwise page will get incremented and is stored.
  * 2. Check isBoxActive and if a session is stored. Then, set all variables based on what is in storage if true.
  * 3. Query and price filter icon stuff.
- * 4. Set URLS. A categoryObject is created, which is the list of booleans the backend wants to get.
+ * 4. Set URLS. Category is actually an id integer. "Everything" is hardcoded to -1.
  * 5. Setting up the box: Check if active and if a session is stored. If so, populate the the box using HTML in storage and scroll to the proper position.
  * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. The new HTML and saved HTML are added to each other. Check strings, display box warning text if empty. Then HTML time. Populate the box with masonry. !!! Load the current variables into storage.
  * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true. We also force isBoxActive false and the animation so the user can navigate after a session load normally.
@@ -400,7 +400,7 @@ if (JSON.parse(localStorage["isBoxActive"])) {
   })
 } else {
   $container.masonry({
-    transitionDuration: '0.6s'		//default 0.4s
+    transitionDuration: '0.6s'      //default 0.4s
   })
 }
 
@@ -424,6 +424,7 @@ function runloadBox(isRemoveHtml) {
     setCategory(category);
     setOrder(order);
     setPricebox(minPrice, maxPrice);
+    $("#searchbar").val(query);
   } else {
     query = document.getElementById('searchbar').value;
     minPrice = document.getElementById('min').value;
@@ -460,6 +461,12 @@ function runloadBox(isRemoveHtml) {
     order: order
   };
   url = url + $.param(params);
+  
+  if (category === -1) {
+    //Everything, do nothing
+  } else {
+    url = url + "&category="+category;
+  }
 
   /*for (key in categoryObject) {
     if (categoryObject[key]==true) {
@@ -467,12 +474,6 @@ function runloadBox(isRemoveHtml) {
       url = url + "&category="+cat_pk;
     }
   }*/
-  
-  if (category === -1) {
-    //Everything, do nothing
-  } else {
-    url = url + "&category="+category;
-  }
   
   /*for (key in cir_status) {
     if (cir_status[key]==true) {
@@ -599,39 +600,12 @@ function getCategory() {
 
 function setCategory(catid) {
   category = catid;
-  //categoryObject = createCategoryObject(cat);
   //Search Bar Text
   document.getElementById('searchbar').placeholder = "Search in " + num2cat(catid);
   //Sidebar stylings
   $("li.side-item.category").removeClass("active");
   $("#"+catid+"-category").addClass("active");
 }
-
-/*function createCategoryObject(category) {
-  if(category === "Everything") {
-    return {}
-  } else if(category === "Apparel") {
-    return {"Apparel": true}
-  } else if(category === "Appliances") {
-    return {"Appliances": true}
-  } else if(category === "Automotive") {
-    return {"Automotive": true}
-  } else if(category === "Books") {
-    return {"Books": true}
-  } else if(category === "Electronics") {
-    return {"Electronics": true}
-  } else if(category === "Furniture") {
-    return {"Furniture": true}
-  } else if(category === "Movies and Games") {
-    return {"Movies and Games": true}
-  } else if(category === "Music") {
-    return {"Music": true}
-  } else if(category === "Tickets") {
-    return {"Tickets": true}
-  } else {
-    return {"Other": true}
-  }
-}*/
 
 function setNewState() {
   localStorage["query"] = JSON.stringify(query);
@@ -670,17 +644,16 @@ function toggleFriendsFilter(){
   }
   runloadBox(true);
 }
+/*****************************
+ * End of Boxview
+ * **************************/
 
 $.urlParam = function(name){
   var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
-  if (results==""){
-    return null;
+  if (results==null){
+    return "";
   }
   else{
     return results[1] || 0;
   }
 }
-
-/*****************************
- * End of Boxview
- * **************************/

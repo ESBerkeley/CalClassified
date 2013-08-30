@@ -164,9 +164,11 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     /*****************************/
     $('.collapse').collapse({show:true})
     setCategory(-1);
+    if(!JSON.parse(localStorage["isBoxActive"])) {
+      $("#searchbar").val($.urlParam("q"));
+    }
     $('#dateNew-li').addClass("active");
     runloadBox(false, true);
-    
     /*****************************/
     
     $(window).scroll(function(){
