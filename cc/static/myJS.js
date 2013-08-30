@@ -518,7 +518,18 @@ function runloadBox(isRemoveHtml) {
         }
         savedHtml += containerHtml;
         $containerHtml = $(containerHtml);
-        $container.append($containerHtml).masonry('appended', $containerHtml);
+        
+        if(!savedHtml && !containerHtml) {
+          $("#box-empty").show();
+        } else {
+          $("#box-empty").hide();
+        }
+        
+        //Masonry errors if you attempt to append an empty. First check if if the string is not empty before appending.
+        if(containerHtml) {
+          $container.append($containerHtml).masonry('appended', $containerHtml);
+        }
+        
         $container.masonry();
         $("#pac-ajax").hide();
         setNewState();
