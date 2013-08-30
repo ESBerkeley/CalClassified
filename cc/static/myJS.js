@@ -373,7 +373,7 @@ $(window).on('beforeunload', function(){
  * 3. Query and price filter icon stuff.
  * 4. Set URLS. A categoryObject is created, which is the list of booleans the backend wants to get.
  * 5. Setting up the box: Check if active and if a session is stored. If so, populate the the box using HTML in storage and scroll to the proper position.
- * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. Check length of data, display text if data is empty. Then HTML time. The new HTML and saved HTML are added to each other. Populate the box with masonry. !!! Load the current variables into storage.
+ * Otherwise: Do the get. Check to isRemoveHtml, and possibly clear out old masonry boxes. The new HTML and saved HTML are added to each other. Check strings, display box warning text if empty. Then HTML time. Populate the box with masonry. !!! Load the current variables into storage.
  * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true. We also force isBoxActive false and the animation so the user can navigate after a session load normally.
  * 
  * Functions that are running alongside:
@@ -396,11 +396,11 @@ $container.masonry({
 //Set animation. Ignore animation if we are loading a session to make the transition seem more "seamless".
 if (JSON.parse(localStorage["isBoxActive"])) {
   $container.masonry({
-	transitionDuration: 0
+    transitionDuration: 0
   })
 } else {
   $container.masonry({
-	transitionDuration: '0.6s'		//default 0.4s
+    transitionDuration: '0.6s'		//default 0.4s
   })
 }
 
@@ -429,7 +429,7 @@ function runloadBox(isRemoveHtml) {
     minPrice = document.getElementById('min').value;
     maxPrice = document.getElementById('max').value;
   }
-  
+  console.log(query)
   var cir_status = getCircs();
   
   //load pacman
@@ -552,7 +552,7 @@ function getScroll() {
 }
 
 function search(){
-  var q = document.getElementById('searchbar').value;
+  q = document.getElementById('searchbar').value;
   url = "/browse/?q="+q
   window.location = url;
 }
@@ -656,14 +656,24 @@ function revertState() {
 }
 
 function toggleFriendsFilter(){
-    isFilterFriends = !isFilterFriends;
-    if (isFilterFriends) {
-        $("#friends-li").addClass("active");
-    } else {
-        $("#friends-li").removeClass("active");
-    }
-    runloadBox(true);
+  isFilterFriends = !isFilterFriends;
+  if (isFilterFriends) {
+      $("#friends-li").addClass("active");
+  } else {
+      $("#friends-li").removeClass("active");
   }
+  runloadBox(true);
+}
+
+$.urlParam = function(name){
+  var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+  if (results==null){
+    return null;
+  }
+  else{
+    return results[1] || 0;
+  }
+}
 
 /*****************************
  * End of Boxview
