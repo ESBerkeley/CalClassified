@@ -121,7 +121,7 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
             return [self.get_category_image_url()]
     
     def get_category_image_url(self):
-        return '/static/images/%s.png' % str(self.category).replace(',', '').lower()
+        return '/static/images/categories/%s.png' % str(self.category).replace(',', '').lower()
     
     def get_first_image_url(self):
         try:

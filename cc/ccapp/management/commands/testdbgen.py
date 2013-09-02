@@ -29,7 +29,7 @@ class Command(BaseCommand):
         
         unamez = ['Abe','Teddy','George','Tom','Bill']
 
-        cnamez = ['Appliances', 'Apparel', 'Automotive', 'Books', 'Electronics', 'Furniture', 'Movies and Games', 'Music', 'Tickets', 'Other']
+        cnamez = ['Apparel, Accessories', 'Appliances', 'Books', 'Electronics', 'Furniture', 'Housing', 'Movies, Music, Games', 'Sporting Goods', 'Tickets', 'Other']
 
         pnames = ['shoes 4 sale', 'rear axle', 'bag of ham', 'speaker system', '24 pack of coke',
                   'dead cat', 'beef jerkey', 'tv set', 'desk n chairs', 'top hat', 'suit and tie',
