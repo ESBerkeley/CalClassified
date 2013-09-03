@@ -191,7 +191,7 @@ class FacebookRequiredLazy(FacebookRequired):
                     fn, request, *args, **kwargs)
             else:
                 # added to avoid non-fb accounts to have to login to FB
-                if request.user.is_authenticated() and request.user.get_profile().facebook_id:
+                if request.user.get_profile().facebook_id:
                     response = self.oauth_redirect(oauth_url, redirect_uri, e)
                 else:
                     response = self.execute_view(fn, request, graph=graph, *args, **kwargs)
