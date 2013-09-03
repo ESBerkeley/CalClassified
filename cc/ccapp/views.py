@@ -151,7 +151,7 @@ def confirmviewIFS(request,pid,secret):
     confirmview(request,pid,secret,ItemForSale)"""
 
 @logit
-@facebook_required_lazy(scope='publish_actions')
+@facebook_required(scope='publish_actions')
 def sell_item(request, super_cat_form, super_cat_model,**kwargs):
     if request.user.is_authenticated():
         
@@ -169,7 +169,6 @@ def sell_item(request, super_cat_form, super_cat_model,**kwargs):
         #form.fields['circles'].help_text = """Tip: Hold down "Control", or "Command" on a Mac, to select more than one.
         #    <p style="color:red;">Only people in the groups you select can see your post.</p>"""
         #Specify which groups you want to sell to.
-
 
         #Saving model for MULTIUPLOADER
         #request.session['instance'] = model
@@ -256,7 +255,8 @@ def sell_item_POST(request):
                                 fb_success = True
                             except:
                                 fb_group_success = False
-
+                        else:
+                            fb_group_success = False
                 post_created_signal.send(sender = ItemForSale, instance = model)
                 if not fb_group_success:
                     return redirect(model.get_absolute_url()+"?new=1&postffs=0")

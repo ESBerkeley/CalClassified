@@ -42,6 +42,12 @@ class FacebookRequired(object):
         b.) We tried getting permissions and failed, abort...
         c.) We are about to ask for permissions
         '''
+
+        # added to avoid non-fb accounts to have to login to FB
+        if request.user.is_authenticated() and not request.user.get_profile().facebook_id:
+            return self.execute_view(fn, request, *args, **kwargs)
+        #END add
+
         redirect_uri = self.get_redirect_uri(request)
         oauth_url = get_oauth_url(
             self.scope_list, redirect_uri, extra_params=self.extra_params)
@@ -166,6 +172,11 @@ class FacebookRequiredLazy(FacebookRequired):
             self.scope_list, redirect_uri, extra_params=self.extra_params)
 
         graph = None
+        # added to avoid non-fb accounts to have to login to FB
+        if request.user.is_authenticated() and not request.user.get_profile().facebook_id:
+            return self.execute_view(fn, request, graph=graph, *args, **kwargs)
+        # End ADD
+
         try:
             # call get persistent graph and convert the
             # token with correct redirect uri
@@ -190,11 +201,7 @@ class FacebookRequiredLazy(FacebookRequired):
                 response = self.authentication_failed(
                     fn, request, *args, **kwargs)
             else:
-                # added to avoid non-fb accounts to have to login to FB
-                if request.user.is_authenticated() and not request.user.get_profile().facebook_id:
-                    response = self.execute_view(fn, request, graph=graph, *args, **kwargs)
-                else:
-                    response = self.oauth_redirect(oauth_url, redirect_uri, e)
+                response = self.oauth_redirect(oauth_url, redirect_uri, e)
         return response
 
 
