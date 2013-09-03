@@ -309,6 +309,7 @@ class Notification(models.Model):
     8 - notify the buyer that the seller has confirmed the purchase
     9 - notify the seller that buyer has declined to purchase
     10 - notify the seller that the buyer has reviewed their item
+    11- notify the buyer that the seller has declined purchase request
     """
     going_to  = models.ForeignKey('django_facebook.FacebookProfile')
     type = models.IntegerField(default = 0)
@@ -367,6 +368,8 @@ class Thread(models.Model):
     is_read = models.BooleanField(default=True)
     newest_message_time = models.DateTimeField(null=True)
     declined = models.BooleanField(default=False)
+    declined_user = models.ForeignKey(User, related_name='+', null=True, blank=True)
+    # declined_user = person who got declined, e.g. Seller declines buyer means declined_user = buyer
 
     def get_absolute_url(self):
         return '/accounts/profile/messages/%i' % self.id

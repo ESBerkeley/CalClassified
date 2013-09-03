@@ -186,8 +186,6 @@ def sell_item(request, super_cat_form, super_cat_model,**kwargs):
         #    ecks['specificCircleName']=circle.name
         #    form = ItemForSaleForm(initial={'circles':circles},instance=model)
 
-        graph = require_persistent_graph(request)
-
         ecks['form'] = form
         if user_profile.facebook_id:
             ecks['is_facebook'] = True
@@ -462,18 +460,32 @@ def modify_post(request):
             if action == "done":
                 #the sale is complete (yay). delete post and redirect to profile page
                 post.sold = True
+                post.pending_flag = True
                 post.sold_date = datetime.datetime.now()
                 post.save()
                 custom_log_message('user ' + str(request.user.id) + ' sold item :) ' + str(post_pk))
-                sale_complete_signal.send(sender = ItemForSale, instance = post)
+                if post.pending_buyer: #in case if marked sold elsewhere (not on BuyNearMe).
+                    sale_complete_signal.send(sender=ItemForSale, instance=post)
                 return HttpResponseRedirect("/accounts/profile/selling")
 
             elif action == "repost":
                 #the sald didnt work out, repost the item, and redirect seller
-                repost_signal.send(sender = ItemForSale, instance = post, target = post.pending_buyer.get_profile())
+                repost_signal.send(sender=ItemForSale, instance=post, target=post.pending_buyer.get_profile())
+                try:
+                    # Set threads to declined
+                    thread1 = Thread.objects.get(owner=post.owner, other_person=post.pending_buyer, item=post)
+                    thread2 = Thread.objects.get(owner=post.pending_buyer, other_person=post.owner, item=post)
+                    thread1.declined=True
+                    thread1.declined_user = post.pending_buyer
+                    thread2.declined=True
+                    thread2.declined_user = post.pending_buyer
+                    thread1.save()
+                    thread2.save()
+                except:
+                    pass
                 post.pending_flag = False
                 post.pending_buyer = None
-                post.expire_date = datetime.datetime.now()
+                post.expire_date = datetime.datetime.now()+timedelta(days=30)
                 custom_log_message('user ' + str(request.user.id) + ' reposted item :( ' + str(post_pk))
                 post.save()
                 return HttpResponseRedirect("/"+str(post_pk))
@@ -1209,7 +1221,8 @@ def profile_selling(request):
 
 
     declined_threads_ids = []
-    for item in base_unsold_itemset:
+    #include declined threads for sold items
+    for item in ItemForSale.objects.filter(owner=user, deleted=False).order_by('-time_created'):
         declined_threads = Thread.objects.filter(owner=user, item=item, declined=True)
         for thread in declined_threads:
             if thread.item and thread.item.owner == user:
@@ -1218,18 +1231,23 @@ def profile_selling(request):
 
     sold_items = ItemForSale.objects.filter(owner=user, sold=True)
     sold_threads_ids = []
+    sold_item_ids = []
     for item in sold_items:
         try:
             sold_thread = Thread.objects.get(owner=user, other_person=item.pending_buyer, item=item)
             sold_threads_ids.append(sold_thread.id)
+            sold_item_ids.append(item.id)
         except:
             pass
     sold_threads = Thread.objects.filter(id__in = sold_threads_ids).order_by('is_read','-newest_message_time')
+
+    sold_items_outside = ItemForSale.objects.filter(owner=user, sold=True).exclude(id__in=sold_item_ids)
 
     data['pending_threads'] = pending_threads         #needs confirmation
     data['my_threads'] = bought_threads               #bought threads
     data['ifs_waiting_list'] = ifs_waiting_list       #unsold
     data['ifs_sold'] = sold_threads                   #sold
+    data['sold_outside_list'] = sold_items_outside    #sold outside BNM
     data['ifs_expired'] = expired_items               #expired items
     data['declined_threads'] = declined_threads       #declined purchase requests
     
@@ -1314,6 +1332,9 @@ def profile_view_thread(request,thread_id):
 
     messages = thread.messages.all().order_by('-time_created')
     data = {"thread":thread, "messages": messages, "is_owner":is_owner, "this_is_a_thread":True}
+
+    if request.user == thread.declined_user:
+        data['is_declined_user'] = True
 
     if not thread.post_deleted:
         data['post'] = poast

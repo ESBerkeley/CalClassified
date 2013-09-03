@@ -111,7 +111,11 @@ $("#decline-modal-send").on("click", function(){
         data: data,
         success: function(data){
             $(".msg-modal").modal('hide');
-            $("#decline-success-modal").modal('show');
+            if (is_owner) {
+                $("#decline-success-seller-modal").modal('show');
+            } else {
+                $("#decline-success-modal").modal('show');
+            }
         }
     });
 });

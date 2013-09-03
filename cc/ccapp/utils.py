@@ -56,18 +56,24 @@ def change_purchase(request, confirm):
     thread2.is_read = False
     if not confirm:
         thread1.declined = True
+        thread1.declined_user = recipient
         thread2.declined = True
+        thread2.declined_user = recipient
     else:
         thread1.declined = False
+        thread1.declined_user = None
         thread2.declined = False
+        thread2.declined_user = None
     thread1.save()
     thread2.save()
 
     if confirm:
         # Signal to buyer that seller has confirmed purchase
         confirm_purchase_signal.send(sender=ItemForSale, instance=post, message=message)
+    elif post.owner == sender:
+        decline_buyer_purchase_hndlr(sender=ItemForSale, instance=post, message=message, buyer=recipient)
     else:
-        decline_purchase_signal.send(sender=ItemForSale, instance=post, message=message, buyer=sender)
+        decline_seller_purchase_signal.send(sender=ItemForSale, instance=post, message=message, buyer=sender)
 
     # add notifications to profile
     rec_profile = recipient.get_profile()

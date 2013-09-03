@@ -166,6 +166,10 @@ function get_friend_notifications(){
               else if(obj[k].fields.type == 10){   //buyer "bob" has reviewed your item
                 x += "<li><a href='/user/" + obj[k].fields.going_to + "/reviews'>Buyer <strong>" + obj[k].extras.second_username + "</strong> has reviewed your item <strong>" + obj[k].extras.title + "</strong>.</a></li>";
               }
+
+              else if(obj[k].fields.type == 11){   //seller "bob" has declined purchase of item from buyer
+                x += "<li><a href=\"/accounts/profile/messages/" + obj[k].fields.thread_id + "\">Seller <strong>" + obj[k].extras.second_username + "</strong> declined the sale of <strong>" + obj[k].extras.title + "</strong>.</a></li>";
+              }
            } 
 
          x+="<li> <a href = \"/accounts/profile/\">See All</a></li>";

@@ -14,6 +14,7 @@ p, blockquote {
 {% block content %}
 {% endblock %}
 {% block signature %}
+  <br>
   <p>Thanks,<br>
   BuyNearMe Team</p>
   {% load static %}

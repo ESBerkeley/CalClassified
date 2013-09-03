@@ -33,3 +33,7 @@
 .button-row {
     padding-bottom:10px;
 }
+
+.button-row > .btn {
+    margin-right:10px;
+}

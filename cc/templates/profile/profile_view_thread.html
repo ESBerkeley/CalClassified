@@ -12,7 +12,11 @@
 <div>
   {% if thread.declined %}
       <div class="alert alert-error fade in">
+        {% if thread.declined_user == post.owner %}
         <p>This purchase has been declined by the buyer.</p>
+        {% else %}
+        <p>This purchase has been declined by the seller.</p>
+        {% endif %}
       </div>
   {% elif is_owner %}
     {% if post.pending_flag and not post.sold %}
@@ -49,22 +53,27 @@
 
   {% if not post.pending_flag and is_owner and not thread.declined %}
     <div class="button-row">
-      <button class="btn" data-toggle="modal" data-target="#confirm-modal" style="margin-right:10px;">Confirm Purchase</button>
+      <button class="btn" data-toggle="modal" data-target="#confirm-modal">Confirm Purchase</button>
       <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+      <button class="btn" data-toggle="modal" data-target="#decline-modal">Decline Purchase</button>
     </div>
-    Confirm purchase to remove the item from search results and show your commitment to this buyer.
+    Confirm purchase to remove the item from search results and show your commitment to this buyer. Decline if it is no longer available.
   {% elif not is_owner and request.user != post.pending_buyer and not thread.declined %}
     <div class="button-row">
       <button class="btn" data-toggle="modal" data-target="#decline-modal" style="margin-right:10px;">Decline Purchase</button>
       <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
     </div>
     Decline purchase if you no longer want to buy this item.
-  {% elif thread.declined and not is_owner %}
-      <button class="btn" data-toggle="modal" data-target="#undo-decline-modal" style="margin-right:10px;">Undo Decline Purchase</button>
+  {% elif thread.declined and not is_declined_user and not post.pending_flag %}
+      <div class="button-row">
+        <button class="btn" data-toggle="modal" data-target="#undo-decline-modal">Undo Decline Purchase</button>
+        <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+      </div>
   {% else %}
     <button class="btn contact-button btn-info" data-toggle="modal" href="#contact-modal"><i class="icon-share-alt icon-white"></i> Reply </button>
+    <br>
   {% endif %}
-  <br><br>
+  <br>
   {% if not is_owner and post.pending_flag and post.pending_buyer == request.user %}
     <a href="{% url review_item post.id %}">Have you already received the item? Click here to give a review!</a>
   {% endif %}
@@ -98,6 +107,7 @@
   var post_pk = "{{ thread.post_id }}";
   var csrf_token = "{{ csrf_token }}";
   var recipient_pk = "{{ thread.other_person.pk }}";
+  var is_owner = ("{{ is_owner }}" == "True");
 </script>
 {% endblock %}
 

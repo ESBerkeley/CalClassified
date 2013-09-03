@@ -253,15 +253,41 @@
 
         </tbody>
         </table>
-    {% elif my_threads or ifs_waiting_list %}
+    {% elif not sold_outside_list and my_threads %}
         <center><h4> Sold Items </h4></center>
         <center><p>
             You haven't finished selling any items yet. <br>
             Mark your items as sold if they're done!
         </p></center>
+        <br>
     {% endif %}
 
-    {% if not my_threads and not ifs_waiting_list and not ifs_sold %}
+    {% if sold_outside_list %}
+        <table class="table table-striped">
+    <caption><h4> Sold Outside BuyNearMe </h4></caption>
+    <thead>
+        <tr>
+            <th>Item Title</th>
+            <th>Date Sold</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in sold_outside_list %}
+    <tr>
+      <td>
+        <a class="item-title" href = "/{{ item.pk }}"> {{ item.title }} </a>
+      </td>
+      <td>
+          {{ item.sold_date.date }}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    <br>
+    {% endif %}
+
+    {% if not my_threads and not ifs_waiting_list and not ifs_sold and not sold_outside_list %}
         <h2> You are not currently selling anything.</h2>
         <h4>
           <a href="{% url createIFS %}">Create a post now!</a>
