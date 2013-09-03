@@ -4,6 +4,7 @@ from urlparse import urlparse, parse_qs
 from django.db import connection
 from cc.ccapp.signals import *
 from django.http import HttpResponse, Http404, HttpResponseRedirect
+from cc.open_facebook.exceptions import OAuthException
 
 import datetime
 
@@ -58,12 +59,10 @@ def change_purchase(request, confirm):
         thread1.declined = True
         thread1.declined_user = recipient
         thread2.declined = True
-        thread2.declined_user = recipient
+
     else:
         thread1.declined = False
-        thread1.declined_user = None
         thread2.declined = False
-        thread2.declined_user = None
     thread1.save()
     thread2.save()
 
@@ -242,9 +241,15 @@ def save_fb_items_to_model(facebook, items):
 @facebook_required_lazy(scope='publish_actions')
 def free_for_sale_post(request, item):
     graph = require_persistent_graph(request)
-    facebook = FacebookUserConverter(graph)
-    response = facebook.set_free_for_sale(item)
-    return response
+    try:
+        graph.is_authenticated()
+        facebook = FacebookUserConverter(graph)
+        response = facebook.set_free_for_sale(item)
+        return response
+    except OAuthException:
+        return None
+    except AttributeError:
+        return None # Not Facebook Account
 
 
 @facebook_required_lazy(scope='publish_actions')
@@ -278,9 +283,15 @@ def fb_group_post(request, item, fb_group):
     action, user = connect_user(request)'''
 
     graph = require_persistent_graph(request)
-    facebook = FacebookUserConverter(graph)
-    response = facebook.set_fb_group(item, fb_group)
-    return response
+    try:
+        graph.is_authenticated()
+        facebook = FacebookUserConverter(graph)
+        response = facebook.set_fb_group(item, fb_group)
+        return response
+    except OAuthException:
+        return None
+    except AttributeError:
+        return None # Not Facebook Account
 #    except:
 #        return None
 
@@ -304,6 +315,6 @@ def get_exif(img):
                     decoded = TAGS.get(tag, tag)
                     ret[decoded] = value
     except IOError:
-        print 'IOERROR ' + fname
+        print 'IOERROR '# + fname # COMMENTED BECAUSE NO FNAME PRESENT IN FUNCTION
     return ret
     
