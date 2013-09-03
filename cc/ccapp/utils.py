@@ -242,11 +242,9 @@ def save_fb_items_to_model(facebook, items):
 @facebook_required_lazy(scope='publish_actions')
 def free_for_sale_post(request, item):
     graph = require_persistent_graph(request)
-    if graph.is_authenticated():
-        facebook = FacebookUserConverter(graph)
-        response = facebook.set_free_for_sale(item)
-        return response
-    return None
+    facebook = FacebookUserConverter(graph)
+    response = facebook.set_free_for_sale(item)
+    return response
 
 
 @facebook_required_lazy(scope='publish_actions')
@@ -280,11 +278,9 @@ def fb_group_post(request, item, fb_group):
     action, user = connect_user(request)'''
 
     graph = require_persistent_graph(request)
-    if graph.is_authenticated():
-        facebook = FacebookUserConverter(graph)
-        response = facebook.set_fb_group(item, fb_group)
-        return response
-    return None
+    facebook = FacebookUserConverter(graph)
+    response = facebook.set_fb_group(item, fb_group)
+    return response
 #    except:
 #        return None
 
