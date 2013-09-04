@@ -370,6 +370,7 @@ $(window).on('beforeunload', function(){
  * 
  * isRemoveHtml: Boolean that determines if I want to clear out the boxes, e.g., clicking on a new category, I want to keep it true so the boxes get cleared out. On a scroll down load, I want to preserve my current html.
  * isBoxActive: Boolean, saved in localStorage. Indicates if we want the saved state. Set to false on every page except "viewitem" using the beforeunload and unload functions. Also, force a false on all "browse" clicks. That way, we only load an old session on a "back" from an item view.
+ * isRunning: Boolean that returns true while loadbox is running, false otherwise.
  * 
  * 
  * 1. Check isRemoveHtml and reset page value if true, otherwise page will get incremented and is stored.
@@ -381,7 +382,7 @@ $(window).on('beforeunload', function(){
  * 6. Since we have just run loadbox, a session must be stored, so we mark the boolean as true. We also force isBoxActive false and the animation so the user can navigate after a session load normally.
  * 
  * Functions that are running alongside:
- * 1. A scroll function that monitors the position and increments the page and fires a loadbox if we scroll down.
+ * 1. A scroll function that monitors the position and increments the page and fires a loadbox if we scroll down. (Located in box.html)
  * 2. A function fires on page exit which saves the current scroll position in storage. (Located in box.html)
  * 3. Functions that fire on page "unloads" and "beforeunloads" that set isBoxActive.
  * 
@@ -422,8 +423,10 @@ var categoryObject;
 var page = 0;
 var order = 'dateNew';
 var isFilterFriends = false;
+var isRunning = false;
 
 function runloadBox(isRemoveHtml) {
+  isRunning = true;
   isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
     page = 0;
@@ -514,6 +517,7 @@ function runloadBox(isRemoveHtml) {
     $container.masonry();
     $(window).scrollTop(getScroll())
     $("#pac-ajax").hide();
+    isRunning = false;
   } else {
     $.ajax({
       type: "GET",
@@ -554,6 +558,7 @@ function runloadBox(isRemoveHtml) {
         $container.masonry();
         $("#pac-ajax").hide();
         setNewState();
+        isRunning = false;
       }
     });
   }
@@ -653,6 +658,10 @@ function toggleFriendsFilter(){
       $("#friends-li").removeClass("active");
   }
   runloadBox(true);
+}
+
+function getIsRunning() {
+  return isRunning;
 }
 /*****************************
  * End of Boxview

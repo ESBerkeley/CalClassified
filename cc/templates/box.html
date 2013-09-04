@@ -170,12 +170,12 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       {% endif %}
     }
     $('#dateNew-li').addClass("active");
-    runloadBox(false, true);
+    runloadBox(false);
     
     /*****************************/
     
     $(window).scroll(function(){
-      if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+      if($(window).scrollTop() + $(window).height() >= $(document).height() && !getIsRunning()) {
         page++;
         runloadBox(false);
       }
