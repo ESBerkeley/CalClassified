@@ -1,24 +1,39 @@
 <hr id="listings-header-line" />
 <center>
-    <div id="listings-header">
-        LISTINGS
-    </div>
+  <div id="listings-header">
+    LISTINGS
+  </div>
 </center>
-<div class="items-container container">
+<div class="items-container">
+  <div class="items-wrapper">
     {% for item in items_listed %}
-        <a href="{{ item.get_absolute_url }}">
-            <div class="item">
-                <center><img class="item-image" src="{{ item.get_thumbnail_url }}" /></center>
-                <div class="item-text">
-                    {{ item.title }}
-                </div>
-                <div class="item-price">
-                    {{ item.price }}
-                </div>
+      <a href="{{ item.get_absolute_url }}">
+        <!--<div class="item">
+            <center><img class="item-image" src="{{ item.get_thumbnail_url }}" /></center>
+            <div class="item-text">
+                {{ item.title }}
             </div>
-        </a>
+            <div class="item-price">
+                {{ item.price }}
+            </div>
+        </div>-->
+        
+        <div class="box-item user-item">
+          <img class="box-image" src="{{ item.get_thumbnail_url }}" />
+          <div class="box-text">
+            <div class="box-title">{{ item.title }}</div>
+            <div class="box-hr"></div>
+            <span class="box-left">
+              <div class="box-price">${{ item.price }}</div>
+              <div class='box-date'></div>
+            </span>
+            <div class='box-right'></div>
+          </div>
+        </div>
+      </a>
     {% endfor %}
     {% if not items_listed %}
-        <center><div class="no-items-listed">No items listed</div></center>
+      <center><div class="no-items-listed">No items listed</div></center>
     {% endif %}
+  </div>
 </div>

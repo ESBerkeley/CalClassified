@@ -135,6 +135,17 @@
     width: 988px;
 }
 
+.items-wrapper {
+  margin-left:27px;
+}
+
+.user-item {
+  float:left;
+  margin-right:13px;
+  height:295px;
+}
+
+/*
 .item {
     background-color: white;
     border: 1px solid #D3D3D3;
@@ -178,7 +189,7 @@
     font-weight: 600;
     border: 2px solid white;
     border-top: none;
-}
+}*/
 
 .item:hover {
         -moz-box-shadow: 0 0 3px 3px rgba(255,183,51,0.3);
