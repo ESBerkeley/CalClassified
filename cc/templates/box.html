@@ -184,7 +184,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     
     //Loads on scrolling down. Integer is pixels before reaching the bottom we start loading.
     $(window).scroll(function() {
-      if($(window).scrollTop() + $(window).height() + 70 >= $(document).height() && !getIsRunning()) {
+      if($(window).scrollTop() + $(window).height() + 0 >= $(document).height() && !getIsRunning()) {
         page++;
         runloadBox(false);
       }
