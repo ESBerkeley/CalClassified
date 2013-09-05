@@ -130,20 +130,29 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
 {% endblock %}
 
 {% block content %}
-    <div id="box" class="span12 offset3">
-      <!-- Box -->
+    <div class="span12 offset3">
+      <div id="box">
+        <!-- Box -->
+      </div>
       
       <div id="box-empty">
         <h2>Sorry, there were no items that matched your search.</h2>
       </div>
+      
+      <div id="pac-ajax-mid">
+        <h4 style="color:white">Loading . . . <img src="{{ STATIC_URL }}images/pacman-ajax-flipped.gif"/> </h4>
+      </div>
+      
+      <div id="pac-ajax">
+        <h4 style="color:white">Loading . . . <img src="{{ STATIC_URL }}images/pacman-ajax-flipped.gif"/> </h4>
+      </div>
+      
     </div>
     
   </div>
 </div><!-- end sidebar -->
 
-<div id="pac-ajax">
-  <h4 style="color:white">Loading . . . <img src="{{ STATIC_URL }}images/pacman-ajax-flipped.gif" style="" /> </h4>
-</div>
+
 
   <form style="display: none;" id="session">
    <textarea id="sfield">3</textarea>
@@ -171,11 +180,11 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     }
     $('#dateNew-li').addClass("active");
     runloadBox(false);
-    
     /*****************************/
     
-    $(window).scroll(function(){
-      if($(window).scrollTop() + $(window).height() >= $(document).height() && !getIsRunning()) {
+    //Loads on scrolling down. Integer is pixels before reaching the bottom we start loading.
+    $(window).scroll(function() {
+      if($(window).scrollTop() + $(window).height() + 70 >= $(document).height() && !getIsRunning()) {
         page++;
         runloadBox(false);
       }

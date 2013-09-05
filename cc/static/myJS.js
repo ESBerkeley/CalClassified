@@ -445,9 +445,6 @@ function runloadBox(isRemoveHtml) {
   }
   
   var cir_status = getCircs();
-  
-  //load pacman
-  $("#pac-ajax").show();
 
   if(query) {      //hides and shows cancel button in search bar
     $("#search-cancel-nav").show();
@@ -516,9 +513,16 @@ function runloadBox(isRemoveHtml) {
     $container.append($containerHtml).masonry('appended', $containerHtml);
     $container.masonry();
     $(window).scrollTop(getScroll())
-    $("#pac-ajax").hide();
+    //$("#pac-ajax").hide();
     isRunning = false;
   } else {
+    //load pacman
+    if(savedHtml.length > 0) {
+      $("#pac-ajax").show();
+    } else {
+      $("#pac-ajax-mid").show();
+    }
+    
     $.ajax({
       type: "GET",
       url: url,
@@ -557,6 +561,7 @@ function runloadBox(isRemoveHtml) {
         
         $container.masonry();
         $("#pac-ajax").hide();
+        $("#pac-ajax-mid").hide();
         setNewState();
         isRunning = false;
       }
