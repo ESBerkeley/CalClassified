@@ -347,10 +347,6 @@ img.medium {
   margin-top:18px;
 }
 
-#box-empty {
-  display:none;
-}
-
 .box-item {
   margin-bottom:13px;	/*vertical gutter*/
   width:300px;
@@ -438,6 +434,10 @@ img.medium {
   width:37px;
 }
 
+#box-empty {
+  display:none;
+}
+
 #pac-ajax-mid {
   width:160px;
   height:45px;
@@ -463,6 +463,10 @@ img.medium {
   margin-left:auto;
   margin-right:auto;
   margin-top:15px;
+  display:none;
+}
+
+#box-done {
   display:none;
 }
 
