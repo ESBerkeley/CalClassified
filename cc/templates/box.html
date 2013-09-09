@@ -40,19 +40,19 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapseOne" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="-1-category" class="side-item category" onclick="setCategory(-1); runloadBox(true);">
+              <li id="-1-category" class="side-item category" onclick="setCategory(-1); runloadBox(true,true);">
                 <div id="Everything_category" class="side-text">Everything</div>
               </li>
               {% for cat in cc_cats %}
                 {% if cat.name != "Other" %}
-                <li id="{{ cat.id }}-category" class="side-item category" onclick="setCategory({{cat.id}}); runloadBox(true);">
+                <li id="{{ cat.id }}-category" class="side-item category" onclick="setCategory({{cat.id}}); runloadBox(true,true);">
                   <div id="{{cat.id}}_category" class="side-text">{{cat.name}}</div>
                 </li>
                 {% endif %}
               {% endfor %}
               {% for cat in cc_cats %}
                 {% if cat.name == "Other" %}
-                  <li id="{{ cat.id }}-category" class="side-item category" onclick="setCategory({{cat.id}}); runloadBox(true);">
+                  <li id="{{ cat.id }}-category" class="side-item category" onclick="setCategory({{cat.id}}); runloadBox(true,true);">
                   <div id="{{cat.id}}_category" class="side-text">Other</div>
                 </li>
                 {% endif %}
@@ -72,13 +72,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
         <div id="collapse2" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <li id="dateNew-li" class="side-item sort" onclick="setOrder('dateNew'); runloadBox(true);">
+              <li id="dateNew-li" class="side-item sort" onclick="setOrder('dateNew'); runloadBox(true,true);">
                 <div class="side-text order-text">Date: Newest First</div>
               </li>
-              <li id="priceLow-li" class="side-item sort" onclick="setOrder('priceLow'); runloadBox(true);">
+              <li id="priceLow-li" class="side-item sort" onclick="setOrder('priceLow'); runloadBox(true,true);">
                 <div class="side-text order-text">Price: Lowest First</div>
               </li>
-              <li id="priceHigh-li" class="side-item sort" onclick="setOrder('priceHigh'); runloadBox(true);">
+              <li id="priceHigh-li" class="side-item sort" onclick="setOrder('priceHigh'); runloadBox(true,true);">
                 <div class="side-text order-text">Price: Highest First</div>
               </li>
             </ul>
@@ -118,8 +118,8 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
                 <div class="form-inline price-box">
                   <input id="min" type="text" class="input-mini" placeholder="Low"> ~
                   <input id="max" type="text" class="input-mini" placeholder="High" style="margin-right:8px;">
-                  <i id="price-go" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox(true);"></i>
-                  <i id="price-cancel" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel(); runloadBox(true);"></i>
+                  <i id="price-go" class="icon-arrow-right price-icon" type="submit" class="submit" onclick="runloadBox(true,true);"></i>
+                  <i id="price-cancel" class="icon-remove price-icon" type="submit hidden" onclick="priceboxCancel(); runloadBox(true,true);"></i>
                 </div>
               </li>
             </ul>
@@ -180,26 +180,26 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
       {% endif %}
     }
     $('#dateNew-li').addClass("active");
-    runloadBox(false);
+    runloadBox(false, true);
     /*****************************/
     
-    //Loads on scrolling down. Integer is pixels before reaching the bottom we start loading.
+    //Loads on scrolling down. Integer is pixels before reaching the bottom we start loading. Need at least 1 for Chrome glitch.
     $(window).scroll(function() {
-      if($(window).scrollTop() + $(window).height() + 0 >= $(document).height() && !getIsRunning()) {
+      if($(window).scrollTop() + $(window).height() + 1 >= $(document).height() && !getIsRunning()) {
         page++;
-        runloadBox(false);
+        runloadBox(false, false);
       }
     });
     
     $("#min").keypress(function(e) {
       if(e.which == 13) {
-        runloadBox(true);
+        runloadBox(true, true);
       }
     });
     
     $("#max").keypress(function(e) {
       if(e.which == 13) {
-        runloadBox(true);
+        runloadBox(true, true);
       }
     });
     
@@ -212,8 +212,8 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     $("body").css("padding-top","+=70px");
     $(".navbar .container").css("min-width","97%");
 
-    $("#searchbarform").attr("action","javascript: runloadBox(true);");
-    $("#search-go-nav").attr("onclick", "runloadBox(true)");
+    $("#searchbarform").attr("action","javascript: runloadBox(true, true);");
+    $("#search-go-nav").attr("onclick", "runloadBox(true, true)");
 
     /*{% if q %}
       //if query exists, keep at the top
@@ -232,25 +232,13 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     }
   */
   });
-  /*
-  var in_restore = 0;
-  var ogrid,old_obj,scraps,oflags;
-  scraps=[];
-  oflags="";*/
+  
   var cat_object = {};
   var circ_object = {};
   var categories = [];
   var circles = [];
-  //var filtering_by_friends = false;
-
-
-  /*var numx = 4;
-  var heights = new Array();
-  for(var i = 0; i < numx; i++){
-    heights[i] = 0;
-  }*/
   
-  {% for entry in cc_cats %}  //all categories and circles are initially false
+  {% for entry in cc_cats %}
     categories.push("{{entry.name}}")
   {% endfor %}
   for (index in categories) {
@@ -258,7 +246,7 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     cat_object[cat] = false;
   }
 
-  {% for entry in cc_circs %}  //circles
+  {% for entry in cc_circs %}
     circles.push("{{entry.id}}")
   {% endfor %}
   for (index in circles) {

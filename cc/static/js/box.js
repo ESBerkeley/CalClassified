@@ -60,7 +60,7 @@ var order = 'dateNew';
 var isFilterFriends = false;
 var isRunning = false;
 
-function runloadBox(isRemoveHtml) {
+function runloadBox(isRemoveHtml, isLoadingMiddle) {
   isRunning = true;
   isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
@@ -152,10 +152,10 @@ function runloadBox(isRemoveHtml) {
     isRunning = false;
   } else {
     //load pacman
-    if(savedHtml.length > 0) {
-      $("#pac-ajax").show();
-    } else {
+    if(isLoadingMiddle) {
       $("#pac-ajax-mid").show();
+    } else {
+      $("#pac-ajax").show();
     }
     
     $.ajax({

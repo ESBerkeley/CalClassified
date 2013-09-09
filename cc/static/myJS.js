@@ -358,7 +358,7 @@ $("#modal-send").on("click", function(){
   });
 });
 
-//Sets "isBoxActive" false for all pages. Overridden in "view item".
+//Sets "isBoxActive" false for all pages except in "view item". Used to on runloadBox for "back".
 $(window).on('beforeunload', function(){
   localStorage["isBoxActive"] = JSON.stringify(false);
 });
