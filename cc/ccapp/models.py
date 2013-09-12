@@ -101,8 +101,10 @@ class ItemForSale(Post): #lol extends post be sure to check its field's as well
     circles = models.ManyToManyField(Circle)
     cached_thumb = models.CharField(max_length=200, default = '')
 
+    num_interested_buyers = models.IntegerField(default=0)
+    first_interested_buy_date = models.DateTimeField(null=True, blank=True)
     pending_buyer = models.ForeignKey(User, null=True, default=None, related_name='buyer')
-    pending_flag = models.BooleanField(default = False)
+    pending_flag = models.BooleanField(default=False)
     pending_date = models.DateTimeField(null=True, blank=True)
     sold = models.BooleanField(default = False)
     deleted = models.BooleanField(default = False)
@@ -235,7 +237,8 @@ class ItemForSaleForm(ModelForm):
     class Meta:
         model = ItemForSale
         exclude = ('time_created','images', 'key_data', 'owner','owner_facebook_id','cached_thumb', 'pending_buyer',
-                   'pending_date', 'pending_flag', 'sold', 'sold_date', 'deleted', 'approved','circles', 'expire_date')
+                   'pending_date', 'pending_flag', 'sold', 'sold_date', 'deleted', 'approved','circles', 'expire_date',
+                    'num_interested_buyers', 'first_interested_buy_date')
 
     #imgfile  = forms.ImageField(label='Select a file', help_text='max. 10 megabytes', required=False)
 

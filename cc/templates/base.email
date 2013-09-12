@@ -18,7 +18,7 @@ p, blockquote {
   <p>Thanks,<br>
   BuyNearMe Team</p>
   {% load static %}
-  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}124ta-orange.png"><br>
+  <img style="height:37px;" src="http://buynear.me/{% get_static_prefix %}images/site_logo.png"><br>
   <p2>
       <a href="mailto:feedback@buynear.me">Contact Us</a> if you have any concerns!<br>
       Replies to this email will not be read.<br>

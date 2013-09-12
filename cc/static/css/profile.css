@@ -16,13 +16,21 @@
     padding: 5px;
 }
 
-.alert > h3 {
+.confirm > h3 {
     font-weight:600;
     line-height:24px;
 }
 
 .alert > p {
-    margin:0px;
+    margin:0;
+}
+
+.confirm > p {
+    margin: 10px 0;
+}
+
+.confirm {
+    margin-bottom:0;
 }
 
 .item-title {
