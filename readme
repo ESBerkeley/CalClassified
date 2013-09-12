@@ -1,6 +1,6 @@
 Prerequisites:
 
--django 1.3 or greater
+-django 1.4.3 or greater
 
 NOTE: as of jun 5, there is no need to use easy_install to get django_evolution, django_registration, or django_facebook.
 However, you will have to download, compile and install the python imaging library to use django-facebook.
@@ -11,10 +11,28 @@ Stuff
 and stuff
 
 
-
 Image Upload Tutorials:
 http://groups.google.com/group/django-users/browse_thread/thread/712946dfabaa2ec1
 http://stackoverflow.com/questions/5871730/need-a-minimal-django-file-upload-example
 
 python manage.py createcachetable user_sessions
 python manage.py testdbgen
+
+9/12/13
+Elasticsearch and Haystack:
+#I think we're on haystack 2.1.0, GET AT LEAST 2.0.x +
+pip install django-haystack --upgrade
+
+# On Mac OS X...
+brew install elasticsearch
+
+# On Ubuntu...
+apt-get install elasticsearch
+
+pip install pyelasticsearch
+
+pip install django==1.4.3
+
+#Seung developed this on windows, but he thinks if you're on OS X or Linus, just type "elasticsearch" in the terminal to run it
+#on windows I manually go to the elasticsearch folder and run elasticsearch.bat
+python manage.py rebuild_index

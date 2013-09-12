@@ -317,4 +317,3 @@ def get_exif(img):
     except IOError:
         print 'IOERROR '# + fname # COMMENTED BECAUSE NO FNAME PRESENT IN FUNCTION
     return ret
-    

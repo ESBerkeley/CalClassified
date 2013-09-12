@@ -1,50 +1,32 @@
-from cc.swamp_logging import logit, custom_log_message
-
-from cc.ccapp.models import *
-from cc.ccapp.signals import *
-from cc.ccapp.utils import send_bnm_message, change_purchase, save_fb_items_to_model, \
-    fb_group_post, free_for_sale_post, image_rotate, get_exif
-from cc.ccapp.forms import EmailForm, FeedbackForm, CreditCardForm
-
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
 from django.core.context_processors import csrf
 from django.core import serializers
-from django.db import connection
-from django.db.models import Avg, Max, Min, Count
+from django.db.models import Avg, Max, Count
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
-
-from cc.django_facebook.models import *
-from cc.django_facebook.decorators import facebook_required, facebook_required_lazy
-from cc.django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
-from cc.open_facebook.exceptions import OpenFacebookException
-
 from haystack.query import SearchQuerySet
-from haystack.management.commands import update_index
-
-from cc.multiuploader.models import MultiuploaderImage
-
 from django.core.mail import send_mail
+
+from cc.swamp_logging import logit, custom_log_message
+from cc.ccapp.models import *
+from cc.ccapp.signals import *
+from cc.ccapp.utils import *
+from cc.ccapp.forms import EmailForm, FeedbackForm, CreditCardForm
+from cc.django_facebook.decorators import facebook_required
+from cc.multiuploader.models import MultiuploaderImage
 from cc.templated_email import send_templated_mail
 
-from urlparse import urlparse, parse_qs
-
 #for image rotate
-from StringIO import StringIO
 from PIL import Image
-from PIL import ImageDraw
-from django.core.files.uploadedfile import InMemoryUploadedFile
 #
 
 import random
 import datetime
-import re
+
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 @csrf_exempt
@@ -813,13 +795,6 @@ def ajax_box(request):
     checked_categories = map(int, checked_categories)
     #if len(checked_categories) == 11:
     #    checked_categories == range(1, 5) + range(6, 12) #take out Facebook Post Category
-    
-    """ #OLD NON-HAYSTACK SEARCH
-    if ('q' in request.GET) and request.GET['q'].strip():
-        query_string = request.GET['q']
-        entry_query = get_query(query_string, ['title', 'body','category__name','circles__name'])
-        found_entries = found_entries.filter(entry_query).order_by('-time_created')
-    """
 
     found_entries = SearchQuerySet()
 
@@ -830,46 +805,41 @@ def ajax_box(request):
     #     friend_ids = [x.facebook_id for x in friends]
     #     found_entries = found_entries.filter(owner_facebook_id__in = friend_ids)
 
-
+    found_entries = found_entries.filter(
+            price__range=(min_price,max_price),
+            approved="true",
+            sold="false",
+            pending_flag="false",
+            deleted="false",
+            expire_date__gte=datetime.datetime.now()
+        )
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
         found_entries = found_entries.filter(
             text=found_entries.query.clean(query_string),
-            circles__in=checked_circles,
-            category__in=checked_categories,
-            price__range=(min_price,max_price),
-            approved=True,
-            sold=False,
-            pending_flag=False,
-            deleted=False,
-            expire_date__gte=datetime.datetime.now()
-        )
+            )
+
         #found_entries = SearchQuerySet().filter(text=query_string)
         #found_entries = found_entries.filter(entry_query) #auto orders by relevance score
-    else:
-        found_entries = found_entries.filter(
-            circles__in=checked_circles,
-            category__in=checked_categories,
-            price__range=(min_price,max_price),
-            approved=True,
-            sold=False,
-            pending_flag=False,
-            deleted=False,
-            expire_date__gte=datetime.datetime.now()
-        )
+
+    #haystack bugs if you feed it an empty list so only pass in as filter param when needed
+    #client sends empty array if Everything is checked
+    if checked_categories:
+        found_entries = found_entries.filter(category__in=checked_categories)
+
     #These values determine the number of boxes in each GET. Keep divisible by 3.
     load_from = 39 * p
     load_to = 39 * (p+1)
     #sorting order. order variable determines what goes first. ex: order=priceLow, cheapest first
     order  = request.GET['order']
     if order == 'dateNew':
-        found_entries = found_entries.order_by('-time_created').load_all()[load_from:load_to]
+        found_entries = found_entries.order_by('-time_created')[load_from:load_to]
     elif order == 'dateOld':
-        found_entries = found_entries.order_by('time_created').load_all()[load_from:load_to]
+        found_entries = found_entries.order_by('time_created')[load_from:load_to]
     elif order == 'priceLow':
-        found_entries = found_entries.order_by('price').load_all()[load_from:load_to]
+        found_entries = found_entries.order_by('price')[load_from:load_to]
     elif order == 'priceHigh':
-        found_entries = found_entries.order_by('-price').load_all()[load_from:load_to]
+        found_entries = found_entries.order_by('-price')[load_from:load_to]
 
     #is user logged in? highlight his friends' posts
     #TODO: this could be very inefficient. consider performance optimization... perhaps store facebook user id of creator in post model...

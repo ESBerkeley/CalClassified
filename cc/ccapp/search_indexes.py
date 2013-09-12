@@ -1,10 +1,9 @@
 from haystack import indexes
-from haystack import site
 from models import *
 import datetime
 
 
-class ItemForSaleIndex(indexes.RealTimeSearchIndex):
+class ItemForSaleIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     title = indexes.CharField(model_attr='title', boost=1.5)
     #IFS
@@ -25,25 +24,25 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
     #is_facebook_post = indexes.BooleanField(model_attr='is_facebook_post')
     expire_date = indexes.DateTimeField(model_attr='expire_date')
 
+    #It's also important to note that you CAN NOT filter using an actual boolean value...which is sort of dumb.
+    # You HAVE to use either 'true' or 'false'. e.g. sqs = sqs.filter(mybool='true').
+    # Using True or False will behave like 'true', and cause errors.
+
     def prepare_approved(self, obj):
-        if obj.approved==False:
-            return ''
-        return True
+        # if obj.approved==False:
+        #     return ''
+        # return True
+        # Kept to record the previous fix to boolean filtering not working
+        return obj.approved
 
     def prepare_pending_flag(self, obj):
-        if obj.pending_flag==False:
-            return ''
-        return True
+        return obj.pending_flag
 
     def prepare_sold(self, obj):
-        if obj.sold==False:
-            return ''
-        return True
+        return obj.sold
 
     def prepare_deleted(self, obj):
-        if obj.deleted==False:
-            return ''
-        return True
+        return obj.deleted
 
     """def prepare_is_facebook_post(self, obj):
         if obj.is_facebook_post==False:
@@ -59,9 +58,6 @@ class ItemForSaleIndex(indexes.RealTimeSearchIndex):
     def get_model(self):
         return ItemForSale
 
-    def index_queryset(self):
+    def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
         return self.get_model().objects.filter(time_created__lte=datetime.datetime.now())
-        
-        
-site.register(ItemForSale, ItemForSaleIndex)
