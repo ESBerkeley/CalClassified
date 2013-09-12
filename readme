@@ -29,6 +29,9 @@ brew install elasticsearch
 # On Ubuntu...
 apt-get install elasticsearch
 
+#APPARENTLY THIS DOESNT WORK, THEN TRY
+pip install elasticsearch
+
 pip install pyelasticsearch
 
 pip install django==1.4.3
