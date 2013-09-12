@@ -1461,7 +1461,7 @@ def repost_item(request):
         item = ItemForSale.objects.get(id=request.POST['post_id'])
         if request.user == item.owner:
             expired = item.is_expired
-            item.expire_date = datetime.datetime.now()+timedelta(days=60)
+            item.expire_date = datetime.datetime.now()+timedelta(days=30)
             item.time_created = datetime.datetime.now()
             item.save()
             if expired:

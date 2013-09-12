@@ -4,6 +4,7 @@
  * States are stored using "localstorage" which is persistent until a cache/cookie clear.
  * 
  * isRemoveHtml: Boolean that determines if I want to clear out the boxes, e.g., clicking on a new category, I want to keep it true so the boxes get cleared out. On a scroll down load, I want to preserve my current html.
+ * isLoadingMiddle: Boolean that determines where the ajax loading box is, the middle or bottom.
  * isBoxActive: Boolean, saved in localStorage. Indicates if we want the saved state. Set to false on every page except "viewitem" using the beforeunload and unload functions. Also, force a false on all "browse" clicks. That way, we only load an old session on a "back" from an item view.
  * isRunning: Boolean that returns true while loadbox is running, false otherwise.
  * 
@@ -36,7 +37,6 @@ $container.masonry({
 //sets isBoxActive if not yet set to prevent JSON conversion errors later
 if(localStorage["isBoxActive"] === null) {
   localStorage["isBoxActive"] = JSON.stringify(false);
-  console.log('isactive')
 }
 
 //Set animation. Ignore animation if we are loading a session to make the transition seem more "seamless".
@@ -59,8 +59,9 @@ var page = 0;
 var order = 'dateNew';
 var isFilterFriends = false;
 var isRunning = false;
+var isDone = false;
 
-function runloadBox(isRemoveHtml) {
+function runloadBox(isRemoveHtml, isLoadingMiddle) {
   isRunning = true;
   isBoxActive = JSON.parse(localStorage["isBoxActive"])
   if(isRemoveHtml) {
@@ -152,10 +153,10 @@ function runloadBox(isRemoveHtml) {
     isRunning = false;
   } else {
     //load pacman
-    if(savedHtml.length > 0) {
-      $("#pac-ajax").show();
-    } else {
+    if(isLoadingMiddle) {
       $("#pac-ajax-mid").show();
+    } else {
+      $("#pac-ajax").show();
     }
     
     $.ajax({
@@ -163,6 +164,14 @@ function runloadBox(isRemoveHtml) {
       url: url,
       dataType: "json",
       success: function(data){
+        if(data.length < 39) {
+          isDone = true;
+          //$("#box-done").show();
+        } else {
+          isDone = false;
+          //$("#box-done").hide();
+        }
+        
         if(isRemoveHtml) {
           var elements = $container.masonry('getItemElements')
           if(elements.length > 0)

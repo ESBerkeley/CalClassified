@@ -173,7 +173,12 @@ def buy_button_hndlr(sender, **kwargs):
         buyer = kwargs['buyer'].get_profile()
         new_note = Notification(post_from = item, going_to = seller, type = 3)
         new_note.second_party = buyer
-        
+
+        item.num_interested_buyers += 1
+        if not item.first_interested_buy_date:
+            item.first_interested_buy_date = datetime.now()
+        item.save()
+
         seller.friend_notifications += 1
         seller.save()
         thread = Thread.objects.get(owner=seller.user, post_id=item.id, other_person=buyer.user)
