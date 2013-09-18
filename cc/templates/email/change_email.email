@@ -1,6 +1,6 @@
 {% extends "base.email" %}
 
-{% block subject %}BuyNearMe Email Change{% endblock %}
+{% block subj %}BuyNearMe Email Change{% endblock %}
 {% block content %}
   <p>Greetings {{ first_name }},</p>
   <p>
