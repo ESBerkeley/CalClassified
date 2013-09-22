@@ -222,16 +222,7 @@ function getScroll() {
   return JSON.parse(localStorage["scroll"]);
 }
 
-function search(){
-  q = document.getElementById('searchbar').value;
-  url = "/browse/?q="+q
-  window.location = url;
-}
 
-function searchbarCancel() {   //cancel for the search bar
-  document.getElementById('searchbar').value = '';
-  runloadBox(true);
-}
 
 function priceboxCancel() {   //cancel for the price box
   document.getElementById('max').value = null;

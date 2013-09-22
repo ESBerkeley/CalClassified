@@ -358,7 +358,34 @@ $("#modal-send").on("click", function(){
   });
 });
 
+/***
+ * Box Things
+ ***/
+
 //Sets "isBoxActive" false for all pages except in "view item". Used to on runloadBox for "back".
 $(window).on('beforeunload', function(){
   localStorage["isBoxActive"] = JSON.stringify(false);
 });
+
+function setInactive() {
+  $(window).on('unload', function(){
+    localStorage["isBoxActive"] = JSON.stringify(false);
+  });
+}
+
+//Box Search
+function search(){
+  q = document.getElementById('searchbar').value;
+  url = "/browse/?q="+q
+  setInactive();
+  window.location = url;
+}
+
+function searchbarCancel() {   //cancel for the search bar
+  document.getElementById('searchbar').value = '';
+  runloadBox(true);
+}
+
+/***
+ * End Box Things
+ ***/

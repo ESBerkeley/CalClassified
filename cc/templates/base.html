@@ -208,48 +208,41 @@ onkeypress="window.open(this.href); return false;" href="http://www.surveygizmo.
     <script src="{% get_static_prefix %}abomination.js"></script>
     <script src="{% get_static_prefix %}js/masonry.pkgd.min.js"></script>
     <script src="{% get_static_prefix %}js/moment.min.js"></script>
-    <script src="{% get_static_prefix %}myJS.js?v=22"></script>
+    <script src="{% get_static_prefix %}myJS.js?v=23"></script>
 
     {% endblock %}
 
     {% block js_script %}
     <script type="text/javascript">
-    $.myproject = {} // namespace
-    $.myproject.STATIC_URL = '{{ STATIC_URL }}';
-    $(".collapse").collapse();
-    $("#search-cancel-nav").hide();  //hides search cancel button initially
-    $('.tooltips').tooltip('hide');  //activates tooltips. Use class "tooltips" plural. "tooltips" is taken and messes up
-    get_friend_notifications();
+      $.myproject = {} // namespace
+      $.myproject.STATIC_URL = '{{ STATIC_URL }}';
+      $(".collapse").collapse();
+      $("#search-cancel-nav").hide();  //hides search cancel button initially
+      $('.tooltips').tooltip('hide');  //activates tooltips. Use class "tooltips" plural. "tooltips" is taken and messes up
+      get_friend_notifications();
 
-    //jquery that adjusts sidebar horizontal scrolling
-    $(function() {
-        var $sidebar   = $(".sidebar-nav"),
-            $window    = $(window),
-            offset     = $sidebar.offset(),
-            leftPadding = 20;
-        $window.scroll(function() {
-            if ($window.scrollLeft() > 0) {
-                $sidebar.stop().animate({
-                    marginLeft: -$window.scrollLeft() + leftPadding
-                },0);
-            } else {
-                $sidebar.stop().animate({
-                    marginLeft: leftPadding
-                },0);
-            }
-        });
-    });
+      //jquery that adjusts sidebar horizontal scrolling
+      $(function() {
+          var $sidebar   = $(".sidebar-nav"),
+              $window    = $(window),
+              offset     = $sidebar.offset(),
+              leftPadding = 20;
+          $window.scroll(function() {
+              if ($window.scrollLeft() > 0) {
+                  $sidebar.stop().animate({
+                      marginLeft: -$window.scrollLeft() + leftPadding
+                  },0);
+              } else {
+                  $sidebar.stop().animate({
+                      marginLeft: leftPadding
+                  },0);
+              }
+          });
+      });
 
-    $('#friend_notifications_dropdown').click(function(){
-      clear_notif_number();
-    });
-
-    function setInactive() {
-	  $(window).on('unload', function(){
-		localStorage["isBoxActive"] = JSON.stringify(false);
-	  });
-    }
-    
+      $('#friend_notifications_dropdown').click(function(){
+        clear_notif_number();
+      });
     </script>
     {% endblock %}
 
