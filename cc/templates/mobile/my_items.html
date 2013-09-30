@@ -23,7 +23,7 @@
 
                 <li class="browse-item">
                 <a href="{{ thread.get_mobile_url }}" rel="external">
-                    <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;"/>
+                    <img src="{{ thread.item.get_thumbnail_url }}" style="max-height: 100%;"/>
                     <h3>
                         {{ thread.post_title }}
                         {% if not thread.is_read %}
@@ -48,7 +48,7 @@
 
                 <li class="browse-item">
                 <a href="{{ thread.get_mobile_url }}" rel="external">
-                    <img src="{{ thread.post.get_thumbnail_url }}" style="max-height: 100%;"/>
+                    <img src="{{ thread.item.get_thumbnail_url }}" style="max-height: 100%;"/>
                     <h3>
                         {{ thread.post_title }}
                         {% if not thread.is_read %}

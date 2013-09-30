@@ -205,19 +205,19 @@ def ajax_browse(request):
         query_string = request.GET['searchText']
         found_entries = SearchQuerySet().filter_or(
             text=query_string,
-            category__in=checked_categories,
-            approved=True,
-            sold=False,
-            pending_flag=False,
-            deleted=False,
+            approved="true",
+            sold="false",
+            pending_flag="false",
+            deleted="false",
+            expire_date__gte=datetime.datetime.now(),
             price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
     else:
         found_entries = SearchQuerySet().filter_or(
-            category__in=checked_categories,
-            approved=True,
-            sold=False,
-            pending_flag=False,
-            deleted=False,
+            approved="true",
+            sold="false",
+            pending_flag="false",
+            deleted="false",
+            expire_date__gte=datetime.datetime.now(),
             price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
 
     list_entries = []

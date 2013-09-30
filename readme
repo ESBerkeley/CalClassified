@@ -36,6 +36,7 @@ pip install pyelasticsearch
 
 pip install django==1.4.3
 
-#Seung developed this on windows, but he thinks if you're on OS X or Linus, just type "elasticsearch" in the terminal to run it
+#Seung developed this on windows, but he thinks if you're on OS X or Linus, run the command below to start elasticsearch
+sudo service elasticsearch start
 #on windows I manually go to the elasticsearch folder and run elasticsearch.bat
 python manage.py rebuild_index
