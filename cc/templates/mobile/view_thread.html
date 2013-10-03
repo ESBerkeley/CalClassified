@@ -16,12 +16,13 @@
     </p>
 
     {% if not item.pending_flag and not thread.declined and item.owner == request.user %}
+    Selling to this buyer?
     <fieldset class="ui-grid-a">
         <div class="ui-block-a">
-            <a href="#confirm-modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="c">Confirm Purchase</a>
+            <a href="#confirm-modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="c">Yes</a>
         </div>
         <div class="ui-block-b">
-            <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Reply</a>
+            <a href="#modal" id="buy-btn" data-role="button" data-rel="dialog" data-theme="b">Reply/No</a>
         </div>
     </fieldset>
     {% else %}
