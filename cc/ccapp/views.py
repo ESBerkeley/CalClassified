@@ -203,6 +203,7 @@ def sell_item_POST(request):
                     obj = MultiuploaderImage()
                     image = Image.open(file)
                     rotate_name = "rotate-value" + str(index)
+                    print float(request.POST[rotate_name])
                     obj.image = image_rotate(image, float(request.POST[rotate_name]), str(file))
                     obj.filename = str(file)
                     obj.key_data = obj.key_generate

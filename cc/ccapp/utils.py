@@ -295,14 +295,12 @@ def fb_group_post(request, item, fb_group):
 #    except:
 #        return None
 
-def image_rotate(image, degrees, filename):  #Rotate a PIL Image, then convert it into a Django file
-    im = image.rotate(degrees)
+def image_rotate(image, degrees, filename):  #Rotate a PIL Image, then convert it into a Django file. We must convert degrees into negative first, because JS rotation operates in the opposite direction as PIL
+    im = image.rotate(-degrees)
     buffer = StringIO()
     im.save(buffer, "PNG")
     image_file = InMemoryUploadedFile(buffer, None, filename, 'image/png', buffer.len, None)
     return image_file
-
-
  
 def get_exif(img):
     """Get embedded EXIF data from image file."""
