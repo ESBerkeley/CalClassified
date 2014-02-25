@@ -12,6 +12,9 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^login/$', "login", name='login'),
     url(r'^browse/$',"browse", name="browse"),
     url(r'^sell/$',"sell", name="sell"),
+    #Totally useless
+    #url(r'^sell/$',"sell", name="createIFS"),
+    #url(r'^feedback/$',"home", name="feedback"),
     url(r'^features',"features", name="features"),
     url(r'^my_items/$',"my_items", name="my_items"),
     url(r'^buying/$',"buying", name="buying"),
@@ -27,6 +30,11 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^verify_user/(?P<auth_key>[\w\+%_& ]+)/$','verify_user',name="verify_user"),
     #url(r'^accounts/login/$','browse'),
 
+    #ACCOUNT URLS
+    #url(r'^view_messages/$',"view_messages", name="view_messages"),
+    url(r'^view_messages/(?P<thread_id>\d+)/$',"view_thread"),
+    url(r'^accounts/profile/messages/(?P<thread_id>\d+)$', 'view_thread'),
+
     #FACEBOOK
     url(r'^facebook/', include('django_facebook.urls')),
     url(r'^accounts/', include('django_facebook.auth_urls')),
@@ -39,10 +47,6 @@ urlpatterns = patterns('ccapp.mobile_views',
     url(r'^ajax/reply_comment/$', "ajax_reply_comment"),
     url(r'^ajax/delete_notifications/$', "ajax_delete_notifications"),
 
-    #ACCOUNT URLS
-    #url(r'^view_messages/$',"view_messages", name="view_messages"),
-    url(r'^view_messages/(?P<thread_id>\d+)/$',"view_thread"),
-    url(r'^accounts/profile/messages/(?P<thread_id>\d+)$', 'view_thread'),
     
     #Banned People
     url(r'^banned/$','banned', name="banned"),
