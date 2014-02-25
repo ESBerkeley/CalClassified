@@ -1476,7 +1476,7 @@ def ajax_repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
         if request.user == item.owner:
-            item.expire_date = datetime.datetime.now()+timedelta(days=60)
+            item.expire_date = datetime.datetime.now()+timedelta(days=30)
             item.time_created = datetime.datetime.now()
             item.save()
             return HttpResponse("OK")

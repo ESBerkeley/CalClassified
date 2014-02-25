@@ -42,6 +42,7 @@ urlpatterns = patterns('ccapp.mobile_views',
     #ACCOUNT URLS
     #url(r'^view_messages/$',"view_messages", name="view_messages"),
     url(r'^view_messages/(?P<thread_id>\d+)/$',"view_thread"),
+    url(r'^accounts/profile/messages/(?P<thread_id>\d+)$', 'view_thread'),
     
     #Banned People
     url(r'^banned/$','banned', name="banned"),

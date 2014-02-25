@@ -1,5 +1,17 @@
 Prerequisites:
+EVERYTHING FOR NOW
+pip install virtualenv
+pip install virtualenv wrapper
+virtualenv env
+source ./env/bin/activate
 
+pip install -r requirements.txt
+pip install django-haystack
+
+deactivate 
+=> when done
+
+--------------------------------------------
 -django 1.4.3 or greater
 
 NOTE: as of jun 5, there is no need to use easy_install to get django_evolution, django_registration, or django_facebook.
@@ -35,6 +47,10 @@ pip install elasticsearch
 pip install pyelasticsearch
 
 pip install django==1.4.3
+
+pip install django-resized
+pip install django-celery
+pip install django-haystack
 
 #Seung developed this on windows, but he thinks if you're on OS X or Linus, run the command below to start elasticsearch
 sudo service elasticsearch start
