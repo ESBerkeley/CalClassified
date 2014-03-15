@@ -897,9 +897,9 @@ h2
   min-width: 450px;
     margin: auto;
     border: 0px #E0E0E0 solid ;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
     background-color: white;
 }
 
