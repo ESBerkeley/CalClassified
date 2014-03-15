@@ -21,9 +21,14 @@
   <div id="top-banner" style="-webkit-box-shadow: none; box-shadow: none; overflow: hidden">
     <div id="banner-text-container">
       <div id="banner-text">
-                <input style="font-size: 25px; border: 1px solid #999; box-shadow: 0px; width: 100%; line-height: 25px; border-radius: 0; height: 50px !important; box-shadow:none; margin-top: 10%" type="text" class="search-query" placeholder="What do you want to buy?" id="searchhome">
-                <button style="margin-top: 10%; background: #00a2f0; border: none; font-weight: 500; border-radius: none; height: 58px !important; width: 100px; color: white" class="btn btn-large" onclick="search2();">Search</button>
-        </div>
+        <!--div class="blob"></div-->
+        <h1>Cal's Exclusive Student Marketplace</h1>
+        <form action="javascript:search2();">
+           <input style="font-size: 25px; border: 1px solid #999; z-index: 6; box-shadow: 0px; width: 100%; line-height: 25px; border-radius: 0; height: 50px !important; box-shadow:none; margin-top: 0%" type="text" class="search-query" placeholder="What do you want to buy?"
+                  id="searchhome">
+           <button style="margin-top: 0%; background: #00a2f0; z-index: 6; border: none; font-weight: 500; border-radius: none; height: 58px !important; width: 100px; color: white" class="btn btn-large" onclick="search2();">Search</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -32,7 +37,7 @@
 <div id="why-us" class="container row">
   <center>
   <div id="why-text">
-    <h3 style="font-size:22pt"> Cal's Exclusive Student Marketplace. Meet on campus!</h3>
+    <h3 style="font-size:22pt">Sell your stuff quickly and conveniently on campus!</h3>
   </div>
   <div id="why-buttons">
     <a class="btn btn-primary btn-large" style="background: #fff; width:130px;" href="{% url browse %}">Browse</a>
