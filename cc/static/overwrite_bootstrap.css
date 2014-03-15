@@ -301,6 +301,11 @@ caption {
     border: none;
 }
 
+.side-item {
+    line-height: 10px !important;
+    font-size: 13px !important;
+}
+
 .accordion-group {
     background-color: white;
     border: 0px solid #cdcdcd;
@@ -534,8 +539,8 @@ img.medium {
 
 .box-price {
   font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
-  font-size:22px;
+  font-weight: 300;
+  font-size: 20px;
 }
 
 .box-date {
