@@ -381,6 +381,14 @@ function search(){
   window.location = url;
 }
 
+// Another search
+function search2(){
+  q = document.getElementById('searchhome').value;
+  url = "/browse/?q="+q
+  setInactive();
+  window.location = url;
+}
+
 function searchbarCancel() {   //cancel for the search bar
   document.getElementById('searchbar').value = '';
   runloadBox(true);

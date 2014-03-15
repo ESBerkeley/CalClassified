@@ -3,9 +3,6 @@
 {% block title %}BuyNearMe{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block extra_css %}
-body{
-  background-image: url("/static/low_contrast_linen.png");
-}
 {% endblock %}
 
 {% block navbar %}
@@ -21,83 +18,27 @@ body{
 
 {% block content %}
 
-  <div id="top-banner">
+  <div id="top-banner" style="-webkit-box-shadow: none; box-shadow: none; overflow: hidden">
     <div id="banner-text-container">
       <div id="banner-text">
-        <h1>Berkeley's Premier Student Marketplace</h1>
-        <h2>Buy and sell items on the Berkeley campus!</h2>
-      </div>
+                <input style="font-size: 25px; border: 1px solid #999; box-shadow: 0px; width: 100%; line-height: 25px; border-radius: 0; height: 50px !important; box-shadow:none; margin-top: 10%" type="text" class="search-query" placeholder="What do you want to buy?" id="searchhome">
+                <button style="margin-top: 10%; background: #00a2f0; border: none; font-weight: 500; border-radius: none; height: 58px !important; width: 100px; color: white" class="btn btn-large" onclick="search2();">Search</button>
+        </div>
     </div>
-    <!--div id="speech-text-container" class="container">
-      <div id="speech-text">
-          <h2>
-              We endorse: <br>
-              <a href="https://www.facebook.com/chenchenhuo" onclick="window.open(this.href); return false;" 
-onkeypress="window.open(this.href); return false;"> EVP Chen-Chen Huo</a> <br>
-              <a href="https://www.facebook.com/courtney.chow888" onclick="window.open(this.href); return false;" 
-onkeypress="window.open(this.href); return false;">#181 Courtney Chow</a><br>
-              {% load static %}
-              <a href="http://studentaction.org">
-                <img style="height:50px;" src="{% get_static_prefix %}images/student_action.jpg">
-              </a>
-          </h2>
-      </div>
-    </div-->
   </div>
 
-
+<div id="bottom-banner" style="height: auto; background: white;">
+</div>
 <div id="why-us" class="container row">
   <center>
   <div id="why-text">
-    <h3 style="font-size:22pt"> Meet on campus and trade with another Cal Bear!</h3>
+    <h3 style="font-size:22pt"> Cal's Exclusive Student Marketplace. Meet on campus!</h3>
   </div>
   <div id="why-buttons">
-    <a class="btn btn-primary btn-large" style="width:130px;" href="{% url browse %}">Browse</a>
-    <a class="btn btn-custom-orange btn-large" style="width:130px; margin-left:12px;" href="{% url createIFS %}">Sell</a>
+    <a class="btn btn-primary btn-large" style="background: #fff; width:130px;" href="{% url browse %}">Browse</a>
+    <a class="btn btn-custom-orange btn-large" style="background: #fff; width:130px; margin-left:12px;" href="{% url createIFS %}">Sell</a>
   </div>
   </center>
 </div>
 
-
-<div id="low-banner">
-    <div class="row-fluid container index-row">
-      <!--<div class="span3">
-          <h2>Login</h2>
-          <p>See what your friends are offering by logging in with your Facebook.</p>
-      </div>
-      <div class="span3">
-          <h2>Buy</h2>
-          <p>Buy an item and claim it forever. Exchange messages to collect your item.</p>
-      </div>
-      <div class="span3">
-          <h2>Sell</h2>
-          <p>Share directly with your Facebook groups and get notified by email when your item has been sold!</p>
-      </div>
-      <div class="span3">
-          <h2>Mobile</h2>
-          <p>Use our mobile site to upload images straight from your camera.</p>
-      </div>-->
-      <div class="span4">
-          <div style="text-align:center;"><i class="icon-group" style="font-size:75px;"></i></div>
-          <h2>Community</h2>
-          <p>
-              Trade with your fellow students and never get stabbed again. Conveniently schedule a meet up on campus.
-          </p>
-      </div>
-      <div class="span4">
-          <div style="text-align:center;"><i class="icon-money" style="font-size:75px;"></i></div>
-          <h2>Easy Money</h2>
-          <p>
-              Fatten your wallet and sell all your stuff lying around quickly and easily.
-          </p>
-      </div>
-      <div class="span4">
-          <div style="margin-top:-7px; text-align:center;"><i class="icon-mobile-phone" style="font-size:92px;"></i></div>
-          <h2 style="margin-top:0px;">Convenience</h2>
-          <p>
-              Use our mobile website to browse and upload your pictures directly from your smartphone.
-          </p>
-      </div>
-    </div>
-</div>
 {% endblock %}

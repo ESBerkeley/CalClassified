@@ -53,7 +53,7 @@ label.error {
       <div class="control-group">
         <label class="control-label" id="category_label" for="category_id">Category</label>
         <div class="controls">
-            <select name="category_id">
+            <select name="category_id" style="border-radius: 0px; background: #eee; -webkit-appearance: none; padding-top: 0">
               {% for category in categories %}
                 <option value="{{ category.id }}" {% if category == item.category %}selected{%endif%}>{{category.name}}</option>
               {% endfor %}
@@ -78,7 +78,6 @@ label.error {
             {% endif%}
             <span id="upload-images" > 
             {% if image_set %}<br>{% endif %}
-            <b>Add more photos if you aren't over the limit!</b>
             <div id="upload1" style="display: none;">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;">
@@ -86,7 +85,7 @@ label.error {
                     </div>
                     <div id="new-image0" class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
                   <span class="btn btn-file">
-                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-new" style="font-weight: 400">Select image</span>
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="images" />
                   </span>
@@ -102,7 +101,7 @@ label.error {
                     </div>
                     <div id="new-image1" class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
                   <span class="btn btn-file">
-                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-new" style="font-weight: 400">Select image</span>
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="images" />
                   </span>
@@ -118,7 +117,7 @@ label.error {
                     </div>
                     <div id="new-image2" class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
                   <span class="btn btn-file">
-                      <span class="fileupload-new">Select image</span>
+                      <span class="fileupload-new" style="font-weight: 400">Select image</span>
                       <span class="fileupload-exists">Change</span>
                       <input type="file" name="images" />
                   </span>

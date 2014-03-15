@@ -8,7 +8,7 @@
 .profile-card {
     background: white;
     padding: 20px;
-    border: 1px solid #d1d1d1;
+    border: 0px solid #d1d1d1;
     position: relative;
 }
 
@@ -30,7 +30,9 @@
 .change-photo-label {
     position: absolute;
     bottom: 0;
-    background-color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #777;
     opacity: 0.8;
     color: white;
     width: 100%;
@@ -44,7 +46,7 @@
 }
 
 #user-name {
-    font-size: 32px;
+    font-size: 22px;
     color: #28b4ef;
 }
 
@@ -93,18 +95,21 @@
     padding-left: 10px;
 }
 
+
+
 .profile-options {
     position: absolute;
     right: 0;
     top: 0;
     width: 180px;
     height: 182px;
-    background-color: #2e2e2e;
+    background-color: #FFF !important;
     padding: 20px;
+    font-weight: 300 !important;
 }
 
 .profile-options a{
-    color: white;
+    color: #0088cc;
     font-size: 18px;
     display: block;
     margin-bottom: 10px;
@@ -113,8 +118,8 @@
 #listings-header {
     letter-spacing: 4px;
     font-size: 22px;
-    font-weight: bold;
-    background-image: url('/static/images/greyish.jpg'); /** based on body background image **/
+    font-weight: 300;
+    background image **/
     background-color: black;
     display: inline-table;
     margin-top: -31px;
@@ -122,7 +127,7 @@
 }
 
 #listings-header-line {
-    display: block;
+    display: none;
     height: 1px;
     border: 0;
     border-top: 1px solid #ccc;
@@ -204,12 +209,13 @@
 }
 
 .no-items-listed {
-    font-size: 24px;
+    font-size: 16px;
+    font-weight: 300;
 }
 
 .review {
     background-color: white;
-    border: 1px solid #d1d1d1;
+    border: 0px solid #d1d1d1;
     padding: 10px 20px;
     margin-bottom: 10px;
 }

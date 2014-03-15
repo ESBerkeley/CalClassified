@@ -24,9 +24,20 @@
 }
 
 #body {
-    padding-bottom: 0; /* includes padding from the footer and footer's height */
+    padding-bottom: 0;
+    background: white; /* includes padding from the footer and footer's height */
 }
 
 .footer {
     position:relative;
+}
+
+body {
+    background-image: none !important;
+}
+
+.btn {
+    border: none;
+    box-shadow: none !important;
+    border-radius: 0px;
 }
