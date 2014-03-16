@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>{% load static %}
-    <title>{% block title %}Buy Near Me Mobile{% endblock %}</title>
+    <title>{% block title %}BuyNearMe Mobile{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
     <link href="{% get_static_prefix %}mobile/mobile_style.css" rel="stylesheet">
@@ -37,7 +37,7 @@
             <li style="width:33%;"><a href="{% url browse %}" rel="external" class="font-400" >Browse</a></li>
 		    <li style="width:33%;"><a href="{% url sell %}" rel="external" class="font-400">Sell</a></li>
             {% if request.user.is_authenticated %}
-		    <li style="width:34%;"><a id="flip" class="flipclass"><img src="/static/mobile/gear-white.png" style="height:17px; margin-left:-3px;"></a></li>
+		    <li style="width:34%;"><a style="font-family: 'Source Sans Pro', sans-serif; font-weight: 400;" id="flip" class="flipclass"><img src="/static/mobile/gear-white.png" style="height:0px; margin-left:-3px;">Settings</a></li>
             {% else %}
             <li style="width:34%;"><a href="{% url login %}" rel="external" class="font-400">Login</a></li>
             {% endif %}

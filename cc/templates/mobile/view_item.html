@@ -112,23 +112,7 @@
         <a href="#delete-modal" id="delete-btn" data-role="button" data-rel="dialog" data-theme="a">Delete Item</a>
     {% endif %}
     
-    </div>
-
-
-    <!--
-    <br>
-
-    <label style="padding: 3%;">Send a message to the owner:</label>
-    <form onsubmit="javascript: return false;" id="message-form" data-ajax="false">{% csrf_token %}
-    <input type="hidden" name="post_pk" value="{{ item.pk }}" />
-    <input type="hidden" name="recipient_pk" value="{{ item.owner.pk }}" />
-    <textarea id="message-text" name="message"></textarea>
-    <input type="submit" value="Send Message" data-theme="b"/>
-    </form>
-    -->
-
-    
-    {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated %}
         <center>
           {% if item.sold %}
             {% if item.pending_buyer == request.user %}
@@ -163,11 +147,26 @@
         <a href="/?next={{ item.get_absolute_url }}" data-role="button">Login to Buy</a>
     {% endif %}
     
+    </div>
+
+
+    <!--
+    <br>
+
+    <label style="padding: 3%;">Send a message to the owner:</label>
+    <form onsubmit="javascript: return false;" id="message-form" data-ajax="false">{% csrf_token %}
+    <input type="hidden" name="post_pk" value="{{ item.pk }}" />
+    <input type="hidden" name="recipient_pk" value="{{ item.owner.pk }}" />
+    <textarea id="message-text" name="message"></textarea>
+    <input type="submit" value="Send Message" data-theme="b"/>
+    </form>
+    -->
+    
     
    <br>
    
-   <div id="comments-section" style="border-top: 1px solid #bebebe">
-       <h3 style="margin:0; border-bottom: solid #4c4c4c 1px;">Comments</h3>
+   <div id="comments-section" style="border-top: 0px solid #bebebe">
+       <h3 style="margin:0; border-bottom: solid #4c4c4c 0px; font-size: 18px">Comments</h3>
        {% if comments %}
         <ul data-role="listview">
         {% for comment in comments %}
