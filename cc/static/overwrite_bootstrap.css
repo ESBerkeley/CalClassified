@@ -647,8 +647,8 @@ img.medium {
     -webkit-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
     -moz-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
     box-shadow: 25px 0px 25px -7px rgba(0,0,0,0.3), -25px 0px 25px -7px rgba(0,0,0,0.3);
-    opacity:1;
-    z-index:3;
+    /*opacity:1;*/
+    z-index:80;
 }
 
 #banner-text-container {
@@ -660,14 +660,29 @@ img.medium {
     margin-left:15%;
 }
 
+#banner-text .blob {
+    background: url(https://a0.muscache.com/airbnb/static/landing_pages/home_v2/homepage-sprite-54617e9d9dbd7f5e375a5667bb7a393f.png) 0px 0px no-repeat;
+    height: 180px;
+    position:absolute;
+    opacity:1;
+    display:block;
+    width:600px;
+    z-index:-1;
+    margin-top:-60px;
+    margin-left:-100px;
+}
+
 #banner-text h1 {
-  font-family: 'Proxima Nova', 'proxima-nova', 'Open Sans', Helvetica, sans-serif;
-  font-weight: normal;
+  font-family: 'Open Sans', Helvetica, sans-serif;
+  font-weight: bold;
   font-size: 35px;
   /*text-shadow: 0 0 5px grey;*/
   letter-spacing: 0px;
-  color: white;
-  text-shadow: 2px 2px rgba(0,0,0,1);
+  color: #fff;
+  /*text-shadow: 2px 2px rgba(0,0,0,1);*/
+  text-shadow: 0 -1px 8px rgba(0,0,0,0.9);
+  -webkit-font-smoothing: antialiased;
+  margin-top: 80px;
 }
 
 #banner-text h2 {
