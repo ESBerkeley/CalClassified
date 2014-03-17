@@ -30,6 +30,7 @@
 
 .footer {
     position:relative;
+    border: none !important;
 }
 
 body {
