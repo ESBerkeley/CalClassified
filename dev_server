@@ -8,7 +8,7 @@ function runserver {
     python manage.py syncdb
     python manage.py evolve --hint
     python manage.py evolve --hint --execute
-    python manage.py runserver buynear.me:9001
+    python manage.py runserver smartfuse.net:8000
 }
 
 runserver cc
