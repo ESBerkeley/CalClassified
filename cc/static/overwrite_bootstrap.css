@@ -75,7 +75,7 @@ h4 {
 .btn {
   font-family: 'Open Sans', sans-serif;
   font-weight: bold;
-  text-shadow: 0;
+  text-shadow: none;
   -webkit-font-smoothing: antialiased;
 }
 
