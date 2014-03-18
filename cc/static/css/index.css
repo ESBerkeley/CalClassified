@@ -23,13 +23,17 @@
   height: inherit;
 }
 
+body {
+    background: #FFF;
+}
+
 #body {
     padding-bottom: 0;
     background: white; /* includes padding from the footer and footer's height */
 }
 
 .footer {
-    position:relative;
+    position: absolute;
     border: none !important;
 }
 
