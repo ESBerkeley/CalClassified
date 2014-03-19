@@ -489,6 +489,11 @@ label.error {
     z-index: 10;
 }
 
+#sell-form .ui-select
+{
+    width: 100% !important;
+}
+
 #browse-list-footer{
     margin-left: 0.5%; 
     margin-right:0.5%;
@@ -506,13 +511,14 @@ label.error {
 #no-search-results {
     text-align: center;
     font-family: 'Source Sans Pro', sans-serif;
-    font-size: 20px;
+    font-size: 16px;
     padding-top: 12px;
+    font-weight: 300;
     padding-bottom: 12px;
     margin-left: 0.5%; 
     margin-right:0.5%;
     background-color: white;
-    border: 1px solid rgb(187, 187, 187);
+    border: 0px solid rgb(187, 187, 187);
 }
 
 #browse-list a{
@@ -535,7 +541,7 @@ label.error {
 
 .ui-btn-inner .ui-icon-delete
 {
-    display: none;
+    #display: none;
 }
 
 .ui-btn-icon-notext .ui-btn-inner {
