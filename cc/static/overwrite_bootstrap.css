@@ -744,7 +744,7 @@ img.medium {
 
 .index-row {
   max-width: 1130px;
-  /*color: #777;*/
+  color: #555 !important;
 }
 
 .index-row h2 {

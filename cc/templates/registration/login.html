@@ -36,7 +36,7 @@
       <input type="submit" class="btn btn-primary btn-large" value="Login" />
     </form>
     
-    <div id="OR"> <h3> OR </h3> </div>
+    <div id="OR"><h3 style="font-size: 14px">Or</h3></div>
     
     <form action="{% url facebook_connect %}?facebook_login=1" method="post">{% csrf_token %}
       <input type="hidden" value="{{ request.path }}?next={{ request.GET.next }}" name="next" />
