@@ -21,6 +21,14 @@
     padding: 0px !important;
 }
 
+.chzn-container-multi .chzn-choices .search-choice
+{
+    background-image: none !important;
+    background: #eee !important;
+    border: none !important;
+    border-radius: none !important;
+}
+
 .btn-success
 {
     background: #51a351 !important;
@@ -483,14 +491,14 @@ img.medium {
   width:300px;
   height:310px;
   background-color:white;
-  -moz-border-radius:2px;
-  border-radius:2px;
-  box-shadow:1px 2px 2px #CCCCCC;
-/*   border-style:dotted; */
+  -moz-border-radius:0px;
+  border-radius:0px;
+  box-shadow:1px 1px 2px #BBB;
+  /*border-style:dotted; */
 }
 
 .box-item:hover {
-  box-shadow:1px 2px 8px #BBBBBB;
+  box-shadow:1px 2px 8px #AAA;
 }
 
 .box-image {
