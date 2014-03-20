@@ -961,6 +961,7 @@ h2
     font-size: 24px !important;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .dropdown-menu li > a:hover,
