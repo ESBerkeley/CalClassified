@@ -31,24 +31,16 @@
       </table>
       <p id="login-error" style="display:none; color:red; font-size:12px; margin-top:5px; margin-bottom:0px;">Your E-mail or password was incorrect. Please try again.</p>
       <p style="font-size:13px"><a href="{% url auth_password_reset %}">Forgot</a> your password?  <a href="{% url registration_register %}">Need an account</a>?</p>
-      
       <input type="hidden" name="next" value="{{ next }}" />
       <input type="submit" class="btn btn-primary btn-large" value="Login" />
     </form>
-    
-    <div id="OR"><h3 style="font-size: 14px">Or</h3></div>
-    
+    <h3 style="font-size: 14px; margin-top: -10px;">Or</h3>
     <form action="{% url facebook_connect %}?facebook_login=1" method="post">{% csrf_token %}
       <input type="hidden" value="{{ request.path }}?next={{ request.GET.next }}" name="next" />
       <div id="facebook_login_js">
         <input onclick="F.connect(this.parentNode.parentNode); return false;" type="image" src="{% get_static_prefix %}images/login.png" style="height:35px; width:280px; margin-bottom:-16px; padding-right:5px;"/>
       </div>
     </form>
-
-        <br>
-        <img src="{% get_static_prefix %}images/fb_permissions.png"/>
-    <p>Click okay to let us help you sell your item by sharing it with the Facebook Groups of your choice (like Free & For Sale).
-        <br><br><b>We will never spam your friends' walls.</b></p>
   </div>
     
 </div>

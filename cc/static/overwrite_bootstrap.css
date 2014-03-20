@@ -800,6 +800,10 @@ img.medium {
     min-width: 1246px;
 }
 
+.footer a:hover {
+    text-decoration: none;
+}
+
 .footer-text {
   color: black;
     margin-right: 50px;
