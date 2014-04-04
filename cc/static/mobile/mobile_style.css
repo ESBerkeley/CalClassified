@@ -183,7 +183,7 @@ h4 {
 .div-page {
      background-image: none;
      background: #eee;
-     /*background: #b5daff;*/
+     height: 100% !important;
 }
 
 .title {
