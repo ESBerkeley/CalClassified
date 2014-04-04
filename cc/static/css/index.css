@@ -29,6 +29,7 @@ body {
 }
 
 #body {
+    padding-top: 20px !important;
     padding-bottom: 0;
     background: white; /* includes padding from the footer and footer's height */
 }
