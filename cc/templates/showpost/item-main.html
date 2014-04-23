@@ -6,13 +6,13 @@
       {% elif post.pending_flag %}
           <br>
           {% if thread and request.user != post.owner %}
-              <span style="color: red">(You are purchasing this item)</span>
+              <span style="display: none; color: red">(You are purchasing this item)</span>
           {% else %}
-              <span style="color:red;">(This item is being purchased)</span>
+              <span style="color:red; display: none">(This item is being purchased)</span>
           {% endif %}
       {% elif post.deleted %}
           <br>
-          <span style="color:red;">(This item has been deleted)</span>
+          <span style="color:red; display: none">(This item has been deleted)</span>
       {% endif %}
     </div>
 
