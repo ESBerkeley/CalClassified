@@ -122,7 +122,8 @@
     background image **/
     background-color: black;
     display: inline-table;
-    margin-top: -31px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     padding: 0 4px 0 9px;
 }
 
@@ -138,6 +139,7 @@
     /*overflow: hidden;*/
     /*width: 982px;*/
     width: 988px;
+    margin-left: 12px;
 }
 
 .items-wrapper {
@@ -146,7 +148,7 @@
 
 .user-item {
   float:left;
-  margin-right:13px;
+  margin-right:10px;
   height:295px;
 }
 
