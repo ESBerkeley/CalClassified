@@ -99,7 +99,7 @@
                data-content="<span style='font-weight:300;'>This item will not show up in search results once it has expired.<br><br>
                Click the refresh button to the left to reset the expiration date to 60 days from now!</span>"
                data-placement="right" data-trigger="hover" data-original-title="">
-           <i class="icon-question-sign" style="color:black; font-size:18px;"></i></a></center></th>
+           <i class="icon-question-sign" style="color:black; font-size:16px;"></i></a></center></th>
             <th><center>Delete Item</center></th>
         </tr>
     </thead>
@@ -288,8 +288,8 @@
     {% endif %}
 
     {% if not my_threads and not ifs_waiting_list and not ifs_sold and not sold_outside_list %}
-        <h2> You are not currently selling anything.</h2>
-        <h4>
+        <h2 style="font-size: 16px"> You are not currently selling anything.</h2>
+        <h4 style="font-size: 16px">
           <a href="{% url createIFS %}">Create a post now!</a>
         </h4>
     {% endif %}

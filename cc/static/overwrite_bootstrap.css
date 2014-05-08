@@ -551,6 +551,7 @@ img.medium {
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
   font-size: 20px;
+  color: #0088cc !important;
 }
 
 .box-date {
@@ -840,6 +841,7 @@ body {
     background: #eee; /** user.css needs to be changed too!! #listings-header**/
     /*background-image: url('/static/grey.png');*/
     /*background-color: #add9e6;*/
+    min-width: 1246px;
 }
 
 .small-title {
