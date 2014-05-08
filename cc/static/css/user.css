@@ -58,9 +58,13 @@
     display: inline-block;
 }
 
+#reviews-avg img {
+    height: 20px;
+}
+
 #num-reviews {
     display: inline-block;
-    font-size: 20px;
+    font-size: 18px;
     vertical-align: middle;
     color: rgb(153, 153, 153);
 }
@@ -116,13 +120,12 @@
 }
 
 #listings-header {
-    letter-spacing: 4px;
     font-size: 22px;
     font-weight: 300;
     background image **/
     background-color: black;
     display: inline-table;
-    margin-top: 20px;
+    margin-top: 40px;
     margin-bottom: 20px;
     padding: 0 4px 0 9px;
 }
