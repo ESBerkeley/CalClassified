@@ -5,7 +5,8 @@ html, body
 
 body
 {
-    background: #eee;
+    background: #eee !important;
+    text-shadow: none !important;
 }
 
 .ui-btn, .ui-shadow, .ui-btn-corner-all, .ui-btn-up-b
@@ -479,7 +480,7 @@ label.error {
 #browse-list {
     margin-left: 0.5%; 
     margin-right:0.5%;
-    box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px 0px;
+    box-shadow: none;
     border: 1px solid rgb(187, 187, 187);
     border-top: 0;
     border-bottom: 0;
