@@ -827,7 +827,7 @@ img.medium {
 
 #body {
     min-height: 100%;
-    padding-top: 35px;
+    padding-top: 25px;
     padding-bottom: 105px; /* includes padding from the footer and footer's height */
 }
 
