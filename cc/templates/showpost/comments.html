@@ -1,6 +1,14 @@
 <div class="comments-section">
     <div class="comments-wrapper">
-        <div id="comments-header">COMMENTS</div>
+    <!-- AddThis Button BEGIN -->
+        <div id="addthis-container" class="addthis_toolbox addthis_default_style addthis_32x32_style">
+            <a style="border-radius: 50%" class="addthis_button_facebook"></a>
+            <a class="addthis_button_twitter"></a>
+            <a class="addthis_button_email"></a>
+        <!--a class="addthis_counter addthis_bubble_style"></a-->
+        </div>
+    <!-- AddThis Button END -->
+        <div id="comments-header"></div>
         {% if comments %}
         {% for comment in comments %}
             <div class="comment-row">
@@ -70,7 +78,7 @@
             </div><!--end comment-row-->
         {% endfor %}
         {% else %}
-            <div class="no-comments">No comments</div>
+            <div class="no-comments"></div>
         {% endif %}
     </div><!-- end comments-wrapper -->
 
@@ -86,7 +94,7 @@
     {% elif post.pending_flag %}
         <div id="comment-sold">Sold or claimed items can no longer accept comments.</div>
     {% else %}
-        <a class="btn contact-button btn-primary btn-small" href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Comment</a>
+        <a href="/accounts/login/?next={{ post.get_absolute_url }}">Login to Comment</a>
     {% endif %}
     </div>
 </div><!-- end .comments-section -->

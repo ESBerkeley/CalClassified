@@ -1,13 +1,5 @@
 <div id="price-and-share">
-    <div id="item-price">${{ post.price }}</div>
-    <!-- AddThis Button BEGIN -->
-    <div id="addthis-container" class="addthis_toolbox addthis_default_style addthis_32x32_style">
-        <a class="addthis_button_facebook"></a>
-        <a class="addthis_button_twitter"></a>
-        <a class="addthis_button_email"></a>
-        <!--a class="addthis_counter addthis_bubble_style"></a-->
-    </div>
-    <!-- AddThis Button END -->
+    <div id="item-price" style="width: 100%; text-align: center">${{ post.price }}</div>
 </div>
 
 <div id="main-action-wrapper">
@@ -133,18 +125,17 @@
         <a href="{% url user_reviews post.owner.id %}" class="num-reviews"> {{ reviews|length }} reviews</a>
     </div>
 </div>
-
+    {% if request.user == post.owner %}
 <div id="item-info">
 
-    <div class="info-title">DATE ADDED</div>
+    <div class="info-title">Date Added</div>
     <div class="info-detail">{{ post.time_created.date }}</div>
 
-    <div class="info-title">CATEGORY</div>
+    <div class="info-title">Category</div>
     <div class="info-detail">{{ post.category.name }}</div>
 
-    {% if request.user == post.owner %}
         <div class="info-column">
-            <div class="info-title">DATE EXPIRES</div>
+            <div class="info-title">Post Expires</div>
             <div class="info-detail">{{ post.expire_date.date }}</div>
         </div><!-- end #info-column -->
         <div class="refresh-column">
@@ -162,36 +153,36 @@
                data-placement="right" data-trigger="hover" data-original-title="">
            <i class="icon-question-sign" style="color: #0088cc; font-size:24px;"></i></a>
         </div>
-    {% endif %}
     {% if post.sold %}
-        <div class="info-title">DATE SOLD</div>
+        <div class="info-title">Date Sold</div>
         <div class="info-detail">{{ post.sold_date.date }}</div>
     {% endif %}
 
 </div><!-- end #item-info -->
+{% endif %}
 
 {% if request.user.is_authenticated %}
 <div id="item-actions">
     {% if request.user == post.owner and not post.pending_flag and not post.sold%}
         <div class="small-action">
             <a data-toggle="modal" href="#delete-modal-{{ post.id }}">
-                <i class="icon-trash"></i>
+                <!--<i class="icon-trash"></i>-->
                 Delete Item
             </a>
         </div>
     {% endif %}
         <div id="active-bookmark" class="bookmark-activate small-action" style="display: none">
-            <i class="icon-heart bookmark-activate"></i>
+            <!--<i class="icon-heart bookmark-activate"></i>-->
             Bookmark Item
         </div>
 
         <div id="not-active-bookmark" class="bookmark-activate small-action">
-            <i class="icon-remove bookmark-activate"></i>
+            <!--<i class="icon-remove bookmark-activate"></i>-->
             Unbookmark Item
         </div>
 
         <div id="flag-post" class="small-action">
-            <i class="icon-flag"></i>
+            <!--<i class="icon-flag"></i>-->
             Flag as Inappropriate
         </div>
 </div><!-- end #item-actions -->

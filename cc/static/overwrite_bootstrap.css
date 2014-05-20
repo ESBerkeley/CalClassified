@@ -1,5 +1,15 @@
 /*WARNING all h2-4 fonts changed*/
 
+.at300bs
+{
+    border-radius: 50%;
+}
+
+#item-price
+{
+    color: #87CAFA;
+}
+
 .basic-wrap
 {
     border: 0px !important;
@@ -8,16 +18,20 @@
 
 .blue-wrap
 {
+    border: 0px !important;
     padding: 0px !important;
 }
 
 .green-wrap
 {
+    border: 0px !important;
     padding: 0px !important;
 }
 
 .main-btn-wrapper
 {
+    margin-top: 50px;
+    border: 0px !important;
     padding: 0px !important;
 }
 
@@ -39,7 +53,7 @@
 .main-btn-wrapper .btn-block
 {
     width: 100% !important;
-    background: green;
+    background: #2bc073;
     color: white;
     height: 50px;
     font-weight: 400;
@@ -82,12 +96,12 @@ h4 {
 
 .btn {
   font-family: 'Open Sans', sans-serif;
-  font-weight: bold;
+  font-weight: 400;
   text-shadow: none;
-  -webkit-font-smoothing: antialiased;
 }
 
 body {
+    font-weight: 300 !important;
     font-family: 'Open Sans', sans-serif;
     padding-top: 70px !important;
 }
@@ -112,7 +126,7 @@ body {
 }
 
 .btn.btn-primary {
-  background-color: hsl(201, 100%, 41%) !important;
+  background-color: hsl(201, 100%, 50%) !important;
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00a2f9", endColorstr="#0087d1");
   background-image: -khtml-gradient(linear, left top, left bottom, from(#00a2f9), to(#0087d1));
@@ -147,9 +161,9 @@ body {
 .navbar .nav > li > a {
     color: #414141;
     font-family: 'Open Sans', sans-serif;
-    font-weight: 400;
+    font-weight: 300;
     padding: 7px 10px 7px 10px;
-    font-size: 15px;
+    font-size: 14px;
     text-shadow: none;
 }
 
@@ -787,14 +801,19 @@ img.medium {
   padding: 0px 10px;
 }
 
+.alert
+{
+    border: none !important;
+    font-weight: 300 !important;
+} 
+
 /*footer*/
 .footer {
     position: absolute;
     width: 100%;
     border-top: solid 1px rgb(224, 224, 224);
-    /* background-color: #9d9d9d; */
-  text-align:center;
-  /* font-size:10px; */
+    font-weight: 300;
+    text-align:center;
     padding: 15px 0 15px;
     background-color: /*#262626*/ white;
     bottom: 0;
@@ -961,6 +980,7 @@ h2
 
 #item-title
 {
+    color: #aaa;
     margin-bottom: 20px !important;
     font-size: 24px !important;
     overflow: hidden;

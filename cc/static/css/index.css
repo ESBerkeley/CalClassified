@@ -4,12 +4,28 @@
 #low-banner .icon-pic {
     text-align:center;
 }
+#top-banner {
+    background-size: cover;
+    position: absolute;
+    padding-bottom: 0;
+    height: 100%;
+    width: 100%;
+}
 
 #low-banner p {
     font-size:14px;
 }
 
+#why-us {
+    display: none;
+}
+
+input[placeholder] {
+    font-weight: 300;
+}
+
 #low-banner {
+    display: none;
     /*-moz-box-shadow:    inset 0  4px 15px -8px #696868,
                         inset 0 -4px 15px -8px #696868;
     -webkit-box-shadow: inset 0  4px 15px -8px #696868,
@@ -31,10 +47,13 @@ body {
 #body {
     padding-top: 20px !important;
     padding-bottom: 0;
+    position: absolute;
+    width: 100%;
     background: white; /* includes padding from the footer and footer's height */
 }
 
 .footer {
+    display: none;
     position: absolute;
     border: none !important;
 }
