@@ -32,7 +32,7 @@
             (Unread)
         {% endif %}
           <td>
-            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope-alt"></i></a>
+            <a href="../messages/{{ thread.id }}">Read</a>
           </td>
           <td>
             {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}
@@ -70,7 +70,7 @@
             (Unread)
         {% endif %}
           <td>
-            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope-alt"></i></a>
+            <a href="../messages/{{ thread.id }}">Read</a>
           </td>
           <td>
             {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}
@@ -202,7 +202,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary verify-repost" value="{{ item.id }}" type="button" data-loading-text="Reposting...">Repost</button>
-                            <button class="btn" data-dismiss="modal">Cancel</button>
+                            <button class="btn" data-dismiss="<<">Cancel</button>
                         </div>
                     </div>
 
@@ -242,7 +242,7 @@
               {% endif %}
           </td>
           <td>
-            <a href="../messages/{{ thread.id }}">Read <i class="icon-envelope" style="text-decoration:none; color:black;"></i></a>
+            <a href="../messages/{{ thread.id }}">Read</a>
           </td>
           <td>
             {{ thread.other_person.first_name }} {{ thread.other_person.last_name }}

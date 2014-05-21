@@ -1,22 +1,5 @@
 <div class="item-main">
-    <div id="item-title">
-        {{ post.title }}
-      {% if post.sold %}
-          <br><span style="color:red;">(This item has been sold)</span>
-      {% elif post.pending_flag %}
-          <br>
-          {% if thread and request.user != post.owner %}
-              <span style="font-size: 16px ; color: red">(You are purchasing this item)</span>
-          {% else %}
-              <span style="color:red; font-size:16px">(This item is being purchased)</span>
-          {% endif %}
-      {% elif post.deleted %}
-          <br>
-          <span style="color:red; font-size:16px">(This item has been deleted)</span>
-      {% endif %}
-    </div>
-
-    <div id="postCarousel" class="carousel slide {% if post.is_category_image %}category-image{% endif %}">
+    <div id="postCarousel" style="width: 620px; margin-left: -15px; margin-top: -15px;" class="carousel slide {% if post.is_category_image %}category-image{% endif %}">
       <!-- Carousel items -->
       <div class="carousel-inner">
         {% if post.is_facebook_post %}
@@ -43,6 +26,7 @@
         {% endfor %}
         {% endif %}
       </div>
+    
       <!-- Carousel nav -->
       {% if image_set_length > 1 %}
         <a class="carousel-control left" href="#postCarousel" data-slide="prev">&lsaquo;</a>
@@ -50,5 +34,20 @@
       {% endif %}
     </div> <!--end #postCarousel-->
 
+        <div id="item-title" style="display: block; margin-bottom: 20px;">
+        {{ post.title }}
+         {% if post.sold %}
+          <p style="margin-top: 5px; font-size: 14px; color:red;">(This item has been sold)</p>
+      {% elif post.pending_flag %}
+          {% if thread and request.user != post.owner %}
+              <p style="margin-top: 5px; font-size: 14px; color:red;">(You are purchasing this item)</p>
+          {% else %}
+              <p style="margin-top: 5px; font-size: 14px; color:red;">(This item is being purchased)</p>
+          {% endif %}
+      {% elif post.deleted %}
+          <p style="margin-top: 5px; font-size: 14px; color:red;">(This item has been deleted)</p>
+      {% endif %}
+    </div>
+    
     <div id="description">{{ post.body }}</div>
 </div><!-- end .item-main -->

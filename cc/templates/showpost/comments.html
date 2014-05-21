@@ -11,7 +11,7 @@
         <div id="comments-header"></div>
         {% if comments %}
         {% for comment in comments %}
-            <div class="comment-row">
+            <div class="comment-row" style="border-top: 0; margin-top: 25px">
                 <div class="commenter-photo">
                     <a href="{% url user comment.sender.id %}">
                         <img class="comment-photo" src="{{ comment.sender.get_profile.get_image_url }}" />
@@ -51,7 +51,7 @@
                         {% endif %}
                         {% if comment.sender == request.user or request.user.is_staff %}
                             <a comment-id="{{ comment.id }}" class="delete-comment no-underline">
-                                <i class="icon-trash"></i> Delete
+                                Delete
                             </a>
                         {% endif %}
                     </div>
@@ -82,11 +82,11 @@
         {% endif %}
     </div><!-- end comments-wrapper -->
 
-    <div class="comment-action">
+    <div class="comment-action" style="margin-top: 25px">
     {% if not post.pending_flag and request.user.is_authenticated %}
       <div class="add-comment">
         <form action="{{ request.path }}" method="post" id="comment-form"> {% csrf_token %}
-        <textarea id="id_body" type="text" name="body" maxlength="200" class="span5" rows="2" placeholder="write a comment"></textarea>
+        <textarea style="width: 575px" id="id_body" type="text" name="body" maxlength="200" class="span5" rows="2" placeholder="write a comment"></textarea>
         <br>
         <button class="btn btn-primary btn-small" id="comment-btn" data-loading-text="Sending...">Comment</button>
         </form>

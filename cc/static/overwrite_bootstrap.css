@@ -1,5 +1,13 @@
 /*WARNING all h2-4 fonts changed*/
 
+#what-happens
+{
+    background-color: white;
+    border-top: 0px;
+    margin-top: 0px;
+    color: #51a351 !important
+}
+
 .at300bs
 {
     border-radius: 50%;
@@ -18,12 +26,14 @@
 
 .blue-wrap
 {
+    background: inherit !important;
     border: 0px !important;
     padding: 0px !important;
 }
 
 .green-wrap
 {
+    background: inherit !important;
     border: 0px !important;
     padding: 0px !important;
 }
@@ -80,18 +90,20 @@
 }
 
 h2 {
+  font-size: 18px !important;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
 }
 
 h3 {
+  font-size: 18px;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
 }
 
 h4 {
     font-family: 'Open Sans', sans-serif;
-    font-weight: 400;
+    font-weight: 300;
 }
 
 .btn {
@@ -812,7 +824,7 @@ img.medium {
     position: absolute;
     width: 100%;
     border-top: solid 1px rgb(224, 224, 224);
-    font-weight: 300;
+    font-weight: 400;
     text-align:center;
     padding: 15px 0 15px;
     background-color: /*#262626*/ white;
@@ -826,12 +838,12 @@ img.medium {
 }
 
 .footer-text {
-  color: black;
+    color: #555;
     margin-right: 50px;
 }
 
 .footer-copy {
-  color: black;
+    color: #555;
 }
 
 #index-footer {
@@ -910,7 +922,7 @@ h2
 
 .small-body {
   background-color: white;
-  padding: 20px 40px 20px 40px;
+  padding: 5px 40px 20px 40px;
   margin: 0;
 }
 
@@ -980,6 +992,7 @@ h2
 
 #item-title
 {
+    text-align: center;
     color: #aaa;
     margin-bottom: 20px !important;
     font-size: 24px !important;
@@ -1010,6 +1023,7 @@ h2
 }
 
 .alert {
+    text-shadow: none !important;
     border-radius: 0 !important;
 }
 

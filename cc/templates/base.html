@@ -87,9 +87,9 @@
         <div class="container">
           <a class="brand" id="logo" href="/"><img style="height:37px; width:144px;" src="{% get_static_prefix %}images/site_logo.png"></a>
           <ul class="nav" style="margin-left: 50px">
-            <li><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 300 !important" href="{% url browse %}" onclick="setInactive()">Browse</a></li>
-            <li><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 300 !important" href="{% url createIFS %}">Sell</a></li>
-            <li><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 300 !important" href="{% url feedback %}">Feedback</a></li>
+            <li><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 400 !important" href="{% url browse %}" onclick="setInactive()">Browse</a></li>
+            <li><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 400 !important" href="{% url createIFS %}">Sell</a></li>
+            <li><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 400 !important" href="{% url feedback %}">Feedback</a></li>
             <form id="searchbarform" class="navbar-search form-inline span4" action="javascript:search();" style="margin-right: -100px; width: 400px; margin-left: 60px">
                 <input style="border-left: 1px solid #ccc; border-right: 1px solid #ccc; box-shadow: 0px; width: 100%; border-radius: 0; height: 30px !important; padding-top: 6px; box-shadow:none; margin-top: -9px" type="text" class="search-query" placeholder="Search in Everything" id="searchbar">
                 <i id="search-go-nav" style="top: -2px; position: relative" class="icon-search search-icon-nav" class="submit" onclick="search();"></i>
@@ -133,11 +133,11 @@
             </a>   -->
             </li>
 
-            <li><a href="/accounts/profile">Account</a></li>
-            <li><a href="{% url auth_logout %}">Logout</a></li>
+            <li><a style="font-weight: 400" href="/accounts/profile">Account</a></li>
+            <li><a style="font-weight: 400" href="{% url auth_logout %}">Logout</a></li>
             {% else %}
-            <li ><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 300 !important" href="/accounts/login/">Login</a></li>
-            <li ><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 300 !important" style="padding-left: 0px;" href="/accounts/register/">Sign Up</a></li>
+            <li ><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 400 !important" href="/accounts/login/">Login</a></li>
+            <li ><a style="font-size: 14px !important; font-family: 'Open Sans' !important; font-weight: 400 !important" style="padding-left: 0px;" href="/accounts/register/">Sign Up</a></li>
             {% endif %}
           </ul>
         </div>
