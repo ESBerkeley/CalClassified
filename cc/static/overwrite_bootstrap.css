@@ -206,7 +206,11 @@ input[type="text"], input[type="password"], textarea
     border-radius: 0px !important;
 }
 
-.navbar .container{
+.review {
+    width: auto;
+}
+
+.navbar .container {
   width: auto !important;  /*default .navbar .container has width:auto, which makes it stretch out*/
   padding-top: 4px;
   padding-bottom: 4px;
@@ -491,7 +495,9 @@ img.medium {
   min-width:145px;
 }
 
-
+.relevant-item-number {
+  font-weight: 300 !important;
+}
 
 .indexDiv {
   position:relative;
