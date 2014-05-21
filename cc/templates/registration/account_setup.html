@@ -27,8 +27,8 @@ label.error {
       {% if message %}
       <p style="color:red">{{ message }}</p>
       {% endif %}
-    <p style="font-size:13px; margin-bottom:1px;" >When someone buys your item or sends you a message, you will receive an email.</p>
-      <p style="font-size:13px; font-weight:bold;">By default, we will use your Facebook e-mail.</p>
+        When someone buys your item or sends you a message, you will receive an email.<br/>
+        By default, we will use your Facebook e-mail.<br/><br/>
       <p>Current e-mail: &nbsp;&nbsp;&nbsp;{{ request.user.email }}</p>
       <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
         <div id="fields form">
