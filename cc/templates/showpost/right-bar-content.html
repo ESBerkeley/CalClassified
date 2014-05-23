@@ -125,6 +125,16 @@
         <a href="{% url user_reviews post.owner.id %}" class="num-reviews"> {{ reviews|length }} reviews</a>
     </div>
 </div>
+<br/>
+<!-- AddThis Button BEGIN -->
+        <div id="addthis-container" class="addthis_toolbox addthis_default_style addthis_32x32_style" style="margin-top: 20px; text-align: center">
+            <a style="border-radius: 50%" class="addthis_button_facebook"></a>
+            <a class="addthis_button_twitter"></a>
+            <a class="addthis_button_email"></a>
+        <!--a class="addthis_counter addthis_bubble_style"></a-->
+        </div>
+    <!-- AddThis Button END -->
+<br/><br/>
     {% if request.user == post.owner %}
 <div id="item-info">
 

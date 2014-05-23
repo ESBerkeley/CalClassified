@@ -15,35 +15,27 @@
     {% load static %}
      <link href="{% get_static_prefix %}css/index.css" rel="stylesheet">
 {% endblock %}
-
 {% block content %}
-  <div id="top-banner" style="-webkit-box-shadow: none; box-shadow: none; overflow: hidden">
+    <style>
+        a:hover
+        {
+            text-decoration: none !important;
+        }
+    </style>
+  <div id="top-banner" style="position: absolute; height: 100%; -webkit-box-shadow: none; box-shadow: none; overflow: hidden">
     <div id="banner-text-container">
-      <div id="banner-text" style="margin-top: 6.5%">
+      <div id="banner-text" style="margin-top: 17%">
         <!--div class="blob"></div-->
-        <h1 style="color: #222; text-shadow: none; font-size: 26px; font-weight: 300; margin-bottom: 20px">Cal's Exclusive Student Marketplace</h1>
+        <h1 style="color: #222; text-shadow: none; font-size: 26px; font-weight: 300; margin-bottom: 20px">Cal's Exclusive Student Marketplace&nbsp;&nbsp;<font style="color: #777">|</font><a href="sell" style="text-decoration: none; color: #0080fc">&nbsp;&nbsp;Sell&nbsp;&nbsp;</a><font style="color: #777">|</font><a href="browse" style="text-decoration: none; color: #0080fc">&nbsp;&nbsp;Buy&nbsp;&nbsp;</a></h1>
         <form action="javascript:search2();">
            <input style="position: absolute; background: #ffffff; font-size: 20px; z-index: 6; box-shadow: 0px; width: 100%; line-height: 25px; border-radius: 0; height: 43px !important; box-shadow:none; margin-top: 0%; border: 1px solid #777;" type="text" class="search-query" placeholder="What would you like to buy? Press enter to search."
                   id="searchhome">
            <!--<button style="margin-top: 0%; background: rgb(0, 135, 210); text-shadow: none; z-index: 6; border: 0px solid rgb(0, 100, 200); font-weight: 300; border-radius: none; height: 51px !important; width: 100px; color: white" class="btn btn-large" onclick="search2();">Search</button>-->
         </form>
-      </div>
+        </div>
     </div>
   </div>
 
-<div id="bottom-banner" style="height: auto; background: white;">
-</div>
-<div id="why-us" class="container row">
-  <center>
-  <div id="why-text">
-    <h3 style="font-size:24px; font-weight: 300">Sell your stuff quickly and conveniently on campus!</h3>
-  </div>
-  <div id="why-buttons">
-    <a class="btn btn-primary btn-large" style="font-weight: 400; text-shadow: none; background: #fff; width:130px;" href="{% url browse %}">Browse</a>
-    <a class="btn btn-custom-orange btn-large" style="font-weight: 400; text-shadow: none; background: #fff; width:130px; margin-left:12px;" href="{% url createIFS %}">Sell</a>
-  </div>
-  </center>
-</div>
 <div id="low-banner">
     <div class="row-fluid container index-row">
       <div class="span4">

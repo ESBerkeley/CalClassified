@@ -45,20 +45,22 @@ body {
 }
 
 #body {
-    padding-top: 20px !important;
     padding-bottom: 0;
+    padding-top: 0 !important;
     position: absolute;
     width: 100%;
     background: white; /* includes padding from the footer and footer's height */
 }
 
 .footer {
-    display: none;
+    z-index: 1000;
     position: absolute;
     border: none !important;
 }
 
 body {
+    margin-top: 0px !important;
+    padding-top: 0px !important;
     background-image: none !important;
 }
 
