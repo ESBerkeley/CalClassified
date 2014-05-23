@@ -1,5 +1,5 @@
 <div class="item-main">
-    <div id="postCarousel" style="width: 620px; margin-left: -15px; margin-top: -15px;" class="carousel slide {% if post.is_category_image %}category-image{% endif %}">
+    <div id="postCarousel" style="width: 620px; margin-top: -15px; margin-left: -15px; margin-bottom: 20px;" class="carousel slide {% if post.is_category_image %}category-image{% endif %}">
       <!-- Carousel items -->
       <div class="carousel-inner">
         {% if post.is_facebook_post %}
@@ -34,7 +34,7 @@
       {% endif %}
     </div> <!--end #postCarousel-->
 
-        <div id="item-title" style="display: block; margin-bottom: 20px;">
+    <div id="item-title" style="display: block; margin-bottom: 20px;">
         {{ post.title }}
          {% if post.sold %}
           <p style="margin-top: 5px; font-size: 14px; color:red;">(This item has been sold)</p>
@@ -48,6 +48,7 @@
           <p style="margin-top: 5px; font-size: 14px; color:red;">(This item has been deleted)</p>
       {% endif %}
     </div>
-    
+
+
     <div id="description">{{ post.body }}</div>
 </div><!-- end .item-main -->

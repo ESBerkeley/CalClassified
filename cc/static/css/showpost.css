@@ -40,7 +40,6 @@
 
 #postCarousel {
   height:327px;
-  width:590px;
   background-color: #1c1c1c;
   margin-top: 8px;
 }
@@ -77,7 +76,7 @@
   font-size: 24px;
   font-weight: 300;
   width: 190px;
-  margin-top: 8px;
+  margin-top: 26px;
 }
 
 #addthis-container {
@@ -336,7 +335,7 @@
 }
 
 .comment-action {
-  background-color: rgb(246, 246, 246);
+  /* background-color: rgb(246, 246, 246); */
   padding: 15px;
   padding-bottom: 10px;
 }
