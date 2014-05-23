@@ -2,7 +2,14 @@
 
 .dropdown-menu
 {
-    box-shadow:1px 2px 8px #AAA;
+    box-shadow: none;
+}
+
+.dropdown-menu a
+{
+    padding-top: 7px;
+    padding-bottom: 7px;
+    color: #777;
 }
 
 .dropdown-menu a strong
@@ -92,6 +99,11 @@ img[title="regular"]
 
 }
 
+.btn:hover, .btn-block:hover, .btn-success:hover, .btn:hover, .at300bs:hover
+{
+    opacity: 0.75;
+}
+
 .modal
 {
     border-radius: 0px !important;
@@ -152,7 +164,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+b
+{
+    font-weight: 600 !important;
+}
+
 .btn.btn-primary {
+ font-weight: 400 !important;
   border-radius: 5px;
   background-color: hsl(201, 100%, 50%) !important;
   background-repeat: repeat-x;
@@ -548,7 +566,8 @@ img.medium {
 }
 
 .box-item:hover {
-  box-shadow:1px 2px 8px #AAA;
+  opacity: 0.75;
+  /*box-shadow:1px 2px 8px #AAA;*/
 }
 
 .box-image {
@@ -704,9 +723,6 @@ img.medium {
     margin-top: -20px;
     margin-left: auto;
     margin-right: auto;
-    -webkit-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
-    -moz-box-shadow:rgba(0,0,0,0.4) 0 0 22px 10px;
-    box-shadow: 25px 0px 25px -7px rgba(0,0,0,0.3), -25px 0px 25px -7px rgba(0,0,0,0.3);
     /*opacity:1;*/
     z-index:80;
 }
