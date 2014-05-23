@@ -1,5 +1,10 @@
 /*WARNING all h2-4 fonts changed*/
 
+img[title="regular"]
+{
+    border-radius: 50%;
+}
+
 #what-happens
 {
     background-color: white;
