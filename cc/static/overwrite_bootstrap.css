@@ -1,5 +1,15 @@
 /*WARNING all h2-4 fonts changed*/
 
+.dropdown-menu
+{
+    box-shadow:1px 2px 8px #AAA;
+}
+
+.dropdown-menu a strong
+{
+    font-weight: 600;
+}
+
 img[title="regular"]
 {
     border-radius: 50%;
