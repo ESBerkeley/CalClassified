@@ -59,7 +59,7 @@
 
 #postCarousel .item > img {
   max-height:325px;
-  max-width:600px;
+  max-width:450px;
   display: inline-block;
   vertical-align:middle;
   margin-top:-2px;
