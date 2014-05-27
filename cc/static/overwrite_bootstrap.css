@@ -63,7 +63,7 @@ img[title="regular"]
 
 .main-btn-wrapper
 {
-    border-radius: 5px;
+    border-radius: 0px;
     margin-top: 50px;
     border: 0px !important;
     padding: 0px !important;
@@ -79,7 +79,7 @@ img[title="regular"]
 
 .btn-success
 {
-    border-radius: 5px;
+    border-radius: 0px;
     background: #51a351 !important;
     width: 100% !important;
     height: 50px;
@@ -87,7 +87,7 @@ img[title="regular"]
 
 .main-btn-wrapper .btn-block
 {
-    border-radius: 5px;
+    border-radius: 0px;
     width: 100% !important;
     background: #2bc073;
     color: white;
@@ -138,7 +138,7 @@ h4 {
 }
 
 .btn {
-  border-radius: 5px !important;
+  border-radius: 0px !important;
   font-family: 'Open Sans', sans-serif;
   font-weight: 400;
   text-shadow: none;
@@ -151,7 +151,7 @@ body {
 }
 
 .btn-custom-blue { 
-    border-radius: 5px;
+    border-radius: 0px;
     background-color: hsl(203, 64%, 28%) !important; background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2a86c0", endColorstr="#195275"); border-color: #195275 #195275 hsl(203, 64%, 23.5%); color: #fff !important; text-shadow: none; -webkit-font-smoothing: antialiased; }
 
 .btn-custom-orange {
@@ -171,7 +171,7 @@ b
 
 .btn.btn-primary {
  font-weight: 400 !important;
-  border-radius: 5px;
+  border-radius: 0px;
   background-color: hsl(201, 100%, 50%) !important;
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00a2f9", endColorstr="#0087d1");
@@ -1079,7 +1079,7 @@ h2
 }
 
 .btn {
-    border-radius: 5px;
+    border-radius: 0x;
     border: none;
     box-shadow: none !important;
     border-radius: 0px;
