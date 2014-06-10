@@ -79,7 +79,7 @@
     {% if not post.pending_flag and request.user.is_authenticated %}
       <div class="add-comment">
         <form action="{{ request.path }}" method="post" id="comment-form"> {% csrf_token %}
-        <textarea style="width: 575px" id="id_body" type="text" name="body" maxlength="200" class="span5" rows="2" placeholder="write a comment"></textarea>
+        <textarea style="width: 575px" id="id_body" type="text" name="body" maxlength="200" class="span5" rows="2" placeholder="Write a comment."></textarea>
         <br>
         <button class="btn btn-primary btn-small" id="comment-btn" data-loading-text="Sending...">Comment</button>
         </form>
