@@ -1316,3 +1316,8 @@ a.empty-link {
     font-weight:normal
 }
 
+.carousel-control
+{
+    top: 50% !important;
+}
+
