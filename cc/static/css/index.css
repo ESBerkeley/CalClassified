@@ -1,3 +1,8 @@
+.navbar 
+{
+    opacity: 1.0 !important;
+}
+
 #low-banner h2,
 #low-banner p,
 #low-banner .icon-group,
