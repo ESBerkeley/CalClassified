@@ -115,6 +115,43 @@ def register(request):
     
     return response
     
+def login_calnet(request):
+    data = {}
+    if request.method == 'POST':
+        form = CalnetProfileForm()
+        username = request.POST['username']
+        email = username + '@berkeley.edu'
+        password = request.POST['password']
+        
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # the password verified for the user and user exists
+            data['title'] = "Successfully logged in"
+            data['message'] = """Go use your account now."""
+            login(request, user)
+            return render_to_response('message.html',data,context_instance=RequestContext(request))
+        else:
+            #### NEEED TO PUT CALNET LOGIN STUFF HERE AND COVER CASE THAT IT DOESNT WORK
+            calnet_success = False
+            if calnet_success:
+                # need to create account
+                user = User.objects.create_user(username, email, password)
+                user.first_name = username
+                user.save()
+                login(request, user)
+            else:
+                data['title'] = "Login Error"
+                data['message'] = "The username and/or password are incorrect."
+                form = CalnetProfileForm(request.POST)
+                data['form'] = form
+                return render_to_response('registration/login_calnet.html', data, context_instance = RequestContext(request))
+
+    else:
+        form = CalnetProfileForm()
+
+    context = RequestContext(request)
+    context['form'] = form
+    return render_to_response('registration/login_calnet.html', data, context_instance = context)
 
 ## Creates the body for the email
 #def create_body(auth_key,user):

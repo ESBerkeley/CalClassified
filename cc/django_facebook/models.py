@@ -374,6 +374,10 @@ class FacebookProfileForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput , label="Password")
     password_again = forms.CharField( widget=forms.PasswordInput, label="Password (again)" )
 
+class CalnetProfileForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={'size':'30'}), label="Username")    
+    password = forms.CharField(widget=forms.PasswordInput , label="Password")
+
     
 if settings.AUTH_PROFILE_MODULE == 'django_facebook.FacebookProfile':
     '''

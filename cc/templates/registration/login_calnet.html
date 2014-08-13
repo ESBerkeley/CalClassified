@@ -1,0 +1,91 @@
+{% extends "registration/registration_base.html" %}
+{% block title %}Login With Calnet{% endblock %}
+
+{% block sidebar %} {% endblock %}
+
+
+
+{% block head %}
+<style type='text/css'>
+label.error {
+ float: none;
+ color: red;
+ padding-left: .5em;
+ vertical-align: top;
+ }
+ body {
+    background-image: none !important;
+ }
+ </style>
+{% endblock %}
+
+{% block content %}
+<div id="signup-container" class="container">
+  <div id="signup-box" class="span12">
+
+  
+  <div class="small-title">
+    <h2>Login with Calnet</h2>
+  </div>
+    
+  
+  <div class="small-body">
+      <p style="font-size:12px;">Already have an account or want to login with Facebook? <a href="/accounts/login">Login here</a></p>
+  {% if message %}
+  <p style="color:red">{{ message }}</p>
+  {% endif %}
+  <form action="{% url login_calnet %}"  method="post" class="form-horizontal" id="loginForm">{% csrf_token %}
+  <div id="fields form">
+    {% for field in form %}
+      <div class="control-group">
+        {{ field.errors }}
+        <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+        <div class="controls ">
+        {{ field }}
+          <span class="help-block">{{ field.help_text }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <p style="margin-top: 0px; padding-bottom: 5px;" /><i>By proceeding, you have read and agreed to the <a href="/terms/">terms and conditions</a>.</i><br>
+  <!--label for="terms" class="error" style="display:none; padding-top: 5px;">This field is required.</label--> <br>
+  <input type="submit" class="btn btn-primary loading" data-loading-text="Logging in..." value="Login with Calnet" />
+
+  </form>
+  </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block post_js %}
+<script type="text/javascript" src="/static/jquery-validation-1.9.0/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+    $("#loginForm").validate({
+      rules: {
+        username: {
+          required: true,
+        },
+        password: {
+          required: true,
+          minlength: 6,
+          maxlength: 22,
+        },
+      },
+        submitHandler: function(form) {
+            // do other stuff for a valid form
+            $(".loading").button('loading')
+            form.submit();
+        }
+    });
+    
+
+  });
+</script>
+{% endblock %}
+
+
