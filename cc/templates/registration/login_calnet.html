@@ -30,22 +30,26 @@ label.error {
     
   
   <div class="small-body">
-      <p style="font-size:12px;">Already have an account or want to login with Facebook? <a href="/accounts/login">Login here</a></p>
+      <p style="font-size:12px;">Use your Berkeley Calnet to login. Don't want to use Calnet? <a href="/accounts/login">Login here</a></p>
   {% if message %}
   <p style="color:red">{{ message }}</p>
   {% endif %}
   <form action="{% url login_calnet %}"  method="post" class="form-horizontal" id="loginForm">{% csrf_token %}
   <div id="fields form">
-    {% for field in form %}
       <div class="control-group">
-        {{ field.errors }}
-        <label class="control-label" id="{{field.html_name}}">{{ field.label }}</label>
+        <label class="control-label" id="username">Calnet Username</label>
         <div class="controls ">
-        {{ field }}
-          <span class="help-block">{{ field.help_text }}</span>
+            <input id="id_username" type="text" name="username" size="30">
+            <span class="help-block"></span>
         </div>
       </div>
-    {% endfor %}
+      <div class="control-group">
+        <label class="control-label" id="password">Calnet Password</label>
+        <div class="controls ">
+            <input type="password" name="password" id="id_password">
+            <span class="help-block"></span>
+        </div>
+      </div>
   </div>
 
   <p style="margin-top: 0px; padding-bottom: 5px;" /><i>By proceeding, you have read and agreed to the <a href="/terms/">terms and conditions</a>.</i><br>

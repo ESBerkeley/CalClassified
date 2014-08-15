@@ -131,27 +131,32 @@ def login_calnet(request):
             login(request, user)
             return render_to_response('message.html',data,context_instance=RequestContext(request))
         else:
-            #### NEEED TO PUT CALNET LOGIN STUFF HERE AND COVER CASE THAT IT DOESNT WORK
-            calnet_success = False
+            import urllib
+            page = urllib.urlopen('http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password)
+            if page.read() == "SUCCESS":
+                calnet_success = True
+            else:
+                calnet_success = False
             if calnet_success:
                 # need to create account
                 user = User.objects.create_user(username, email, password)
                 user.first_name = username
                 user.save()
+                user = authenticate(username=username, password=password)
                 login(request, user)
             else:
                 data['title'] = "Login Error"
-                data['message'] = "The username and/or password are incorrect."
+                data['message'] = "Incorrect Calnet login."
                 form = CalnetProfileForm(request.POST)
                 data['form'] = form
                 return render_to_response('registration/login_calnet.html', data, context_instance = RequestContext(request))
-
     else:
         form = CalnetProfileForm()
 
     context = RequestContext(request)
     context['form'] = form
     return render_to_response('registration/login_calnet.html', data, context_instance = context)
+
 
 ## Creates the body for the email
 #def create_body(auth_key,user):
