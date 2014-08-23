@@ -2,6 +2,7 @@ from ccapp.models import *
 from ccapp.signals import *
 from ccapp.utils import *
 
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core import serializers
@@ -12,10 +13,10 @@ from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 
-
 from django_facebook.models import *
 from django_facebook.api import get_facebook_graph, get_persistent_graph, require_persistent_graph, FacebookUserConverter
 from django_facebook.decorators import facebook_required, facebook_required_lazy
+from django_facebook.utils import get_registration_backend, next_redirect
 from open_facebook.exceptions import OpenFacebookException
 
 from django.views.decorators.csrf import csrf_exempt
@@ -44,7 +45,7 @@ def home(request):
         return HttpResponseRedirect("/browse/")
     return render_to_response('mobile/home.html', context_instance = RequestContext(request))
 
-def login(request):
+def login_mobile(request):
     if request.user.is_authenticated() and request.user.get_profile().is_banned: #cy@hacker
         return HttpResponse("cy@m8")
     if request.user.is_authenticated():
@@ -67,6 +68,7 @@ def login_calnet(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             # the password verified for the user and user exists
+            print('yes')
             login(request, user)
             return next_redirect(request)
         else:

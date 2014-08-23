@@ -31,7 +31,7 @@
             <center><h2>CalNet Login</h2><center>
         </div>
 
-        <form method="post" action="{% url auth_login %}">{% csrf_token %}
+        <form method="post" action="{% url login_calnet_mobile %}">{% csrf_token %}
             <label for="basic" class="font-400">CalNet Username:</label>
             <input type="text" name="username" id="basic" value="" style="font-size:12px;"/>
             <label for="basic" class="font-300">CalNet Password: </label>
