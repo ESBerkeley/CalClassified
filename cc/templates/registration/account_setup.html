@@ -28,7 +28,7 @@ label.error {
       <p style="color:red">{{ message }}</p>
       {% endif %}
         When someone buys your item or sends you a message, you will receive an email.<br/>
-        By default, we will use your Facebook e-mail.<br/><br/>
+        By default, we will use your Facebook or Berkeley e-mail.<br/><br/>
       <p>Current e-mail: &nbsp;&nbsp;&nbsp;{{ request.user.email }}</p>
       <form action="."  method="post" class="form-horizontal" id="sellForm">{% csrf_token %}
         <div id="fields form">
