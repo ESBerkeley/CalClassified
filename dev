@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function runserver {
+    source ./env/bin/activate
     cd $1
     pwd
     echo "yes" | python manage.py collectstatic
