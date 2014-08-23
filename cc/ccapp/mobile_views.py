@@ -56,6 +56,49 @@ def login(request):
             data['next'] = request.GET['next']
         return render_to_response('mobile/login.html', data, context_instance = RequestContext(request))
 
+def login_calnet(request):
+    data = {}
+    if request.method == 'POST':
+        form = CalnetProfileForm()
+        username = request.POST['username']
+        email = username + '@berkeley.edu'
+        password = request.POST['password']
+        
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # the password verified for the user and user exists
+            login(request, user)
+            return next_redirect(request)
+        else:
+            import urllib
+            page = urllib.urlopen('http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password)
+            if page.read() == "SUCCESS":
+                calnet_success = True
+            else:
+                calnet_success = False
+            if calnet_success:
+                # need to create account
+                user = User.objects.create_user(username, email, password)
+                user.first_name = username
+                user.save()
+                user = authenticate(username=username, password=password)
+                login(request, user)
+                data['title'] = "Successfully logged in"
+                data['message'] = """Go use your account now."""
+                return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
+            else:
+                data['title'] = "Login Error"
+                data['message'] = "Incorrect Calnet login."
+                form = CalnetProfileForm(request.POST)
+                data['form'] = form
+                return render_to_response('mobile/login_calnet.html', data, context_instance = RequestContext(request))
+    else:
+        form = CalnetProfileForm()
+
+    context = RequestContext(request)
+    context['form'] = form
+    return render_to_response('mobile/login_calnet.html', data, context_instance = context)
+
 def features(request):
     return render_to_response('mobile/features.html', context_instance = RequestContext(request))
 

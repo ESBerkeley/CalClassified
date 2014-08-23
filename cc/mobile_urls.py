@@ -10,6 +10,7 @@ admin.autodiscover()
 urlpatterns = patterns('ccapp.mobile_views',
     url(r'^$', "home", name='home'),
     url(r'^login/$', "login", name='login'),
+    url(r'^login_calnet/$', 'login_calnet', name='login_calnet'),
     url(r'^browse/$',"browse", name="browse"),
     url(r'^sell/$',"sell", name="sell"),
     #Totally useless
