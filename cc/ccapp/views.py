@@ -421,6 +421,8 @@ def showpost(request, pid, super_cat):
             threads = Thread.objects.filter(owner=request.user, post_id=post.id, declined=False)
             if threads.exists():
                 ecks['offers'] = True
+        if '@berkeley.edu' in post.owner.email:
+            ecks['seller_is_berkeley'] = True
         ecks['this_is_a_post'] = True
         ecks['reviews'] = ItemReview.objects.filter(seller=post.owner).order_by('-time_created')
         ecks['reviews_avg'] = ItemReview.objects.filter(seller=post.owner).aggregate(Avg('score'))['score__avg']
