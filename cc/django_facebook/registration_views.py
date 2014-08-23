@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
 
 from django_facebook.models import *
-from django_facebook.utils import get_registration_backend
+from django_facebook.utils import get_registration_backend, next_redirect
 
 from ccapp.models import *
 from templated_email import send_templated_mail
@@ -126,10 +126,8 @@ def login_calnet(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             # the password verified for the user and user exists
-            data['title'] = "Successfully logged in"
-            data['message'] = """Go use your account now."""
             login(request, user)
-            return render_to_response('message.html',data,context_instance=RequestContext(request))
+            return next_redirect(request)
         else:
             import urllib
             page = urllib.urlopen('http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password)
@@ -144,6 +142,9 @@ def login_calnet(request):
                 user.save()
                 user = authenticate(username=username, password=password)
                 login(request, user)
+                data['title'] = "Successfully logged in"
+                data['message'] = """Go use your account now."""
+                return render_to_response('message.html',data,context_instance=RequestContext(request))
             else:
                 data['title'] = "Login Error"
                 data['message'] = "Incorrect Calnet login."
