@@ -28,13 +28,13 @@
         {% else %}
 
         <div class="title">
-            <center><h2>Login</h2><center>
+            <center><h2>CalNet Login</h2><center>
         </div>
 
         <form method="post" action="{% url auth_login %}">{% csrf_token %}
-            <label for="basic" class="font-400">Username:</label>
+            <label for="basic" class="font-400">CalNet Username:</label>
             <input type="text" name="username" id="basic" value="" style="font-size:12px;"/>
-            <label for="basic" class="font-300">Password: </label>
+            <label for="basic" class="font-300">CalNet Password: </label>
             <input type="password" name="password" value="" style="font-size:12px; margin-bottom:20px;" />
             
 

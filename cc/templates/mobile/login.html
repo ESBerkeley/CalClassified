@@ -54,7 +54,9 @@
             <div class="border"></div>
 
             <button id="fake-login" data-theme="b">Log in with Facebook</button>
-
+            <div style="width: 100%; text-align: center">
+                <a href="/login_calnet/"><img style="margin-bottom: 20px; border: 1px solid black; width: 280px;" src='{{ STATIC_URL }}/calnet.png' /></a>
+            </div>
             <div class="inner_content" style="display: none;">
                 <form action="{% url facebook_connect %}?facebook_login=1" method="post">{% csrf_token %}
                     <input type="hidden" value="{{ next }}" name="next" />
