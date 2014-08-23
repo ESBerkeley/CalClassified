@@ -34,7 +34,8 @@
       <input type="hidden" name="next" value="{{ next }}" />
       <input type="submit" class="btn btn-primary btn-large" value="Login" />
     </form>
-    <h3 style="font-size: 14px; margin-top: -10px;">Or</h3>
+    <h3 style="font-size: 14px; margin-top: -10px;">Or login with CalNet or Facebook.</h3>
+    <a href="/accounts/login_calnet/"><img style="margin-bottom: 20px; border: 1px solid black; width: 280px;" src='{{ STATIC_URL }}/calnet.png' /></a>
     <form action="{% url facebook_connect %}?facebook_login=1" method="post">{% csrf_token %}
       <input type="hidden" value="{{ request.path }}?next={{ request.GET.next }}" name="next" />
       <div id="facebook_login_js">
