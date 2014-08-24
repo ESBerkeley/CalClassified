@@ -144,7 +144,7 @@
           
           </center>
     {% else %}
-        <a href="/?next={{ item.get_absolute_url }}" data-role="button">Login to Buy</a>
+        <a href="{% url login %}?next={{ item.get_absolute_url }}" data-role="button">Login to Buy</a>
     {% endif %}
     
     </div>
