@@ -128,13 +128,11 @@
         <br>
         <span class="score" data-score="{{ reviews_avg }}"></span>
         <a href="{% url user_reviews post.owner.id %}" class="num-reviews"> {{ reviews|length }} reviews</a>
-        {% if seller_is_berkeley %}
-        <div>
-          The Seller is a berkeley Student
-        </div>
-        {% endif %}
     </div>
 </div>
+{% if seller_is_berkeley %}
+        <img style="width: 58px; height: 58px;" src="{{ STATIC_URL }}/cal.jpg"></img>Verified Cal Student
+{% endif %}
 <br/>
 <!-- AddThis Button BEGIN -->
         <div id="addthis-container" class="addthis_toolbox addthis_default_style addthis_32x32_style" style="margin-top: 20px; text-align: center">

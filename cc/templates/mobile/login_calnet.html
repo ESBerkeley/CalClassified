@@ -1,82 +1,163 @@
-{% extends "mobile/base.html" %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>CalNet Central Authentication Service - Single Sign-on</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+    <meta name="keywords" content="Central Authentication Service" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	
+	<link rel="icon" type="image/ico"  href="https://auth.berkeley.edu/cas/themes/default/favicon.ico" />
+	
+    <script src="https://auth.berkeley.edu/cas/js/common.js" type="text/javascript"></script>
 
-{% block body_content %}
-<div>
-    <!--<div id="home-logo" data-inset="true">
-        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 37px;"></center>
-        <center><h2 style="font-size:15px; margin-top:5px;"> Buy and Sell Your Things</h2></center>
-    </div>-->
-    
-    <div id="home-logo" data-inset="true">
-        <center><img src="/static/124ta-beta.png" alt="Buy Near Me" style="max-height: 40px;"></center>
-    </div>
-    
-    {% if next %}
-    <p style="color:red; font-size:13px; margin-top:0px; margin-bottom:5px; text-align: center;">Please log in to continue.</p>
-    {% endif %}
+	
+	<link rel="stylesheet" href="https://auth.berkeley.edu/cas/themes/default/media.css" type="text/css"  />
+	
+	
+    <script src="https://auth.berkeley.edu/cas/js/firefox.js" type="text/javascript"></script>
 
-    <div id="login-box">
-        {% if request.user.is_authenticated %}
-            <script type="text/javascript">
-                window.location.href = "http://m.buynear.me/browse"
-            </script>
+	
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" type="text/css" href="https://auth.berkeley.edu/cas/themes/default/ie.css" />
+	<![endif]-->
+	
 
-            <div>
-                Hi, {{ request.user.first_name }}!<br>
-                <a href="/logout">logout</a>
-            </div>
-        {% else %}
+	<script type="text/javascript"> 
+	function toggle() {
+		var ele = document.getElementById("toggleHelpText");
+		var text = document.getElementById("displayHelpText");
+		if(ele.style.display == "block") {
+	    		ele.style.display = "none";
+			text.innerHTML = "HELP";
+	  	}
+		else {
+			ele.style.display = "block";
+			text.innerHTML = "Hide Help";
+		}
+	}
+	function pageScroll() {
+	    	window.scrollBy(0,130); // horizontal and vertical scroll increments
+	} 
+	</script>
 
-        <div class="title">
-            <center><h2>CalNet Login</h2><center>
-        </div>
+</head>
 
-        <form method="post" action="{% url login_calnet_mobile %}">{% csrf_token %}
-            <label for="basic" class="font-400">CalNet Username:</label>
-            <input type="text" name="username" id="basic" value="" style="font-size:12px;"/>
-            <label for="basic" class="font-300">CalNet Password: </label>
-            <input type="password" name="password" value="" style="font-size:12px; margin-bottom:20px;" />
-            
+<body xmlns="http://www.w3.org/1999/xhtml">
+	
+	<div class="hidden"><h1>UC Berkeley</h1></div>
+    <div id="content">
 
-            {% if form.errors %}
-                <p id="login-error" style="color:red; font-size:13px; margin-top:0px; margin-bottom:0px; text-align: center;">Your Calnet Username or Password was incorrect. Please try again.</p>
-            {% endif %}
 
-            <input type="submit" value="Log In" data-theme="d" />
-            {% if next %}
-                <input type="hidden" name="next" value="{{ next }}" />
-            {% else %}
-                <input type="hidden" name="next" value="/notifications/" />
-            {% endif %}
+ <form action="{% url login_calnet_mobile %}"  method="post" class="form-horizontal" id="loginForm">{% csrf_token %}
+	<fieldset>
+		<h2>
+		
+		   
+		   
+			<strong>CalNet</strong> Authentication Service
+		   
+		
+		</h2>		
+		<p class="note"></p>
+		 {% if message %}
+  <h3 id="status" class="error"> {{ message }}</h3>
+  {% endif %}
+		<p>
+	    	<label for="username"><span class="accesskey">C</span>alNet ID:</label>							
+			<br />							
+			<input id="username" style="height: 30px" name="username" class="required" tabindex="1" accesskey="c" type="text" value="" size="25"/>
+	    </p>
+	     
+		<p>
+	    	
+	    	    
+	    	    
+	    	        <label for="password"><span class="accesskey">P</span>assphrase (Case Sensitive):</label>
+	    	    
+	    	
+			<br />
+			<input id="password" style="height: 30px" name="password" class="required" tabindex="2" accesskey="p" type="password" value="" size="25"/>
+	    </p>
+	                    
+	   	<p class="submit">
+			<input class="button" accesskey="l" value="Sign In" tabindex="4" type="submit" />
+		
+		
+		<span class="hidden"><br /><br /></span>
+			
+			<span class='help'>
+				<a id='displayHelpText' href='javascript:toggle();pageScroll()'>
+				<script type="text/javascript">
+				document.write("HELP");
+				</script>
+				</a>
+				</span>			   
+        </p>
+	            </fieldset>
+        	</form>
 
-        </form>
+			
+			   
+			   
+			        
+			                
+			                
+							<div id="toggleHelpText" class="help-copy" style="display: none">
+			                        <h3 class="calnet-help">Help</h3>
+<p>If you are having persistent problems authenticating using your CalNet ID and passphrase, please contact:</p>
+<p style="margin-left:10%"><a href="http://cal1card.berkeley.edu/" title="Cal 1 Card Office">Cal 1 Card Office</a><br />
+180 C&eacute;sar Ch&aacute;vez Center, Lower Sproul<br />
+Phone: (510) 642-4126<br />
+Hours: Monday &ndash; Friday, 9 am &ndash; 4:30 pm<br />
+E-mail: <a href="mailto:calnet@berkeley.edu">calnet@berkeley.edu</a></p>
+<p>For answers to general questions about using this service, please see the UC Berkeley Knowledge Base section entitled <a href="https://kb.berkeley.edu/jivekb/kbcategory.jspa?categoryID=67" title="Knowledge Base articles about this service"><span class="forScreenReaders">Knowledge Base articles about the </span>CalNet Central Authentication Service (CAS)</a>.</p></div>
 
-            <div class="border"></div>
-            
-            <div class="border" style=" margin-bottom: 20px;"></div>
-            
-            <center><a href="{% url signup %}">Don't have an account? Sign Up</a></center>
+									<noscript>		
+									<div class="help-copy">
+				                        <h3 class="calnet-help">Help</h3>
+<p>If you are having persistent problems authenticating using your CalNet ID and passphrase, please contact:</p>
+<p style="margin-left:10%"><a href="http://cal1card.berkeley.edu/" title="Cal 1 Card Office">Cal 1 Card Office</a><br />
+180 C&eacute;sar Ch&aacute;vez Center, Lower Sproul<br />
+Phone: (510) 642-4126<br />
+Hours: Monday &ndash; Friday, 9 am &ndash; 4:30 pm<br />
+E-mail: <a href="mailto:calnet@berkeley.edu">calnet@berkeley.edu</a></p>
+<p>For answers to general questions about using this service, please see the UC Berkeley Knowledge Base section entitled <a href="https://kb.berkeley.edu/jivekb/kbcategory.jspa?categoryID=67" title="Knowledge Base articles about this service"><span class="forScreenReaders">Knowledge Base articles about the </span>CalNet Central Authentication Service (CAS)</a>.</p></div>
 
-        {% endif %}
-    </div>
-</div>
-{% endblock %}
+									</noscript>
+			                
+			        
+			   
+			
+			
+			
+			
+<div class="copyright">
 
-{% block javascript %}
+<small>Copyright &copy; <script type="text/javascript">
+	var theDate=new Date()
+	document.write(theDate.getFullYear())
+	</script> UC Regents. All rights reserved.</small>
+</div><!--end copyright-->
 
-<script type="text/javascript">
-    $('#body-page').live('pageshow', function () {
-        // THIS IS HOW TO DO DOCUMENT READY
-        {% if form.errors %}
-            $("#login-error").show();
-        {% endif %}
-
-    });
-
-    $("#fake-login").click(function(){
-        $("#actual-fb-login").trigger("click");
-    })
+ <script type="text/javascript">
+	 <!--
+		if (document.getElementById("loginForm")) {
+			if (document.getElementById("loginForm").username) {
+				document.getElementById("loginForm").username.setAttribute("autocomplete","off");
+			}
+			if (document.getElementById("loginForm").password) {
+				document.getElementById("loginForm").password.setAttribute("autocomplete","off");
+			}
+			if (document.getElementById("loginForm") && document.getElementById("loginForm").username != null) {
+	    		document.getElementById("loginForm").username.focus();
+			}
+		}
+		if (document.getElementById("helpLink")) {
+			document.getElementById("helpLink").setAttribute("target","_blank");
+		}
+	-->
 </script>
+</div>
+ </body>
+</html>
 
-{% endblock %}
 
