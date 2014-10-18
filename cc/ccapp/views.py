@@ -470,7 +470,7 @@ def modify_post(request):
                     pass
                 post.pending_flag = False
                 post.pending_buyer = None
-                post.expire_date = datetime.datetime.now()+timedelta(days=30)
+                post.expire_date = datetime.datetime.now()+timedelta(days=90)
                 custom_log_message('user ' + str(request.user.id) + ' reposted item :( ' + str(post_pk))
                 post.save()
                 return HttpResponseRedirect("/"+str(post_pk))
@@ -1464,7 +1464,7 @@ def repost_item(request):
         item = ItemForSale.objects.get(id=request.POST['post_id'])
         if request.user == item.owner:
             expired = item.is_expired
-            item.expire_date = datetime.datetime.now()+timedelta(days=30)
+            item.expire_date = datetime.datetime.now()+timedelta(days=90)
             item.time_created = datetime.datetime.now()
             item.save()
             if expired:
@@ -1478,7 +1478,7 @@ def ajax_repost_item(request):
     if request.method == 'POST':
         item = ItemForSale.objects.get(id=request.POST['post_id'])
         if request.user == item.owner:
-            item.expire_date = datetime.datetime.now()+timedelta(days=30)
+            item.expire_date = datetime.datetime.now()+timedelta(days=90)
             item.time_created = datetime.datetime.now()
             item.save()
             return HttpResponse("OK")
