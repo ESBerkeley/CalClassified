@@ -814,7 +814,7 @@ def ajax_box(request):
             sold="false",
             pending_flag="false",
             deleted="false",
-            expire_date__gte=datetime.datetime.now()
+            expire_date__gte=datetime.datetime.now()-datetime.timedelta(weeks=52)
         )
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
