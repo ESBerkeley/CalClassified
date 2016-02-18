@@ -1,5 +1,12 @@
 *.pyc
 *~
+.DS_Store
 static_files
 cc/media/images
 cc/static_files
+env
+cc/media/
+logs
+cc/sq3.db
+cc/sq3.db-journal
+

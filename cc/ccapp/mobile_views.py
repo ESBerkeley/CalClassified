@@ -39,6 +39,7 @@ from django.core.mail import send_mail
 from templated_email import send_templated_mail
 import random
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+SECRET_CALNET_PASSWORD = "R3C3S2awlvre99of15hs"
 
 def home(request):
     if request.user.is_authenticated():
@@ -57,6 +58,7 @@ def login_mobile(request):
             data['next'] = request.GET['next']
         return render_to_response('mobile/login.html', data, context_instance = RequestContext(request))
 
+
 def login_calnet(request):
     data = {}
     if request.method == 'POST':
@@ -64,36 +66,36 @@ def login_calnet(request):
         username = request.POST['username']
         email = username + '@berkeley.edu'
         password = request.POST['password']
-        
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            # the password verified for the user and user exists
-            print('yes')
-            login(request, user)
-            return next_redirect(request)
+
+        user = authenticate(username=email, password=SECRET_CALNET_PASSWORD)
+        import urllib
+        page = urllib.urlopen('http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password)
+        if page.read() == "SUCCESS":
+            calnet_success = True
         else:
-            import urllib
-            page = urllib.urlopen('http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password)
-            if page.read() == "SUCCESS":
-                calnet_success = True
+            calnet_success = False
+        print 'http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password
+        if calnet_success:
+            if user is not None:
+                # the password verified for the user and user exists
+                login(request, user)
+                return next_redirect(request)
             else:
-                calnet_success = False
-            if calnet_success:
                 # need to create account
-                user = User.objects.create_user(username, email, password)
+                user = User.objects.create_user(email, email, SECRET_CALNET_PASSWORD)
                 user.first_name = username
                 user.save()
-                user = authenticate(username=username, password=password)
+                user = authenticate(username=email, password=SECRET_CALNET_PASSWORD)
                 login(request, user)
                 data['title'] = "Successfully logged in"
                 data['message'] = """Go use your account now."""
                 return render_to_response('mobile/message.html',data,context_instance=RequestContext(request))
-            else:
-                data['title'] = "Login Error"
-                data['message'] = "Incorrect Calnet login."
-                form = CalnetProfileForm(request.POST)
-                data['form'] = form
-                return render_to_response('mobile/login_calnet.html', data, context_instance = RequestContext(request))
+        else:
+            data['title'] = "Login Error"
+            data['message'] = "Incorrect Calnet login."
+            form = CalnetProfileForm(request.POST)
+            data['form'] = form
+            return render_to_response('mobile/login_calnet.html', data, context_instance = RequestContext(request))
     else:
         form = CalnetProfileForm()
 

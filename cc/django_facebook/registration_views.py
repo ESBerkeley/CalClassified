@@ -14,7 +14,7 @@ import random
 from django_facebook.connect import CONNECT_ACTIONS
 
 RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-
+SECRET_CALNET_PASSWORD = "R3C3S2awlvre99of15hs"
 
 def register(request):
     """
@@ -123,34 +123,34 @@ def login_calnet(request):
         email = username + '@berkeley.edu'
         password = request.POST['password']
         
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            # the password verified for the user and user exists
-            login(request, user)
-            return next_redirect(request)
+        user = authenticate(username=email, password=SECRET_CALNET_PASSWORD)
+        import urllib
+        page = urllib.urlopen('http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password)
+        if page.read() == "SUCCESS":
+            calnet_success = True
         else:
-            import urllib
-            page = urllib.urlopen('http://smartfuse.net/calnetlogin.php?username=' + username + '&password=' + password)
-            if page.read() == "SUCCESS":
-                calnet_success = True
+            calnet_success = False
+        if calnet_success:
+            if user is not None:
+                # the password verified for the user and user exists
+                login(request, user)
+                return next_redirect(request)
             else:
-                calnet_success = False
-            if calnet_success:
                 # need to create account
-                user = User.objects.create_user(username, email, password)
+                user = User.objects.create_user(email, email, SECRET_CALNET_PASSWORD)
                 user.first_name = username
                 user.save()
-                user = authenticate(username=username, password=password)
+                user = authenticate(username=email, password=SECRET_CALNET_PASSWORD)
                 login(request, user)
                 data['title'] = "Successfully logged in"
                 data['message'] = """Go use your account now."""
                 return render_to_response('message.html',data,context_instance=RequestContext(request))
-            else:
-                data['title'] = "Login Error"
-                data['message'] = "Incorrect Calnet login."
-                form = CalnetProfileForm(request.POST)
-                data['form'] = form
-                return render_to_response('registration/login_calnet.html', data, context_instance = RequestContext(request))
+        else:
+            data['title'] = "Login Error"
+            data['message'] = "Incorrect Calnet login."
+            form = CalnetProfileForm(request.POST)
+            data['form'] = form
+            return render_to_response('registration/login_calnet.html', data, context_instance = RequestContext(request))
     else:
         form = CalnetProfileForm()
 

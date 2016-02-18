@@ -1,5 +1,5 @@
 import os
-import Image
+from PIL import Image
 from StringIO import StringIO
 
 from django.conf import settings
