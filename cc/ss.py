@@ -1,27 +1,11 @@
 import os
 import django
-
-
-
-#This block is all celery related things. broker_backend must be changed for use in production!
-import djcelery
-djcelery.setup_loader()
-
-APPEND_SLASH = True
-
-#This line must be enabled for local development (unless you want to install and configure rabbitmq)
-#BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
-
-#The following line is for production, for use with a properly configured rabbitmq.
-#BROKER_URL = 'amqp://CCBROKER:CCBROKERPW@localhost:5672//'
-
-
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_DOC_ROOT = '/media'
 # Django settings for cc project.
 
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -134,9 +118,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'middleware.SubdomainsMiddleware', # this is for subdomain
-    'middleware.BannedMiddleware',
-    #'middleware.ActiveUserMiddleware', # this is to logout FB users that no longer have permissions
-    # Supposedly unrequired! :)
 )
 
 
@@ -164,7 +145,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_facebook',
     'ccapp',
-    'ccapp_facebook',
     'multiuploader',
     'sorl.thumbnail',
     'django.contrib.admin',
@@ -172,11 +152,7 @@ INSTALLED_APPS = (
     'haystack',
     'templated_email',
     'django_resized',
-    'widget_tweaks',
-    'djkombu',                           #This needs to be changed for server production
-    'djcelery',
-#    'requests',
-#    'facepy',
+    'widget_tweaks'
     # 'django.contrib.admindocs',
 )
 
@@ -208,119 +184,68 @@ AUTH_PROFILE_MODULE = 'django_facebook.FacebookProfile'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
+            'class': 'django.utils.log.AdminEmailHandler'
         },
         'null': {
             'level':'DEBUG',
             'class':'django.utils.log.NullHandler',
-        },
-        'console':{
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'swamp_handler':{
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'formatter': 'simple', 
-            'filename': SITE_ROOT + '/../logs/bnm_log.log'
         },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
         'django': {
             'handlers':['null'],
             'propagate': True,
             'level':'INFO',
         },
-        'swamp_logger':{
-            'handlers': ['swamp_handler'], 
-            'propagate': True,
-            'level': 'INFO',
-        },
-    },
-    # you can also shortcut 'loggers' and just configure logging for EVERYTHING at once
-    'root': {
-        'handlers': ['console', 'mail_admins'],
-        'level': 'INFO'
-    },
+    }
 }
 
 DJANGORESIZED_DEFAULT_SIZE = [800, 600]
 
 FACEBOOK_APP_ID = '171685159547122'
 FACEBOOK_APP_SECRET = '1b87bf57984631d3830f64edd60ebfcf'
-FACEBOOK_LOGIN_DEFAULT_REDIRECT = '/browse/'
+FACEBOOK_LOGIN_DEFAULT_REDIRECT = '/accounts/profile/'
 FACEBOOK_STORE_FRIENDS = True
-FACEBOOK_STORE_GROUPS = False
-FACEBOOK_CELERY_STORE = True
-
-#FACEBOOK_REDIRECT_URI = 'http://test.buynear.me:8000/facebook/connect/?facebook_login=1'
-#FACEBOOK_CELERY_TOKEN_EXTEND = True # Turn on later when we know it will work.
-
-#CELERY_ALWAYS_EAGER = True # USE FOR DEVELOPMENT, TURN OFF ON PRODUCTION
+FACEBOOK_STORE_GROUPS = True
 
 TEMPLATED_EMAIL_TEMPLATE_DIR = SITE_ROOT + '/templates/email/'
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django' # FOR PROD
-#TEMPLATED_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # FOR DEV'T, emails sent to console
+TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 
 # HANDLES SENDING EMAILS FROM DJANGO
 # supposedly you have to at least log into the HOST_USER at least once normally
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'buynearme'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = 'noreply@buynear.me'#'buynearme@gmail.com'
+
 EMAIL_HOST_PASSWORD = 'CalClassified'
 EMAIL_PORT = 587
 
-
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #from django.core.mail import send_mail      
 #send_mail('Test', 'meow', 'noreply@buynear.me', ['seung.j@live.com']) 
 
-#haystack 2.0.0
-# HAYSTACK_CONNECTIONS = {
-#     'default': {
-#         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-#         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-#     },
-# }
-
+"""#haystack 2.0.0
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'haystack',
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-
-
 """
+
 #haystack 1.27
 HAYSTACK_SITECONF = 'ccapp.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(os.path.dirname(__file__), 'whoosh_index')
-"""
+

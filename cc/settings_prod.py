@@ -13,7 +13,8 @@ APPEND_SLASH = True
 #BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 
 #The following line is for production, for use with a properly configured rabbitmq.
-#BROKER_URL = 'amqp://CCBROKER:CCBROKERPW@localhost:5672//'
+BROKER_URL = 'amqp://CCBROKER:CCBROKERPW@localhost:5672//'
+
 
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -173,7 +174,7 @@ INSTALLED_APPS = (
     'templated_email',
     'django_resized',
     'widget_tweaks',
-    'djkombu',                           #This needs to be changed for server production
+#    'djkombu',                           #This needs to be changed for server production
     'djcelery',
 #    'requests',
 #    'facepy',
@@ -241,7 +242,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'simple', 
-            'filename': SITE_ROOT + '/../logs/bnm_log.log'
+            'filename': '/var/www/calclassified/logs/bnm_log.log'
         },
     },
     'loggers': {
@@ -274,7 +275,7 @@ FACEBOOK_APP_ID = '171685159547122'
 FACEBOOK_APP_SECRET = '1b87bf57984631d3830f64edd60ebfcf'
 FACEBOOK_LOGIN_DEFAULT_REDIRECT = '/browse/'
 FACEBOOK_STORE_FRIENDS = True
-FACEBOOK_STORE_GROUPS = False
+FACEBOOK_STORE_GROUPS = True
 FACEBOOK_CELERY_STORE = True
 
 #FACEBOOK_REDIRECT_URI = 'http://test.buynear.me:8000/facebook/connect/?facebook_login=1'
@@ -299,28 +300,17 @@ EMAIL_PORT = 587
 #from django.core.mail import send_mail      
 #send_mail('Test', 'meow', 'noreply@buynear.me', ['seung.j@live.com']) 
 
-#haystack 2.0.0
-# HAYSTACK_CONNECTIONS = {
-#     'default': {
-#         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-#         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-#     },
-# }
-
+"""#haystack 2.0.0
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'haystack',
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-
-
 """
+
 #haystack 1.27
 HAYSTACK_SITECONF = 'ccapp.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(os.path.dirname(__file__), 'whoosh_index')
-"""
+

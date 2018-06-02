@@ -256,7 +256,7 @@ def ajax_browse(request):
             sold="false",
             pending_flag="false",
             deleted="false",
-            expire_date__gte=datetime.datetime.now(),
+            expire_date__gte=datetime.datetime.now()-datetime.timedelta(weeks=300),
             price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
     else:
         found_entries = SearchQuerySet().filter_or(
@@ -264,7 +264,7 @@ def ajax_browse(request):
             sold="false",
             pending_flag="false",
             deleted="false",
-            expire_date__gte=datetime.datetime.now(),
+            expire_date__gte=datetime.datetime.now()-datetime.timedelta(weeks=300),
             price__range=(min_price,max_price)).order_by('-time_created')[first_index:last_index]
 
     list_entries = []

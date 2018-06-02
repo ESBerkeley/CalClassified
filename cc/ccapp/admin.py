@@ -32,11 +32,16 @@ class FacebookPostForExcelAdmin(admin.ModelAdmin):
     search_fields = ['message', 'seller_name']
     date_hierarchy = 'updated_time'
 
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('post_title', 'body', 'time_created')
+    list_filter = ('time_created',)
+    date_hierarchy = 'time_created'
+
 admin.site.register(Category)
 admin.site.register(Circle)
 admin.site.register(ItemForSale, ItemForSaleAdmin)
 admin.site.register(Notification)
-admin.site.register(Message)
+admin.site.register(Message, MessageAdmin)
 admin.site.register(ItemReview)
 admin.site.register(Thread, ThreadAdmin)
 admin.site.register(Comment, CommentAdmin)
